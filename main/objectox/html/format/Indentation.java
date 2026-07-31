@@ -31,7 +31,10 @@ final class Indentation {
 
   public final void dec() {
     if (level == 0) {
-      throw new IllegalStateException();
+      final String msg;
+      msg = "Cannot decrement indentation level below zero";
+
+      throw new IllegalStateException(msg);
     }
 
     level--;
