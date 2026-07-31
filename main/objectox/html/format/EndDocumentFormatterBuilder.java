@@ -17,25 +17,39 @@ package objectox.html.format;
 
 import java.util.Objects;
 import objectos.html.format.EndDocumentOptions;
+import objectos.html.format.NewLineStyle;
 import objectox.html.markup.CommentEscaper;
 
 public final class EndDocumentFormatterBuilder implements EndDocumentOptions {
 
-  private String comment;
+  private String comment = "END Objectos HTML";
 
-  public final EndDocumentFormatter build() {
-    return new EndDocumentFormatter(comment);
+  private NewLineStyle newLineStyle = NewLineStyle.ifNotEmpty();
+
+  public final EndDocumentFormatter build(NewLine newLine) {
+    return new EndDocumentFormatter(
+        comment,
+
+        newLine,
+
+        newLineStyle
+    );
   }
 
   @Override
   public final void comment(String value) {
     final String original;
-    original = Objects.requireNonNull(value);
+    original = Objects.requireNonNull(value, "value == null");
 
     final CommentEscaper escaper;
     escaper = new CommentEscaper(original);
 
     comment = escaper.escape();
+  }
+
+  @Override
+  public final void newLineStyle(NewLineStyle value) {
+    newLineStyle = Objects.requireNonNull(value, "value == null");
   }
 
 }

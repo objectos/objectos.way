@@ -17,45 +17,93 @@ package objectox.html.format;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.html.format.NewLineStyle;
 import org.testng.annotations.Test;
 
 public class EndDocumentFormatterBuilderTest {
 
-  @Test
+  @Test(
+      description = "reject null comment",
+      expectedExceptions = NullPointerException.class,
+      expectedExceptionsMessageRegExp = "value == null"
+  )
   public void comment01() {
     final EndDocumentFormatterBuilder subject;
     subject = new EndDocumentFormatterBuilder();
 
-    final EndDocumentFormatter res;
-    res = subject.build();
-
-    assertEquals(res.comment, null);
+    subject.comment(null);
   }
 
-  @Test
+  @Test(description = "it should return the default value")
   public void comment02() {
+    final EndDocumentFormatterBuilder subject;
+    subject = new EndDocumentFormatterBuilder();
+
+    final EndDocumentFormatter res;
+    res = subject.build(NewLine.LF);
+
+    assertEquals(res.comment, "END Objectos HTML");
+  }
+
+  @Test(description = "It should accept the specified value")
+  public void comment03() {
     final EndDocumentFormatterBuilder subject;
     subject = new EndDocumentFormatterBuilder();
 
     subject.comment("abc");
 
     final EndDocumentFormatter res;
-    res = subject.build();
+    res = subject.build(NewLine.LF);
 
     assertEquals(res.comment, "abc");
   }
 
-  @Test
-  public void comment03() {
+  @Test(description = "escape special characters")
+  public void comment04() {
     final EndDocumentFormatterBuilder subject;
     subject = new EndDocumentFormatterBuilder();
 
     subject.comment("-->");
 
     final EndDocumentFormatter res;
-    res = subject.build();
+    res = subject.build(NewLine.LF);
 
     assertEquals(res.comment, "--&gt;");
   }
 
+  @Test(
+      description = "reject null newLineStyle",
+      expectedExceptions = NullPointerException.class,
+      expectedExceptionsMessageRegExp = "value == null"
+  )
+  public void newLineStyle01() {
+    final EndDocumentFormatterBuilder subject;
+    subject = new EndDocumentFormatterBuilder();
+
+    subject.newLineStyle(null);
+  }
+
+  @Test(description = "default newLineStyle is IF_NOT_EMPTY")
+  public void newLineStyle02() {
+    final EndDocumentFormatterBuilder subject;
+    subject = new EndDocumentFormatterBuilder();
+
+    final EndDocumentFormatter res;
+    res = subject.build(NewLine.LF);
+
+    assertEquals(res.newLineStyle, NewLineOption.IF_NOT_EMPTY);
+  }
+
+  @Test(description = "accept the specified value")
+  public void newLineStyle03() {
+    final EndDocumentFormatterBuilder subject;
+    subject = new EndDocumentFormatterBuilder();
+
+    subject.newLineStyle(NewLineStyle.always());
+
+    final EndDocumentFormatter res;
+    res = subject.build(NewLine.LF);
+
+    assertEquals(res.newLineStyle, NewLineOption.ALWAYS);
+  }
 }

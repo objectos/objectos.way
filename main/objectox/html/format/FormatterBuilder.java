@@ -25,11 +25,11 @@ import objectos.html.format.FormatterOptions;
 
 public final class FormatterBuilder implements FormatterOptions {
 
-  private BeginDocumentFormatterBuilder beginDocumentFormatterBuilder;
+  private final BeginDocumentFormatterBuilder beginDocumentFormatterBuilder = new BeginDocumentFormatterBuilder();
 
   private final BeginStartTagFormatterBuilder beginStartTagFormatterBuilder = new BeginStartTagFormatterBuilder();
 
-  private EndDocumentFormatter endDocumentFormatter;
+  private final EndDocumentFormatterBuilder endDocumentFormatterBuilder = new EndDocumentFormatterBuilder();
 
   private String indentationText;
 
@@ -44,7 +44,7 @@ public final class FormatterBuilder implements FormatterOptions {
 
         beginStartTagFormatterBuilder.build(indentation),
 
-        endDocumentFormatter == null ? EndDocumentFormatter.STANDARD : endDocumentFormatter
+        endDocumentFormatterBuilder.build(newLine)
     );
   }
 
@@ -60,12 +60,7 @@ public final class FormatterBuilder implements FormatterOptions {
 
   @Override
   public final void endDocument(Consumer<? super EndDocumentOptions> opts) {
-    final EndDocumentFormatterBuilder builder;
-    builder = new EndDocumentFormatterBuilder();
-
-    opts.accept(builder);
-
-    endDocumentFormatter = builder.build();
+    opts.accept(endDocumentFormatterBuilder);
   }
 
   @Override

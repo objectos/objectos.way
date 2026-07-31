@@ -18,6 +18,7 @@ package objectox.html.format;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
+import objectos.html.format.NewLineStyle;
 import objectox.html.stream.EndDocumentEvent;
 import org.testng.annotations.Test;
 
@@ -36,13 +37,13 @@ public class EndDocumentFormatterTest {
     }
   }
 
-  @Test
+  @Test(description = "empty comment emits nothing")
   public void comment01() {
     final String comment;
-    comment = null;
+    comment = "";
 
     final EndDocumentFormatter subject;
-    subject = new EndDocumentFormatter(comment);
+    subject = new EndDocumentFormatter(comment, NewLine.LF, NewLineStyle.never());
 
     final EndDocumentEvent event;
     event = EndDocumentEvent.INSTANCE;
@@ -54,13 +55,49 @@ public class EndDocumentFormatterTest {
     );
   }
 
-  @Test
+  @Test(description = "non-empty comment emits comment without newline")
   public void comment02() {
     final String comment;
     comment = "END Objectos HTML";
 
     final EndDocumentFormatter subject;
-    subject = new EndDocumentFormatter(comment);
+    subject = new EndDocumentFormatter(comment, NewLine.LF, NewLineStyle.never());
+
+    final EndDocumentEvent event;
+    event = EndDocumentEvent.INSTANCE;
+
+    assertEquals(
+        format(subject, event),
+
+        "<!-- END Objectos HTML -->"
+    );
+  }
+
+  @Test(description = "always with empty comment emits newline")
+  public void newLineStyle01() {
+    final String comment;
+    comment = "";
+
+    final EndDocumentFormatter subject;
+    subject = new EndDocumentFormatter(comment, NewLine.LF, NewLineStyle.always());
+
+    final EndDocumentEvent event;
+    event = EndDocumentEvent.INSTANCE;
+
+    assertEquals(
+        format(subject, event),
+
+        "\n"
+    );
+  }
+
+  @Test(description = "always with non-empty comment emits comment and newline")
+  public void newLineStyle02() {
+    final String comment;
+    comment = "Test";
+
+    final EndDocumentFormatter subject;
+    subject = new EndDocumentFormatter(comment, NewLine.LF, NewLineStyle.always());
 
     final EndDocumentEvent event;
     event = EndDocumentEvent.INSTANCE;
@@ -69,8 +106,82 @@ public class EndDocumentFormatterTest {
         format(subject, event),
 
         """
-        <!-- END Objectos HTML -->
+        <!-- Test -->
         """
+    );
+  }
+
+  @Test(description = "ifNotEmpty with empty comment emits nothing")
+  public void newLineStyle03() {
+    final String comment;
+    comment = "";
+
+    final EndDocumentFormatter subject;
+    subject = new EndDocumentFormatter(comment, NewLine.LF, NewLineStyle.ifNotEmpty());
+
+    final EndDocumentEvent event;
+    event = EndDocumentEvent.INSTANCE;
+
+    assertEquals(
+        format(subject, event),
+
+        ""
+    );
+  }
+
+  @Test(description = "ifNotEmpty with non-empty comment emits comment and newline")
+  public void newLineStyle04() {
+    final String comment;
+    comment = "Test";
+
+    final EndDocumentFormatter subject;
+    subject = new EndDocumentFormatter(comment, NewLine.LF, NewLineStyle.ifNotEmpty());
+
+    final EndDocumentEvent event;
+    event = EndDocumentEvent.INSTANCE;
+
+    assertEquals(
+        format(subject, event),
+
+        """
+        <!-- Test -->
+        """
+    );
+  }
+
+  @Test(description = "never with empty comment emits nothing")
+  public void newLineStyle05() {
+    final String comment;
+    comment = "";
+
+    final EndDocumentFormatter subject;
+    subject = new EndDocumentFormatter(comment, NewLine.LF, NewLineStyle.never());
+
+    final EndDocumentEvent event;
+    event = EndDocumentEvent.INSTANCE;
+
+    assertEquals(
+        format(subject, event),
+
+        ""
+    );
+  }
+
+  @Test(description = "never with non-empty comment emits comment without newline")
+  public void newLineStyle06() {
+    final String comment;
+    comment = "Test";
+
+    final EndDocumentFormatter subject;
+    subject = new EndDocumentFormatter(comment, NewLine.LF, NewLineStyle.never());
+
+    final EndDocumentEvent event;
+    event = EndDocumentEvent.INSTANCE;
+
+    assertEquals(
+        format(subject, event),
+
+        "<!-- Test -->"
     );
   }
 

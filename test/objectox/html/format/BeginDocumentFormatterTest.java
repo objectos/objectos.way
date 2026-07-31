@@ -37,10 +37,10 @@ public class BeginDocumentFormatterTest {
     }
   }
 
-  @Test(description = "null comment emits nothing")
+  @Test(description = "empty comment emits nothing")
   public void comment01() {
     final String comment;
-    comment = null;
+    comment = "";
 
     final BeginDocumentFormatter subject;
     subject = new BeginDocumentFormatter(comment, NewLine.LF, NewLineStyle.never());
@@ -73,10 +73,10 @@ public class BeginDocumentFormatterTest {
     );
   }
 
-  @Test(description = "always with null comment emits newline")
+  @Test(description = "always with empty comment emits newline")
   public void newLineStyle01() {
     final String comment;
-    comment = null;
+    comment = "";
 
     final BeginDocumentFormatter subject;
     subject = new BeginDocumentFormatter(comment, NewLine.LF, NewLineStyle.always());
@@ -91,7 +91,7 @@ public class BeginDocumentFormatterTest {
     );
   }
 
-  @Test(description = "always with non-null comment emits comment and newline")
+  @Test(description = "always with non-empty comment emits comment and newline")
   public void newLineStyle02() {
     final String comment;
     comment = "Test";
@@ -111,10 +111,10 @@ public class BeginDocumentFormatterTest {
     );
   }
 
-  @Test(description = "ifNotEmpty with null comment emits nothing")
+  @Test(description = "ifNotEmpty with empty comment emits nothing")
   public void newLineStyle03() {
     final String comment;
-    comment = null;
+    comment = "";
 
     final BeginDocumentFormatter subject;
     subject = new BeginDocumentFormatter(comment, NewLine.LF, NewLineStyle.ifNotEmpty());
@@ -129,7 +129,7 @@ public class BeginDocumentFormatterTest {
     );
   }
 
-  @Test(description = "ifNotEmpty with non-null comment emits comment and newline")
+  @Test(description = "ifNotEmpty with non-empty comment emits comment and newline")
   public void newLineStyle04() {
     final String comment;
     comment = "Test";
@@ -149,10 +149,10 @@ public class BeginDocumentFormatterTest {
     );
   }
 
-  @Test(description = "never with null comment emits nothing")
+  @Test(description = "never with empty comment emits nothing")
   public void newLineStyle05() {
     final String comment;
-    comment = null;
+    comment = "";
 
     final BeginDocumentFormatter subject;
     subject = new BeginDocumentFormatter(comment, NewLine.LF, NewLineStyle.never());
@@ -167,7 +167,7 @@ public class BeginDocumentFormatterTest {
     );
   }
 
-  @Test(description = "never with non-null comment emits comment without newline")
+  @Test(description = "never with non-empty comment emits comment without newline")
   public void newLineStyle06() {
     final String comment;
     comment = "Test";

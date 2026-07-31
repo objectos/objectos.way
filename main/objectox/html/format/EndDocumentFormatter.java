@@ -16,25 +16,36 @@
 package objectox.html.format;
 
 import java.io.IOException;
+import objectos.html.format.NewLineStyle;
 import objectos.html.stream.EndDocument;
 
 final class EndDocumentFormatter {
 
-  public static final EndDocumentFormatter STANDARD = new EndDocumentFormatter("END Objectos HTML");
-
   final String comment;
 
-  EndDocumentFormatter(String comment) {
+  private final NewLine newLine;
+
+  final NewLineStyle newLineStyle;
+
+  EndDocumentFormatter(String comment, NewLine newLine, NewLineStyle newLineStyle) {
     this.comment = comment;
+
+    this.newLine = newLine;
+
+    this.newLineStyle = newLineStyle;
   }
 
   public final void format(EndDocument event, Appendable out) throws IOException {
-    if (comment != null) {
+    if (comment.isEmpty()) {
+      newLine.empty(newLineStyle, out);
+    } else {
       out.append("<!-- ");
 
       out.append(comment);
 
-      out.append(" -->\n");
+      out.append(" -->");
+
+      newLine.notEmpty(newLineStyle, out);
     }
   }
 
