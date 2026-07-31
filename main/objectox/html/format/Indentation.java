@@ -15,14 +15,31 @@
  */
 package objectox.html.format;
 
-import objectos.html.format.NewLineStyle;
+final class Indentation {
 
-public enum NewLineStyleEnum implements NewLineStyle {
+  private int level;
 
-  ALWAYS,
+  private final String text;
 
-  IF_NOT_EMPTY,
+  Indentation(String text) {
+    this.text = text;
+  }
 
-  NEVER;
+  public final void inc() {
+    level++;
+  }
+
+  public final void dec() {
+    if (level == 0) {
+      throw new IllegalStateException();
+    }
+
+    level--;
+  }
+
+  @Override
+  public final String toString() {
+    return text.repeat(level);
+  }
 
 }

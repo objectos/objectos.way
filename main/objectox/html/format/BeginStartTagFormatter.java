@@ -21,10 +21,10 @@ import objectos.html.stream.BeginStartTag;
 final class BeginStartTagFormatter {
 
   @SuppressWarnings("unused")
-  private final Ctx ctx;
+  private final Indentation indentation;
 
-  BeginStartTagFormatter(Ctx ctx) {
-    this.ctx = ctx;
+  BeginStartTagFormatter(Indentation indentation) {
+    this.indentation = indentation;
   }
 
   public final void format(BeginStartTag event, Appendable out) throws IOException {

@@ -24,19 +24,22 @@ public final class BeginDocumentFormatterBuilder implements BeginDocumentOptions
 
   private String comment;
 
-  private NewLineStyle newLineStyle;
+  private NewLineStyle newLineStyle = NewLineStyle.ifNotEmpty();
 
-  public final BeginDocumentFormatter build() {
+  public final BeginDocumentFormatter build(NewLine newLine) {
     return new BeginDocumentFormatter(
         comment,
-        newLineStyle == null ? NewLineStyle.ifNotEmpty() : newLineStyle
+
+        newLine,
+
+        newLineStyle
     );
   }
 
   @Override
   public final void comment(String value) {
     final String original;
-    original = Objects.requireNonNull(value);
+    original = Objects.requireNonNull(value, "value == null");
 
     final CommentEscaper escaper;
     escaper = new CommentEscaper(original);

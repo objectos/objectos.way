@@ -37,13 +37,13 @@ public class BeginDocumentFormatterTest {
     }
   }
 
-  @Test
+  @Test(description = "null comment emits nothing")
   public void comment01() {
     final String comment;
     comment = null;
 
     final BeginDocumentFormatter subject;
-    subject = new BeginDocumentFormatter(comment, NewLineStyle.ifNotEmpty());
+    subject = new BeginDocumentFormatter(comment, NewLine.LF, NewLineStyle.never());
 
     final BeginDocumentEvent event;
     event = BeginDocumentEvent.INSTANCE;
@@ -55,13 +55,13 @@ public class BeginDocumentFormatterTest {
     );
   }
 
-  @Test
+  @Test(description = "non-null comment emits comment without newline")
   public void comment02() {
     final String comment;
     comment = "BEGIN Objectos HTML";
 
     final BeginDocumentFormatter subject;
-    subject = new BeginDocumentFormatter(comment, NewLineStyle.ifNotEmpty());
+    subject = new BeginDocumentFormatter(comment, NewLine.LF, NewLineStyle.never());
 
     final BeginDocumentEvent event;
     event = BeginDocumentEvent.INSTANCE;
@@ -69,19 +69,35 @@ public class BeginDocumentFormatterTest {
     assertEquals(
         format(subject, event),
 
-        """
-        <!-- BEGIN Objectos HTML -->
-        """
+        "<!-- BEGIN Objectos HTML -->"
     );
   }
 
-  @Test
+  @Test(description = "always with null comment emits newline")
   public void newLineStyle01() {
+    final String comment;
+    comment = null;
+
+    final BeginDocumentFormatter subject;
+    subject = new BeginDocumentFormatter(comment, NewLine.LF, NewLineStyle.always());
+
+    final BeginDocumentEvent event;
+    event = BeginDocumentEvent.INSTANCE;
+
+    assertEquals(
+        format(subject, event),
+
+        "\n"
+    );
+  }
+
+  @Test(description = "always with non-null comment emits comment and newline")
+  public void newLineStyle02() {
     final String comment;
     comment = "Test";
 
     final BeginDocumentFormatter subject;
-    subject = new BeginDocumentFormatter(comment, NewLineStyle.always());
+    subject = new BeginDocumentFormatter(comment, NewLine.LF, NewLineStyle.always());
 
     final BeginDocumentEvent event;
     event = BeginDocumentEvent.INSTANCE;
@@ -95,31 +111,13 @@ public class BeginDocumentFormatterTest {
     );
   }
 
-  @Test
-  public void newLineStyle02() {
-    final String comment;
-    comment = "Test";
-
-    final BeginDocumentFormatter subject;
-    subject = new BeginDocumentFormatter(comment, NewLineStyle.never());
-
-    final BeginDocumentEvent event;
-    event = BeginDocumentEvent.INSTANCE;
-
-    assertEquals(
-        format(subject, event),
-
-        "<!-- Test -->"
-    );
-  }
-
-  @Test
+  @Test(description = "ifNotEmpty with null comment emits nothing")
   public void newLineStyle03() {
     final String comment;
     comment = null;
 
     final BeginDocumentFormatter subject;
-    subject = new BeginDocumentFormatter(comment, NewLineStyle.never());
+    subject = new BeginDocumentFormatter(comment, NewLine.LF, NewLineStyle.ifNotEmpty());
 
     final BeginDocumentEvent event;
     event = BeginDocumentEvent.INSTANCE;
@@ -128,6 +126,62 @@ public class BeginDocumentFormatterTest {
         format(subject, event),
 
         ""
+    );
+  }
+
+  @Test(description = "ifNotEmpty with non-null comment emits comment and newline")
+  public void newLineStyle04() {
+    final String comment;
+    comment = "Test";
+
+    final BeginDocumentFormatter subject;
+    subject = new BeginDocumentFormatter(comment, NewLine.LF, NewLineStyle.ifNotEmpty());
+
+    final BeginDocumentEvent event;
+    event = BeginDocumentEvent.INSTANCE;
+
+    assertEquals(
+        format(subject, event),
+
+        """
+        <!-- Test -->
+        """
+    );
+  }
+
+  @Test(description = "never with null comment emits nothing")
+  public void newLineStyle05() {
+    final String comment;
+    comment = null;
+
+    final BeginDocumentFormatter subject;
+    subject = new BeginDocumentFormatter(comment, NewLine.LF, NewLineStyle.never());
+
+    final BeginDocumentEvent event;
+    event = BeginDocumentEvent.INSTANCE;
+
+    assertEquals(
+        format(subject, event),
+
+        ""
+    );
+  }
+
+  @Test(description = "never with non-null comment emits comment without newline")
+  public void newLineStyle06() {
+    final String comment;
+    comment = "Test";
+
+    final BeginDocumentFormatter subject;
+    subject = new BeginDocumentFormatter(comment, NewLine.LF, NewLineStyle.never());
+
+    final BeginDocumentEvent event;
+    event = BeginDocumentEvent.INSTANCE;
+
+    assertEquals(
+        format(subject, event),
+
+        "<!-- Test -->"
     );
   }
 

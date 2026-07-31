@@ -25,22 +25,24 @@ import objectos.html.format.FormatterOptions;
 
 public final class FormatterBuilder implements FormatterOptions {
 
-  private BeginDocumentFormatter beginDocumentFormatter;
+  private BeginDocumentFormatterBuilder beginDocumentFormatterBuilder;
 
   private final BeginStartTagFormatterBuilder beginStartTagFormatterBuilder = new BeginStartTagFormatterBuilder();
 
   private EndDocumentFormatter endDocumentFormatter;
 
-  private String indentation = "  ";
+  private String indentationText;
+
+  private final NewLine newLine = NewLine.LF;
 
   public final Formatter build() {
-    final Ctx ctx;
-    ctx = new Ctx(indentation);
+    final Indentation indentation;
+    indentation = new Indentation(indentationText);
 
     return new FormatterPojo(
-        beginDocumentFormatter == null ? BeginDocumentFormatter.STANDARD : beginDocumentFormatter,
+        beginDocumentFormatterBuilder.build(newLine),
 
-        beginStartTagFormatterBuilder.build(ctx),
+        beginStartTagFormatterBuilder.build(indentation),
 
         endDocumentFormatter == null ? EndDocumentFormatter.STANDARD : endDocumentFormatter
     );
@@ -48,12 +50,7 @@ public final class FormatterBuilder implements FormatterOptions {
 
   @Override
   public final void beginDocument(Consumer<? super BeginDocumentOptions> opts) {
-    final BeginDocumentFormatterBuilder builder;
-    builder = new BeginDocumentFormatterBuilder();
-
-    opts.accept(builder);
-
-    beginDocumentFormatter = builder.build();
+    opts.accept(beginDocumentFormatterBuilder);
   }
 
   @Override
@@ -93,7 +90,7 @@ public final class FormatterBuilder implements FormatterOptions {
       throw new IllegalArgumentException(msg);
     }
 
-    indentation = v;
+    indentationText = v;
   }
 
 }

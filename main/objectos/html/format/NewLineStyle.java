@@ -15,19 +15,19 @@
  */
 package objectos.html.format;
 
-import objectox.html.format.NewLineStyleEnum;
+import objectox.html.format.NewLineOption;
 
 /// Configures when to emit new lines during formatting. New lines are typically
 /// emitted *after* the event.
 public sealed interface NewLineStyle
     permits
-    NewLineStyleEnum {
+    NewLineOption {
 
   /// Returns a style that always emits a new line on an event.
   ///
   /// @return a style that always emits a new line on an event
   static NewLineStyle always() {
-    return NewLineStyleEnum.ALWAYS;
+    return NewLineOption.ALWAYS;
   }
 
   /// Returns a style that emits a new line if the event is considered to be
@@ -35,14 +35,14 @@ public sealed interface NewLineStyle
   ///
   /// @return a style that emits a new line if the event is "not empty"
   static NewLineStyle ifNotEmpty() {
-    return NewLineStyleEnum.IF_NOT_EMPTY;
+    return NewLineOption.IF_NOT_EMPTY;
   }
 
   /// Returns a style that never emits a new line on an event.
   ///
   /// @return a style that never emits a new line on an event
   static NewLineStyle never() {
-    return NewLineStyleEnum.NEVER;
+    return NewLineOption.NEVER;
   }
 
 }

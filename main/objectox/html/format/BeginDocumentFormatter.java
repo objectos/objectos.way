@@ -21,16 +21,16 @@ import objectos.html.stream.BeginDocument;
 
 final class BeginDocumentFormatter {
 
-  public static final BeginDocumentFormatter STANDARD = new BeginDocumentFormatter(
-      "BEGIN Objectos HTML", NewLineStyle.ifNotEmpty()
-  );
-
   final String comment;
+
+  private final NewLine newLine;
 
   final NewLineStyle newLineStyle;
 
-  BeginDocumentFormatter(String comment, NewLineStyle newLineStyle) {
+  BeginDocumentFormatter(String comment, NewLine newLine, NewLineStyle newLineStyle) {
     this.comment = comment;
+
+    this.newLine = newLine;
 
     this.newLineStyle = newLineStyle;
   }
@@ -43,9 +43,9 @@ final class BeginDocumentFormatter {
 
       out.append(" -->");
 
-      if (newLineStyle != NewLineStyleEnum.NEVER) {
-        out.append('\n');
-      }
+      newLine.notEmpty(newLineStyle, out);
+    } else {
+      newLine.empty(newLineStyle, out);
     }
   }
 

@@ -22,78 +22,88 @@ import org.testng.annotations.Test;
 
 public class BeginDocumentFormatterBuilderTest {
 
-  @Test(description = "it should return the default value")
+  @Test(
+      description = "reject null comment",
+      expectedExceptions = NullPointerException.class,
+      expectedExceptionsMessageRegExp = "value == null"
+  )
   public void comment01() {
     final BeginDocumentFormatterBuilder subject;
     subject = new BeginDocumentFormatterBuilder();
 
+    subject.comment(null);
+  }
+
+  @Test(description = "it should return the default value")
+  public void comment02() {
+    final BeginDocumentFormatterBuilder subject;
+    subject = new BeginDocumentFormatterBuilder();
+
     final BeginDocumentFormatter res;
-    res = subject.build();
+    res = subject.build(NewLine.LF);
 
     assertEquals(res.comment, null);
   }
 
   @Test(description = "It should accept the specified value")
-  public void comment02() {
+  public void comment03() {
     final BeginDocumentFormatterBuilder subject;
     subject = new BeginDocumentFormatterBuilder();
 
     subject.comment("abc");
 
     final BeginDocumentFormatter res;
-    res = subject.build();
+    res = subject.build(NewLine.LF);
 
     assertEquals(res.comment, "abc");
   }
 
-  @Test
-  public void comment03() {
+  @Test(description = "escape special characters")
+  public void comment04() {
     final BeginDocumentFormatterBuilder subject;
     subject = new BeginDocumentFormatterBuilder();
 
     subject.comment("-->");
 
     final BeginDocumentFormatter res;
-    res = subject.build();
+    res = subject.build(NewLine.LF);
 
     assertEquals(res.comment, "--&gt;");
   }
 
-  @Test
+  @Test(
+      description = "reject null newLineStyle",
+      expectedExceptions = NullPointerException.class,
+      expectedExceptionsMessageRegExp = "value == null"
+  )
   public void newLineStyle01() {
     final BeginDocumentFormatterBuilder subject;
     subject = new BeginDocumentFormatterBuilder();
 
-    final BeginDocumentFormatter res;
-    res = subject.build();
-
-    assertEquals(res.newLineStyle, NewLineStyleEnum.IF_NOT_EMPTY);
+    subject.newLineStyle(null);
   }
 
-  @Test
+  @Test(description = "default newLineStyle is IF_NOT_EMPTY")
   public void newLineStyle02() {
+    final BeginDocumentFormatterBuilder subject;
+    subject = new BeginDocumentFormatterBuilder();
+
+    final BeginDocumentFormatter res;
+    res = subject.build(NewLine.LF);
+
+    assertEquals(res.newLineStyle, NewLineOption.IF_NOT_EMPTY);
+  }
+
+  @Test(description = "accept the specified value")
+  public void newLineStyle03() {
     final BeginDocumentFormatterBuilder subject;
     subject = new BeginDocumentFormatterBuilder();
 
     subject.newLineStyle(NewLineStyle.always());
 
     final BeginDocumentFormatter res;
-    res = subject.build();
+    res = subject.build(NewLine.LF);
 
-    assertEquals(res.newLineStyle, NewLineStyleEnum.ALWAYS);
+    assertEquals(res.newLineStyle, NewLineOption.ALWAYS);
   }
-
-  @Test
-  public void newLineStyle03() {
-    final BeginDocumentFormatterBuilder subject;
-    subject = new BeginDocumentFormatterBuilder();
-
-    subject.newLineStyle(NewLineStyle.never());
-
-    final BeginDocumentFormatter res;
-    res = subject.build();
-
-    assertEquals(res.newLineStyle, NewLineStyleEnum.NEVER);
-  }
-
 }

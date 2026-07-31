@@ -15,30 +15,14 @@
  */
 package objectox.html.format;
 
-final class Ctx {
+import objectos.html.format.NewLineStyle;
 
-  private final String indentation;
+public enum NewLineOption implements NewLineStyle {
 
-  private int indentationLevel;
+  ALWAYS,
 
-  Ctx(String indentation) {
-    this.indentation = indentation;
-  }
+  IF_NOT_EMPTY,
 
-  public final String indentation() {
-    return indentation.repeat(indentationLevel);
-  }
-
-  public final void indentationInc() {
-    indentationLevel++;
-  }
-
-  public final void indentationDec() {
-    if (indentationLevel == 0) {
-      throw new IllegalStateException();
-    }
-
-    indentationLevel--;
-  }
+  NEVER;
 
 }

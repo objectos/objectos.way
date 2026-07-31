@@ -20,7 +20,7 @@ import objectos.html.format.IndentationStyle;
 
 public final class BeginStartTagFormatterBuilder implements BeginStartTagOptions {
 
-  public final BeginStartTagFormatter build(Ctx ctx) {
+  public final BeginStartTagFormatter build(Indentation ctx) {
     return new BeginStartTagFormatter(ctx);
   }
 
