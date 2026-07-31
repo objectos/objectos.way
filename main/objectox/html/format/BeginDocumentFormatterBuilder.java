@@ -22,7 +22,7 @@ import objectox.html.markup.CommentEscaper;
 
 public final class BeginDocumentFormatterBuilder implements BeginDocumentOptions {
 
-  private String comment;
+  private String comment = "BEGIN Objectos HTML";
 
   private NewLineStyle newLineStyle = NewLineStyle.ifNotEmpty();
 

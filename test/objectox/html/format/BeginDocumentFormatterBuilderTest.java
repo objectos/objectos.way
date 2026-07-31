@@ -42,7 +42,7 @@ public class BeginDocumentFormatterBuilderTest {
     final BeginDocumentFormatter res;
     res = subject.build(NewLine.LF);
 
-    assertEquals(res.comment, null);
+    assertEquals(res.comment, "BEGIN Objectos HTML");
   }
 
   @Test(description = "It should accept the specified value")

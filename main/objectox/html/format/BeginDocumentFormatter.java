@@ -36,7 +36,9 @@ final class BeginDocumentFormatter {
   }
 
   public final void format(BeginDocument event, Appendable out) throws IOException {
-    if (comment != null) {
+    if (comment.isEmpty()) {
+      newLine.empty(newLineStyle, out);
+    } else {
       out.append("<!-- ");
 
       out.append(comment);
@@ -44,8 +46,6 @@ final class BeginDocumentFormatter {
       out.append(" -->");
 
       newLine.notEmpty(newLineStyle, out);
-    } else {
-      newLine.empty(newLineStyle, out);
     }
   }
 
