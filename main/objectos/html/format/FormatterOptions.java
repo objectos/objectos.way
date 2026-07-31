@@ -17,6 +17,7 @@ package objectos.html.format;
 
 import java.util.function.Consumer;
 import objectos.html.stream.BeginDocument;
+import objectos.html.stream.BeginStartTag;
 import objectos.html.stream.EndDocument;
 import objectox.html.format.FormatterBuilder;
 
@@ -30,9 +31,24 @@ public sealed interface FormatterOptions
   /// @param opts allows for setting the options
   void beginDocument(Consumer<? super BeginDocumentOptions> opts);
 
+  /// Sets the [BeginStartTag] options.
+  ///
+  /// @param opts allows for setting the options
+  void beginStartTag(Consumer<? super BeginStartTagOptions> opts);
+
   /// Sets the [EndDocument] options.
   ///
   /// @param opts allows for setting the options
   void endDocument(Consumer<? super EndDocumentOptions> opts);
+
+  /// Sets the indentation unit to the specified value. If not set, the
+  /// formatter defaults to the `"\u0020\u0020"` string, i.e., two space
+  /// characters.
+  ///
+  /// The string may only contain characters for which the method
+  /// [Character#isWhitespace] returns `true`.
+  ///
+  /// @param value the string to use as indentation unit
+  void indentation(String value);
 
 }

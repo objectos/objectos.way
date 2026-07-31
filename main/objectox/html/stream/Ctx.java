@@ -27,7 +27,6 @@ class Ctx {
 
   private boolean computed;
 
-  @SuppressWarnings("unused")
   private final Object[] objects;
 
   private Event result;

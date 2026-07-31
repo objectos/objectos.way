@@ -18,6 +18,7 @@ package objectox.html.format;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
+import objectos.html.format.NewLineStyle;
 import objectox.html.stream.BeginDocumentEvent;
 import org.testng.annotations.Test;
 
@@ -42,7 +43,7 @@ public class BeginDocumentFormatterTest {
     comment = null;
 
     final BeginDocumentFormatter subject;
-    subject = new BeginDocumentFormatter(comment);
+    subject = new BeginDocumentFormatter(comment, NewLineStyle.ifNotEmpty());
 
     final BeginDocumentEvent event;
     event = BeginDocumentEvent.INSTANCE;
@@ -60,7 +61,7 @@ public class BeginDocumentFormatterTest {
     comment = "BEGIN Objectos HTML";
 
     final BeginDocumentFormatter subject;
-    subject = new BeginDocumentFormatter(comment);
+    subject = new BeginDocumentFormatter(comment, NewLineStyle.ifNotEmpty());
 
     final BeginDocumentEvent event;
     event = BeginDocumentEvent.INSTANCE;
@@ -71,6 +72,62 @@ public class BeginDocumentFormatterTest {
         """
         <!-- BEGIN Objectos HTML -->
         """
+    );
+  }
+
+  @Test
+  public void newLineStyle01() {
+    final String comment;
+    comment = "Test";
+
+    final BeginDocumentFormatter subject;
+    subject = new BeginDocumentFormatter(comment, NewLineStyle.always());
+
+    final BeginDocumentEvent event;
+    event = BeginDocumentEvent.INSTANCE;
+
+    assertEquals(
+        format(subject, event),
+
+        """
+        <!-- Test -->
+        """
+    );
+  }
+
+  @Test
+  public void newLineStyle02() {
+    final String comment;
+    comment = "Test";
+
+    final BeginDocumentFormatter subject;
+    subject = new BeginDocumentFormatter(comment, NewLineStyle.never());
+
+    final BeginDocumentEvent event;
+    event = BeginDocumentEvent.INSTANCE;
+
+    assertEquals(
+        format(subject, event),
+
+        "<!-- Test -->"
+    );
+  }
+
+  @Test
+  public void newLineStyle03() {
+    final String comment;
+    comment = null;
+
+    final BeginDocumentFormatter subject;
+    subject = new BeginDocumentFormatter(comment, NewLineStyle.never());
+
+    final BeginDocumentEvent event;
+    event = BeginDocumentEvent.INSTANCE;
+
+    assertEquals(
+        format(subject, event),
+
+        ""
     );
   }
 

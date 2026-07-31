@@ -16,16 +16,23 @@
 package objectox.html.format;
 
 import java.io.IOException;
+import objectos.html.format.NewLineStyle;
 import objectos.html.stream.BeginDocument;
 
 final class BeginDocumentFormatter {
 
-  public static final BeginDocumentFormatter STANDARD = new BeginDocumentFormatter("BEGIN Objectos HTML");
+  public static final BeginDocumentFormatter STANDARD = new BeginDocumentFormatter(
+      "BEGIN Objectos HTML", NewLineStyle.ifNotEmpty()
+  );
 
   final String comment;
 
-  BeginDocumentFormatter(String comment) {
+  final NewLineStyle newLineStyle;
+
+  BeginDocumentFormatter(String comment, NewLineStyle newLineStyle) {
     this.comment = comment;
+
+    this.newLineStyle = newLineStyle;
   }
 
   public final void format(BeginDocument event, Appendable out) throws IOException {
@@ -34,7 +41,11 @@ final class BeginDocumentFormatter {
 
       out.append(comment);
 
-      out.append(" -->\n");
+      out.append(" -->");
+
+      if (newLineStyle != NewLineStyleEnum.NEVER) {
+        out.append('\n');
+      }
     }
   }
 

@@ -17,11 +17,12 @@ package objectox.html.format;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.html.format.NewLineStyle;
 import org.testng.annotations.Test;
 
 public class BeginDocumentFormatterBuilderTest {
 
-  @Test
+  @Test(description = "it should return the default value")
   public void comment01() {
     final BeginDocumentFormatterBuilder subject;
     subject = new BeginDocumentFormatterBuilder();
@@ -32,7 +33,7 @@ public class BeginDocumentFormatterBuilderTest {
     assertEquals(res.comment, null);
   }
 
-  @Test
+  @Test(description = "It should accept the specified value")
   public void comment02() {
     final BeginDocumentFormatterBuilder subject;
     subject = new BeginDocumentFormatterBuilder();
@@ -56,6 +57,43 @@ public class BeginDocumentFormatterBuilderTest {
     res = subject.build();
 
     assertEquals(res.comment, "--&gt;");
+  }
+
+  @Test
+  public void newLineStyle01() {
+    final BeginDocumentFormatterBuilder subject;
+    subject = new BeginDocumentFormatterBuilder();
+
+    final BeginDocumentFormatter res;
+    res = subject.build();
+
+    assertEquals(res.newLineStyle, NewLineStyleEnum.IF_NOT_EMPTY);
+  }
+
+  @Test
+  public void newLineStyle02() {
+    final BeginDocumentFormatterBuilder subject;
+    subject = new BeginDocumentFormatterBuilder();
+
+    subject.newLineStyle(NewLineStyle.always());
+
+    final BeginDocumentFormatter res;
+    res = subject.build();
+
+    assertEquals(res.newLineStyle, NewLineStyleEnum.ALWAYS);
+  }
+
+  @Test
+  public void newLineStyle03() {
+    final BeginDocumentFormatterBuilder subject;
+    subject = new BeginDocumentFormatterBuilder();
+
+    subject.newLineStyle(NewLineStyle.never());
+
+    final BeginDocumentFormatter res;
+    res = subject.build();
+
+    assertEquals(res.newLineStyle, NewLineStyleEnum.NEVER);
   }
 
 }

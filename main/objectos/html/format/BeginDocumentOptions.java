@@ -28,4 +28,10 @@ public sealed interface BeginDocumentOptions
   /// @param value the comment
   void comment(String value);
 
+  /// Sets the new line style to the specified value. Defaults to
+  /// [NewLineStyle#ifNotEmpty] if not set.
+  ///
+  /// @param value the new line style
+  void newLineStyle(NewLineStyle value);
+
 }

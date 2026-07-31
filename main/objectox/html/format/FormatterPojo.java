@@ -30,14 +30,20 @@ public final class FormatterPojo implements Formatter {
 
   private final BeginDocumentFormatter beginDocumentFormatter;
 
+  private final BeginStartTagFormatter beginStartTagFormatter;
+
   private final EndDocumentFormatter endDocumentFormatter;
 
   FormatterPojo(
       BeginDocumentFormatter beginDocumentFormatter,
 
+      BeginStartTagFormatter beginStartTagFormatter,
+
       EndDocumentFormatter endDocumentFormatter
   ) {
     this.beginDocumentFormatter = beginDocumentFormatter;
+
+    this.beginStartTagFormatter = beginStartTagFormatter;
 
     this.endDocumentFormatter = endDocumentFormatter;
   }
@@ -47,7 +53,7 @@ public final class FormatterPojo implements Formatter {
     switch (event) {
       case BeginDocument begin -> beginDocumentFormatter.format(begin, out);
 
-      case BeginStartTag begin -> beginStartTag(begin, out);
+      case BeginStartTag begin -> beginStartTagFormatter.format(begin, out);
 
       case EndStartTag end -> endStartTag(end, out);
 
@@ -59,12 +65,6 @@ public final class FormatterPojo implements Formatter {
 
       case EndDocument end -> endDocumentFormatter.format(end, out);
     }
-  }
-
-  private void beginStartTag(BeginStartTag event, Appendable out) throws IOException {
-    out.append('<');
-
-    out.append(event.name());
   }
 
   private void endStartTag(EndStartTag event, Appendable out) throws IOException {

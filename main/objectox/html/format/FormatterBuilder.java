@@ -15,8 +15,10 @@
  */
 package objectox.html.format;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 import objectos.html.format.BeginDocumentOptions;
+import objectos.html.format.BeginStartTagOptions;
 import objectos.html.format.EndDocumentOptions;
 import objectos.html.format.Formatter;
 import objectos.html.format.FormatterOptions;
@@ -25,11 +27,20 @@ public final class FormatterBuilder implements FormatterOptions {
 
   private BeginDocumentFormatter beginDocumentFormatter;
 
+  private final BeginStartTagFormatterBuilder beginStartTagFormatterBuilder = new BeginStartTagFormatterBuilder();
+
   private EndDocumentFormatter endDocumentFormatter;
 
+  private String indentation = "  ";
+
   public final Formatter build() {
+    final Ctx ctx;
+    ctx = new Ctx(indentation);
+
     return new FormatterPojo(
         beginDocumentFormatter == null ? BeginDocumentFormatter.STANDARD : beginDocumentFormatter,
+
+        beginStartTagFormatterBuilder.build(ctx),
 
         endDocumentFormatter == null ? EndDocumentFormatter.STANDARD : endDocumentFormatter
     );
@@ -46,6 +57,11 @@ public final class FormatterBuilder implements FormatterOptions {
   }
 
   @Override
+  public final void beginStartTag(Consumer<? super BeginStartTagOptions> opts) {
+    opts.accept(beginStartTagFormatterBuilder);
+  }
+
+  @Override
   public final void endDocument(Consumer<? super EndDocumentOptions> opts) {
     final EndDocumentFormatterBuilder builder;
     builder = new EndDocumentFormatterBuilder();
@@ -53,6 +69,31 @@ public final class FormatterBuilder implements FormatterOptions {
     opts.accept(builder);
 
     endDocumentFormatter = builder.build();
+  }
+
+  @Override
+  public final void indentation(String value) {
+    final String v;
+    v = Objects.requireNonNull(value, "value == null");
+
+    if (v.isEmpty()) {
+      final String msg;
+      msg = "Invalid indentation: it may not be empty";
+
+      throw new IllegalArgumentException(msg);
+    }
+
+    final boolean allWhitespace;
+    allWhitespace = v.chars().allMatch(Character::isWhitespace);
+
+    if (!allWhitespace) {
+      final String msg;
+      msg = "Invalid indentation: it may onlhy contain whitespace characters";
+
+      throw new IllegalArgumentException(msg);
+    }
+
+    indentation = v;
   }
 
 }

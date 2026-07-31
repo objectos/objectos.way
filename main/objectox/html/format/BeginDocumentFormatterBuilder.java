@@ -17,14 +17,20 @@ package objectox.html.format;
 
 import java.util.Objects;
 import objectos.html.format.BeginDocumentOptions;
+import objectos.html.format.NewLineStyle;
 import objectox.html.markup.CommentEscaper;
 
 public final class BeginDocumentFormatterBuilder implements BeginDocumentOptions {
 
   private String comment;
 
+  private NewLineStyle newLineStyle;
+
   public final BeginDocumentFormatter build() {
-    return new BeginDocumentFormatter(comment);
+    return new BeginDocumentFormatter(
+        comment,
+        newLineStyle == null ? NewLineStyle.ifNotEmpty() : newLineStyle
+    );
   }
 
   @Override
@@ -36,6 +42,11 @@ public final class BeginDocumentFormatterBuilder implements BeginDocumentOptions
     escaper = new CommentEscaper(original);
 
     comment = escaper.escape();
+  }
+
+  @Override
+  public final void newLineStyle(NewLineStyle value) {
+    newLineStyle = Objects.requireNonNull(value, "value == null");
   }
 
 }
