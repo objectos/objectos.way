@@ -23,15 +23,16 @@ public sealed interface BeginDocumentOptions
     permits
     BeginDocumentFormatterBuilder {
 
-  /// Emits the specified comment on an event.
+  /// Emits the specified comment on an event. If the specified value is the
+  /// empty string, then the comment markup is not emitted.
   ///
-  /// @param value the comment
+  /// @param value the comment, not null
   void comment(String value);
 
   /// Sets the new line style to the specified value. Defaults to
   /// [NewLineStyle#ifNotEmpty] if not set.
   ///
-  /// @param value the new line style
+  /// @param value the new line style, not null
   void newLineStyle(NewLineStyle value);
 
 }
