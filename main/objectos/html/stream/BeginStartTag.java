@@ -17,7 +17,7 @@ package objectos.html.stream;
 
 import objectox.html.stream.BeginStartTagEvent;
 
-/// The start tag of an HTML element has begun.
+/// This event begins an start tag of an HTML element.
 public sealed interface BeginStartTag
     extends Event
     permits BeginStartTagEvent {

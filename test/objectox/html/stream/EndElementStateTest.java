@@ -17,7 +17,6 @@ package objectox.html.stream;
 
 import static org.testng.Assert.assertEquals;
 
-import objectox.html.IntSize;
 import objectox.html.attr.AttributeNamePojo;
 import objectox.html.elem.ElementNamePojo;
 import objectox.html.markup.HtmlBytes;
@@ -66,8 +65,7 @@ public class EndElementStateTest {
       opts.addByte(HtmlBytes.ENDTAG8);
       opts.addInt8(ElementNamePojo.HTML.index());
 
-      opts.push(ScanDocumentNodeFrame.of(7));
-      opts.push(new ScanElementNodeFrame(10, IntSize.BIT8, 1));
+      opts.push(ScanDocumentNodeFrame.of(10));
     });
 
     final EndElementState subject;

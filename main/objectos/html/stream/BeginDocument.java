@@ -17,7 +17,7 @@ package objectos.html.stream;
 
 import objectox.html.stream.BeginDocumentEvent;
 
-/// The HTML document has begun.
+/// This event begins an HTML document.
 public sealed interface BeginDocument
     extends Event
     permits BeginDocumentEvent {}

@@ -17,7 +17,14 @@ package objectos.html.stream;
 
 import objectox.html.stream.EndStartTagEvent;
 
-/// The start tag of an HTML element has ended.
+/// This event ends the start tag of an HTML element.
 public sealed interface EndStartTag
     extends Event
-    permits EndStartTagEvent {}
+    permits EndStartTagEvent {
+
+  /// Returns the kind of this end start tag event.
+  ///
+  /// @return the kind of this end start tag event
+  EndStartTagKind kind();
+
+}

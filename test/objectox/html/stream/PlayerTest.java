@@ -63,7 +63,7 @@ public class PlayerTest {
         """
         BeginDocument
         BeginStartTag(html)
-        EndStartTag
+        EndStartTag(empty)
         RenderEndTag(html)
         EndDocument
         """
@@ -83,7 +83,7 @@ public class PlayerTest {
         BeginDocument
         BeginStartTag(html)
         RenderAttribute(lang, pt-BR)
-        EndStartTag
+        EndStartTag(empty)
         RenderEndTag(html)
         EndDocument
         """
@@ -103,7 +103,7 @@ public class PlayerTest {
         BeginDocument
         BeginStartTag(html)
         RenderBooleanAttribute(autofocus)
-        EndStartTag
+        EndStartTag(empty)
         RenderEndTag(html)
         EndDocument
         """
@@ -124,7 +124,7 @@ public class PlayerTest {
         BeginStartTag(html)
         EndStartTag
         BeginStartTag(head)
-        EndStartTag
+        EndStartTag(empty)
         RenderEndTag(head)
         RenderEndTag(html)
         EndDocument

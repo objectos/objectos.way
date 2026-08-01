@@ -33,6 +33,16 @@ final class ScanElementNodeFrame extends Frame {
     this.length = length;
   }
 
+  ScanElementNodeFrame(int index, IntSize size, int length, int current) {
+    super(index);
+
+    this.size = size;
+
+    this.length = length;
+
+    this.current = current;
+  }
+
   public final boolean hasNext() {
     return current < length;
   }

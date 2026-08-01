@@ -82,6 +82,37 @@ public class ScanElementNodeStateTest {
     assertEquals(ctx.nextByte(), HtmlBytes.ENDTAG8);
   }
 
+  @Test(description = """
+  <html lang="pt-BR"></html>
+  """)
+  public void compute02b() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeNamePojo.LANG.index());
+      opts.addInt8(opts.addObject("pt-BR"));
+      opts.addByte(HtmlBytes.STARTTAG8);
+      opts.addInt8(ElementNamePojo.HTML.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ENDTAG8);
+      opts.addInt8(ElementNamePojo.HTML.index());
+
+      opts.push(ScanDocumentNodeFrame.of(7));
+      opts.push(new ScanElementNodeFrame(8, IntSize.BIT8, 1, 1));
+    });
+
+    final ScanElementNodeState subject;
+    subject = new ScanElementNodeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res.getClass(), RenderEndTagState.class);
+    assertEquals(ctx.hasEvent(), false);
+  }
+
   @Test(description = "<html><head></head></html>")
   public void compute04() {
     final Ctx ctx;

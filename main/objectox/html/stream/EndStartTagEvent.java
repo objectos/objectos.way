@@ -16,17 +16,27 @@
 package objectox.html.stream;
 
 import objectos.html.stream.EndStartTag;
+import objectos.html.stream.EndStartTagKind;
 
-public final class EndStartTagEvent implements EndStartTag {
+public record EndStartTagEvent(EndStartTagKind kind) implements EndStartTag {
 
-  static final EndStartTagEvent INSTANCE = new EndStartTagEvent();
-
-  private EndStartTagEvent() {
+  public static EndStartTagEvent of(EndStartTagKind kind) {
+    return new EndStartTagEvent(kind);
   }
 
   @Override
   public final String toString() {
-    return "EndStartTag";
+    return "EndStartTag" + suffix();
+  }
+
+  private String suffix() {
+    return switch (kind) {
+      case ELEMENT -> "";
+
+      case EMPTY_ELEMENT -> "(empty)";
+
+      case VOID_ELEMENT -> "(void)";
+    };
   }
 
 }

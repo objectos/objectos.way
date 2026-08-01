@@ -17,7 +17,7 @@ package objectos.html.stream;
 
 import objectox.html.stream.EndDocumentEvent;
 
-/// The HTML document has ended.
+/// This event ends an HTML document.
 public sealed interface EndDocument
     extends Event
     permits EndDocumentEvent {}

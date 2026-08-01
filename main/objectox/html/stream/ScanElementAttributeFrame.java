@@ -19,11 +19,17 @@ import objectox.html.IntSize;
 
 final class ScanElementAttributeFrame extends Frame {
 
-  private final IntSize size;
+  private int childTextCount;
+
+  private int childRawCount;
+
+  private int childElementCount;
 
   private int current;
 
   private final int length;
+
+  private final IntSize size;
 
   ScanElementAttributeFrame(int index, IntSize size, int length) {
     super(index);
@@ -33,19 +39,47 @@ final class ScanElementAttributeFrame extends Frame {
     this.length = length;
   }
 
+  ScanElementAttributeFrame(int index, IntSize size, int length, int current) {
+    super(index);
+
+    this.current = current;
+
+    this.size = size;
+
+    this.length = length;
+  }
+
+  public final void childElement() {
+    childElementCount++;
+  }
+
+  public final void childRaw() {
+    childRawCount++;
+  }
+
+  public final void childText() {
+    childTextCount++;
+  }
+
+  public final boolean emptyElement() {
+    return childElementCount == 0
+        && childRawCount == 0
+        && childTextCount == 0;
+  }
+
   public final boolean hasNext() {
     return current < length;
+  }
+
+  @Override
+  public final State newState(Ctx ctx) {
+    return new ScanElementAttributeState(ctx);
   }
 
   public final int nextInt(Ctx ctx) {
     current += 1;
 
     return ctx.nextInt(size);
-  }
-
-  @Override
-  public final State newState(Ctx ctx) {
-    return new ScanElementAttributeState(ctx);
   }
 
 }

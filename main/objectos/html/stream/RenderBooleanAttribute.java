@@ -17,7 +17,7 @@ package objectos.html.stream;
 
 import objectox.html.stream.RenderBooleanAttributeEvent;
 
-/// Render a boolean attribute in an element start tag.
+/// This event renders a boolean attribute in an element start tag.
 public sealed interface RenderBooleanAttribute
     extends Event
     permits RenderBooleanAttributeEvent {

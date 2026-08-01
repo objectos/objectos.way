@@ -37,8 +37,7 @@ public class ScanDocumentNodeStateTest {
     res = subject.compute();
 
     assertEquals(res.getClass(), EndDocumentState.class);
-    assertEquals(ctx.hasEvent(), true);
-    assertEquals(ctx.nextEvent(), EndDocumentEvent.INSTANCE);
+    assertEquals(ctx.hasEvent(), false);
   }
 
   @Test(description = "<html></html>")

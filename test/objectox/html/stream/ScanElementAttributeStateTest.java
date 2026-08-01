@@ -17,6 +17,7 @@ package objectox.html.stream;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.html.stream.EndStartTagKind;
 import objectox.html.IntSize;
 import objectox.html.attr.AttributeNamePojo;
 import objectox.html.elem.ElementNamePojo;
@@ -48,7 +49,7 @@ public class ScanElementAttributeStateTest {
 
     assertEquals(res.getClass(), ScanElementNodeState.class);
     assertEquals(ctx.hasEvent(), true);
-    assertEquals(ctx.nextEvent(), EndStartTagEvent.INSTANCE);
+    assertEquals(ctx.nextEvent(), EndStartTagEvent.of(EndStartTagKind.EMPTY_ELEMENT));
   }
 
   @Test(description = """
@@ -81,6 +82,38 @@ public class ScanElementAttributeStateTest {
     assertEquals(res.getClass(), RenderAttributeState.class);
     assertEquals(ctx.hasEvent(), false);
     assertEquals(ctx.nextInt(IntSize.BIT8), AttributeNamePojo.LANG.index());
+  }
+
+  @Test(description = """
+  <html lang="pt-BR"></html>
+  """)
+  public void compute02b() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeNamePojo.LANG.index());
+      opts.addInt8(opts.addObject("pt-BR"));
+      opts.addByte(HtmlBytes.STARTTAG8);
+      opts.addInt8(ElementNamePojo.HTML.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ENDTAG8);
+      opts.addInt8(ElementNamePojo.HTML.index());
+
+      opts.push(new ScanElementNodeFrame(7, IntSize.BIT8, 1));
+      opts.push(new ScanElementAttributeFrame(8, IntSize.BIT8, 1, 1));
+    });
+
+    final ScanElementAttributeState subject;
+    subject = new ScanElementAttributeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res.getClass(), ScanElementNodeState.class);
+    assertEquals(ctx.hasEvent(), true);
+    assertEquals(ctx.nextEvent(), EndStartTagEvent.of(EndStartTagKind.EMPTY_ELEMENT));
   }
 
   @Test(description = """
@@ -144,6 +177,113 @@ public class ScanElementAttributeStateTest {
 
     assertEquals(res.getClass(), ScanElementAttributeState.class);
     assertEquals(ctx.hasEvent(), false);
+  }
+
+  @Test(description = "<html><head></head></html>")
+  public void compute04b() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xSTARTTAG8);
+      opts.addInt8(ElementNamePojo.HEAD.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ENDTAG8);
+      opts.addInt8(ElementNamePojo.HEAD.index());
+      opts.addByte(HtmlBytes.STARTTAG8);
+      opts.addInt8(ElementNamePojo.HTML.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ENDTAG8);
+      opts.addInt8(ElementNamePojo.HTML.index());
+
+      opts.push(new ScanElementNodeFrame(10, IntSize.BIT8, 1));
+
+      final ScanElementAttributeFrame f;
+      f = new ScanElementAttributeFrame(11, IntSize.BIT8, 1, 1);
+
+      f.childElement();
+
+      opts.push(f);
+    });
+
+    final ScanElementAttributeState subject;
+    subject = new ScanElementAttributeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res.getClass(), ScanElementNodeState.class);
+    assertEquals(ctx.hasEvent(), true);
+    assertEquals(ctx.nextEvent(), EndStartTagEvent.of(EndStartTagKind.ELEMENT));
+  }
+
+  @Test(description = """
+  <head><meta charset="UTF-8"></head>
+  """)
+  public void compute05() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeNamePojo.CHARSET.index());
+      opts.addInt8(opts.addObject("UTF-8"));
+      opts.addByte(HtmlBytes.xSTARTTAG8);
+      opts.addInt8(ElementNamePojo.META.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.VOIDELEM);
+      opts.addByte(HtmlBytes.STARTTAG8);
+      opts.addInt8(ElementNamePojo.HEAD.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(3);
+      opts.addByte(HtmlBytes.ENDTAG8);
+      opts.addInt8(ElementNamePojo.HEAD.index());
+
+      opts.push(new ScanElementNodeFrame(13, IntSize.BIT8, 1));
+      opts.push(new ScanElementAttributeFrame(13, IntSize.BIT8, 1));
+    });
+
+    final ScanElementAttributeState subject;
+    subject = new ScanElementAttributeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res.getClass(), ScanElementAttributeState.class);
+    assertEquals(ctx.hasEvent(), false);
+  }
+
+  @Test(description = """
+  <head><meta charset="UTF-8"></head>
+  """)
+  public void compute05b() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.ATTRIBUTE88);
+      opts.addInt8(AttributeNamePojo.CHARSET.index());
+      opts.addInt8(opts.addObject("UTF-8"));
+      opts.addByte(HtmlBytes.xSTARTTAG8);
+      opts.addInt8(ElementNamePojo.META.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.VOIDELEM);
+
+      opts.push(new ScanElementNodeFrame(7, IntSize.BIT8, 1));
+      opts.push(new ScanElementAttributeFrame(8, IntSize.BIT8, 1, 1));
+    });
+
+    final ScanElementAttributeState subject;
+    subject = new ScanElementAttributeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res.getClass(), ScanElementNodeState.class);
+    assertEquals(ctx.hasEvent(), true);
+    assertEquals(ctx.nextEvent(), EndStartTagEvent.of(EndStartTagKind.VOID_ELEMENT));
   }
 
 }

@@ -15,6 +15,7 @@
  */
 package objectox.html.stream;
 
+import objectos.html.stream.EndStartTagKind;
 import objectox.html.IntSize;
 import objectox.html.markup.HtmlBytes;
 
@@ -56,20 +57,63 @@ final class ScanElementAttributeState implements State {
     return switch (code) {
       case HtmlBytes.xATTRIBUTE88 -> new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT8);
 
+      case HtmlBytes.xATTRIBUTE816 -> new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT16);
+
+      case HtmlBytes.xATTRIBUTE824 -> new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT24);
+
       case HtmlBytes.xBOOLEAN8 -> new RenderBooleanAttributeState(ctx, IntSize.BIT8);
 
-      case HtmlBytes.xSTARTTAG8 -> skip();
+      case HtmlBytes.xSTARTTAG8 -> {
+        frame.childElement();
+
+        yield skip();
+      }
+
+      case HtmlBytes.xTEXT8, HtmlBytes.xTEXT16, HtmlBytes.xTEXT24 -> {
+        frame.childText();
+
+        yield skip();
+      }
+
+      case HtmlBytes.xRAW8, HtmlBytes.xRAW16, HtmlBytes.xRAW24 -> {
+        frame.childRaw();
+
+        yield skip();
+      }
 
       default -> throw State.implCode(code);
     };
   }
 
   private State end() {
-    ctx.pop();
+    final EndStartTagKind kind;
+    kind = endKind();
 
-    ctx.result(EndStartTagEvent.INSTANCE);
+    final EndStartTagEvent event;
+    event = new EndStartTagEvent(kind);
+
+    ctx.result(event);
 
     return new ScanElementNodeState(ctx);
+  }
+
+  private EndStartTagKind endKind() {
+    final byte peek;
+    peek = ctx.peekByte();
+
+    final Frame f;
+    f = ctx.pop();
+
+    if (peek == HtmlBytes.VOIDELEM) {
+      return EndStartTagKind.VOID_ELEMENT;
+    }
+
+    final ScanElementAttributeFrame frame;
+    frame = f.as(ScanElementAttributeFrame.class);
+
+    return frame.emptyElement()
+        ? EndStartTagKind.EMPTY_ELEMENT
+        : EndStartTagKind.ELEMENT;
   }
 
   private State skip() {

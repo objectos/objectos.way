@@ -17,7 +17,7 @@ package objectos.html.stream;
 
 import objectox.html.stream.RenderAttributeEvent;
 
-/// Render a non-boolean attribute in an element start tag.
+/// This event renders a non-boolean attribute in an element start tag.
 public sealed interface RenderAttribute
     extends Event
     permits RenderAttributeEvent {

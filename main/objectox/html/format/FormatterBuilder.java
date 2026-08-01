@@ -44,6 +44,14 @@ public final class FormatterBuilder implements FormatterOptions {
 
         beginStartTagFormatterBuilder.build(indentation),
 
+        new RenderAttributeFormatter(),
+
+        new RenderBooleanAttributeFormatter(),
+
+        new EndStartTagFormatter(indentation, newLine),
+
+        new RenderEndTagFormatter(indentation, newLine),
+
         endDocumentFormatterBuilder.build(newLine)
     );
   }
