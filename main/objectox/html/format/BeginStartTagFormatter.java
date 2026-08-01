@@ -22,7 +22,7 @@ final class BeginStartTagFormatter {
 
   private final Indentation indentation;
 
-  private final IndentationStyle indentationStyle;
+  final IndentationStyle indentationStyle;
 
   BeginStartTagFormatter(Indentation indentation, IndentationStyle indentationStyle) {
     this.indentation = indentation;

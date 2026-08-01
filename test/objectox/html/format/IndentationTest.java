@@ -17,6 +17,7 @@ package objectox.html.format;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.html.format.IndentationStyle;
 import org.testng.annotations.Test;
 
 public class IndentationTest {
@@ -72,6 +73,84 @@ public class IndentationTest {
     subject = new Indentation("  ");
 
     subject.dec();
+  }
+
+  @Test(description = "format with NEVER does not append anything")
+  public void format01() {
+    final Indentation subject;
+    subject = new Indentation("  ");
+
+    subject.inc();
+    subject.inc();
+
+    final char[] buf;
+    buf = new char[10];
+
+    final Output out;
+    out = Output.wrap(buf, 0, buf.length);
+
+    subject.format(IndentationStyle.never(), out);
+
+    assertEquals(out.toString(), "");
+  }
+
+  @Test(description = "format with START_OF_LINE appends when output is empty")
+  public void format02() {
+    final Indentation subject;
+    subject = new Indentation("  ");
+
+    subject.inc();
+    subject.inc();
+
+    final char[] buf;
+    buf = new char[10];
+
+    final Output out;
+    out = Output.wrap(buf, 0, buf.length);
+
+    subject.format(IndentationStyle.startOfLine(), out);
+
+    assertEquals(out.toString(), "    ");
+  }
+
+  @Test(description = "format with START_OF_LINE appends after newline")
+  public void format03() {
+    final Indentation subject;
+    subject = new Indentation("  ");
+
+    subject.inc();
+
+    final char[] buf;
+    buf = new char[10];
+
+    final Output out;
+    out = Output.wrap(buf, 0, buf.length);
+
+    out.append("hello\n");
+
+    subject.format(IndentationStyle.startOfLine(), out);
+
+    assertEquals(out.toString(), "hello\n  ");
+  }
+
+  @Test(description = "format with START_OF_LINE does not append when not at start of line")
+  public void format04() {
+    final Indentation subject;
+    subject = new Indentation("  ");
+
+    subject.inc();
+
+    final char[] buf;
+    buf = new char[10];
+
+    final Output out;
+    out = Output.wrap(buf, 0, buf.length);
+
+    out.append("hello");
+
+    subject.format(IndentationStyle.startOfLine(), out);
+
+    assertEquals(out.toString(), "hello");
   }
 
 }

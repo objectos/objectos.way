@@ -21,7 +21,8 @@ public final class EndStartTagEvent implements EndStartTag {
 
   static final EndStartTagEvent INSTANCE = new EndStartTagEvent();
 
-  private EndStartTagEvent() {}
+  private EndStartTagEvent() {
+  }
 
   @Override
   public final String toString() {

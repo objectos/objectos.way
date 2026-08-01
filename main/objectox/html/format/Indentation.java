@@ -46,7 +46,11 @@ final class Indentation {
     switch (style) {
       case IndentationOption.NEVER -> {}
 
-      case IndentationOption.START_OF_LINE -> {}
+      case IndentationOption.START_OF_LINE -> {
+        if (out.startOfLine()) {
+          out.append(toString());
+        }
+      }
     }
   }
 
