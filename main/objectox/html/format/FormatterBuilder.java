@@ -34,7 +34,7 @@ public final class FormatterBuilder implements FormatterOptions {
 
   private final EndStartTagFormatterBuilder endStartTagFormatterBuilder = new EndStartTagFormatterBuilder();
 
-  private String indentationText;
+  private String indentationText = "  ";
 
   private final NewLine newLine = NewLine.LF;
 

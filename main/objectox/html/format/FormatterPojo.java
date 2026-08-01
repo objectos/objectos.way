@@ -80,7 +80,7 @@ public final class FormatterPojo implements Formatter {
   }
 
   private void format(Event event, Output out) {
-    throw new UnsupportedOperationException("Implement me :: type=" + event.getClass().getSimpleName());
+    // noop
   }
 
 }

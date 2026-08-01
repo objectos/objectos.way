@@ -23,12 +23,12 @@ import org.testng.annotations.Test;
 
 public class BeginDocumentFormatterTest {
 
-  private String format(BeginDocumentFormatter subject, BeginDocumentEvent event) {
-    final char[] buf;
-    buf = new char[256];
+  private String format(BeginDocumentFormatter subject) {
+    final BeginDocumentEvent event;
+    event = BeginDocumentEvent.INSTANCE;
 
     final Output out;
-    out = Output.wrap(buf, 0, buf.length);
+    out = OutputY.create();
 
     subject.format(event, out);
 
@@ -40,14 +40,17 @@ public class BeginDocumentFormatterTest {
     final String comment;
     comment = "";
 
-    final BeginDocumentFormatter subject;
-    subject = new BeginDocumentFormatter(comment, NewLine.LF, NewLineStyle.never());
+    final NewLine newLine;
+    newLine = NewLine.LF;
 
-    final BeginDocumentEvent event;
-    event = BeginDocumentEvent.INSTANCE;
+    final NewLineStyle newLineStyle;
+    newLineStyle = NewLineStyle.never();
+
+    final BeginDocumentFormatter subject;
+    subject = new BeginDocumentFormatter(comment, newLine, newLineStyle);
 
     assertEquals(
-        format(subject, event),
+        format(subject),
 
         ""
     );
@@ -58,14 +61,17 @@ public class BeginDocumentFormatterTest {
     final String comment;
     comment = "BEGIN Objectos HTML";
 
-    final BeginDocumentFormatter subject;
-    subject = new BeginDocumentFormatter(comment, NewLine.LF, NewLineStyle.never());
+    final NewLine newLine;
+    newLine = NewLine.LF;
 
-    final BeginDocumentEvent event;
-    event = BeginDocumentEvent.INSTANCE;
+    final NewLineStyle newLineStyle;
+    newLineStyle = NewLineStyle.never();
+
+    final BeginDocumentFormatter subject;
+    subject = new BeginDocumentFormatter(comment, newLine, newLineStyle);
 
     assertEquals(
-        format(subject, event),
+        format(subject),
 
         "<!-- BEGIN Objectos HTML -->"
     );
@@ -76,14 +82,17 @@ public class BeginDocumentFormatterTest {
     final String comment;
     comment = "";
 
-    final BeginDocumentFormatter subject;
-    subject = new BeginDocumentFormatter(comment, NewLine.LF, NewLineStyle.always());
+    final NewLine newLine;
+    newLine = NewLine.LF;
 
-    final BeginDocumentEvent event;
-    event = BeginDocumentEvent.INSTANCE;
+    final NewLineStyle newLineStyle;
+    newLineStyle = NewLineStyle.always();
+
+    final BeginDocumentFormatter subject;
+    subject = new BeginDocumentFormatter(comment, newLine, newLineStyle);
 
     assertEquals(
-        format(subject, event),
+        format(subject),
 
         "\n"
     );
@@ -94,14 +103,17 @@ public class BeginDocumentFormatterTest {
     final String comment;
     comment = "Test";
 
-    final BeginDocumentFormatter subject;
-    subject = new BeginDocumentFormatter(comment, NewLine.LF, NewLineStyle.always());
+    final NewLine newLine;
+    newLine = NewLine.LF;
 
-    final BeginDocumentEvent event;
-    event = BeginDocumentEvent.INSTANCE;
+    final NewLineStyle newLineStyle;
+    newLineStyle = NewLineStyle.always();
+
+    final BeginDocumentFormatter subject;
+    subject = new BeginDocumentFormatter(comment, newLine, newLineStyle);
 
     assertEquals(
-        format(subject, event),
+        format(subject),
 
         """
         <!-- Test -->
@@ -114,14 +126,17 @@ public class BeginDocumentFormatterTest {
     final String comment;
     comment = "";
 
-    final BeginDocumentFormatter subject;
-    subject = new BeginDocumentFormatter(comment, NewLine.LF, NewLineStyle.ifNotEmpty());
+    final NewLine newLine;
+    newLine = NewLine.LF;
 
-    final BeginDocumentEvent event;
-    event = BeginDocumentEvent.INSTANCE;
+    final NewLineStyle newLineStyle;
+    newLineStyle = NewLineStyle.ifNotEmpty();
+
+    final BeginDocumentFormatter subject;
+    subject = new BeginDocumentFormatter(comment, newLine, newLineStyle);
 
     assertEquals(
-        format(subject, event),
+        format(subject),
 
         ""
     );
@@ -132,14 +147,17 @@ public class BeginDocumentFormatterTest {
     final String comment;
     comment = "Test";
 
-    final BeginDocumentFormatter subject;
-    subject = new BeginDocumentFormatter(comment, NewLine.LF, NewLineStyle.ifNotEmpty());
+    final NewLine newLine;
+    newLine = NewLine.LF;
 
-    final BeginDocumentEvent event;
-    event = BeginDocumentEvent.INSTANCE;
+    final NewLineStyle newLineStyle;
+    newLineStyle = NewLineStyle.ifNotEmpty();
+
+    final BeginDocumentFormatter subject;
+    subject = new BeginDocumentFormatter(comment, newLine, newLineStyle);
 
     assertEquals(
-        format(subject, event),
+        format(subject),
 
         """
         <!-- Test -->
@@ -152,14 +170,17 @@ public class BeginDocumentFormatterTest {
     final String comment;
     comment = "";
 
-    final BeginDocumentFormatter subject;
-    subject = new BeginDocumentFormatter(comment, NewLine.LF, NewLineStyle.never());
+    final NewLine newLine;
+    newLine = NewLine.LF;
 
-    final BeginDocumentEvent event;
-    event = BeginDocumentEvent.INSTANCE;
+    final NewLineStyle newLineStyle;
+    newLineStyle = NewLineStyle.never();
+
+    final BeginDocumentFormatter subject;
+    subject = new BeginDocumentFormatter(comment, newLine, newLineStyle);
 
     assertEquals(
-        format(subject, event),
+        format(subject),
 
         ""
     );
@@ -170,14 +191,17 @@ public class BeginDocumentFormatterTest {
     final String comment;
     comment = "Test";
 
-    final BeginDocumentFormatter subject;
-    subject = new BeginDocumentFormatter(comment, NewLine.LF, NewLineStyle.never());
+    final NewLine newLine;
+    newLine = NewLine.LF;
 
-    final BeginDocumentEvent event;
-    event = BeginDocumentEvent.INSTANCE;
+    final NewLineStyle newLineStyle;
+    newLineStyle = NewLineStyle.never();
+
+    final BeginDocumentFormatter subject;
+    subject = new BeginDocumentFormatter(comment, newLine, newLineStyle);
 
     assertEquals(
-        format(subject, event),
+        format(subject),
 
         "<!-- Test -->"
     );

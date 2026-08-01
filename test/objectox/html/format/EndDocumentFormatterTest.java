@@ -23,12 +23,12 @@ import org.testng.annotations.Test;
 
 public class EndDocumentFormatterTest {
 
-  private String format(EndDocumentFormatter subject, EndDocumentEvent event) {
-    final char[] buf;
-    buf = new char[256];
+  private String format(EndDocumentFormatter subject) {
+    final EndDocumentEvent event;
+    event = EndDocumentEvent.INSTANCE;
 
     final Output out;
-    out = Output.wrap(buf, 0, buf.length);
+    out = OutputY.create();
 
     subject.format(event, out);
 
@@ -40,14 +40,17 @@ public class EndDocumentFormatterTest {
     final String comment;
     comment = "";
 
-    final EndDocumentFormatter subject;
-    subject = new EndDocumentFormatter(comment, NewLine.LF, NewLineStyle.never());
+    final NewLine newLine;
+    newLine = NewLine.LF;
 
-    final EndDocumentEvent event;
-    event = EndDocumentEvent.INSTANCE;
+    final NewLineStyle newLineStyle;
+    newLineStyle = NewLineStyle.never();
+
+    final EndDocumentFormatter subject;
+    subject = new EndDocumentFormatter(comment, newLine, newLineStyle);
 
     assertEquals(
-        format(subject, event),
+        format(subject),
 
         ""
     );
@@ -58,14 +61,17 @@ public class EndDocumentFormatterTest {
     final String comment;
     comment = "END Objectos HTML";
 
-    final EndDocumentFormatter subject;
-    subject = new EndDocumentFormatter(comment, NewLine.LF, NewLineStyle.never());
+    final NewLine newLine;
+    newLine = NewLine.LF;
 
-    final EndDocumentEvent event;
-    event = EndDocumentEvent.INSTANCE;
+    final NewLineStyle newLineStyle;
+    newLineStyle = NewLineStyle.never();
+
+    final EndDocumentFormatter subject;
+    subject = new EndDocumentFormatter(comment, newLine, newLineStyle);
 
     assertEquals(
-        format(subject, event),
+        format(subject),
 
         "<!-- END Objectos HTML -->"
     );
@@ -76,14 +82,17 @@ public class EndDocumentFormatterTest {
     final String comment;
     comment = "";
 
-    final EndDocumentFormatter subject;
-    subject = new EndDocumentFormatter(comment, NewLine.LF, NewLineStyle.always());
+    final NewLine newLine;
+    newLine = NewLine.LF;
 
-    final EndDocumentEvent event;
-    event = EndDocumentEvent.INSTANCE;
+    final NewLineStyle newLineStyle;
+    newLineStyle = NewLineStyle.always();
+
+    final EndDocumentFormatter subject;
+    subject = new EndDocumentFormatter(comment, newLine, newLineStyle);
 
     assertEquals(
-        format(subject, event),
+        format(subject),
 
         "\n"
     );
@@ -94,14 +103,17 @@ public class EndDocumentFormatterTest {
     final String comment;
     comment = "Test";
 
-    final EndDocumentFormatter subject;
-    subject = new EndDocumentFormatter(comment, NewLine.LF, NewLineStyle.always());
+    final NewLine newLine;
+    newLine = NewLine.LF;
 
-    final EndDocumentEvent event;
-    event = EndDocumentEvent.INSTANCE;
+    final NewLineStyle newLineStyle;
+    newLineStyle = NewLineStyle.always();
+
+    final EndDocumentFormatter subject;
+    subject = new EndDocumentFormatter(comment, newLine, newLineStyle);
 
     assertEquals(
-        format(subject, event),
+        format(subject),
 
         """
         <!-- Test -->
@@ -114,14 +126,17 @@ public class EndDocumentFormatterTest {
     final String comment;
     comment = "";
 
-    final EndDocumentFormatter subject;
-    subject = new EndDocumentFormatter(comment, NewLine.LF, NewLineStyle.ifNotEmpty());
+    final NewLine newLine;
+    newLine = NewLine.LF;
 
-    final EndDocumentEvent event;
-    event = EndDocumentEvent.INSTANCE;
+    final NewLineStyle newLineStyle;
+    newLineStyle = NewLineStyle.ifNotEmpty();
+
+    final EndDocumentFormatter subject;
+    subject = new EndDocumentFormatter(comment, newLine, newLineStyle);
 
     assertEquals(
-        format(subject, event),
+        format(subject),
 
         ""
     );
@@ -132,14 +147,17 @@ public class EndDocumentFormatterTest {
     final String comment;
     comment = "Test";
 
-    final EndDocumentFormatter subject;
-    subject = new EndDocumentFormatter(comment, NewLine.LF, NewLineStyle.ifNotEmpty());
+    final NewLine newLine;
+    newLine = NewLine.LF;
 
-    final EndDocumentEvent event;
-    event = EndDocumentEvent.INSTANCE;
+    final NewLineStyle newLineStyle;
+    newLineStyle = NewLineStyle.ifNotEmpty();
+
+    final EndDocumentFormatter subject;
+    subject = new EndDocumentFormatter(comment, newLine, newLineStyle);
 
     assertEquals(
-        format(subject, event),
+        format(subject),
 
         """
         <!-- Test -->
@@ -152,14 +170,17 @@ public class EndDocumentFormatterTest {
     final String comment;
     comment = "";
 
-    final EndDocumentFormatter subject;
-    subject = new EndDocumentFormatter(comment, NewLine.LF, NewLineStyle.never());
+    final NewLine newLine;
+    newLine = NewLine.LF;
 
-    final EndDocumentEvent event;
-    event = EndDocumentEvent.INSTANCE;
+    final NewLineStyle newLineStyle;
+    newLineStyle = NewLineStyle.never();
+
+    final EndDocumentFormatter subject;
+    subject = new EndDocumentFormatter(comment, newLine, newLineStyle);
 
     assertEquals(
-        format(subject, event),
+        format(subject),
 
         ""
     );
@@ -170,14 +191,17 @@ public class EndDocumentFormatterTest {
     final String comment;
     comment = "Test";
 
-    final EndDocumentFormatter subject;
-    subject = new EndDocumentFormatter(comment, NewLine.LF, NewLineStyle.never());
+    final NewLine newLine;
+    newLine = NewLine.LF;
 
-    final EndDocumentEvent event;
-    event = EndDocumentEvent.INSTANCE;
+    final NewLineStyle newLineStyle;
+    newLineStyle = NewLineStyle.never();
+
+    final EndDocumentFormatter subject;
+    subject = new EndDocumentFormatter(comment, newLine, newLineStyle);
 
     assertEquals(
-        format(subject, event),
+        format(subject),
 
         "<!-- Test -->"
     );

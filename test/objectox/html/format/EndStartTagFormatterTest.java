@@ -26,11 +26,8 @@ import org.testng.annotations.Test;
 public class EndStartTagFormatterTest {
 
   private String format(EndStartTagFormatter subject, EndStartTag event) {
-    final char[] buf;
-    buf = new char[256];
-
     final Output out;
-    out = Output.wrap(buf, 0, buf.length);
+    out = OutputY.create();
 
     subject.format(event, out);
 
@@ -42,8 +39,14 @@ public class EndStartTagFormatterTest {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
+    final NewLine newLine;
+    newLine = NewLine.LF;
+
+    final NewLineStyle newLineStyle;
+    newLineStyle = NewLineStyle.always();
+
     final EndStartTagFormatter subject;
-    subject = new EndStartTagFormatter(indentation, NewLine.LF, NewLineStyle.always());
+    subject = new EndStartTagFormatter(indentation, newLine, newLineStyle);
 
     final EndStartTag event;
     event = new EndStartTagEvent(EndStartTagKind.ELEMENT);
@@ -62,8 +65,14 @@ public class EndStartTagFormatterTest {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
+    final NewLine newLine;
+    newLine = NewLine.LF;
+
+    final NewLineStyle newLineStyle;
+    newLineStyle = NewLineStyle.always();
+
     final EndStartTagFormatter subject;
-    subject = new EndStartTagFormatter(indentation, NewLine.LF, NewLineStyle.always());
+    subject = new EndStartTagFormatter(indentation, newLine, newLineStyle);
 
     final EndStartTag event;
     event = new EndStartTagEvent(EndStartTagKind.VOID_ELEMENT);
@@ -82,8 +91,14 @@ public class EndStartTagFormatterTest {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
+    final NewLine newLine;
+    newLine = NewLine.LF;
+
+    final NewLineStyle newLineStyle;
+    newLineStyle = NewLineStyle.always();
+
     final EndStartTagFormatter subject;
-    subject = new EndStartTagFormatter(indentation, NewLine.LF, NewLineStyle.always());
+    subject = new EndStartTagFormatter(indentation, newLine, newLineStyle);
 
     final EndStartTag event;
     event = new EndStartTagEvent(EndStartTagKind.EMPTY_ELEMENT);
@@ -102,8 +117,14 @@ public class EndStartTagFormatterTest {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
+    final NewLine newLine;
+    newLine = NewLine.LF;
+
+    final NewLineStyle newLineStyle;
+    newLineStyle = NewLineStyle.never();
+
     final EndStartTagFormatter subject;
-    subject = new EndStartTagFormatter(indentation, NewLine.LF, NewLineStyle.never());
+    subject = new EndStartTagFormatter(indentation, newLine, newLineStyle);
 
     final EndStartTag event;
     event = new EndStartTagEvent(EndStartTagKind.ELEMENT);
@@ -122,8 +143,14 @@ public class EndStartTagFormatterTest {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
+    final NewLine newLine;
+    newLine = NewLine.LF;
+
+    final NewLineStyle newLineStyle;
+    newLineStyle = NewLineStyle.never();
+
     final EndStartTagFormatter subject;
-    subject = new EndStartTagFormatter(indentation, NewLine.LF, NewLineStyle.never());
+    subject = new EndStartTagFormatter(indentation, newLine, newLineStyle);
 
     final EndStartTag event;
     event = new EndStartTagEvent(EndStartTagKind.VOID_ELEMENT);
@@ -142,8 +169,14 @@ public class EndStartTagFormatterTest {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
+    final NewLine newLine;
+    newLine = NewLine.LF;
+
+    final NewLineStyle newLineStyle;
+    newLineStyle = NewLineStyle.never();
+
     final EndStartTagFormatter subject;
-    subject = new EndStartTagFormatter(indentation, NewLine.LF, NewLineStyle.never());
+    subject = new EndStartTagFormatter(indentation, newLine, newLineStyle);
 
     final EndStartTag event;
     event = new EndStartTagEvent(EndStartTagKind.EMPTY_ELEMENT);
@@ -162,8 +195,14 @@ public class EndStartTagFormatterTest {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
+    final NewLine newLine;
+    newLine = NewLine.LF;
+
+    final NewLineStyle newLineStyle;
+    newLineStyle = NewLineStyle.ifNotEmpty();
+
     final EndStartTagFormatter subject;
-    subject = new EndStartTagFormatter(indentation, NewLine.LF, NewLineStyle.ifNotEmpty());
+    subject = new EndStartTagFormatter(indentation, newLine, newLineStyle);
 
     final EndStartTag event;
     event = new EndStartTagEvent(EndStartTagKind.ELEMENT);
@@ -182,8 +221,14 @@ public class EndStartTagFormatterTest {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
+    final NewLine newLine;
+    newLine = NewLine.LF;
+
+    final NewLineStyle newLineStyle;
+    newLineStyle = NewLineStyle.ifNotEmpty();
+
     final EndStartTagFormatter subject;
-    subject = new EndStartTagFormatter(indentation, NewLine.LF, NewLineStyle.ifNotEmpty());
+    subject = new EndStartTagFormatter(indentation, newLine, newLineStyle);
 
     final EndStartTag event;
     event = new EndStartTagEvent(EndStartTagKind.VOID_ELEMENT);
@@ -202,8 +247,14 @@ public class EndStartTagFormatterTest {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
+    final NewLine newLine;
+    newLine = NewLine.LF;
+
+    final NewLineStyle newLineStyle;
+    newLineStyle = NewLineStyle.ifNotEmpty();
+
     final EndStartTagFormatter subject;
-    subject = new EndStartTagFormatter(indentation, NewLine.LF, NewLineStyle.ifNotEmpty());
+    subject = new EndStartTagFormatter(indentation, newLine, newLineStyle);
 
     final EndStartTag event;
     event = new EndStartTagEvent(EndStartTagKind.EMPTY_ELEMENT);

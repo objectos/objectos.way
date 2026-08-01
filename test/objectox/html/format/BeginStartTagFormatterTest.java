@@ -25,12 +25,26 @@ import org.testng.annotations.Test;
 
 public class BeginStartTagFormatterTest {
 
-  private String format(BeginStartTagFormatter subject, BeginStartTag event) {
-    final char[] buf;
-    buf = new char[256];
+  private String format(BeginStartTagFormatter subject) {
+    final BeginStartTag event;
+    event = new BeginStartTagEvent(ElementNamePojo.DIV);
 
     final Output out;
-    out = Output.wrap(buf, 0, buf.length);
+    out = OutputY.create();
+
+    subject.format(event, out);
+
+    return out.toString();
+  }
+
+  private String format(BeginStartTagFormatter subject, String text) {
+    final BeginStartTag event;
+    event = new BeginStartTagEvent(ElementNamePojo.DIV);
+
+    final Output out;
+    out = OutputY.create(opts -> {
+      opts.text = text;
+    });
 
     subject.format(event, out);
 
@@ -42,14 +56,14 @@ public class BeginStartTagFormatterTest {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
-    final BeginStartTagFormatter subject;
-    subject = new BeginStartTagFormatter(indentation, IndentationStyle.never());
+    final IndentationStyle indentationStyle;
+    indentationStyle = IndentationStyle.never();
 
-    final BeginStartTag event;
-    event = new BeginStartTagEvent(ElementNamePojo.DIV);
+    final BeginStartTagFormatter subject;
+    subject = new BeginStartTagFormatter(indentation, indentationStyle);
 
     assertEquals(
-        format(subject, event),
+        format(subject),
 
         "<div"
     );
@@ -62,14 +76,14 @@ public class BeginStartTagFormatterTest {
 
     indentation.inc();
 
-    final BeginStartTagFormatter subject;
-    subject = new BeginStartTagFormatter(indentation, IndentationStyle.startOfLine());
+    final IndentationStyle indentationStyle;
+    indentationStyle = IndentationStyle.startOfLine();
 
-    final BeginStartTag event;
-    event = new BeginStartTagEvent(ElementNamePojo.DIV);
+    final BeginStartTagFormatter subject;
+    subject = new BeginStartTagFormatter(indentation, indentationStyle);
 
     assertEquals(
-        format(subject, event),
+        format(subject),
 
         "  <div"
     );
@@ -82,23 +96,17 @@ public class BeginStartTagFormatterTest {
 
     indentation.inc();
 
+    final IndentationStyle indentationStyle;
+    indentationStyle = IndentationStyle.startOfLine();
+
     final BeginStartTagFormatter subject;
-    subject = new BeginStartTagFormatter(indentation, IndentationStyle.startOfLine());
+    subject = new BeginStartTagFormatter(indentation, indentationStyle);
 
-    final char[] buf;
-    buf = new char[256];
+    assertEquals(
+        format(subject, "text"),
 
-    final Output out;
-    out = Output.wrap(buf, 0, buf.length);
-
-    out.append("text");
-
-    final BeginStartTag event;
-    event = new BeginStartTagEvent(ElementNamePojo.DIV);
-
-    subject.format(event, out);
-
-    assertEquals(out.toString(), "text<div");
+        "text<div"
+    );
   }
 
   @Test(description = "multiple indentation levels")
@@ -107,18 +115,19 @@ public class BeginStartTagFormatterTest {
     indentation = new Indentation("  ");
 
     indentation.inc();
+
     indentation.inc();
 
-    final BeginStartTagFormatter subject;
-    subject = new BeginStartTagFormatter(indentation, IndentationStyle.startOfLine());
+    final IndentationStyle indentationStyle;
+    indentationStyle = IndentationStyle.startOfLine();
 
-    final BeginStartTag event;
-    event = new BeginStartTagEvent(ElementNamePojo.SPAN);
+    final BeginStartTagFormatter subject;
+    subject = new BeginStartTagFormatter(indentation, indentationStyle);
 
     assertEquals(
-        format(subject, event),
+        format(subject),
 
-        "    <span"
+        "    <div"
     );
   }
 
