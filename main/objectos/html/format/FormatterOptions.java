@@ -19,6 +19,7 @@ import java.util.function.Consumer;
 import objectos.html.stream.BeginDocument;
 import objectos.html.stream.BeginStartTag;
 import objectos.html.stream.EndDocument;
+import objectos.html.stream.EndStartTag;
 import objectox.html.format.FormatterBuilder;
 
 /// Configures the creation of a [Formatter] instance.
@@ -40,6 +41,11 @@ public sealed interface FormatterOptions
   ///
   /// @param opts allows for setting the options
   void endDocument(Consumer<? super EndDocumentOptions> opts);
+
+  /// Sets the [EndStartTag] options.
+  ///
+  /// @param opts allows for setting the options
+  void endStartTag(Consumer<? super EndStartTagOptions> opts);
 
   /// Sets the indentation unit to the specified value. If not set, the
   /// formatter defaults to the `"\u0020\u0020"` string, i.e., two space

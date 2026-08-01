@@ -20,6 +20,7 @@ import java.util.function.Consumer;
 import objectos.html.format.BeginDocumentOptions;
 import objectos.html.format.BeginStartTagOptions;
 import objectos.html.format.EndDocumentOptions;
+import objectos.html.format.EndStartTagOptions;
 import objectos.html.format.Formatter;
 import objectos.html.format.FormatterOptions;
 
@@ -30,6 +31,8 @@ public final class FormatterBuilder implements FormatterOptions {
   private final BeginStartTagFormatterBuilder beginStartTagFormatterBuilder = new BeginStartTagFormatterBuilder();
 
   private final EndDocumentFormatterBuilder endDocumentFormatterBuilder = new EndDocumentFormatterBuilder();
+
+  private final EndStartTagFormatterBuilder endStartTagFormatterBuilder = new EndStartTagFormatterBuilder();
 
   private String indentationText;
 
@@ -44,15 +47,9 @@ public final class FormatterBuilder implements FormatterOptions {
 
         beginStartTagFormatterBuilder.build(indentation),
 
-        new RenderAttributeFormatter(),
+        endDocumentFormatterBuilder.build(newLine),
 
-        new RenderBooleanAttributeFormatter(),
-
-        new EndStartTagFormatter(indentation, newLine),
-
-        new RenderEndTagFormatter(indentation, newLine),
-
-        endDocumentFormatterBuilder.build(newLine)
+        endStartTagFormatterBuilder.build(indentation, newLine)
     );
   }
 
@@ -69,6 +66,11 @@ public final class FormatterBuilder implements FormatterOptions {
   @Override
   public final void endDocument(Consumer<? super EndDocumentOptions> opts) {
     opts.accept(endDocumentFormatterBuilder);
+  }
+
+  @Override
+  public final void endStartTag(Consumer<? super EndStartTagOptions> opts) {
+    opts.accept(endStartTagFormatterBuilder);
   }
 
   @Override

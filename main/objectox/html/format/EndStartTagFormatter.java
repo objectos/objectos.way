@@ -15,6 +15,7 @@
  */
 package objectox.html.format;
 
+import objectos.html.format.NewLineStyle;
 import objectos.html.stream.EndStartTag;
 
 final class EndStartTagFormatter {
@@ -23,25 +24,35 @@ final class EndStartTagFormatter {
 
   private final NewLine newLine;
 
-  EndStartTagFormatter(Indentation indentation, NewLine newLine) {
+  final NewLineStyle newLineStyle;
+
+  EndStartTagFormatter(Indentation indentation, NewLine newLine, NewLineStyle newLineStyle) {
     this.indentation = indentation;
 
     this.newLine = newLine;
+
+    this.newLineStyle = newLineStyle;
   }
 
   public final void format(EndStartTag event, Output out) {
     out.append('>');
 
     switch (event.kind()) {
-      case VOID_ELEMENT -> newLine.always(out);
-
-      case ELEMENT -> {
-        indentation.inc();
-
-        newLine.always(out);
+      case VOID_ELEMENT -> {
+        newLine.notEmpty(newLineStyle, out);
       }
 
-      case EMPTY_ELEMENT -> indentation.inc();
+      case ELEMENT -> {
+        newLine.notEmpty(newLineStyle, out);
+
+        indentation.inc();
+      }
+
+      case EMPTY_ELEMENT -> {
+        newLine.empty(newLineStyle, out);
+
+        indentation.inc();
+      }
     }
   }
 

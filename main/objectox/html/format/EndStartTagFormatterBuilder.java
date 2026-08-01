@@ -15,20 +15,27 @@
  */
 package objectox.html.format;
 
-import objectos.html.stream.RenderAttribute;
+import java.util.Objects;
+import objectos.html.format.EndStartTagOptions;
+import objectos.html.format.NewLineStyle;
 
-final class RenderAttributeFormatter {
+public final class EndStartTagFormatterBuilder implements EndStartTagOptions {
 
-  public final void format(RenderAttribute event, Output out) {
-    out.append(' ');
+  private NewLineStyle newLineStyle = NewLineStyle.ifNotEmpty();
 
-    out.append(event.name());
+  public final EndStartTagFormatter build(Indentation indentation, NewLine newLine) {
+    return new EndStartTagFormatter(
+        indentation,
 
-    out.append("=\"");
+        newLine,
 
-    out.append(event.value());
+        newLineStyle
+    );
+  }
 
-    out.append('"');
+  @Override
+  public final void newLineStyle(NewLineStyle value) {
+    newLineStyle = Objects.requireNonNull(value, "value == null");
   }
 
 }

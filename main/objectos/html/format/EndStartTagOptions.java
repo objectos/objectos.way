@@ -13,16 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html.format;
+package objectos.html.format;
 
-import objectos.html.stream.RenderBooleanAttribute;
+import objectos.html.stream.EndStartTag;
+import objectox.html.format.EndStartTagFormatterBuilder;
 
-final class RenderBooleanAttributeFormatter {
+/// Configures the formatting of the [EndStartTag] event.
+public sealed interface EndStartTagOptions
+    permits
+    EndStartTagFormatterBuilder {
 
-  public final void format(RenderBooleanAttribute event, Output out) {
-    out.append(' ');
-
-    out.append(event.name());
-  }
+  /// Sets the new line style to the specified value. Defaults to
+  /// [NewLineStyle#ifNotEmpty] if not set.
+  ///
+  /// @param value the new line style, not null
+  void newLineStyle(NewLineStyle value);
 
 }

@@ -31,44 +31,26 @@ public final class FormatterPojo implements Formatter {
 
   private final BeginStartTagFormatter beginStartTagFormatter;
 
-  private final RenderAttributeFormatter renderAttributeFormatter;
-
-  private final RenderBooleanAttributeFormatter renderBooleanAttributeFormatter;
+  private final EndDocumentFormatter endDocumentFormatter;
 
   private final EndStartTagFormatter endStartTagFormatter;
-
-  private final RenderEndTagFormatter renderEndTagFormatter;
-
-  private final EndDocumentFormatter endDocumentFormatter;
 
   FormatterPojo(
       BeginDocumentFormatter beginDocumentFormatter,
 
       BeginStartTagFormatter beginStartTagFormatter,
 
-      RenderAttributeFormatter renderAttributeFormatter,
+      EndDocumentFormatter endDocumentFormatter,
 
-      RenderBooleanAttributeFormatter renderBooleanAttributeFormatter,
-
-      EndStartTagFormatter endStartTagFormatter,
-
-      RenderEndTagFormatter renderEndTagFormatter,
-
-      EndDocumentFormatter endDocumentFormatter
+      EndStartTagFormatter endStartTagFormatter
   ) {
     this.beginDocumentFormatter = beginDocumentFormatter;
 
     this.beginStartTagFormatter = beginStartTagFormatter;
 
-    this.renderAttributeFormatter = renderAttributeFormatter;
-
-    this.renderBooleanAttributeFormatter = renderBooleanAttributeFormatter;
+    this.endDocumentFormatter = endDocumentFormatter;
 
     this.endStartTagFormatter = endStartTagFormatter;
-
-    this.renderEndTagFormatter = renderEndTagFormatter;
-
-    this.endDocumentFormatter = endDocumentFormatter;
   }
 
   public final void formatTo(Event event, Output out) {
@@ -77,16 +59,28 @@ public final class FormatterPojo implements Formatter {
 
       case BeginStartTag begin -> beginStartTagFormatter.format(begin, out);
 
-      case RenderAttribute attr -> renderAttributeFormatter.format(attr, out);
+      case RenderAttribute attr -> format(attr, out);
 
-      case RenderBooleanAttribute attr -> renderBooleanAttributeFormatter.format(attr, out);
+      case RenderBooleanAttribute attr -> format(attr, out);
 
       case EndStartTag end -> endStartTagFormatter.format(end, out);
 
-      case RenderEndTag endTag -> renderEndTagFormatter.format(endTag, out);
+      case RenderEndTag endTag -> renderEndTag(endTag, out);
 
       case EndDocument end -> endDocumentFormatter.format(end, out);
     }
+  }
+
+  private void renderEndTag(RenderEndTag event, Output out) {
+    out.append("</");
+
+    out.append(event.name());
+
+    out.append('>');
+  }
+
+  private void format(Event event, Output out) {
+    throw new UnsupportedOperationException("Implement me :: type=" + event.getClass().getSimpleName());
   }
 
 }
