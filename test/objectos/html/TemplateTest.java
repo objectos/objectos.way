@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html;
+package objectos.html;
 
 import static org.testng.Assert.assertEquals;
 
@@ -21,16 +21,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import objectos.html.ClassName;
-import objectos.html.ElementName;
-import objectos.html.Id;
-import objectos.html.Template;
 import objectos.html.markup.ElementInstruction;
 import objectos.html.markup.Instruction;
 import objectos.http.Content;
 import org.testng.annotations.Test;
 
-public class HtmlTemplateTest {
+public class TemplateTest {
 
   @Test(description = """
   HtmlTemplate TC00
@@ -47,7 +43,9 @@ public class HtmlTemplateTest {
         },
 
         """
+        <!-- BEGIN Objectos HTML -->
         <html></html>
+        <!-- END Objectos HTML -->
         """
     );
   }

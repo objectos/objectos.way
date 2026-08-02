@@ -27,6 +27,12 @@ final class Indentation {
     this.text = text;
   }
 
+  Indentation(int level, String text) {
+    this.level = level;
+
+    this.text = text;
+  }
+
   public final void inc() {
     level++;
   }

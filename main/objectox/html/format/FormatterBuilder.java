@@ -34,6 +34,8 @@ public final class FormatterBuilder implements FormatterOptions {
 
   private final EndStartTagFormatterBuilder endStartTagFormatterBuilder = new EndStartTagFormatterBuilder();
 
+  private final RenderEndTagFormatterBuilder renderEndTagFormatterBuilder = new RenderEndTagFormatterBuilder();
+
   private String indentationText = "  ";
 
   private final NewLine newLine = NewLine.LF;
@@ -49,7 +51,9 @@ public final class FormatterBuilder implements FormatterOptions {
 
         endDocumentFormatterBuilder.build(newLine),
 
-        endStartTagFormatterBuilder.build(indentation, newLine)
+        endStartTagFormatterBuilder.build(indentation, newLine),
+
+        renderEndTagFormatterBuilder.build(indentation, newLine)
     );
   }
 

@@ -20,7 +20,7 @@ import objectos.html.stream.RenderEndTag;
 
 public record RenderEndTagEvent(ElementName elementName) implements RenderEndTag {
 
-  static RenderEndTagEvent of(ElementName elementName) {
+  public static RenderEndTagEvent of(ElementName elementName) {
     return new RenderEndTagEvent(elementName);
   }
 

@@ -17,8 +17,11 @@ package objectox.html;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UncheckedIOException;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.Spliterator;
 import java.util.Spliterators;
@@ -59,7 +62,12 @@ public final class HtmlPojo implements Html {
 
   @Override
   public final void binaryTo(OutputStream out) throws IOException {
-    throw new UnsupportedOperationException("Implement me");
+    try (
+        Reader reader = openStream();
+        Writer writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+    ) {
+      reader.transferTo(writer);
+    }
   }
 
   @Override

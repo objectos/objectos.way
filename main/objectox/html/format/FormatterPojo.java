@@ -35,6 +35,8 @@ public final class FormatterPojo implements Formatter {
 
   private final EndStartTagFormatter endStartTagFormatter;
 
+  private final RenderEndTagFormatter renderEndTagFormatter;
+
   FormatterPojo(
       BeginDocumentFormatter beginDocumentFormatter,
 
@@ -42,7 +44,9 @@ public final class FormatterPojo implements Formatter {
 
       EndDocumentFormatter endDocumentFormatter,
 
-      EndStartTagFormatter endStartTagFormatter
+      EndStartTagFormatter endStartTagFormatter,
+
+      RenderEndTagFormatter renderEndTagFormatter
   ) {
     this.beginDocumentFormatter = beginDocumentFormatter;
 
@@ -51,6 +55,7 @@ public final class FormatterPojo implements Formatter {
     this.endDocumentFormatter = endDocumentFormatter;
 
     this.endStartTagFormatter = endStartTagFormatter;
+    this.renderEndTagFormatter = renderEndTagFormatter;
   }
 
   public final void formatTo(Event event, Output out) {
@@ -65,18 +70,10 @@ public final class FormatterPojo implements Formatter {
 
       case EndStartTag end -> endStartTagFormatter.format(end, out);
 
-      case RenderEndTag endTag -> renderEndTag(endTag, out);
+      case RenderEndTag endTag -> renderEndTagFormatter.format(endTag, out);
 
       case EndDocument end -> endDocumentFormatter.format(end, out);
     }
-  }
-
-  private void renderEndTag(RenderEndTag event, Output out) {
-    out.append("</");
-
-    out.append(event.name());
-
-    out.append('>');
   }
 
   private void format(Event event, Output out) {
