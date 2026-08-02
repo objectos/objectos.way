@@ -20,6 +20,8 @@ import objectos.html.stream.BeginDocument;
 import objectos.html.stream.BeginStartTag;
 import objectos.html.stream.EndDocument;
 import objectos.html.stream.EndStartTag;
+import objectos.html.stream.RenderAttribute;
+import objectos.html.stream.RenderEndTag;
 import objectox.html.format.FormatterBuilder;
 
 /// Configures the creation of a [Formatter] instance.
@@ -56,5 +58,15 @@ public sealed interface FormatterOptions
   ///
   /// @param value the string to use as indentation unit
   void indentation(String value);
+
+  /// Sets the [RenderAttribute] options.
+  ///
+  /// @param opts allows for setting the options
+  void renderAttribute(Consumer<? super RenderAttributeOptions> opts);
+
+  /// Sets the [RenderEndTag] options.
+  ///
+  /// @param opts allows for setting the options
+  void renderEndTag(Consumer<? super RenderEndTagOptions> opts);
 
 }

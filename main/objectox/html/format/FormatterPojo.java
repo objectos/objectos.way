@@ -35,6 +35,8 @@ public final class FormatterPojo implements Formatter {
 
   private final EndStartTagFormatter endStartTagFormatter;
 
+  private final RenderAttributeFormatter renderAttributeFormatter;
+
   private final RenderEndTagFormatter renderEndTagFormatter;
 
   FormatterPojo(
@@ -46,6 +48,8 @@ public final class FormatterPojo implements Formatter {
 
       EndStartTagFormatter endStartTagFormatter,
 
+      RenderAttributeFormatter renderAttributeFormatter,
+
       RenderEndTagFormatter renderEndTagFormatter
   ) {
     this.beginDocumentFormatter = beginDocumentFormatter;
@@ -55,6 +59,9 @@ public final class FormatterPojo implements Formatter {
     this.endDocumentFormatter = endDocumentFormatter;
 
     this.endStartTagFormatter = endStartTagFormatter;
+
+    this.renderAttributeFormatter = renderAttributeFormatter;
+
     this.renderEndTagFormatter = renderEndTagFormatter;
   }
 
@@ -64,15 +71,15 @@ public final class FormatterPojo implements Formatter {
 
       case BeginStartTag begin -> beginStartTagFormatter.format(begin, out);
 
-      case RenderAttribute attr -> format(attr, out);
-
-      case RenderBooleanAttribute attr -> format(attr, out);
+      case EndDocument end -> endDocumentFormatter.format(end, out);
 
       case EndStartTag end -> endStartTagFormatter.format(end, out);
 
-      case RenderEndTag endTag -> renderEndTagFormatter.format(endTag, out);
+      case RenderAttribute attr -> renderAttributeFormatter.format(attr, out);
 
-      case EndDocument end -> endDocumentFormatter.format(end, out);
+      case RenderBooleanAttribute attr -> format(attr, out);
+
+      case RenderEndTag endTag -> renderEndTagFormatter.format(endTag, out);
     }
   }
 
