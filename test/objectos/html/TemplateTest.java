@@ -65,7 +65,9 @@ public class TemplateTest {
         },
 
         """
+        <!-- BEGIN Objectos HTML -->
         <html lang="pt-BR"></html>
+        <!-- END Objectos HTML -->
         """
     );
   }
@@ -85,8 +87,10 @@ public class TemplateTest {
         },
 
         """
-      <html class="no-js" lang="pt-BR"></html>
-      """
+        <!-- BEGIN Objectos HTML -->
+        <html class="no-js" lang="pt-BR"></html>
+        <!-- END Objectos HTML -->
+        """
     );
   }
 
@@ -107,10 +111,12 @@ public class TemplateTest {
         },
 
         """
-      <html>
-      <head></head>
-      </html>
-      """
+        <!-- BEGIN Objectos HTML -->
+        <html>
+          <head></head>
+        </html>
+        <!-- END Objectos HTML -->
+        """
     );
   }
 
@@ -1322,23 +1328,23 @@ public class TemplateTest {
             div(
                 c(html -> html.span("as child"))
             );
-  
+
             div(f(this::fragment0));
-  
+
             div(f(this::fragment1));
           }
-  
+
           private void fragment0() {
             c(html -> html.span("fragment root"));
           }
-  
+
           private void fragment1() {
             div(
                 c(html -> html.span("fragment child"))
             );
           }
         },
-  
+
         """
         <div><span>as child</span></div>
         <div><span>fragment root</span></div>

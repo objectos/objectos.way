@@ -40,6 +40,8 @@ final class RenderEndTagFormatter {
   }
 
   public final void format(RenderEndTag event, Output out) {
+    indentation.dec();
+
     indentation.format(indentationStyle, out);
 
     out.append("</");
@@ -49,8 +51,6 @@ final class RenderEndTagFormatter {
     out.append('>');
 
     newLine.notEmpty(newLineStyle, out);
-
-    indentation.dec();
   }
 
 }

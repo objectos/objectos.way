@@ -20,13 +20,28 @@ import objectos.html.stream.RenderAttribute;
 
 final class RenderAttributeFormatter {
 
-  final QuotationMarkStyle quotationMark;
+  final QuotationMarkStyle quotationMarkStyle;
 
-  RenderAttributeFormatter(QuotationMarkStyle quotationMark) {
-    this.quotationMark = quotationMark;
+  RenderAttributeFormatter(QuotationMarkStyle quotationMarkStyle) {
+    this.quotationMarkStyle = quotationMarkStyle;
   }
 
   public final void format(RenderAttribute attr, Output out) {
+    out.append(' ');
+
+    out.append(attr.name());
+
+    out.append('=');
+
+    switch (quotationMarkStyle) {
+      case QuotationMarkOption o -> {
+        out.append(o.mark);
+
+        out.append(attr.value());
+
+        out.append(o.mark);
+      }
+    }
   }
 
 }

@@ -19,8 +19,14 @@ import objectos.html.format.QuotationMarkStyle;
 
 public enum QuotationMarkOption implements QuotationMarkStyle {
 
-  DOUBLE,
+  DOUBLE('\"'),
 
-  SINGLE;
+  SINGLE('\'');
+
+  final char mark;
+
+  private QuotationMarkOption(char mark) {
+    this.mark = mark;
+  }
 
 }

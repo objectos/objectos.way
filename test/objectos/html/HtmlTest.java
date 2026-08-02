@@ -63,7 +63,7 @@ public class HtmlTest {
     );
   }
 
-  @Test(enabled = false)
+  @Test
   public void toString02() {
     toString(
         m -> m.html(

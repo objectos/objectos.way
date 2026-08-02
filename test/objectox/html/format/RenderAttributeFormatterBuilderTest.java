@@ -42,7 +42,7 @@ public class RenderAttributeFormatterBuilderTest {
     final RenderAttributeFormatter res;
     res = subject.build();
 
-    assertEquals(res.quotationMark, QuotationMarkOption.DOUBLE);
+    assertEquals(res.quotationMarkStyle, QuotationMarkOption.DOUBLE);
   }
 
   @Test(description = "accept the specified value")
@@ -55,7 +55,7 @@ public class RenderAttributeFormatterBuilderTest {
     final RenderAttributeFormatter res;
     res = subject.build();
 
-    assertEquals(res.quotationMark, QuotationMarkOption.SINGLE);
+    assertEquals(res.quotationMarkStyle, QuotationMarkOption.SINGLE);
   }
 
 }
