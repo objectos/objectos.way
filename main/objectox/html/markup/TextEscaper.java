@@ -17,6 +17,12 @@ package objectox.html.markup;
 
 final class TextEscaper {
 
+  private static final CommonEscaper ESCAPER = CommonEscaper.create(opts -> {
+    opts.add('&', "&amp;");
+    opts.add('<', "&lt;");
+    opts.add('>', "&gt;");
+  });
+
   private final String value;
 
   TextEscaper(String value) {
@@ -24,46 +30,7 @@ final class TextEscaper {
   }
 
   public final String escape() {
-    final int len;
-    len = value.length();
-
-    int idx;
-    idx = 0;
-
-    for (; idx < len; idx++) {
-      final char c;
-      c = value.charAt(idx);
-
-      if (c == '&' || c == '<' || c == '>') {
-        break;
-      }
-    }
-
-    if (idx == len) {
-      return value;
-    }
-
-    final StringBuilder out;
-    out = new StringBuilder(len + 16);
-
-    out.append(value, 0, idx);
-
-    for (; idx < len; idx++) {
-      final char c;
-      c = value.charAt(idx);
-
-      switch (c) {
-        case '&' -> out.append("&amp;");
-
-        case '<' -> out.append("&lt;");
-
-        case '>' -> out.append("&gt;");
-
-        default -> out.append(c);
-      }
-    }
-
-    return out.toString();
+    return ESCAPER.escape(value);
   }
 
 }

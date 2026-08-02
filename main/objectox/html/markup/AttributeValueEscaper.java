@@ -17,6 +17,14 @@ package objectox.html.markup;
 
 final class AttributeValueEscaper {
 
+  private static final CommonEscaper ESCAPER = CommonEscaper.create(opts -> {
+    opts.add('&', "&amp;");
+    opts.add('<', "&lt;");
+    opts.add('>', "&gt;");
+    opts.add('"', "&quot;");
+    opts.add('\'', "&#39;");
+  });
+
   private final String value;
 
   AttributeValueEscaper(String value) {
@@ -24,50 +32,7 @@ final class AttributeValueEscaper {
   }
 
   public final String escape() {
-    final int len;
-    len = value.length();
-
-    int idx;
-    idx = 0;
-
-    for (; idx < len; idx++) {
-      final char c;
-      c = value.charAt(idx);
-
-      if (c == '&' || c == '<' || c == '>' || c == '"' || c == '\'') {
-        break;
-      }
-    }
-
-    if (idx == len) {
-      return value;
-    }
-
-    final StringBuilder out;
-    out = new StringBuilder(len + 16);
-
-    out.append(value, 0, idx);
-
-    for (; idx < len; idx++) {
-      final char c;
-      c = value.charAt(idx);
-
-      switch (c) {
-        case '&' -> out.append("&amp;");
-
-        case '<' -> out.append("&lt;");
-
-        case '>' -> out.append("&gt;");
-
-        case '"' -> out.append("&quot;");
-
-        case '\'' -> out.append("&#39;");
-
-        default -> out.append(c);
-      }
-    }
-
-    return out.toString();
+    return ESCAPER.escape(value);
   }
 
 }
