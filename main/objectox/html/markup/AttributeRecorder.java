@@ -31,6 +31,9 @@ final class AttributeRecorder {
     final Object v;
     v = Objects.requireNonNull(value, "value == null");
 
+    final Object escaped;
+    escaped = escapeIfNecessary(v);
+
     final int nameIndex;
     nameIndex = name.index();
 
@@ -38,7 +41,7 @@ final class AttributeRecorder {
     nameSize = IntSize.of(nameIndex);
 
     final int valueIndex;
-    valueIndex = sink.addObject(v);
+    valueIndex = sink.addObject(escaped);
 
     final IntSize valueSize;
     valueSize = IntSize.of(valueIndex);
@@ -57,6 +60,17 @@ final class AttributeRecorder {
     };
 
     return new AttributePointer(startIndex);
+  }
+
+  private Object escapeIfNecessary(Object v) {
+    if (!(v instanceof String s)) {
+      return v;
+    }
+
+    final AttributeValueEscaper escaper;
+    escaper = new AttributeValueEscaper(s);
+
+    return escaper.escape();
   }
 
   private int record88(int nameIndex, int valueIndex) {

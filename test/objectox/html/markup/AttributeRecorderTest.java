@@ -136,4 +136,103 @@ public class AttributeRecorderTest {
     );
   }
 
+  @Test(description = "ATTRIBUTE88 escaped")
+  public void record05() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final AttributeRecorder subject;
+    subject = new AttributeRecorder(sink);
+
+    final AttributeNamePojo name;
+    name = AttributeNamePojo.ID;
+
+    final String value;
+    value = "A&B";
+
+    final String escaped;
+    escaped = "A&amp;B";
+
+    final AttributePointer res;
+    res = subject.record(name, value);
+
+    assertEquals(res.value(), 0);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.ATTRIBUTE88);
+          opts.addInt8(name.index());
+          opts.addInt8(opts.addObject(escaped));
+        })
+    );
+  }
+
+  @Test(description = "ATTRIBUTE88 escapes double quotation mark")
+  public void record06() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final AttributeRecorder subject;
+    subject = new AttributeRecorder(sink);
+
+    final AttributeNamePojo name;
+    name = AttributeNamePojo.ID;
+
+    final String value;
+    value = "A\"B";
+
+    final String escaped;
+    escaped = "A&quot;B";
+
+    final AttributePointer res;
+    res = subject.record(name, value);
+
+    assertEquals(res.value(), 0);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.ATTRIBUTE88);
+          opts.addInt8(name.index());
+          opts.addInt8(opts.addObject(escaped));
+        })
+    );
+  }
+
+  @Test(description = "ATTRIBUTE88 escapes single quotation mark")
+  public void record07() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final AttributeRecorder subject;
+    subject = new AttributeRecorder(sink);
+
+    final AttributeNamePojo name;
+    name = AttributeNamePojo.ID;
+
+    final String value;
+    value = "A'B";
+
+    final String escaped;
+    escaped = "A&#39;B";
+
+    final AttributePointer res;
+    res = subject.record(name, value);
+
+    assertEquals(res.value(), 0);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.ATTRIBUTE88);
+          opts.addInt8(name.index());
+          opts.addInt8(opts.addObject(escaped));
+        })
+    );
+  }
+
 }
