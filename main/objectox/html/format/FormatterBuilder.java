@@ -24,6 +24,7 @@ import objectos.html.format.EndStartTagOptions;
 import objectos.html.format.Formatter;
 import objectos.html.format.FormatterOptions;
 import objectos.html.format.RenderAttributeOptions;
+import objectos.html.format.RenderBooleanAttributeOptions;
 import objectos.html.format.RenderEndTagOptions;
 
 public final class FormatterBuilder implements FormatterOptions {
@@ -37,6 +38,8 @@ public final class FormatterBuilder implements FormatterOptions {
   private final EndStartTagFormatterBuilder endStartTagFormatterBuilder = new EndStartTagFormatterBuilder();
 
   private final RenderAttributeFormatterBuilder renderAttributeFormatterBuilder = new RenderAttributeFormatterBuilder();
+
+  private final RenderBooleanAttributeFormatterBuilder renderBooleanAttributeFormatterBuilder = new RenderBooleanAttributeFormatterBuilder();
 
   private final RenderEndTagFormatterBuilder renderEndTagFormatterBuilder = new RenderEndTagFormatterBuilder();
 
@@ -68,6 +71,8 @@ public final class FormatterBuilder implements FormatterOptions {
         endStartTagFormatterBuilder.build(indentation, newLine),
 
         renderAttributeFormatterBuilder.build(),
+
+        renderBooleanAttributeFormatterBuilder.build(),
 
         renderEndTagFormatterBuilder.build(indentation, newLine)
     );
@@ -111,6 +116,11 @@ public final class FormatterBuilder implements FormatterOptions {
   @Override
   public final void renderAttribute(Consumer<? super RenderAttributeOptions> opts) {
     opts.accept(renderAttributeFormatterBuilder);
+  }
+
+  @Override
+  public final void renderBooleanAttribute(Consumer<? super RenderBooleanAttributeOptions> opts) {
+    opts.accept(renderBooleanAttributeFormatterBuilder);
   }
 
   @Override
