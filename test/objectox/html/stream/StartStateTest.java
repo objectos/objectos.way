@@ -38,6 +38,7 @@ public class StartStateTest {
     assertEquals(ctx.hasEvent(), true);
     assertEquals(ctx.nextEvent(), BeginDocumentEvent.INSTANCE);
   }
+
   @Test(description = "<html></html>")
   public void compute01() {
     final Ctx ctx;

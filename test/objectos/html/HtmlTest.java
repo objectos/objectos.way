@@ -93,4 +93,38 @@ public class HtmlTest {
     );
   }
 
+  @Test
+  public void toString04() {
+    toString(
+        m -> m.html(
+            m.head()
+        ),
+
+        """
+        <!-- BEGIN Objectos HTML -->
+        <html>
+          <head></head>
+        </html>
+        <!-- END Objectos HTML -->
+        """
+    );
+  }
+
+  @Test
+  public void toString05() {
+    toString(
+        m -> m.head(
+            m.meta(m.charset("UTF-8"))
+        ),
+
+        """
+        <!-- BEGIN Objectos HTML -->
+        <head>
+          <meta charset="UTF-8">
+        </head>
+        <!-- END Objectos HTML -->
+        """
+    );
+  }
+
 }

@@ -84,4 +84,81 @@ public class RenderEndTagStateTest {
     assertEquals(ctx.nextEvent(), RenderEndTagEvent.of(ElementName.HTML));
   }
 
+  @Test(description = """
+  <head><meta charset="UTF-8"></head>
+  """)
+  public void compute05() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeNamePojo.CHARSET.index());
+      opts.addInt8(opts.addObject("UTF-8"));
+      opts.addByte(HtmlBytes.xSTARTTAG8);
+      opts.addInt8(ElementNamePojo.META.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.VOIDELEM);
+      opts.addByte(HtmlBytes.STARTTAG8);
+      opts.addInt8(ElementNamePojo.HEAD.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(3);
+      opts.addByte(HtmlBytes.ENDTAG8);
+      opts.addInt8(ElementNamePojo.HEAD.index());
+
+      opts.push(ScanDocumentNodeFrame.of(13));
+      opts.push(new ScanElementNodeFrame(14, IntSize.BIT8, 1, 1));
+      opts.push(new JumpFrame(7));
+      opts.push(new ScanElementNodeFrame(8, IntSize.BIT8, 1, 1));
+    });
+
+    final RenderEndTagState subject;
+    subject = new RenderEndTagState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res.getClass(), EndElementState.class);
+    assertEquals(ctx.hasEvent(), false);
+  }
+
+  @Test(description = """
+  <head><meta charset="UTF-8"></head>
+  """)
+  public void compute05b() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeNamePojo.CHARSET.index());
+      opts.addInt8(opts.addObject("UTF-8"));
+      opts.addByte(HtmlBytes.xSTARTTAG8);
+      opts.addInt8(ElementNamePojo.META.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.VOIDELEM);
+      opts.addByte(HtmlBytes.STARTTAG8);
+      opts.addInt8(ElementNamePojo.HEAD.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(3);
+      opts.addByte(HtmlBytes.ENDTAG8);
+      opts.addInt8(ElementNamePojo.HEAD.index());
+
+      opts.push(ScanDocumentNodeFrame.of(13));
+      opts.push(new ScanElementNodeFrame(14, IntSize.BIT8, 1, 1));
+    });
+
+    final RenderEndTagState subject;
+    subject = new RenderEndTagState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res.getClass(), EndElementState.class);
+    assertEquals(ctx.hasEvent(), true);
+    assertEquals(ctx.nextEvent(), RenderEndTagEvent.of(ElementName.HEAD));
+  }
+
 }

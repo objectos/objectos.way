@@ -54,6 +54,14 @@ final class RenderEndTagState implements State {
 
     ctx.result(event);
 
+    return computeEnd();
+  }
+
+  private State renderVoidElem() {
+    return computeEnd();
+  }
+
+  private State computeEnd() {
     final Frame f;
     f = ctx.pop();
 
@@ -66,10 +74,6 @@ final class RenderEndTagState implements State {
     current.updateIfNecessary(previous);
 
     return new EndElementState(ctx);
-  }
-
-  private State renderVoidElem() {
-    throw new UnsupportedOperationException("Implement me");
   }
 
 }

@@ -132,4 +132,26 @@ public class PlayerTest {
     );
   }
 
+  @Test(description = """
+  <head><meta charset="UTF-8"></head>
+  """)
+  public void events05() {
+    events(
+        m -> m.head(
+            m.meta(m.charset("UTF-8"))
+        ),
+
+        """
+        BeginDocument
+        BeginStartTag(head)
+        EndStartTag
+        BeginStartTag(meta)
+        RenderAttribute(charset, UTF-8)
+        EndStartTag(void)
+        RenderEndTag(head)
+        EndDocument
+        """
+    );
+  }
+
 }
