@@ -78,4 +78,19 @@ public class HtmlTest {
     );
   }
 
+  @Test
+  public void toString03() {
+    toString(
+        m -> m.html(
+            Markup.autofocus
+        ),
+
+        """
+        <!-- BEGIN Objectos HTML -->
+        <html autofocus></html>
+        <!-- END Objectos HTML -->
+        """
+    );
+  }
+
 }

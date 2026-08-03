@@ -79,7 +79,7 @@ public class RenderEndTagFormatterTest {
   @Test(description = "startOfLine indentation style emits tag with indentation at start of line")
   public void indentationStyle02() {
     final Indentation indentation;
-    indentation = new Indentation(1, "  ");
+    indentation = new Indentation(2, "  ");
 
     final IndentationStyle indentationStyle;
     indentationStyle = IndentationStyle.startOfLine();
@@ -127,7 +127,7 @@ public class RenderEndTagFormatterTest {
   @Test(description = "multiple indentation levels")
   public void indentationStyle04() {
     final Indentation indentation;
-    indentation = new Indentation(2, "  ");
+    indentation = new Indentation(3, "  ");
 
     final IndentationStyle indentationStyle;
     indentationStyle = IndentationStyle.startOfLine();

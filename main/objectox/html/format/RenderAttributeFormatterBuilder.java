@@ -21,17 +21,17 @@ import objectos.html.format.RenderAttributeOptions;
 
 public final class RenderAttributeFormatterBuilder implements RenderAttributeOptions {
 
-  private QuotationMarkStyle quotationMark = QuotationMarkStyle.doubleMark();
+  private QuotationMarkStyle quotationMarkStyle = QuotationMarkStyle.doubleMark();
 
   public final RenderAttributeFormatter build() {
     return new RenderAttributeFormatter(
-        quotationMark
+        quotationMarkStyle
     );
   }
 
   @Override
-  public final void quotationMark(QuotationMarkStyle value) {
-    quotationMark = Objects.requireNonNull(value, "value == null");
+  public final void quotationMarkStyle(QuotationMarkStyle value) {
+    quotationMarkStyle = Objects.requireNonNull(value, "value == null");
   }
 
 }

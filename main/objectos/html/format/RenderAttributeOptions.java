@@ -27,6 +27,6 @@ public sealed interface RenderAttributeOptions
   /// [QuotationMarkStyle#double] if not set.
   ///
   /// @param value the style value
-  void quotationMark(QuotationMarkStyle value);
+  void quotationMarkStyle(QuotationMarkStyle value);
 
 }

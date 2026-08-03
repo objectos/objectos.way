@@ -31,7 +31,7 @@ public class RenderAttributeFormatterBuilderTest {
     final RenderAttributeFormatterBuilder subject;
     subject = new RenderAttributeFormatterBuilder();
 
-    subject.quotationMark(null);
+    subject.quotationMarkStyle(null);
   }
 
   @Test(description = "default quotationMark is DOUBLE")
@@ -50,7 +50,7 @@ public class RenderAttributeFormatterBuilderTest {
     final RenderAttributeFormatterBuilder subject;
     subject = new RenderAttributeFormatterBuilder();
 
-    subject.quotationMark(QuotationMarkStyle.single());
+    subject.quotationMarkStyle(QuotationMarkStyle.single());
 
     final RenderAttributeFormatter res;
     res = subject.build();
