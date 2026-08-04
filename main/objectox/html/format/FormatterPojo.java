@@ -23,6 +23,7 @@ import objectos.html.stream.RenderAttribute;
 import objectos.html.stream.RenderBooleanAttribute;
 import objectos.html.stream.RenderDoctype;
 import objectos.html.stream.RenderEndTag;
+import objectos.html.stream.RenderText;
 
 public final class FormatterPojo implements Formatter {
 
@@ -38,6 +39,8 @@ public final class FormatterPojo implements Formatter {
 
   private final RenderEndTagFormatter renderEndTagFormatter;
 
+  private final RenderTextFormatter renderTextFormatter;
+
   FormatterPojo(
       BeginStartTagFormatter beginStartTagFormatter,
 
@@ -49,7 +52,9 @@ public final class FormatterPojo implements Formatter {
 
       RenderDoctypeFormatter renderDoctypeFormatter,
 
-      RenderEndTagFormatter renderEndTagFormatter
+      RenderEndTagFormatter renderEndTagFormatter,
+
+      RenderTextFormatter renderTextFormatter
   ) {
     this.beginStartTagFormatter = beginStartTagFormatter;
 
@@ -62,6 +67,8 @@ public final class FormatterPojo implements Formatter {
     this.renderDoctypeFormatter = renderDoctypeFormatter;
 
     this.renderEndTagFormatter = renderEndTagFormatter;
+
+    this.renderTextFormatter = renderTextFormatter;
   }
 
   public final void formatTo(Event event, Output out) {
@@ -77,6 +84,8 @@ public final class FormatterPojo implements Formatter {
       case RenderDoctype doctype -> renderDoctypeFormatter.format(doctype, out);
 
       case RenderEndTag endTag -> renderEndTagFormatter.format(endTag, out);
+
+      case RenderText text -> renderTextFormatter.format(text, out);
     }
   }
 

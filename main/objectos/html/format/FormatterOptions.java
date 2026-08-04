@@ -22,6 +22,7 @@ import objectos.html.stream.RenderAttribute;
 import objectos.html.stream.RenderBooleanAttribute;
 import objectos.html.stream.RenderDoctype;
 import objectos.html.stream.RenderEndTag;
+import objectos.html.stream.RenderText;
 import objectox.html.format.FormatterBuilder;
 
 /// Configures the creation of a [Formatter] instance.
@@ -68,5 +69,10 @@ public sealed interface FormatterOptions
   ///
   /// @param opts allows for setting the options
   void renderEndTag(Consumer<? super RenderEndTagOptions> opts);
+
+  /// Sets the [RenderText] options.
+  ///
+  /// @param opts allows for setting the options
+  void renderText(Consumer<? super RenderTextOptions> opts);
 
 }

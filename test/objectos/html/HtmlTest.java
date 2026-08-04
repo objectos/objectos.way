@@ -130,10 +130,7 @@ public class HtmlTest {
     );
   }
 
-  @Test(description = """
-  <!DOCTYPE html>
-  <html></html>
-  """)
+  @Test
   public void toString07() {
     toString(
         m -> {
@@ -144,6 +141,19 @@ public class HtmlTest {
         """
         <!DOCTYPE html>
         <html></html>
+        """
+    );
+  }
+
+  @Test
+  public void toString08() {
+    toString(
+        m -> m.span("ipsum"),
+
+        """
+        <span>
+          ipsum
+        </span>
         """
     );
   }

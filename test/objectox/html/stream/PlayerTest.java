@@ -191,4 +191,20 @@ public class PlayerTest {
     );
   }
 
+  @Test(description = """
+  <span>ipsum</span>
+  """)
+  public void events08() {
+    events(
+        m -> m.span("ipsum"),
+
+        """
+        BeginStartTag(span)
+        EndStartTag
+        RenderText(ipsum)
+        RenderEndTag(span)
+        """
+    );
+  }
+
 }

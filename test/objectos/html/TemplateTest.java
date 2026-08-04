@@ -322,9 +322,11 @@ public class TemplateTest {
 
         """
         <html>
-        <body>
-        <p>o7html</p>
-        </body>
+          <body>
+            <p>
+              o7html
+            </p>
+          </body>
         </html>
         """
     );
@@ -349,10 +351,14 @@ public class TemplateTest {
         },
 
         """
-      <div>a
-      <p>b</p>
-      c</div>
-      """
+        <div>
+          a
+          <p>
+            b
+          </p>
+          c
+        </div>
+        """
     );
   }
 
@@ -499,8 +505,8 @@ public class TemplateTest {
         },
 
         """
-      <div class="first second"></div>
-      """
+        <div class="first second"></div>
+        """
     );
   }
 

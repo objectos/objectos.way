@@ -312,6 +312,38 @@ public class RecorderTest {
   }
 
   @Test(description = """
+  <span>ipsum</span>
+  """)
+  public void record08() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final Recorder subject;
+    subject = create(sink);
+
+    subject.element(
+        ElementNamePojo.SPAN,
+        subject.text("ipsum")
+    );
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.xTEXT8);
+          opts.addInt8(opts.addObject("ipsum"));
+          opts.addByte(HtmlBytes.STARTTAG8);
+          opts.addInt8(ElementNamePojo.SPAN.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(1);
+          opts.addInt8(0);
+          opts.addByte(HtmlBytes.ENDTAG8);
+          opts.addInt8(ElementNamePojo.SPAN.index());
+        })
+    );
+  }
+
+  @Test(description = """
   flatten instruction
   """)
   public void flatten01() {
@@ -582,38 +614,6 @@ public class RecorderTest {
           opts.addInt8(opts.addObject("qux"));
 
           opts.addByte(HtmlBytes.ENDFRAG);
-        })
-    );
-  }
-
-  @Test(description = """
-  <span>ipsum</span>
-  """)
-  public void text01() {
-    final HtmlSink sink;
-    sink = new HtmlSink();
-
-    final Recorder subject;
-    subject = create(sink);
-
-    subject.element(
-        ElementNamePojo.SPAN,
-        subject.text("ipsum")
-    );
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.xTEXT8);
-          opts.addInt8(opts.addObject("ipsum"));
-          opts.addByte(HtmlBytes.STARTTAG8);
-          opts.addInt8(ElementNamePojo.SPAN.index());
-          opts.addByte(HtmlBytes.VALUES8);
-          opts.addInt8(1);
-          opts.addInt8(0);
-          opts.addByte(HtmlBytes.ENDTAG8);
-          opts.addInt8(ElementNamePojo.SPAN.index());
         })
     );
   }

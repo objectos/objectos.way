@@ -286,4 +286,71 @@ public class ScanElementAttributeStateTest {
     assertEquals(ctx.nextEvent(), EndStartTagEvent.of(EndStartTagKind.VOID_ELEMENT));
   }
 
+  @Test(description = """
+  <span>ipsum</span>
+  """)
+  public void compute08() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xTEXT8);
+      opts.addInt8(opts.addObject("ipsum"));
+      opts.addByte(HtmlBytes.STARTTAG8);
+      opts.addInt8(ElementNamePojo.SPAN.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ENDTAG8);
+      opts.addInt8(ElementNamePojo.SPAN.index());
+
+      opts.push(new ScanElementNodeFrame(6, IntSize.BIT8, 1));
+      opts.push(new ScanElementAttributeFrame(6, IntSize.BIT8, 1));
+    });
+
+    final ScanElementAttributeState subject;
+    subject = new ScanElementAttributeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res.getClass(), ScanElementAttributeState.class);
+    assertEquals(ctx.hasEvent(), false);
+  }
+
+  @Test(description = """
+  <span>ipsum</span>
+  """)
+  public void compute08b() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xTEXT8);
+      opts.addInt8(opts.addObject("ipsum"));
+      opts.addByte(HtmlBytes.STARTTAG8);
+      opts.addInt8(ElementNamePojo.SPAN.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ENDTAG8);
+      opts.addInt8(ElementNamePojo.SPAN.index());
+
+      opts.push(new ScanElementNodeFrame(6, IntSize.BIT8, 1));
+
+      final ScanElementAttributeFrame f;
+      f = new ScanElementAttributeFrame(7, IntSize.BIT8, 1, 1);
+
+      f.childText();
+
+      opts.push(f);
+    });
+
+    final ScanElementAttributeState subject;
+    subject = new ScanElementAttributeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res.getClass(), ScanElementNodeState.class);
+    assertEquals(ctx.hasEvent(), true);
+    assertEquals(ctx.nextEvent(), EndStartTagEvent.of(EndStartTagKind.ELEMENT));
+  }
+
 }
