@@ -130,4 +130,22 @@ public class HtmlTest {
     );
   }
 
+  @Test(description = """
+  <!DOCTYPE html>
+  <html></html>
+  """)
+  public void toString07() {
+    toString(
+        m -> {
+          m.doctype();
+          m.html();
+        },
+
+        """
+        <!DOCTYPE html>
+        <html></html>
+        """
+    );
+  }
+
 }
