@@ -51,11 +51,7 @@ public final class FormatterBuilder implements FormatterOptions {
     indentation = new Indentation(indentationText);
 
     return new FormatterPojo(
-        BeginDocumentFormatter.INSTANCE,
-
         beginStartTagFormatterBuilder.build(indentation),
-
-        EndDocumentFormatter.INSTANCE,
 
         endStartTagFormatterBuilder.build(indentation, newLine),
 

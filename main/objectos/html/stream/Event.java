@@ -18,9 +18,7 @@ package objectos.html.stream;
 /// An Objectos HTML document is streamed as a sequence of events.
 public sealed interface Event
     permits
-    BeginDocument,
     BeginStartTag,
-    EndDocument,
     EndStartTag,
     RenderAttribute,
     RenderBooleanAttribute,

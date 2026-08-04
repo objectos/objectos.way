@@ -31,7 +31,7 @@ final class ScanDocumentNodeState implements State {
     if (ctx.hasByte()) {
       return compute0();
     } else {
-      return new EndDocumentState(ctx);
+      return new StopState(ctx);
     }
   }
 

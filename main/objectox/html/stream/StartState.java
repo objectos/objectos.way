@@ -61,8 +61,6 @@ final class StartState implements State {
       break;
     }
 
-    ctx.result(BeginDocumentEvent.INSTANCE);
-
     return new ScanDocumentNodeState(ctx);
   }
 

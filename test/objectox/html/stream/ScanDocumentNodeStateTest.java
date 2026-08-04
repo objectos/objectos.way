@@ -36,7 +36,7 @@ public class ScanDocumentNodeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res.getClass(), EndDocumentState.class);
+    assertEquals(res.getClass(), StopState.class);
     assertEquals(ctx.hasEvent(), false);
   }
 

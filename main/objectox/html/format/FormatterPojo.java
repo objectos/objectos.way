@@ -16,9 +16,7 @@
 package objectox.html.format;
 
 import objectos.html.format.Formatter;
-import objectos.html.stream.BeginDocument;
 import objectos.html.stream.BeginStartTag;
-import objectos.html.stream.EndDocument;
 import objectos.html.stream.EndStartTag;
 import objectos.html.stream.Event;
 import objectos.html.stream.RenderAttribute;
@@ -27,11 +25,7 @@ import objectos.html.stream.RenderEndTag;
 
 public final class FormatterPojo implements Formatter {
 
-  private final BeginDocumentFormatter beginDocumentFormatter;
-
   private final BeginStartTagFormatter beginStartTagFormatter;
-
-  private final EndDocumentFormatter endDocumentFormatter;
 
   private final EndStartTagFormatter endStartTagFormatter;
 
@@ -42,11 +36,7 @@ public final class FormatterPojo implements Formatter {
   private final RenderEndTagFormatter renderEndTagFormatter;
 
   FormatterPojo(
-      BeginDocumentFormatter beginDocumentFormatter,
-
       BeginStartTagFormatter beginStartTagFormatter,
-
-      EndDocumentFormatter endDocumentFormatter,
 
       EndStartTagFormatter endStartTagFormatter,
 
@@ -56,11 +46,7 @@ public final class FormatterPojo implements Formatter {
 
       RenderEndTagFormatter renderEndTagFormatter
   ) {
-    this.beginDocumentFormatter = beginDocumentFormatter;
-
     this.beginStartTagFormatter = beginStartTagFormatter;
-
-    this.endDocumentFormatter = endDocumentFormatter;
 
     this.endStartTagFormatter = endStartTagFormatter;
 
@@ -73,11 +59,7 @@ public final class FormatterPojo implements Formatter {
 
   public final void formatTo(Event event, Output out) {
     switch (event) {
-      case BeginDocument begin -> beginDocumentFormatter.format(begin, out);
-
       case BeginStartTag begin -> beginStartTagFormatter.format(begin, out);
-
-      case EndDocument end -> endDocumentFormatter.format(end, out);
 
       case EndStartTag end -> endStartTagFormatter.format(end, out);
 

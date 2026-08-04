@@ -36,8 +36,7 @@ public class StartStateTest {
     res = subject.compute();
 
     assertEquals(res.getClass(), ScanDocumentNodeState.class);
-    assertEquals(ctx.hasEvent(), true);
-    assertEquals(ctx.nextEvent(), BeginDocumentEvent.INSTANCE);
+    assertEquals(ctx.hasEvent(), false);
   }
 
   @Test(description = "<html></html>")
@@ -62,8 +61,7 @@ public class StartStateTest {
 
     assertEquals(res.getClass(), ScanDocumentNodeState.class);
     assertEquals(ctx.peekByte(), HtmlBytes.STARTTAG8);
-    assertEquals(ctx.hasEvent(), true);
-    assertEquals(ctx.nextEvent(), BeginDocumentEvent.INSTANCE);
+    assertEquals(ctx.hasEvent(), false);
   }
 
   @Test(description = "<html><head></head></html>")
@@ -95,8 +93,7 @@ public class StartStateTest {
 
     assertEquals(res.getClass(), ScanDocumentNodeState.class);
     assertEquals(ctx.peekByte(), HtmlBytes.STARTTAG8);
-    assertEquals(ctx.hasEvent(), true);
-    assertEquals(ctx.nextEvent(), BeginDocumentEvent.INSTANCE);
+    assertEquals(ctx.hasEvent(), false);
   }
 
   @Test(description = """
@@ -136,8 +133,7 @@ public class StartStateTest {
 
     assertEquals(res.getClass(), ScanDocumentNodeState.class);
     assertEquals(ctx.peekByte(), HtmlBytes.STARTTAG8);
-    assertEquals(ctx.hasEvent(), true);
-    assertEquals(ctx.nextEvent(), BeginDocumentEvent.INSTANCE);
+    assertEquals(ctx.hasEvent(), false);
   }
 
 }

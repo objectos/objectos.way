@@ -47,8 +47,7 @@ public class PlayerTest {
         _ -> {},
 
         """
-        BeginDocument
-        EndDocument
+
         """
     );
   }
@@ -61,11 +60,9 @@ public class PlayerTest {
         m -> m.html(),
 
         """
-        BeginDocument
         BeginStartTag(html)
         EndStartTag(empty)
         RenderEndTag(html)
-        EndDocument
         """
     );
   }
@@ -80,12 +77,10 @@ public class PlayerTest {
         ),
 
         """
-        BeginDocument
         BeginStartTag(html)
         RenderAttribute(lang, pt-BR)
         EndStartTag(empty)
         RenderEndTag(html)
-        EndDocument
         """
     );
   }
@@ -100,12 +95,10 @@ public class PlayerTest {
         ),
 
         """
-        BeginDocument
         BeginStartTag(html)
         RenderBooleanAttribute(autofocus)
         EndStartTag(empty)
         RenderEndTag(html)
-        EndDocument
         """
     );
   }
@@ -122,14 +115,12 @@ public class PlayerTest {
         ),
 
         """
-        BeginDocument
         BeginStartTag(html)
         EndStartTag
         BeginStartTag(head)
         EndStartTag(empty)
         RenderEndTag(head)
         RenderEndTag(html)
-        EndDocument
         """
     );
   }
@@ -146,14 +137,12 @@ public class PlayerTest {
         ),
 
         """
-        BeginDocument
         BeginStartTag(head)
         EndStartTag
         BeginStartTag(meta)
         RenderAttribute(charset, UTF-8)
         EndStartTag(void)
         RenderEndTag(head)
-        EndDocument
         """
     );
   }
@@ -171,7 +160,6 @@ public class PlayerTest {
         ),
 
         """
-        BeginDocument
         BeginStartTag(html)
         RenderAttribute(lang, pt-BR)
         EndStartTag
@@ -179,7 +167,6 @@ public class PlayerTest {
         EndStartTag(empty)
         RenderEndTag(head)
         RenderEndTag(html)
-        EndDocument
         """
     );
   }
@@ -196,12 +183,10 @@ public class PlayerTest {
         },
 
         """
-        BeginDocument
         RenderDoctype
         BeginStartTag(html)
         EndStartTag
         RenderEndTag(html)
-        EndDocument
         """
     );
   }
