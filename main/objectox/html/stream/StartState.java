@@ -37,7 +37,7 @@ final class StartState implements State {
       proto = ctx.peekByte();
 
       switch (proto) {
-        case HtmlBytes.xSTARTTAG8 -> skipElement().execute(IntSize.BIT8);
+        case HtmlBytes.xSTARTTAG8 -> { skipElement().execute(IntSize.BIT8); continue; }
 
         case HtmlBytes.xSTARTFLAT -> throw new UnsupportedOperationException("Implement me");
 

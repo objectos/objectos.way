@@ -111,7 +111,9 @@ public class PlayerTest {
   }
 
   @Test(description = """
-  <html><head></head></html>
+  <html>
+    <head></head>
+  </html>
   """)
   public void events04() {
     events(
@@ -133,7 +135,9 @@ public class PlayerTest {
   }
 
   @Test(description = """
-  <head><meta charset="UTF-8"></head>
+  <head>
+  <meta charset="UTF-8">
+  </head>
   """)
   public void events05() {
     events(
@@ -149,6 +153,32 @@ public class PlayerTest {
         RenderAttribute(charset, UTF-8)
         EndStartTag(void)
         RenderEndTag(head)
+        EndDocument
+        """
+    );
+  }
+
+  @Test(description = """
+  <html lang="pt-BR">
+    <head></head>
+  </html>
+  """)
+  public void events06() {
+    events(
+        m -> m.html(
+            m.head(),
+            m.lang("pt-BR")
+        ),
+
+        """
+        BeginDocument
+        BeginStartTag(html)
+        RenderAttribute(lang, pt-BR)
+        EndStartTag
+        BeginStartTag(head)
+        EndStartTag(empty)
+        RenderEndTag(head)
+        RenderEndTag(html)
         EndDocument
         """
     );

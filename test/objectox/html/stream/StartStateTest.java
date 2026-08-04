@@ -17,6 +17,7 @@ package objectox.html.stream;
 
 import static org.testng.Assert.assertEquals;
 
+import objectox.html.attr.AttributeNamePojo;
 import objectox.html.elem.ElementNamePojo;
 import objectox.html.markup.HtmlBytes;
 import org.testng.annotations.Test;
@@ -80,6 +81,47 @@ public class StartStateTest {
       opts.addByte(HtmlBytes.VALUES8);
       opts.addInt8(1);
       opts.addInt8(0);
+      opts.addByte(HtmlBytes.ENDTAG8);
+      opts.addInt8(ElementNamePojo.HTML.index());
+
+      opts.push(ScanDocumentNodeFrame.of(0));
+    });
+
+    final StartState subject;
+    subject = new StartState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res.getClass(), ScanDocumentNodeState.class);
+    assertEquals(ctx.peekByte(), HtmlBytes.STARTTAG8);
+    assertEquals(ctx.hasEvent(), true);
+    assertEquals(ctx.nextEvent(), BeginDocumentEvent.INSTANCE);
+  }
+
+  @Test(description = """
+  <html lang="pt-BR">
+    <head></head>
+  </html>
+  """)
+  public void compute06() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xSTARTTAG8);
+      opts.addInt8(ElementNamePojo.HEAD.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ENDTAG8);
+      opts.addInt8(ElementNamePojo.HEAD.index());
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeNamePojo.LANG.index());
+      opts.addInt8(opts.addObject("pt-BR"));
+      opts.addByte(HtmlBytes.STARTTAG8);
+      opts.addInt8(ElementNamePojo.HTML.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(2);
+      opts.addInt8(0);
+      opts.addInt8(6);
       opts.addByte(HtmlBytes.ENDTAG8);
       opts.addInt8(ElementNamePojo.HTML.index());
 

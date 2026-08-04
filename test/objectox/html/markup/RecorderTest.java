@@ -237,6 +237,49 @@ public class RecorderTest {
   }
 
   @Test(description = """
+  <html lang="pt-BR">
+    <head></head>
+  </html>
+  """)
+  public void record06() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final Recorder subject;
+    subject = create(sink);
+
+    subject.element(
+        ElementNamePojo.HTML,
+        subject.element(ElementNamePojo.HEAD),
+        subject.attribute(AttributeNamePojo.LANG, "pt-BR")
+    );
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.xSTARTTAG8);
+          opts.addInt8(ElementNamePojo.HEAD.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(0);
+          opts.addByte(HtmlBytes.ENDTAG8);
+          opts.addInt8(ElementNamePojo.HEAD.index());
+          opts.addByte(HtmlBytes.xATTRIBUTE88);
+          opts.addInt8(AttributeNamePojo.LANG.index());
+          opts.addInt8(opts.addObject("pt-BR"));
+          opts.addByte(HtmlBytes.STARTTAG8);
+          opts.addInt8(ElementNamePojo.HTML.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(2);
+          opts.addInt8(0);
+          opts.addInt8(6);
+          opts.addByte(HtmlBytes.ENDTAG8);
+          opts.addInt8(ElementNamePojo.HTML.index());
+        })
+    );
+  }
+
+  @Test(description = """
   flatten instruction
   """)
   public void flatten01() {

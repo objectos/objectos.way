@@ -139,10 +139,12 @@ public class TemplateTest {
         },
 
         """
-      <html lang="pt-BR">
-      <head></head>
-      </html>
-      """
+        <!-- BEGIN Objectos HTML -->
+        <html lang="pt-BR">
+          <head></head>
+        </html>
+        <!-- END Objectos HTML -->
+        """
     );
   }
 
@@ -166,12 +168,14 @@ public class TemplateTest {
         },
 
         """
-      <html>
-      <head>
-      <meta>
-      </head>
-      </html>
-      """
+        <!-- BEGIN Objectos HTML -->
+        <html>
+          <head>
+            <meta>
+          </head>
+        </html>
+        <!-- END Objectos HTML -->
+        """
     );
   }
 
@@ -197,12 +201,14 @@ public class TemplateTest {
         },
 
         """
-      <html lang="pt-BR">
-      <head>
-      <meta charset="utf-8">
-      </head>
-      </html>
-      """
+        <!-- BEGIN Objectos HTML -->
+        <html lang="pt-BR">
+          <head>
+            <meta charset="utf-8">
+          </head>
+        </html>
+        <!-- END Objectos HTML -->
+        """
     );
   }
 
@@ -224,11 +230,13 @@ public class TemplateTest {
         },
 
         """
-      <html>
-      <head></head>
-      <body></body>
-      </html>
-      """
+        <!-- BEGIN Objectos HTML -->
+        <html>
+          <head></head>
+          <body></body>
+        </html>
+        <!-- END Objectos HTML -->
+        """
     );
   }
 
@@ -251,11 +259,13 @@ public class TemplateTest {
         },
 
         """
-      <html lang="pt-BR">
-      <head></head>
-      <body></body>
-      </html>
-      """
+        <!-- BEGIN Objectos HTML -->
+        <html lang="pt-BR">
+          <head></head>
+          <body></body>
+        </html>
+        <!-- END Objectos HTML -->
+        """
     );
   }
 
@@ -276,9 +286,11 @@ public class TemplateTest {
         },
 
         """
-      <!DOCTYPE html>
-      <html></html>
-      """
+        <!-- BEGIN Objectos HTML -->
+        <!DOCTYPE html>
+        <html></html>
+        <!-- END Objectos HTML -->
+        """
     );
   }
 

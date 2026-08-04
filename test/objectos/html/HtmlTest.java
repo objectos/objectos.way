@@ -127,4 +127,22 @@ public class HtmlTest {
     );
   }
 
+  @Test
+  public void toString06() {
+    toString(
+        m -> m.html(
+            m.head(),
+            m.lang("pt-BR")
+        ),
+
+        """
+        <!-- BEGIN Objectos HTML -->
+        <html lang="pt-BR">
+          <head></head>
+        </html>
+        <!-- END Objectos HTML -->
+        """
+    );
+  }
+
 }
