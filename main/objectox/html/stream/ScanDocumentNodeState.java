@@ -40,10 +40,18 @@ final class ScanDocumentNodeState implements State {
     code = ctx.nextByte();
 
     return switch (code) {
+      case HtmlBytes.DOCTYPE -> doctype();
+
       case HtmlBytes.STARTTAG8 -> new BeginStartTagState(ctx, IntSize.BIT8);
 
       default -> throw State.implCode(code);
     };
+  }
+
+  private State doctype() {
+    ctx.result(RenderDoctypeEvent.of());
+
+    return this;
   }
 
 }

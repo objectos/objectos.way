@@ -185,7 +185,7 @@ public class PlayerTest {
         """
         RenderDoctype
         BeginStartTag(html)
-        EndStartTag
+        EndStartTag(empty)
         RenderEndTag(html)
         """
     );

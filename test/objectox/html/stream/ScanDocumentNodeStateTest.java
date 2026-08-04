@@ -64,4 +64,33 @@ public class ScanDocumentNodeStateTest {
     assertEquals(ctx.hasEvent(), false);
   }
 
+  @Test(description = """
+  <!DOCTYPE html>
+  <html></html>
+  """)
+  public void compute07() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.DOCTYPE);
+      opts.addByte(HtmlBytes.STARTTAG8);
+      opts.addInt8(ElementNamePojo.HTML.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ENDTAG8);
+      opts.addInt8(ElementNamePojo.HTML.index());
+
+      opts.push(ScanDocumentNodeFrame.of(0));
+    });
+
+    final ScanDocumentNodeState subject;
+    subject = new ScanDocumentNodeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res.getClass(), ScanDocumentNodeState.class);
+    assertEquals(ctx.hasEvent(), true);
+    assertEquals(ctx.nextEvent(), RenderDoctypeEvent.of());
+  }
+
 }
