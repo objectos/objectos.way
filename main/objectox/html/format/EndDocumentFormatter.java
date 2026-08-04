@@ -15,37 +15,16 @@
  */
 package objectox.html.format;
 
-import objectos.html.format.NewLineStyle;
 import objectos.html.stream.EndDocument;
 
 final class EndDocumentFormatter {
 
-  final String comment;
+  static final EndDocumentFormatter INSTANCE = new EndDocumentFormatter();
 
-  private final NewLine newLine;
-
-  final NewLineStyle newLineStyle;
-
-  EndDocumentFormatter(String comment, NewLine newLine, NewLineStyle newLineStyle) {
-    this.comment = comment;
-
-    this.newLine = newLine;
-
-    this.newLineStyle = newLineStyle;
-  }
+  private EndDocumentFormatter() {}
 
   public final void format(EndDocument event, Output out) {
-    if (comment.isEmpty()) {
-      newLine.empty(newLineStyle, out);
-    } else {
-      out.append("<!-- ");
-
-      out.append(comment);
-
-      out.append(" -->");
-
-      newLine.notEmpty(newLineStyle, out);
-    }
+    // noop
   }
 
 }

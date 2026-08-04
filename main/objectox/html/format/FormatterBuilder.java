@@ -17,9 +17,7 @@ package objectox.html.format;
 
 import java.util.Objects;
 import java.util.function.Consumer;
-import objectos.html.format.BeginDocumentOptions;
 import objectos.html.format.BeginStartTagOptions;
-import objectos.html.format.EndDocumentOptions;
 import objectos.html.format.EndStartTagOptions;
 import objectos.html.format.Formatter;
 import objectos.html.format.FormatterOptions;
@@ -29,11 +27,7 @@ import objectos.html.format.RenderEndTagOptions;
 
 public final class FormatterBuilder implements FormatterOptions {
 
-  private final BeginDocumentFormatterBuilder beginDocumentFormatterBuilder = new BeginDocumentFormatterBuilder();
-
   private final BeginStartTagFormatterBuilder beginStartTagFormatterBuilder = new BeginStartTagFormatterBuilder();
-
-  private final EndDocumentFormatterBuilder endDocumentFormatterBuilder = new EndDocumentFormatterBuilder();
 
   private final EndStartTagFormatterBuilder endStartTagFormatterBuilder = new EndStartTagFormatterBuilder();
 
@@ -48,11 +42,6 @@ public final class FormatterBuilder implements FormatterOptions {
   private final NewLine newLine = NewLine.LF;
 
   @Override
-  public final void beginDocument(Consumer<? super BeginDocumentOptions> opts) {
-    opts.accept(beginDocumentFormatterBuilder);
-  }
-
-  @Override
   public final void beginStartTag(Consumer<? super BeginStartTagOptions> opts) {
     opts.accept(beginStartTagFormatterBuilder);
   }
@@ -62,11 +51,11 @@ public final class FormatterBuilder implements FormatterOptions {
     indentation = new Indentation(indentationText);
 
     return new FormatterPojo(
-        beginDocumentFormatterBuilder.build(newLine),
+        BeginDocumentFormatter.INSTANCE,
 
         beginStartTagFormatterBuilder.build(indentation),
 
-        endDocumentFormatterBuilder.build(newLine),
+        EndDocumentFormatter.INSTANCE,
 
         endStartTagFormatterBuilder.build(indentation, newLine),
 
@@ -76,11 +65,6 @@ public final class FormatterBuilder implements FormatterOptions {
 
         renderEndTagFormatterBuilder.build(indentation, newLine)
     );
-  }
-
-  @Override
-  public final void endDocument(Consumer<? super EndDocumentOptions> opts) {
-    opts.accept(endDocumentFormatterBuilder);
   }
 
   @Override

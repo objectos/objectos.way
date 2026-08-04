@@ -184,4 +184,26 @@ public class PlayerTest {
     );
   }
 
+  @Test(description = """
+  <!DOCTYPE html>
+  <html></html>
+  """)
+  public void events07() {
+    events(
+        m -> {
+          m.doctype();
+          m.html();
+        },
+
+        """
+        BeginDocument
+        RenderDoctype
+        BeginStartTag(html)
+        EndStartTag
+        RenderEndTag(html)
+        EndDocument
+        """
+    );
+  }
+
 }

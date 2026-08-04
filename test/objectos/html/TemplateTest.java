@@ -43,9 +43,7 @@ public class TemplateTest {
         },
 
         """
-        <!-- BEGIN Objectos HTML -->
         <html></html>
-        <!-- END Objectos HTML -->
         """
     );
   }
@@ -65,9 +63,7 @@ public class TemplateTest {
         },
 
         """
-        <!-- BEGIN Objectos HTML -->
         <html lang="pt-BR"></html>
-        <!-- END Objectos HTML -->
         """
     );
   }
@@ -87,9 +83,7 @@ public class TemplateTest {
         },
 
         """
-        <!-- BEGIN Objectos HTML -->
         <html class="no-js" lang="pt-BR"></html>
-        <!-- END Objectos HTML -->
         """
     );
   }
@@ -111,11 +105,9 @@ public class TemplateTest {
         },
 
         """
-        <!-- BEGIN Objectos HTML -->
         <html>
           <head></head>
         </html>
-        <!-- END Objectos HTML -->
         """
     );
   }
@@ -139,11 +131,9 @@ public class TemplateTest {
         },
 
         """
-        <!-- BEGIN Objectos HTML -->
         <html lang="pt-BR">
           <head></head>
         </html>
-        <!-- END Objectos HTML -->
         """
     );
   }
@@ -168,13 +158,11 @@ public class TemplateTest {
         },
 
         """
-        <!-- BEGIN Objectos HTML -->
         <html>
           <head>
             <meta>
           </head>
         </html>
-        <!-- END Objectos HTML -->
         """
     );
   }
@@ -201,13 +189,11 @@ public class TemplateTest {
         },
 
         """
-        <!-- BEGIN Objectos HTML -->
         <html lang="pt-BR">
           <head>
             <meta charset="utf-8">
           </head>
         </html>
-        <!-- END Objectos HTML -->
         """
     );
   }
@@ -230,12 +216,10 @@ public class TemplateTest {
         },
 
         """
-        <!-- BEGIN Objectos HTML -->
         <html>
           <head></head>
           <body></body>
         </html>
-        <!-- END Objectos HTML -->
         """
     );
   }
@@ -259,12 +243,10 @@ public class TemplateTest {
         },
 
         """
-        <!-- BEGIN Objectos HTML -->
         <html lang="pt-BR">
           <head></head>
           <body></body>
         </html>
-        <!-- END Objectos HTML -->
         """
     );
   }
@@ -286,10 +268,8 @@ public class TemplateTest {
         },
 
         """
-        <!-- BEGIN Objectos HTML -->
         <!DOCTYPE html>
         <html></html>
-        <!-- END Objectos HTML -->
         """
     );
   }
@@ -341,12 +321,12 @@ public class TemplateTest {
         },
 
         """
-      <html>
-      <body>
-      <p>o7html</p>
-      </body>
-      </html>
-      """
+        <html>
+        <body>
+        <p>o7html</p>
+        </body>
+        </html>
+        """
     );
   }
 
@@ -1340,23 +1320,23 @@ public class TemplateTest {
             div(
                 c(html -> html.span("as child"))
             );
-
+  
             div(f(this::fragment0));
-
+  
             div(f(this::fragment1));
           }
-
+  
           private void fragment0() {
             c(html -> html.span("fragment root"));
           }
-
+  
           private void fragment1() {
             div(
                 c(html -> html.span("fragment child"))
             );
           }
         },
-
+  
         """
         <div><span>as child</span></div>
         <div><span>fragment root</span></div>

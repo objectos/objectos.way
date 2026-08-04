@@ -43,10 +43,7 @@ public class HtmlTest {
     toString(
         _ -> {},
 
-        """
-        <!-- BEGIN Objectos HTML -->
-        <!-- END Objectos HTML -->
-        """
+        ""
     );
   }
 
@@ -56,9 +53,7 @@ public class HtmlTest {
         m -> m.html(),
 
         """
-        <!-- BEGIN Objectos HTML -->
         <html></html>
-        <!-- END Objectos HTML -->
         """
     );
   }
@@ -71,9 +66,7 @@ public class HtmlTest {
         ),
 
         """
-        <!-- BEGIN Objectos HTML -->
         <html lang="pt-BR"></html>
-        <!-- END Objectos HTML -->
         """
     );
   }
@@ -86,9 +79,7 @@ public class HtmlTest {
         ),
 
         """
-        <!-- BEGIN Objectos HTML -->
         <html autofocus></html>
-        <!-- END Objectos HTML -->
         """
     );
   }
@@ -101,11 +92,9 @@ public class HtmlTest {
         ),
 
         """
-        <!-- BEGIN Objectos HTML -->
         <html>
           <head></head>
         </html>
-        <!-- END Objectos HTML -->
         """
     );
   }
@@ -118,11 +107,9 @@ public class HtmlTest {
         ),
 
         """
-        <!-- BEGIN Objectos HTML -->
         <head>
           <meta charset="UTF-8">
         </head>
-        <!-- END Objectos HTML -->
         """
     );
   }
@@ -136,11 +123,9 @@ public class HtmlTest {
         ),
 
         """
-        <!-- BEGIN Objectos HTML -->
         <html lang="pt-BR">
           <head></head>
         </html>
-        <!-- END Objectos HTML -->
         """
     );
   }

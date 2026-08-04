@@ -16,9 +16,7 @@
 package objectos.html.format;
 
 import java.util.function.Consumer;
-import objectos.html.stream.BeginDocument;
 import objectos.html.stream.BeginStartTag;
-import objectos.html.stream.EndDocument;
 import objectos.html.stream.EndStartTag;
 import objectos.html.stream.RenderAttribute;
 import objectos.html.stream.RenderBooleanAttribute;
@@ -30,20 +28,10 @@ public sealed interface FormatterOptions
     permits
     FormatterBuilder {
 
-  /// Sets the [BeginDocument] options.
-  ///
-  /// @param opts allows for setting the options
-  void beginDocument(Consumer<? super BeginDocumentOptions> opts);
-
   /// Sets the [BeginStartTag] options.
   ///
   /// @param opts allows for setting the options
   void beginStartTag(Consumer<? super BeginStartTagOptions> opts);
-
-  /// Sets the [EndDocument] options.
-  ///
-  /// @param opts allows for setting the options
-  void endDocument(Consumer<? super EndDocumentOptions> opts);
 
   /// Sets the [EndStartTag] options.
   ///

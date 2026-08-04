@@ -280,6 +280,38 @@ public class RecorderTest {
   }
 
   @Test(description = """
+  <!DOCTYPE html>
+  <html></html>
+  """)
+  public void record07() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final Recorder subject;
+    subject = create(sink);
+
+    subject.doctype();
+
+    subject.element(
+        ElementNamePojo.HTML
+    );
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.DOCTYPE);
+          opts.addByte(HtmlBytes.STARTTAG8);
+          opts.addInt8(ElementNamePojo.HTML.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(0);
+          opts.addByte(HtmlBytes.ENDTAG8);
+          opts.addInt8(ElementNamePojo.HTML.index());
+        })
+    );
+  }
+
+  @Test(description = """
   flatten instruction
   """)
   public void flatten01() {
