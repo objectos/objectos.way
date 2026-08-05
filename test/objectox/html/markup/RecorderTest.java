@@ -344,6 +344,44 @@ public class RecorderTest {
   }
 
   @Test(description = """
+  <div class="c1 c2"></html>
+  """)
+  public void record09() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final Recorder subject;
+    subject = create(sink);
+
+    subject.element(
+        ElementName.DIV,
+        subject.attribute(AttributeNamePojo.CLASS, "c1"),
+        subject.attribute(AttributeNamePojo.CLASS, "c2")
+    );
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.xATTRIBUTE88);
+          opts.addInt8(AttributeNamePojo.CLASS.index());
+          opts.addInt8(opts.addObject("c1"));
+          opts.addByte(HtmlBytes.xATTRIBUTE88);
+          opts.addInt8(AttributeNamePojo.CLASS.index());
+          opts.addInt8(opts.addObject("c2"));
+          opts.addByte(HtmlBytes.STARTTAG8);
+          opts.addInt8(ElementNamePojo.DIV.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(2);
+          opts.addInt8(0);
+          opts.addInt8(3);
+          opts.addByte(HtmlBytes.ENDTAG8);
+          opts.addInt8(ElementNamePojo.DIV.index());
+        })
+    );
+  }
+
+  @Test(description = """
   flatten instruction
   """)
   public void flatten01() {

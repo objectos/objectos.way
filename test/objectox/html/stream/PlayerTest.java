@@ -207,4 +207,24 @@ public class PlayerTest {
     );
   }
 
+  @Test(description = """
+  <div class="c1 c2"></html>
+  """)
+  public void events09() {
+    events(
+        m -> m.div(
+            m.className("c1"),
+
+            m.className("c2")
+        ),
+
+        """
+        BeginStartTag(div)
+        RenderAttribute(class, c1 c2)
+        EndStartTag
+        RenderEndTag(div)
+        """
+    );
+  }
+
 }

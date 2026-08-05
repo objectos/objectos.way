@@ -17,6 +17,7 @@ package objectox.html.stream;
 
 import static org.testng.Assert.assertEquals;
 
+import objectox.html.attr.AttributeNamePojo;
 import objectox.html.elem.ElementNamePojo;
 import objectox.html.markup.HtmlBytes;
 import org.testng.annotations.Test;
@@ -91,6 +92,40 @@ public class ScanDocumentNodeStateTest {
     assertEquals(res.getClass(), ScanDocumentNodeState.class);
     assertEquals(ctx.hasEvent(), true);
     assertEquals(ctx.nextEvent(), RenderDoctypeEvent.of());
+  }
+
+  @Test(description = """
+  <div class="c1 c2"></html>
+  """)
+  public void compute09() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeNamePojo.CLASS.index());
+      opts.addInt8(opts.addObject("c1"));
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeNamePojo.CLASS.index());
+      opts.addInt8(opts.addObject("c2"));
+      opts.addByte(HtmlBytes.STARTTAG8);
+      opts.addInt8(ElementNamePojo.DIV.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(2);
+      opts.addInt8(0);
+      opts.addInt8(3);
+      opts.addByte(HtmlBytes.ENDTAG8);
+      opts.addInt8(ElementNamePojo.DIV.index());
+
+      opts.push(ScanDocumentNodeFrame.of(6));
+    });
+
+    final ScanDocumentNodeState subject;
+    subject = new ScanDocumentNodeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res.getClass(), BeginStartTagState.class);
+    assertEquals(ctx.hasEvent(), false);
   }
 
 }
