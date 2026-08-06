@@ -15,12 +15,10 @@
  */
 package objectos.html.markup;
 
-import objectos.html.markup.Instruction.AsMethod;
 import objectox.html.markup.ElementPointer;
 
 /// Represents the encoded markup of an Objectos HTML element.
 public sealed interface ElementMarkup
     extends
-    ElementContent,
-    AsMethod
+    RegularElementContent
     permits AmbiguousInstruction, ElementPointer {}

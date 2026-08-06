@@ -22,6 +22,8 @@ import objectos.html.Attribute;
 import objectos.html.ElementName;
 import objectos.html.markup.AmbiguousInstruction;
 import objectos.html.markup.AttributeMarkup;
+import objectos.html.markup.RegularElementContent;
+import objectos.html.markup.ElementContent;
 import objectos.html.markup.ElementMarkup;
 import objectos.html.markup.FlattenInstruction;
 import objectos.html.markup.Fragment0;
@@ -34,6 +36,7 @@ import objectos.html.markup.Instruction;
 import objectos.html.markup.NoOpInstruction;
 import objectos.html.markup.RawInstruction;
 import objectos.html.markup.TextInstruction;
+import objectos.html.markup.VoidElementContent;
 import objectos.script.JsAction;
 import objectox.html.elem.ElementNamePojo;
 import objectox.html.markup.AttributeNamePojo;
@@ -285,7 +288,7 @@ public abstract NoOpInstruction noop();
   // ELEMENTS
   //
 
-  abstract ElementMarkup elem0(ElementName name, Instruction... contents);
+  abstract ElementMarkup elem0(ElementName name, ElementContent... contents);
 
   abstract ElementMarkup elem0(ElementName name, String text);
 
@@ -295,7 +298,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element
-  public final ElementMarkup elem(ElementName name, Instruction... contents) {
+  public final ElementMarkup elem(ElementName name, ElementContent... contents) {
     Objects.requireNonNull(name, "name == null");
     return elem0(name, contents);
   }
@@ -319,7 +322,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup a(Instruction... contents) {
+  public final ElementMarkup a(RegularElementContent... contents) {
     return elem0(ElementNamePojo.A, contents);
   }
 
@@ -337,7 +340,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup abbr(Instruction... contents) {
+  public final ElementMarkup abbr(RegularElementContent... contents) {
     return elem0(ElementNamePojo.ABBR, contents);
   }
 
@@ -355,7 +358,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup article(Instruction... contents) {
+  public final ElementMarkup article(RegularElementContent... contents) {
     return elem0(ElementNamePojo.ARTICLE, contents);
   }
 
@@ -373,7 +376,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup aside(Instruction... contents) {
+  public final ElementMarkup aside(RegularElementContent... contents) {
     return elem0(ElementNamePojo.ASIDE, contents);
   }
 
@@ -391,7 +394,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup b(Instruction... contents) {
+  public final ElementMarkup b(RegularElementContent... contents) {
     return elem0(ElementNamePojo.B, contents);
   }
 
@@ -409,7 +412,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup blockquote(Instruction... contents) {
+  public final ElementMarkup blockquote(RegularElementContent... contents) {
     return elem0(ElementNamePojo.BLOCKQUOTE, contents);
   }
 
@@ -427,7 +430,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup body(Instruction... contents) {
+  public final ElementMarkup body(RegularElementContent... contents) {
     return elem0(ElementNamePojo.BODY, contents);
   }
 
@@ -445,7 +448,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup br(Instruction.OfVoid... contents) {
+  public final ElementMarkup br(VoidElementContent... contents) {
     return elem0(ElementNamePojo.BR, contents);
   }
 
@@ -454,7 +457,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup button(Instruction... contents) {
+  public final ElementMarkup button(RegularElementContent... contents) {
     return elem0(ElementNamePojo.BUTTON, contents);
   }
 
@@ -472,7 +475,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup clipPath(Instruction... contents) {
+  public final ElementMarkup clipPath(RegularElementContent... contents) {
     return elem0(ElementNamePojo.CLIPPATH, contents);
   }
 
@@ -481,7 +484,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup code(Instruction... contents) {
+  public final ElementMarkup code(RegularElementContent... contents) {
     return elem0(ElementNamePojo.CODE, contents);
   }
 
@@ -499,7 +502,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup dd(Instruction... contents) {
+  public final ElementMarkup dd(RegularElementContent... contents) {
     return elem0(ElementNamePojo.DD, contents);
   }
 
@@ -517,7 +520,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup defs(Instruction... contents) {
+  public final ElementMarkup defs(RegularElementContent... contents) {
     return elem0(ElementNamePojo.DEFS, contents);
   }
 
@@ -535,7 +538,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup details(Instruction... contents) {
+  public final ElementMarkup details(RegularElementContent... contents) {
     return elem0(ElementNamePojo.DETAILS, contents);
   }
 
@@ -553,7 +556,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup dialog(Instruction... contents) {
+  public final ElementMarkup dialog(RegularElementContent... contents) {
     return elem0(ElementNamePojo.DIALOG, contents);
   }
 
@@ -571,7 +574,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup div(Instruction... contents) {
+  public final ElementMarkup div(RegularElementContent... contents) {
     return elem0(ElementNamePojo.DIV, contents);
   }
 
@@ -589,7 +592,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup dl(Instruction... contents) {
+  public final ElementMarkup dl(RegularElementContent... contents) {
     return elem0(ElementNamePojo.DL, contents);
   }
 
@@ -607,7 +610,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup dt(Instruction... contents) {
+  public final ElementMarkup dt(RegularElementContent... contents) {
     return elem0(ElementNamePojo.DT, contents);
   }
 
@@ -625,7 +628,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup em(Instruction... contents) {
+  public final ElementMarkup em(RegularElementContent... contents) {
     return elem0(ElementNamePojo.EM, contents);
   }
 
@@ -643,7 +646,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup fieldset(Instruction... contents) {
+  public final ElementMarkup fieldset(RegularElementContent... contents) {
     return elem0(ElementNamePojo.FIELDSET, contents);
   }
 
@@ -661,7 +664,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup figure(Instruction... contents) {
+  public final ElementMarkup figure(RegularElementContent... contents) {
     return elem0(ElementNamePojo.FIGURE, contents);
   }
 
@@ -679,7 +682,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup footer(Instruction... contents) {
+  public final ElementMarkup footer(RegularElementContent... contents) {
     return elem0(ElementNamePojo.FOOTER, contents);
   }
 
@@ -697,7 +700,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup form(Instruction... contents) {
+  public final ElementMarkup form(RegularElementContent... contents) {
     return elem0(ElementNamePojo.FORM, contents);
   }
 
@@ -706,7 +709,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup g(Instruction... contents) {
+  public final ElementMarkup g(RegularElementContent... contents) {
     return elem0(ElementNamePojo.G, contents);
   }
 
@@ -724,7 +727,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup h1(Instruction... contents) {
+  public final ElementMarkup h1(RegularElementContent... contents) {
     return elem0(ElementNamePojo.H1, contents);
   }
 
@@ -742,7 +745,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup h2(Instruction... contents) {
+  public final ElementMarkup h2(RegularElementContent... contents) {
     return elem0(ElementNamePojo.H2, contents);
   }
 
@@ -760,7 +763,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup h3(Instruction... contents) {
+  public final ElementMarkup h3(RegularElementContent... contents) {
     return elem0(ElementNamePojo.H3, contents);
   }
 
@@ -778,7 +781,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup h4(Instruction... contents) {
+  public final ElementMarkup h4(RegularElementContent... contents) {
     return elem0(ElementNamePojo.H4, contents);
   }
 
@@ -796,7 +799,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup h5(Instruction... contents) {
+  public final ElementMarkup h5(RegularElementContent... contents) {
     return elem0(ElementNamePojo.H5, contents);
   }
 
@@ -814,7 +817,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup h6(Instruction... contents) {
+  public final ElementMarkup h6(RegularElementContent... contents) {
     return elem0(ElementNamePojo.H6, contents);
   }
 
@@ -832,7 +835,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup head(Instruction... contents) {
+  public final ElementMarkup head(RegularElementContent... contents) {
     return elem0(ElementNamePojo.HEAD, contents);
   }
 
@@ -850,7 +853,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup header(Instruction... contents) {
+  public final ElementMarkup header(RegularElementContent... contents) {
     return elem0(ElementNamePojo.HEADER, contents);
   }
 
@@ -868,7 +871,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup hgroup(Instruction... contents) {
+  public final ElementMarkup hgroup(RegularElementContent... contents) {
     return elem0(ElementNamePojo.HGROUP, contents);
   }
 
@@ -886,7 +889,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup hr(Instruction.OfVoid... contents) {
+  public final ElementMarkup hr(VoidElementContent... contents) {
     return elem0(ElementNamePojo.HR, contents);
   }
 
@@ -895,7 +898,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup html(Instruction... contents) {
+  public final ElementMarkup html(RegularElementContent... contents) {
     return elem0(ElementNamePojo.HTML, contents);
   }
 
@@ -913,7 +916,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup img(Instruction.OfVoid... contents) {
+  public final ElementMarkup img(VoidElementContent... contents) {
     return elem0(ElementNamePojo.IMG, contents);
   }
 
@@ -922,7 +925,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup input(Instruction.OfVoid... contents) {
+  public final ElementMarkup input(VoidElementContent... contents) {
     return elem0(ElementNamePojo.INPUT, contents);
   }
 
@@ -931,7 +934,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup kbd(Instruction... contents) {
+  public final ElementMarkup kbd(RegularElementContent... contents) {
     return elem0(ElementNamePojo.KBD, contents);
   }
 
@@ -949,7 +952,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup label(Instruction... contents) {
+  public final ElementMarkup label(RegularElementContent... contents) {
     return elem0(ElementNamePojo.LABEL, contents);
   }
 
@@ -958,7 +961,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup legend(Instruction... contents) {
+  public final ElementMarkup legend(RegularElementContent... contents) {
     return elem0(ElementNamePojo.LEGEND, contents);
   }
 
@@ -976,7 +979,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup li(Instruction... contents) {
+  public final ElementMarkup li(RegularElementContent... contents) {
     return elem0(ElementNamePojo.LI, contents);
   }
 
@@ -994,7 +997,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup link(Instruction.OfVoid... contents) {
+  public final ElementMarkup link(VoidElementContent... contents) {
     return elem0(ElementNamePojo.LINK, contents);
   }
 
@@ -1003,7 +1006,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup main(Instruction... contents) {
+  public final ElementMarkup main(RegularElementContent... contents) {
     return elem0(ElementNamePojo.MAIN, contents);
   }
 
@@ -1021,7 +1024,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup menu(Instruction... contents) {
+  public final ElementMarkup menu(RegularElementContent... contents) {
     return elem0(ElementNamePojo.MENU, contents);
   }
 
@@ -1039,7 +1042,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup meta(Instruction.OfVoid... contents) {
+  public final ElementMarkup meta(VoidElementContent... contents) {
     return elem0(ElementNamePojo.META, contents);
   }
 
@@ -1048,7 +1051,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup nav(Instruction... contents) {
+  public final ElementMarkup nav(RegularElementContent... contents) {
     return elem0(ElementNamePojo.NAV, contents);
   }
 
@@ -1066,7 +1069,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup noscript(Instruction... contents) {
+  public final ElementMarkup noscript(RegularElementContent... contents) {
     return elem0(ElementNamePojo.NOSCRIPT, contents);
   }
 
@@ -1084,7 +1087,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup ol(Instruction... contents) {
+  public final ElementMarkup ol(RegularElementContent... contents) {
     return elem0(ElementNamePojo.OL, contents);
   }
 
@@ -1102,7 +1105,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup optgroup(Instruction... contents) {
+  public final ElementMarkup optgroup(RegularElementContent... contents) {
     return elem0(ElementNamePojo.OPTGROUP, contents);
   }
 
@@ -1120,7 +1123,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup option(Instruction... contents) {
+  public final ElementMarkup option(RegularElementContent... contents) {
     return elem0(ElementNamePojo.OPTION, contents);
   }
 
@@ -1138,7 +1141,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup p(Instruction... contents) {
+  public final ElementMarkup p(RegularElementContent... contents) {
     return elem0(ElementNamePojo.P, contents);
   }
 
@@ -1156,7 +1159,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup path(Instruction... contents) {
+  public final ElementMarkup path(RegularElementContent... contents) {
     return elem0(ElementNamePojo.PATH, contents);
   }
 
@@ -1174,7 +1177,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup pre(Instruction... contents) {
+  public final ElementMarkup pre(RegularElementContent... contents) {
     return elem0(ElementNamePojo.PRE, contents);
   }
 
@@ -1192,7 +1195,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup progress(Instruction... contents) {
+  public final ElementMarkup progress(RegularElementContent... contents) {
     return elem0(ElementNamePojo.PROGRESS, contents);
   }
 
@@ -1210,7 +1213,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup samp(Instruction... contents) {
+  public final ElementMarkup samp(RegularElementContent... contents) {
     return elem0(ElementNamePojo.SAMP, contents);
   }
 
@@ -1228,7 +1231,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup script(Instruction... contents) {
+  public final ElementMarkup script(RegularElementContent... contents) {
     return elem0(ElementNamePojo.SCRIPT, contents);
   }
 
@@ -1246,7 +1249,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup section(Instruction... contents) {
+  public final ElementMarkup section(RegularElementContent... contents) {
     return elem0(ElementNamePojo.SECTION, contents);
   }
 
@@ -1264,7 +1267,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup select(Instruction... contents) {
+  public final ElementMarkup select(RegularElementContent... contents) {
     return elem0(ElementNamePojo.SELECT, contents);
   }
 
@@ -1282,7 +1285,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup small(Instruction... contents) {
+  public final ElementMarkup small(RegularElementContent... contents) {
     return elem0(ElementNamePojo.SMALL, contents);
   }
 
@@ -1300,7 +1303,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup span(Instruction... contents) {
+  public final ElementMarkup span(RegularElementContent... contents) {
     return elem0(ElementNamePojo.SPAN, contents);
   }
 
@@ -1318,7 +1321,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup strong(Instruction... contents) {
+  public final ElementMarkup strong(RegularElementContent... contents) {
     return elem0(ElementNamePojo.STRONG, contents);
   }
 
@@ -1336,7 +1339,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup style(Instruction... contents) {
+  public final ElementMarkup style(RegularElementContent... contents) {
     return elem0(ElementNamePojo.STYLE, contents);
   }
 
@@ -1345,7 +1348,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup sub(Instruction... contents) {
+  public final ElementMarkup sub(RegularElementContent... contents) {
     return elem0(ElementNamePojo.SUB, contents);
   }
 
@@ -1363,7 +1366,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup summary(Instruction... contents) {
+  public final ElementMarkup summary(RegularElementContent... contents) {
     return elem0(ElementNamePojo.SUMMARY, contents);
   }
 
@@ -1381,7 +1384,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup sup(Instruction... contents) {
+  public final ElementMarkup sup(RegularElementContent... contents) {
     return elem0(ElementNamePojo.SUP, contents);
   }
 
@@ -1399,7 +1402,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup svg(Instruction... contents) {
+  public final ElementMarkup svg(RegularElementContent... contents) {
     return elem0(ElementNamePojo.SVG, contents);
   }
 
@@ -1417,7 +1420,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup table(Instruction... contents) {
+  public final ElementMarkup table(RegularElementContent... contents) {
     return elem0(ElementNamePojo.TABLE, contents);
   }
 
@@ -1435,7 +1438,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup tbody(Instruction... contents) {
+  public final ElementMarkup tbody(RegularElementContent... contents) {
     return elem0(ElementNamePojo.TBODY, contents);
   }
 
@@ -1453,7 +1456,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup td(Instruction... contents) {
+  public final ElementMarkup td(RegularElementContent... contents) {
     return elem0(ElementNamePojo.TD, contents);
   }
 
@@ -1471,7 +1474,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup template(Instruction... contents) {
+  public final ElementMarkup template(RegularElementContent... contents) {
     return elem0(ElementNamePojo.TEMPLATE, contents);
   }
 
@@ -1489,7 +1492,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup textarea(Instruction... contents) {
+  public final ElementMarkup textarea(RegularElementContent... contents) {
     return elem0(ElementNamePojo.TEXTAREA, contents);
   }
 
@@ -1507,7 +1510,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup th(Instruction... contents) {
+  public final ElementMarkup th(RegularElementContent... contents) {
     return elem0(ElementNamePojo.TH, contents);
   }
 
@@ -1525,7 +1528,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup thead(Instruction... contents) {
+  public final ElementMarkup thead(RegularElementContent... contents) {
     return elem0(ElementNamePojo.THEAD, contents);
   }
 
@@ -1543,7 +1546,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup title(Instruction... contents) {
+  public final ElementMarkup title(RegularElementContent... contents) {
     return elem0(ElementNamePojo.TITLE, contents);
   }
 
@@ -1552,7 +1555,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup tr(Instruction... contents) {
+  public final ElementMarkup tr(RegularElementContent... contents) {
     return elem0(ElementNamePojo.TR, contents);
   }
 
@@ -1570,7 +1573,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementMarkup ul(Instruction... contents) {
+  public final ElementMarkup ul(RegularElementContent... contents) {
     return elem0(ElementNamePojo.UL, contents);
   }
 

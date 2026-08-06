@@ -15,11 +15,8 @@
  */
 package objectos.html.markup;
 
-import objectos.html.markup.Instruction.AsMethod;
-import objectos.html.markup.Instruction.OfVoid;
 import objectox.html.markup.AttributePointer;
 
 /// Represents the encoded markup of an Objectos HTML attribute.
 public sealed interface AttributeMarkup
-    extends AsMethod, OfVoid
     permits AmbiguousInstruction, AttributePointer {}

@@ -15,13 +15,10 @@
  */
 package objectos.html.markup;
 
-import objectos.html.markup.Instruction.AsMethod;
-import objectos.html.markup.Instruction.OfVoid;
 import objectox.html.markup.FragmentPointer;
 
 /// Represents an instruction to include a fragment to an Objectos
 /// HTML document.
 public sealed interface FragmentInstruction
-    extends AsMethod, OfVoid
     permits
     FragmentPointer {}

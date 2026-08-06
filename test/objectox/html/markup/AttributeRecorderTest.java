@@ -18,52 +18,70 @@ package objectox.html.markup;
 import static org.testng.Assert.assertEquals;
 
 import java.util.stream.IntStream;
+import objectos.html.Attribute;
+import objectos.html.AttributeName;
 import objectos.internal.Util;
 import org.testng.annotations.Test;
 
 public class AttributeRecorderTest {
 
-  @Test(
-      description = "reject null value",
-      expectedExceptions = NullPointerException.class,
-      expectedExceptionsMessageRegExp = "value == null")
-  public void record01() {
+  private HtmlSink record(AttributeName name, String value) {
     final HtmlSink sink;
     sink = new HtmlSink();
 
+    record(sink, name, value);
+
+    return sink;
+  }
+
+  private void record(HtmlSink sink, AttributeName name, String value) {
     final AttributeRecorder subject;
     subject = new AttributeRecorder(sink);
 
+    final Attribute attribute;
+    attribute = new AttributePojo(name, value);
+
+    subject.record(attribute);
+  }
+
+  @Test(
+      description = "reject null name",
+      expectedExceptions = NullPointerException.class,
+      expectedExceptionsMessageRegExp = "Attribute provided a null name")
+  public void record01() {
+    final AttributeNamePojo name;
+    name = null;
+
+    final String value;
+    value = "foo";
+
+    record(name, value);
+  }
+
+  @Test(
+      description = "reject null value",
+      expectedExceptions = NullPointerException.class,
+      expectedExceptionsMessageRegExp = "Attribute provided a null value")
+  public void record02() {
     final AttributeNamePojo name;
     name = AttributeNamePojo.ID;
 
     final String value;
     value = null;
 
-    subject.record(name, value);
+    record(name, value);
   }
 
   @Test(description = "ATTRIBUTE88")
-  public void record02() {
-    final HtmlSink sink;
-    sink = new HtmlSink();
-
-    final AttributeRecorder subject;
-    subject = new AttributeRecorder(sink);
-
+  public void attribute88() {
     final AttributeNamePojo name;
     name = AttributeNamePojo.ID;
 
     final String value;
     value = "foo";
 
-    final AttributePointer res;
-    res = subject.record(name, value);
-
-    assertEquals(res.value(), 0);
-
     assertEquals(
-        sink,
+        record(name, value),
 
         HtmlSinkY.create(opts -> {
           opts.addByte(HtmlBytes.ATTRIBUTE88);
@@ -74,12 +92,9 @@ public class AttributeRecorderTest {
   }
 
   @Test(description = "ATTRIBUTE816")
-  public void record03() {
+  public void attribute816() {
     final HtmlSink sink;
     sink = new HtmlSink(Util.EMPTY_BYTE_ARRAY, new Object[256]);
-
-    final AttributeRecorder subject;
-    subject = new AttributeRecorder(sink);
 
     final AttributeNamePojo name;
     name = AttributeNamePojo.ID;
@@ -87,10 +102,7 @@ public class AttributeRecorderTest {
     final String value;
     value = "foo";
 
-    final AttributePointer res;
-    res = subject.record(name, value);
-
-    assertEquals(res.value(), 0);
+    record(sink, name, value);
 
     assertEquals(
         sink,
@@ -105,12 +117,9 @@ public class AttributeRecorderTest {
   }
 
   @Test(description = "ATTRIBUTE824")
-  public void record04() {
+  public void attribute824() {
     final HtmlSink sink;
     sink = new HtmlSink(Util.EMPTY_BYTE_ARRAY, new Object[1 << 16]);
-
-    final AttributeRecorder subject;
-    subject = new AttributeRecorder(sink);
 
     final AttributeNamePojo name;
     name = AttributeNamePojo.ID;
@@ -118,10 +127,7 @@ public class AttributeRecorderTest {
     final String value;
     value = "foo";
 
-    final AttributePointer res;
-    res = subject.record(name, value);
-
-    assertEquals(res.value(), 0);
+    record(sink, name, value);
 
     assertEquals(
         sink,
@@ -135,14 +141,8 @@ public class AttributeRecorderTest {
     );
   }
 
-  @Test(description = "ATTRIBUTE88 escaped")
-  public void record05() {
-    final HtmlSink sink;
-    sink = new HtmlSink();
-
-    final AttributeRecorder subject;
-    subject = new AttributeRecorder(sink);
-
+  @Test(description = "value should be escaped")
+  public void valueEscaper() {
     final AttributeNamePojo name;
     name = AttributeNamePojo.ID;
 
@@ -152,79 +152,8 @@ public class AttributeRecorderTest {
     final String escaped;
     escaped = "A&amp;B";
 
-    final AttributePointer res;
-    res = subject.record(name, value);
-
-    assertEquals(res.value(), 0);
-
     assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.ATTRIBUTE88);
-          opts.addInt8(name.index());
-          opts.addInt8(opts.addObject(escaped));
-        })
-    );
-  }
-
-  @Test(description = "ATTRIBUTE88 escapes double quotation mark")
-  public void record06() {
-    final HtmlSink sink;
-    sink = new HtmlSink();
-
-    final AttributeRecorder subject;
-    subject = new AttributeRecorder(sink);
-
-    final AttributeNamePojo name;
-    name = AttributeNamePojo.ID;
-
-    final String value;
-    value = "A\"B";
-
-    final String escaped;
-    escaped = "A&quot;B";
-
-    final AttributePointer res;
-    res = subject.record(name, value);
-
-    assertEquals(res.value(), 0);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.ATTRIBUTE88);
-          opts.addInt8(name.index());
-          opts.addInt8(opts.addObject(escaped));
-        })
-    );
-  }
-
-  @Test(description = "ATTRIBUTE88 escapes single quotation mark")
-  public void record07() {
-    final HtmlSink sink;
-    sink = new HtmlSink();
-
-    final AttributeRecorder subject;
-    subject = new AttributeRecorder(sink);
-
-    final AttributeNamePojo name;
-    name = AttributeNamePojo.ID;
-
-    final String value;
-    value = "A'B";
-
-    final String escaped;
-    escaped = "A&#39;B";
-
-    final AttributePointer res;
-    res = subject.record(name, value);
-
-    assertEquals(res.value(), 0);
-
-    assertEquals(
-        sink,
+        record(name, value),
 
         HtmlSinkY.create(opts -> {
           opts.addByte(HtmlBytes.ATTRIBUTE88);

@@ -15,7 +15,7 @@
  */
 package objectox.html.markup;
 
-import java.util.Objects;
+import objectos.html.Attribute;
 import objectos.html.AttributeName;
 import objectox.html.IntSize;
 
@@ -27,12 +27,29 @@ final class AttributeRecorder {
     this.sink = sink;
   }
 
-  public final AttributePointer record(AttributeName name, Object value) {
-    final Object v;
-    v = Objects.requireNonNull(value, "value == null");
+  public final void record(Attribute attribute) {
+    final AttributeName name;
+    name = attribute.attrName();
+
+    if (name == null) {
+      final String msg;
+      msg = "Attribute provided a null name";
+
+      throw new NullPointerException(msg);
+    }
+
+    final String value;
+    value = attribute.attrValue();
+
+    if (value == null) {
+      final String msg;
+      msg = "Attribute provided a null value";
+
+      throw new NullPointerException(msg);
+    }
 
     final Object escaped;
-    escaped = escapeIfNecessary(v);
+    escaped = escapeIfNecessary(value);
 
     final int nameIndex;
     nameIndex = name.index();
@@ -43,23 +60,11 @@ final class AttributeRecorder {
     final int valueIndex;
     valueIndex = sink.addObject(escaped);
 
-    final IntSize valueSize;
-    valueSize = IntSize.of(valueIndex);
-
-    final int startIndex;
-    startIndex = switch (nameSize) {
-      case BIT8 -> switch (valueSize) {
-        case BIT8 -> record88(nameIndex, valueIndex);
-
-        case BIT16 -> record816(nameIndex, valueIndex);
-
-        case BIT24 -> record824(nameIndex, valueIndex);
-      };
+    switch (nameSize) {
+      case BIT8 -> record8(nameIndex, valueIndex);
 
       case BIT16, BIT24 -> throw new UnsupportedOperationException();
-    };
-
-    return new AttributePointer(startIndex);
+    }
   }
 
   private Object escapeIfNecessary(Object v) {
@@ -71,6 +76,19 @@ final class AttributeRecorder {
     escaper = new AttributeValueEscaper(s);
 
     return escaper.escape();
+  }
+
+  private void record8(final int nameIndex, final int valueIndex) {
+    final IntSize valueSize;
+    valueSize = IntSize.of(valueIndex);
+
+    switch (valueSize) {
+      case BIT8 -> record88(nameIndex, valueIndex);
+
+      case BIT16 -> record816(nameIndex, valueIndex);
+
+      case BIT24 -> record824(nameIndex, valueIndex);
+    }
   }
 
   private int record88(int nameIndex, int valueIndex) {

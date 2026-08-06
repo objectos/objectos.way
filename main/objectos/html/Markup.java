@@ -25,11 +25,14 @@ import objectos.html.markup.Fragment1;
 import objectos.html.markup.Fragment2;
 import objectos.html.markup.Fragment3;
 import objectos.html.markup.Fragment4;
+import objectos.html.markup.RegularElementContent;
+import objectos.html.markup.ElementContent;
 import objectos.html.markup.FragmentInstruction;
 import objectos.html.markup.Instruction;
 import objectos.html.markup.NoOpInstruction;
 import objectos.html.markup.RawInstruction;
 import objectos.html.markup.TextInstruction;
+import objectos.html.markup.VoidElementContent;
 import objectos.script.JsAction;
 import objectox.html.MarkupPojo;
 
@@ -348,7 +351,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element
-  ElementMarkup elem(ElementName name, Instruction... contents);
+  ElementMarkup elem(ElementName name, ElementContent... contents);
 
   /// Renders an HTML element with the specified name and text.
   ///
@@ -366,7 +369,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup a(Instruction... contents);
+  ElementMarkup a(RegularElementContent... contents);
 
   /// Renders the `a` element with the specified text.
   ///
@@ -380,7 +383,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup abbr(Instruction... contents);
+  ElementMarkup abbr(RegularElementContent... contents);
 
   /// Renders the `abbr` element with the specified text.
   ///
@@ -394,7 +397,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup article(Instruction... contents);
+  ElementMarkup article(RegularElementContent... contents);
 
   /// Renders the `article` element with the specified text.
   ///
@@ -408,7 +411,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup aside(Instruction... contents);
+  ElementMarkup aside(RegularElementContent... contents);
 
   /// Renders the `aside` element with the specified text.
   ///
@@ -422,7 +425,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup b(Instruction... contents);
+  ElementMarkup b(RegularElementContent... contents);
 
   /// Renders the `b` element with the specified text.
   ///
@@ -436,7 +439,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup blockquote(Instruction... contents);
+  ElementMarkup blockquote(RegularElementContent... contents);
 
   /// Renders the `blockquote` element with the specified text.
   ///
@@ -450,7 +453,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup body(Instruction... contents);
+  ElementMarkup body(RegularElementContent... contents);
 
   /// Renders the `body` element with the specified text.
   ///
@@ -464,14 +467,14 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup br(Instruction.OfVoid... contents);
+  ElementMarkup br(VoidElementContent... contents);
 
   /// Renders the `button` element with the specified content.
   ///
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup button(Instruction... contents);
+  ElementMarkup button(RegularElementContent... contents);
 
   /// Renders the `button` element with the specified text.
   ///
@@ -485,14 +488,14 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup clipPath(Instruction... contents);
+  ElementMarkup clipPath(RegularElementContent... contents);
 
   /// Renders the `code` element with the specified content.
   ///
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup code(Instruction... contents);
+  ElementMarkup code(RegularElementContent... contents);
 
   /// Renders the `code` element with the specified text.
   ///
@@ -506,7 +509,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup dd(Instruction... contents);
+  ElementMarkup dd(RegularElementContent... contents);
 
   /// Renders the `dd` element with the specified text.
   ///
@@ -520,7 +523,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup defs(Instruction... contents);
+  ElementMarkup defs(RegularElementContent... contents);
 
   /// Renders the `defs` element with the specified text.
   ///
@@ -534,7 +537,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup details(Instruction... contents);
+  ElementMarkup details(RegularElementContent... contents);
 
   /// Renders the `details` element with the specified text.
   ///
@@ -548,7 +551,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup dialog(Instruction... contents);
+  ElementMarkup dialog(RegularElementContent... contents);
 
   /// Renders the `dialog` element with the specified text.
   ///
@@ -562,7 +565,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup div(Instruction... contents);
+  ElementMarkup div(RegularElementContent... contents);
 
   /// Renders the `div` element with the specified text.
   ///
@@ -576,7 +579,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup dl(Instruction... contents);
+  ElementMarkup dl(RegularElementContent... contents);
 
   /// Renders the `dl` element with the specified text.
   ///
@@ -590,7 +593,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup dt(Instruction... contents);
+  ElementMarkup dt(RegularElementContent... contents);
 
   /// Renders the `dt` element with the specified text.
   ///
@@ -604,7 +607,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup em(Instruction... contents);
+  ElementMarkup em(RegularElementContent... contents);
 
   /// Renders the `em` element with the specified text.
   ///
@@ -618,7 +621,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup fieldset(Instruction... contents);
+  ElementMarkup fieldset(RegularElementContent... contents);
 
   /// Renders the `fieldset` element with the specified text.
   ///
@@ -632,7 +635,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup figure(Instruction... contents);
+  ElementMarkup figure(RegularElementContent... contents);
 
   /// Renders the `figure` element with the specified text.
   ///
@@ -646,7 +649,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup footer(Instruction... contents);
+  ElementMarkup footer(RegularElementContent... contents);
 
   /// Renders the `footer` element with the specified text.
   ///
@@ -660,14 +663,14 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup form(Instruction... contents);
+  ElementMarkup form(RegularElementContent... contents);
 
   /// Renders the `g` element with the specified content.
   ///
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup g(Instruction... contents);
+  ElementMarkup g(RegularElementContent... contents);
 
   /// Renders the `g` element with the specified text.
   ///
@@ -681,7 +684,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup h1(Instruction... contents);
+  ElementMarkup h1(RegularElementContent... contents);
 
   /// Renders the `h1` element with the specified text.
   ///
@@ -695,7 +698,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup h2(Instruction... contents);
+  ElementMarkup h2(RegularElementContent... contents);
 
   /// Renders the `h2` element with the specified text.
   ///
@@ -709,7 +712,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup h3(Instruction... contents);
+  ElementMarkup h3(RegularElementContent... contents);
 
   /// Renders the `h3` element with the specified text.
   ///
@@ -723,7 +726,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup h4(Instruction... contents);
+  ElementMarkup h4(RegularElementContent... contents);
 
   /// Renders the `h4` element with the specified text.
   ///
@@ -737,7 +740,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup h5(Instruction... contents);
+  ElementMarkup h5(RegularElementContent... contents);
 
   /// Renders the `h5` element with the specified text.
   ///
@@ -751,7 +754,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup h6(Instruction... contents);
+  ElementMarkup h6(RegularElementContent... contents);
 
   /// Renders the `h6` element with the specified text.
   ///
@@ -765,7 +768,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup head(Instruction... contents);
+  ElementMarkup head(RegularElementContent... contents);
 
   /// Renders the `head` element with the specified text.
   ///
@@ -779,7 +782,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup header(Instruction... contents);
+  ElementMarkup header(RegularElementContent... contents);
 
   /// Renders the `header` element with the specified text.
   ///
@@ -793,7 +796,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup hgroup(Instruction... contents);
+  ElementMarkup hgroup(RegularElementContent... contents);
 
   /// Renders the `hgroup` element with the specified text.
   ///
@@ -807,14 +810,14 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup hr(Instruction.OfVoid... contents);
+  ElementMarkup hr(VoidElementContent... contents);
 
   /// Renders the `html` element with the specified content.
   ///
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup html(Instruction... contents);
+  ElementMarkup html(RegularElementContent... contents);
 
   /// Renders the `html` element with the specified text.
   ///
@@ -828,21 +831,21 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup img(Instruction.OfVoid... contents);
+  ElementMarkup img(VoidElementContent... contents);
 
   /// Renders the `input` element with the specified content.
   ///
   /// @param contents the attributes of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup input(Instruction.OfVoid... contents);
+  ElementMarkup input(VoidElementContent... contents);
 
   /// Renders the `kbd` element with the specified content.
   ///
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup kbd(Instruction... contents);
+  ElementMarkup kbd(RegularElementContent... contents);
 
   /// Renders the `kbd` element with the specified text.
   ///
@@ -856,14 +859,14 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup label(Instruction... contents);
+  ElementMarkup label(RegularElementContent... contents);
 
   /// Renders the `legend` element with the specified content.
   ///
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup legend(Instruction... contents);
+  ElementMarkup legend(RegularElementContent... contents);
 
   /// Renders the `legend` element with the specified text.
   ///
@@ -877,7 +880,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup li(Instruction... contents);
+  ElementMarkup li(RegularElementContent... contents);
 
   /// Renders the `li` element with the specified text.
   ///
@@ -891,14 +894,14 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup link(Instruction.OfVoid... contents);
+  ElementMarkup link(VoidElementContent... contents);
 
   /// Renders the `main` element with the specified content.
   ///
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup main(Instruction... contents);
+  ElementMarkup main(RegularElementContent... contents);
 
   /// Renders the `main` element with the specified text.
   ///
@@ -912,7 +915,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup menu(Instruction... contents);
+  ElementMarkup menu(RegularElementContent... contents);
 
   /// Renders the `menu` element with the specified text.
   ///
@@ -926,14 +929,14 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup meta(Instruction.OfVoid... contents);
+  ElementMarkup meta(VoidElementContent... contents);
 
   /// Renders the `nav` element with the specified content.
   ///
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup nav(Instruction... contents);
+  ElementMarkup nav(RegularElementContent... contents);
 
   /// Renders the `nav` element with the specified text.
   ///
@@ -947,7 +950,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup noscript(Instruction... contents);
+  ElementMarkup noscript(RegularElementContent... contents);
 
   /// Renders the `noscript` element with the specified text.
   ///
@@ -961,7 +964,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup ol(Instruction... contents);
+  ElementMarkup ol(RegularElementContent... contents);
 
   /// Renders the `ol` element with the specified text.
   ///
@@ -975,7 +978,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup optgroup(Instruction... contents);
+  ElementMarkup optgroup(RegularElementContent... contents);
 
   /// Renders the `optgroup` element with the specified text.
   ///
@@ -989,7 +992,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup option(Instruction... contents);
+  ElementMarkup option(RegularElementContent... contents);
 
   /// Renders the `option` element with the specified text.
   ///
@@ -1003,7 +1006,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup p(Instruction... contents);
+  ElementMarkup p(RegularElementContent... contents);
 
   /// Renders the `p` element with the specified text.
   ///
@@ -1017,7 +1020,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup path(Instruction... contents);
+  ElementMarkup path(RegularElementContent... contents);
 
   /// Renders the `path` element with the specified text.
   ///
@@ -1031,7 +1034,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup pre(Instruction... contents);
+  ElementMarkup pre(RegularElementContent... contents);
 
   /// Renders the `pre` element with the specified text.
   ///
@@ -1045,7 +1048,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup progress(Instruction... contents);
+  ElementMarkup progress(RegularElementContent... contents);
 
   /// Renders the `progress` element with the specified text.
   ///
@@ -1059,7 +1062,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup samp(Instruction... contents);
+  ElementMarkup samp(RegularElementContent... contents);
 
   /// Renders the `samp` element with the specified text.
   ///
@@ -1073,7 +1076,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup script(Instruction... contents);
+  ElementMarkup script(RegularElementContent... contents);
 
   /// Renders the `script` element with the specified text.
   ///
@@ -1087,7 +1090,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup section(Instruction... contents);
+  ElementMarkup section(RegularElementContent... contents);
 
   /// Renders the `section` element with the specified text.
   ///
@@ -1101,7 +1104,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup select(Instruction... contents);
+  ElementMarkup select(RegularElementContent... contents);
 
   /// Renders the `select` element with the specified text.
   ///
@@ -1115,7 +1118,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup small(Instruction... contents);
+  ElementMarkup small(RegularElementContent... contents);
 
   /// Renders the `small` element with the specified text.
   ///
@@ -1129,7 +1132,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup span(Instruction... contents);
+  ElementMarkup span(RegularElementContent... contents);
 
   /// Renders the `span` element with the specified text.
   ///
@@ -1143,7 +1146,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup strong(Instruction... contents);
+  ElementMarkup strong(RegularElementContent... contents);
 
   /// Renders the `strong` element with the specified text.
   ///
@@ -1157,14 +1160,14 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup style(Instruction... contents);
+  ElementMarkup style(RegularElementContent... contents);
 
   /// Renders the `sub` element with the specified content.
   ///
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup sub(Instruction... contents);
+  ElementMarkup sub(RegularElementContent... contents);
 
   /// Renders the `sub` element with the specified text.
   ///
@@ -1178,7 +1181,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup summary(Instruction... contents);
+  ElementMarkup summary(RegularElementContent... contents);
 
   /// Renders the `summary` element with the specified text.
   ///
@@ -1192,7 +1195,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup sup(Instruction... contents);
+  ElementMarkup sup(RegularElementContent... contents);
 
   /// Renders the `sup` element with the specified text.
   ///
@@ -1206,7 +1209,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup svg(Instruction... contents);
+  ElementMarkup svg(RegularElementContent... contents);
 
   /// Renders the `svg` element with the specified text.
   ///
@@ -1220,7 +1223,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup table(Instruction... contents);
+  ElementMarkup table(RegularElementContent... contents);
 
   /// Renders the `table` element with the specified text.
   ///
@@ -1234,7 +1237,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup tbody(Instruction... contents);
+  ElementMarkup tbody(RegularElementContent... contents);
 
   /// Renders the `tbody` element with the specified text.
   ///
@@ -1248,7 +1251,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup td(Instruction... contents);
+  ElementMarkup td(RegularElementContent... contents);
 
   /// Renders the `td` element with the specified text.
   ///
@@ -1262,7 +1265,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup template(Instruction... contents);
+  ElementMarkup template(RegularElementContent... contents);
 
   /// Renders the `template` element with the specified text.
   ///
@@ -1276,7 +1279,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup textarea(Instruction... contents);
+  ElementMarkup textarea(RegularElementContent... contents);
 
   /// Renders the `textarea` element with the specified text.
   ///
@@ -1290,7 +1293,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup th(Instruction... contents);
+  ElementMarkup th(RegularElementContent... contents);
 
   /// Renders the `th` element with the specified text.
   ///
@@ -1304,7 +1307,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup thead(Instruction... contents);
+  ElementMarkup thead(RegularElementContent... contents);
 
   /// Renders the `thead` element with the specified text.
   ///
@@ -1318,14 +1321,14 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup title(Instruction... contents);
+  ElementMarkup title(RegularElementContent... contents);
 
   /// Renders the `tr` element with the specified content.
   ///
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup tr(Instruction... contents);
+  ElementMarkup tr(RegularElementContent... contents);
 
   /// Renders the `tr` element with the specified text.
   ///
@@ -1339,7 +1342,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  ElementMarkup ul(Instruction... contents);
+  ElementMarkup ul(RegularElementContent... contents);
 
   /// Renders the `ul` element with the specified text.
   ///

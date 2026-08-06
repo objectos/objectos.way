@@ -16,16 +16,15 @@
 package objectos.html;
 
 import java.util.Objects;
-import objectos.html.markup.ElementContent;
-import objectos.html.markup.Instruction;
+import objectos.html.markup.RegularElementContent;
+import objectos.html.markup.VoidElementContent;
 import objectox.html.markup.AttributePojo;
 
 /// Represents an HTML attribute.
 public non-sealed interface Attribute
     extends
-    ElementContent,
-    Instruction.AsObject,
-    Instruction.OfVoid {
+    RegularElementContent,
+    VoidElementContent {
 
   /// Creates an object representing an HTML boolean attribute with the
   /// specified name.

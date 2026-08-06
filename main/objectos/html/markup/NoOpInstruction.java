@@ -15,15 +15,11 @@
  */
 package objectos.html.markup;
 
-import objectos.html.markup.Instruction.AsMethod;
-import objectos.html.markup.Instruction.OfVoid;
 import objectox.html.markup.NoOpInstructionPojo;
 
 /// Represents a no-op instruction.
 public sealed interface NoOpInstruction
     extends
-    ElementContent,
-    AsMethod,
-    OfVoid
+    VoidElementContent
     permits
     NoOpInstructionPojo {}

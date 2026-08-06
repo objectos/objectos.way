@@ -15,12 +15,8 @@
  */
 package objectos.html.markup;
 
-import objectos.html.Attribute;
-
-/// Represents an object allowed as an argument to an HTML element
-/// rendering method.
+/// Represents an object that can be used in any element rendering method.
 public sealed interface ElementContent
     permits
-    Attribute,
-    ElementMarkup,
-    NoOpInstruction {}
+    RegularElementContent,
+    VoidElementContent {}
