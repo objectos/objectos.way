@@ -16,13 +16,16 @@
 package objectos.html;
 
 import java.util.Objects;
+import objectos.html.markup.ElementContent;
 import objectos.html.markup.Instruction;
-import objectox.html.attr.AttributeObjectPojo;
+import objectox.html.markup.AttributePojo;
 
-/// An object representing an instruction to render an HTML attribute. These
-/// instructions may be reused, unlike the instructions represented by methods of
-/// the `Markup` or `Template` classes.
-public non-sealed interface AttributeObject extends Instruction.AsObject, Instruction.OfVoid {
+/// Represents an HTML attribute.
+public non-sealed interface Attribute
+    extends
+    ElementContent,
+    Instruction.AsObject,
+    Instruction.OfVoid {
 
   /// Creates an object representing an HTML boolean attribute with the
   /// specified name.
@@ -30,36 +33,31 @@ public non-sealed interface AttributeObject extends Instruction.AsObject, Instru
   /// @param name the boolean attribute name
   ///
   /// @return a newly created object representing an HTML boolean attribute
-  static AttributeObject of(AttributeName name) {
-    return new AttributeObjectPojo(
+  static Attribute of(AttributeName name) {
+    return new AttributePojo(
         Objects.requireNonNull(name, "name == null"),
         null
     );
   }
 
-  /// Creates an object representing a HTML attribute with the specified name
-  /// and value.
+  /// Returns a new attribute object with the specified name and value.
   ///
   /// @param name the attribute name
   /// @param value the attribute value
   ///
   /// @return a newly created object representing an HTML attribute
-  static AttributeObject of(AttributeName name, String value) {
-    return new AttributeObjectPojo(
-        Objects.requireNonNull(name, "name == null"),
-        Objects.requireNonNull(value, "value == null")
-    );
+  static Attribute of(AttributeName name, String value) {
+    return AttributePojo.of(name, value);
   }
 
-  /// The HTML attribute name.
+  /// Returns the attribute name.
   ///
-  /// @return the HTML attribute name
+  /// @return the attribute name
   AttributeName attrName();
 
-  /// The HTML attribute value, or `null` if this object represents a boolean
-  /// HTML attribute.
+  /// Returns the attribute value.
   ///
-  /// @return the HTML attribute value, or `null`
+  /// @return the attribute value
   String attrValue();
 
 }

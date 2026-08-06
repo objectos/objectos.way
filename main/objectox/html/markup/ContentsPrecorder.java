@@ -17,7 +17,7 @@ package objectox.html.markup;
 
 import java.util.Arrays;
 import objectos.html.AttributeName;
-import objectos.html.AttributeObject;
+import objectos.html.Attribute;
 import objectos.html.markup.Instruction;
 
 final class ContentsPrecorder {
@@ -37,7 +37,7 @@ final class ContentsPrecorder {
       final Instruction instruction;
       instruction = instructions[idx];
 
-      if (!(instruction instanceof AttributeObject)) {
+      if (!(instruction instanceof Attribute)) {
         continue;
       }
 
@@ -58,7 +58,7 @@ final class ContentsPrecorder {
       final Instruction instruction;
       instruction = instructions[idx];
 
-      if (!(instruction instanceof AttributeObject attr)) {
+      if (!(instruction instanceof Attribute attr)) {
         continue;
       }
 

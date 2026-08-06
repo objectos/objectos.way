@@ -19,7 +19,6 @@ import static org.testng.Assert.assertEquals;
 
 import java.util.stream.IntStream;
 import objectos.internal.Util;
-import objectox.html.attr.AttributeNamePojo;
 import org.testng.annotations.Test;
 
 public class AttributeRecorderTest {

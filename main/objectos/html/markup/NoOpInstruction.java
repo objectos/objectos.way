@@ -22,6 +22,7 @@ import objectox.html.markup.NoOpInstructionPojo;
 /// Represents a no-op instruction.
 public sealed interface NoOpInstruction
     extends
+    ElementContent,
     AsMethod,
     OfVoid
     permits

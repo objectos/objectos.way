@@ -13,13 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.markup;
+package objectox.html.markup;
 
-import objectos.html.markup.Instruction.AsMethod;
-import objectos.html.markup.Instruction.OfVoid;
-import objectox.html.markup.AttributePointer;
+import objectos.html.ClassName;
 
-/// Represents an instruction to render an Objectos HTML attribute.
-public sealed interface AttributeInstruction
-    extends AsMethod, OfVoid
-    permits AmbiguousInstruction, AttributePointer {}
+public record ClassNamePojo(String attrValue) implements ClassName {}

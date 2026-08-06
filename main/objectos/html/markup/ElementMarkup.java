@@ -13,8 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html.attr;
+package objectos.html.markup;
 
-import objectos.html.Id;
+import objectos.html.markup.Instruction.AsMethod;
+import objectox.html.markup.ElementPointer;
 
-public record IdPojo(String attrValue) implements Id {}
+/// Represents the encoded markup of an Objectos HTML element.
+public sealed interface ElementMarkup
+    extends
+    ElementContent,
+    AsMethod
+    permits AmbiguousInstruction, ElementPointer {}

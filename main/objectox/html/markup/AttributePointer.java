@@ -15,8 +15,8 @@
  */
 package objectox.html.markup;
 
-import objectos.html.markup.AttributeInstruction;
+import objectos.html.markup.AttributeMarkup;
 
-public final record AttributePointer(int value) implements AttributeInstruction {
+public final record AttributePointer(int value) implements AttributeMarkup {
 
 }

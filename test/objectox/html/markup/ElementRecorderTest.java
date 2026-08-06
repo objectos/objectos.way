@@ -17,8 +17,7 @@ package objectox.html.markup;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.html.AttributeObject;
-import objectox.html.attr.AttributeNamePojo;
+import objectos.html.Attribute;
 import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 
@@ -119,8 +118,8 @@ public class ElementRecorderTest {
     final HtmlSink sink;
     sink = new HtmlSink();
 
-    final AttributeObject attr;
-    attr = AttributeObject.of(AttributeNamePojo.AUTOFOCUS);
+    final Attribute attr;
+    attr = Attribute.of(AttributeNamePojo.AUTOFOCUS);
 
     final ElementRecorder subject;
     subject = create(sink);

@@ -13,16 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html.attr;
+package objectos.html.markup;
 
-public record AttributeSpec(String constantName, String methodName, String htmlName, boolean booleanAttribute)
-    implements Comparable<AttributeSpec> {
-  @Override
-  public final int compareTo(AttributeSpec that) {
-    return constantName.compareTo(that.constantName);
-  }
+import objectos.html.markup.Instruction.AsMethod;
+import objectos.html.markup.Instruction.OfVoid;
+import objectox.html.markup.AttributePointer;
 
-  public final boolean eventAttribute() {
-    return constantName.startsWith("ON");
-  }
-}
+/// Represents the encoded markup of an Objectos HTML attribute.
+public sealed interface AttributeMarkup
+    extends AsMethod, OfVoid
+    permits AmbiguousInstruction, AttributePointer {}

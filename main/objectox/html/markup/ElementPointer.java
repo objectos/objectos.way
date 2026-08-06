@@ -15,8 +15,8 @@
  */
 package objectox.html.markup;
 
-import objectos.html.markup.ElementInstruction;
+import objectos.html.markup.ElementMarkup;
 
-public record ElementPointer(int value) implements ElementInstruction {
+public record ElementPointer(int value) implements ElementMarkup {
 
 }

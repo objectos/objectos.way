@@ -15,7 +15,7 @@
  */
 package objectos.html;
 
-import objectox.html.attr.AttributeNamePojo;
+import objectox.html.markup.AttributeNamePojo;
 
 /// The name of an HTML attribute.
 public sealed interface AttributeName permits AttributeNamePojo {

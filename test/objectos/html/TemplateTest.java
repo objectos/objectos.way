@@ -21,7 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import objectos.html.markup.ElementInstruction;
+import objectos.html.markup.ElementMarkup;
 import objectos.html.markup.Instruction;
 import objectos.http.Content;
 import org.testng.annotations.Test;
@@ -564,7 +564,7 @@ public class TemplateTest {
         new Template() {
           @Override
           protected final void render() {
-            ElementInstruction[] children = new ElementInstruction[count];
+            ElementMarkup[] children = new ElementMarkup[count];
             for (int i = 0; i < count; i++) {
               children[i] = li(Integer.toString(i));
             }

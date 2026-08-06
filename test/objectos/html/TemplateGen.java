@@ -18,9 +18,9 @@ package objectos.html;
 import java.util.Iterator;
 import java.util.Set;
 import objectox.html.AmbiguousSpec;
+import objectox.html.AttributeSpec;
 import objectox.html.HtmlSpec;
 import objectox.html.MethodSpec;
-import objectox.html.attr.AttributeSpec;
 import objectox.html.elem.ElementSpec;
 
 public class TemplateGen {

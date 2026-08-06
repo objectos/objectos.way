@@ -18,7 +18,7 @@ package objectox.html;
 import static org.testng.Assert.assertEquals;
 
 import objectos.html.AttributeName;
-import objectos.html.AttributeObject;
+import objectos.html.Attribute;
 import objectos.html.ClassName;
 import objectos.html.Component;
 import objectos.html.ElementName;
@@ -29,7 +29,7 @@ public class HtmlMarkupTest07Element {
 
   @Test
   public void elem01() {
-    enum Attr implements AttributeObject {
+    enum Attr implements Attribute {
       INSTANCE;
 
       @Override

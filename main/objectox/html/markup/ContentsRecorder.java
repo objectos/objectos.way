@@ -20,7 +20,7 @@ import java.util.function.IntConsumer;
 import java.util.function.ToIntFunction;
 import java.util.stream.Stream;
 import objectos.html.AttributeName;
-import objectos.html.AttributeObject;
+import objectos.html.Attribute;
 import objectos.html.markup.Instruction;
 import objectox.html.IntSize;
 
@@ -139,14 +139,14 @@ final class ContentsRecorder {
     }
 
     private Instruction pre(Instruction instruction) {
-      if (instruction instanceof AttributeObject attr) {
+      if (instruction instanceof Attribute attr) {
         return attr(attr);
       } else {
         return instruction;
       }
     }
 
-    private Instruction attr(AttributeObject attr) {
+    private Instruction attr(Attribute attr) {
       if (offsetSink == null) {
         offsetSink = sink.offset(offset, length, size);
       }

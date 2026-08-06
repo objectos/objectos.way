@@ -16,11 +16,11 @@
 package objectos.html;
 
 import java.util.Objects;
-import objectox.html.attr.AttributeNamePojo;
-import objectox.html.attr.ClassNamePojo;
+import objectox.html.markup.AttributeNamePojo;
+import objectox.html.markup.ClassNamePojo;
 
-/// Represents an HTML {@code class} attribute and its value.
-public sealed interface ClassName extends AttributeObject permits ClassNamePojo {
+/// Represents an HTML `class` attribute and its value.
+public sealed interface ClassName extends Attribute permits ClassNamePojo {
 
   /**
    * Creates a new {@code ClassName} instance whose value is the result of

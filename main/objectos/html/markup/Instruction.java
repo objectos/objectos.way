@@ -15,7 +15,7 @@
  */
 package objectos.html.markup;
 
-import objectos.html.AttributeObject;
+import objectos.html.Attribute;
 import objectos.html.Template;
 import objectos.html.markup.Instruction.AsMethod;
 import objectos.html.markup.Instruction.AsObject;
@@ -38,7 +38,7 @@ public sealed interface Instruction
    * <p>
    * Instances of this interface can be safely reused in multiple templates.
    */
-  sealed interface AsObject extends Instruction permits AttributeObject {}
+  sealed interface AsObject extends Instruction permits Attribute {}
 
   /**
    * Class of instructions that are represented by methods of the
@@ -50,8 +50,8 @@ public sealed interface Instruction
   sealed interface AsMethod
       extends Instruction
       permits
-      ElementInstruction,
-      AttributeInstruction,
+      ElementMarkup,
+      AttributeMarkup,
       FragmentInstruction,
       NoOpInstruction {}
 
@@ -61,8 +61,8 @@ public sealed interface Instruction
    */
   sealed interface OfVoid extends Instruction
       permits
-      AttributeObject,
-      AttributeInstruction,
+      Attribute,
+      AttributeMarkup,
       FragmentInstruction,
       NoOpInstruction {}
 

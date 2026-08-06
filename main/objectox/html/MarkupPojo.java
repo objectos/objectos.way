@@ -17,13 +17,13 @@ package objectox.html;
 
 import java.util.Collection;
 import objectos.html.AttributeName;
-import objectos.html.AttributeObject;
+import objectos.html.Attribute;
 import objectos.html.ElementName;
 import objectos.html.Html;
 import objectos.html.Markup;
 import objectos.html.markup.AmbiguousInstruction;
-import objectos.html.markup.AttributeInstruction;
-import objectos.html.markup.ElementInstruction;
+import objectos.html.markup.AttributeMarkup;
+import objectos.html.markup.ElementMarkup;
 import objectos.html.markup.FlattenInstruction;
 import objectos.html.markup.Fragment0;
 import objectos.html.markup.Fragment1;
@@ -35,7 +35,7 @@ import objectos.html.markup.Instruction;
 import objectos.html.markup.NoOpInstruction;
 import objectos.html.markup.RawInstruction;
 import objectos.html.markup.TextInstruction;
-import objectox.html.attr.AttributeNamePojo;
+import objectox.html.markup.AttributeNamePojo;
 import objectox.html.markup.NoOpInstructionPojo;
 import objectox.html.markup.Recorder;
 
@@ -89,7 +89,7 @@ public sealed abstract class MarkupPojo
   }
 
   @Override
-  public final AttributeInstruction css(String value) {
+  public final AttributeMarkup css(String value) {
     final StringBuilder sb;
     sb = new StringBuilder();
 
@@ -139,7 +139,7 @@ public sealed abstract class MarkupPojo
   // ##################################################################
 
   @Override
-  public final AttributeInstruction attr(AttributeObject object) {
+  public final AttributeMarkup attr(Attribute object) {
     final AttributeName name;
     name = object.attrName();
 
@@ -249,22 +249,22 @@ public sealed abstract class MarkupPojo
   }
 
   @Override
-  final AttributeInstruction attr0(AttributeName name) {
+  final AttributeMarkup attr0(AttributeName name) {
     return recorder.attribute(name);
   }
 
   @Override
-  final AttributeInstruction attr0(AttributeName name, Object value) {
+  final AttributeMarkup attr0(AttributeName name, Object value) {
     return recorder.attribute(name, value);
   }
 
   @Override
-  final ElementInstruction elem0(ElementName name, Instruction... contents) {
+  final ElementMarkup elem0(ElementName name, Instruction... contents) {
     return recorder.element(name, contents);
   }
 
   @Override
-  final ElementInstruction elem0(ElementName name, String text) {
+  final ElementMarkup elem0(ElementName name, String text) {
     final Instruction t;
     t = recorder.text(text);
 

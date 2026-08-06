@@ -18,9 +18,8 @@ package objectox.html.markup;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
-import objectos.html.AttributeObject;
+import objectos.html.Attribute;
 import objectos.html.markup.Instruction;
-import objectox.html.attr.AttributeNamePojo;
 import org.testng.annotations.Test;
 
 public class ContentsPrecorderTest {
@@ -69,7 +68,7 @@ public class ContentsPrecorderTest {
     final Instruction[] input;
     input = new Instruction[] {
         new ElementPointer(10),
-        AttributeObject.of(AttributeNamePojo.ID, "foo"),
+        Attribute.of(AttributeNamePojo.ID, "foo"),
         new ElementPointer(20)
     };
 
@@ -114,7 +113,7 @@ public class ContentsPrecorderTest {
     final Instruction[] input;
     input = new Instruction[] {
         new ElementPointer(10),
-        AttributeObject.of(AttributeNamePojo.AUTOFOCUS),
+        Attribute.of(AttributeNamePojo.AUTOFOCUS),
         new ElementPointer(20)
     };
 

@@ -13,12 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.markup;
+package objectox.html.markup;
 
-import objectos.html.markup.Instruction.AsMethod;
-import objectox.html.markup.ElementPointer;
+import objectos.html.Id;
 
-/// Represents an instruction to render an Objectos HTML element.
-public sealed interface ElementInstruction
-    extends AsMethod
-    permits AmbiguousInstruction, ElementPointer {}
+public record IdPojo(String attrValue) implements Id {}

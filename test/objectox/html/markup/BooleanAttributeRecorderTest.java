@@ -17,7 +17,6 @@ package objectox.html.markup;
 
 import static org.testng.Assert.assertEquals;
 
-import objectox.html.attr.AttributeNamePojo;
 import org.testng.annotations.Test;
 
 public class BooleanAttributeRecorderTest {

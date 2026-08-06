@@ -17,8 +17,8 @@ package objectos.html;
 
 import java.util.Collection;
 import objectos.html.markup.AmbiguousInstruction;
-import objectos.html.markup.AttributeInstruction;
-import objectos.html.markup.ElementInstruction;
+import objectos.html.markup.AttributeMarkup;
+import objectos.html.markup.ElementMarkup;
 import objectos.html.markup.FlattenInstruction;
 import objectos.html.markup.Fragment0;
 import objectos.html.markup.Fragment1;
@@ -104,50 +104,50 @@ public abstract class Template implements Component {
   /// @param object the attribute
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction attr(AttributeObject object) {
+  protected final AttributeMarkup attr(Attribute object) {
     return $html().attr(object);
   }
 
   // START generated code
 
   /// The `async` boolean attribute.
-  protected static final AttributeObject async = Markup.async;
+  protected static final Attribute async = Markup.async;
 
   /// The `autofocus` boolean attribute.
-  protected static final AttributeObject autofocus = Markup.autofocus;
+  protected static final Attribute autofocus = Markup.autofocus;
 
   /// The `checked` boolean attribute.
-  protected static final AttributeObject checked = Markup.checked;
+  protected static final Attribute checked = Markup.checked;
 
   /// The `defer` boolean attribute.
-  protected static final AttributeObject defer = Markup.defer;
+  protected static final Attribute defer = Markup.defer;
 
   /// The `disabled` boolean attribute.
-  protected static final AttributeObject disabled = Markup.disabled;
+  protected static final Attribute disabled = Markup.disabled;
 
   /// The `hidden` boolean attribute.
-  protected static final AttributeObject hidden = Markup.hidden;
+  protected static final Attribute hidden = Markup.hidden;
 
   /// The `multiple` boolean attribute.
-  protected static final AttributeObject multiple = Markup.multiple;
+  protected static final Attribute multiple = Markup.multiple;
 
   /// The `nomodule` boolean attribute.
-  protected static final AttributeObject nomodule = Markup.nomodule;
+  protected static final Attribute nomodule = Markup.nomodule;
 
   /// The `open` boolean attribute.
-  protected static final AttributeObject open = Markup.open;
+  protected static final Attribute open = Markup.open;
 
   /// The `readonly` boolean attribute.
-  protected static final AttributeObject readonly = Markup.readonly;
+  protected static final Attribute readonly = Markup.readonly;
 
   /// The `required` boolean attribute.
-  protected static final AttributeObject required = Markup.required;
+  protected static final Attribute required = Markup.required;
 
   /// The `reversed` boolean attribute.
-  protected static final AttributeObject reversed = Markup.reversed;
+  protected static final Attribute reversed = Markup.reversed;
 
   /// The `selected` boolean attribute.
-  protected static final AttributeObject selected = Markup.selected;
+  protected static final Attribute selected = Markup.selected;
 
   //
   // WAY
@@ -178,7 +178,7 @@ public abstract class Template implements Component {
   ///
   /// @param value the text block containing class names, possibly spread across multiple lines
   /// @return an instruction representing this attribute.
-  protected final AttributeInstruction css(String value) {
+  protected final AttributeMarkup css(String value) {
     return $html().css(value);
   }
 
@@ -431,7 +431,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element
-  protected final ElementInstruction elem(ElementName name, Instruction... contents) {
+  protected final ElementMarkup elem(ElementName name, Instruction... contents) {
     return $html().elem(name, contents);
   }
 
@@ -441,7 +441,7 @@ public abstract class Template implements Component {
   /// @param text the text value of this element
   ///
   /// @return an instruction representing the element
-  protected final ElementInstruction elem(ElementName name, String text) {
+  protected final ElementMarkup elem(ElementName name, String text) {
     return $html().elem(name, text);
   }
 
@@ -455,7 +455,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction a(Instruction... contents) {
+  protected final ElementMarkup a(Instruction... contents) {
     return $html().a(contents);
   }
 
@@ -464,7 +464,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction a(String text) {
+  protected final ElementMarkup a(String text) {
     return $html().a(text);
   }
 
@@ -473,7 +473,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction abbr(Instruction... contents) {
+  protected final ElementMarkup abbr(Instruction... contents) {
     return $html().abbr(contents);
   }
 
@@ -482,7 +482,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction abbr(String text) {
+  protected final ElementMarkup abbr(String text) {
     return $html().abbr(text);
   }
 
@@ -491,7 +491,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction article(Instruction... contents) {
+  protected final ElementMarkup article(Instruction... contents) {
     return $html().article(contents);
   }
 
@@ -500,7 +500,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction article(String text) {
+  protected final ElementMarkup article(String text) {
     return $html().article(text);
   }
 
@@ -509,7 +509,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction aside(Instruction... contents) {
+  protected final ElementMarkup aside(Instruction... contents) {
     return $html().aside(contents);
   }
 
@@ -518,7 +518,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction aside(String text) {
+  protected final ElementMarkup aside(String text) {
     return $html().aside(text);
   }
 
@@ -527,7 +527,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction b(Instruction... contents) {
+  protected final ElementMarkup b(Instruction... contents) {
     return $html().b(contents);
   }
 
@@ -536,7 +536,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction b(String text) {
+  protected final ElementMarkup b(String text) {
     return $html().b(text);
   }
 
@@ -545,7 +545,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction blockquote(Instruction... contents) {
+  protected final ElementMarkup blockquote(Instruction... contents) {
     return $html().blockquote(contents);
   }
 
@@ -554,7 +554,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction blockquote(String text) {
+  protected final ElementMarkup blockquote(String text) {
     return $html().blockquote(text);
   }
 
@@ -563,7 +563,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction body(Instruction... contents) {
+  protected final ElementMarkup body(Instruction... contents) {
     return $html().body(contents);
   }
 
@@ -572,7 +572,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction body(String text) {
+  protected final ElementMarkup body(String text) {
     return $html().body(text);
   }
 
@@ -581,7 +581,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction br(Instruction.OfVoid... contents) {
+  protected final ElementMarkup br(Instruction.OfVoid... contents) {
     return $html().br(contents);
   }
 
@@ -590,7 +590,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction button(Instruction... contents) {
+  protected final ElementMarkup button(Instruction... contents) {
     return $html().button(contents);
   }
 
@@ -599,7 +599,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction button(String text) {
+  protected final ElementMarkup button(String text) {
     return $html().button(text);
   }
 
@@ -608,7 +608,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction clipPath(Instruction... contents) {
+  protected final ElementMarkup clipPath(Instruction... contents) {
     return $html().clipPath(contents);
   }
 
@@ -617,7 +617,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction code(Instruction... contents) {
+  protected final ElementMarkup code(Instruction... contents) {
     return $html().code(contents);
   }
 
@@ -626,7 +626,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction code(String text) {
+  protected final ElementMarkup code(String text) {
     return $html().code(text);
   }
 
@@ -635,7 +635,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction dd(Instruction... contents) {
+  protected final ElementMarkup dd(Instruction... contents) {
     return $html().dd(contents);
   }
 
@@ -644,7 +644,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction dd(String text) {
+  protected final ElementMarkup dd(String text) {
     return $html().dd(text);
   }
 
@@ -653,7 +653,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction defs(Instruction... contents) {
+  protected final ElementMarkup defs(Instruction... contents) {
     return $html().defs(contents);
   }
 
@@ -662,7 +662,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction defs(String text) {
+  protected final ElementMarkup defs(String text) {
     return $html().defs(text);
   }
 
@@ -671,7 +671,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction details(Instruction... contents) {
+  protected final ElementMarkup details(Instruction... contents) {
     return $html().details(contents);
   }
 
@@ -680,7 +680,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction details(String text) {
+  protected final ElementMarkup details(String text) {
     return $html().details(text);
   }
 
@@ -689,7 +689,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction dialog(Instruction... contents) {
+  protected final ElementMarkup dialog(Instruction... contents) {
     return $html().dialog(contents);
   }
 
@@ -698,7 +698,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction dialog(String text) {
+  protected final ElementMarkup dialog(String text) {
     return $html().dialog(text);
   }
 
@@ -707,7 +707,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction div(Instruction... contents) {
+  protected final ElementMarkup div(Instruction... contents) {
     return $html().div(contents);
   }
 
@@ -716,7 +716,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction div(String text) {
+  protected final ElementMarkup div(String text) {
     return $html().div(text);
   }
 
@@ -725,7 +725,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction dl(Instruction... contents) {
+  protected final ElementMarkup dl(Instruction... contents) {
     return $html().dl(contents);
   }
 
@@ -734,7 +734,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction dl(String text) {
+  protected final ElementMarkup dl(String text) {
     return $html().dl(text);
   }
 
@@ -743,7 +743,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction dt(Instruction... contents) {
+  protected final ElementMarkup dt(Instruction... contents) {
     return $html().dt(contents);
   }
 
@@ -752,7 +752,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction dt(String text) {
+  protected final ElementMarkup dt(String text) {
     return $html().dt(text);
   }
 
@@ -761,7 +761,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction em(Instruction... contents) {
+  protected final ElementMarkup em(Instruction... contents) {
     return $html().em(contents);
   }
 
@@ -770,7 +770,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction em(String text) {
+  protected final ElementMarkup em(String text) {
     return $html().em(text);
   }
 
@@ -779,7 +779,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction fieldset(Instruction... contents) {
+  protected final ElementMarkup fieldset(Instruction... contents) {
     return $html().fieldset(contents);
   }
 
@@ -788,7 +788,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction fieldset(String text) {
+  protected final ElementMarkup fieldset(String text) {
     return $html().fieldset(text);
   }
 
@@ -797,7 +797,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction figure(Instruction... contents) {
+  protected final ElementMarkup figure(Instruction... contents) {
     return $html().figure(contents);
   }
 
@@ -806,7 +806,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction figure(String text) {
+  protected final ElementMarkup figure(String text) {
     return $html().figure(text);
   }
 
@@ -815,7 +815,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction footer(Instruction... contents) {
+  protected final ElementMarkup footer(Instruction... contents) {
     return $html().footer(contents);
   }
 
@@ -824,7 +824,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction footer(String text) {
+  protected final ElementMarkup footer(String text) {
     return $html().footer(text);
   }
 
@@ -833,7 +833,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction form(Instruction... contents) {
+  protected final ElementMarkup form(Instruction... contents) {
     return $html().form(contents);
   }
 
@@ -842,7 +842,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction g(Instruction... contents) {
+  protected final ElementMarkup g(Instruction... contents) {
     return $html().g(contents);
   }
 
@@ -851,7 +851,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction g(String text) {
+  protected final ElementMarkup g(String text) {
     return $html().g(text);
   }
 
@@ -860,7 +860,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction h1(Instruction... contents) {
+  protected final ElementMarkup h1(Instruction... contents) {
     return $html().h1(contents);
   }
 
@@ -869,7 +869,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction h1(String text) {
+  protected final ElementMarkup h1(String text) {
     return $html().h1(text);
   }
 
@@ -878,7 +878,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction h2(Instruction... contents) {
+  protected final ElementMarkup h2(Instruction... contents) {
     return $html().h2(contents);
   }
 
@@ -887,7 +887,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction h2(String text) {
+  protected final ElementMarkup h2(String text) {
     return $html().h2(text);
   }
 
@@ -896,7 +896,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction h3(Instruction... contents) {
+  protected final ElementMarkup h3(Instruction... contents) {
     return $html().h3(contents);
   }
 
@@ -905,7 +905,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction h3(String text) {
+  protected final ElementMarkup h3(String text) {
     return $html().h3(text);
   }
 
@@ -914,7 +914,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction h4(Instruction... contents) {
+  protected final ElementMarkup h4(Instruction... contents) {
     return $html().h4(contents);
   }
 
@@ -923,7 +923,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction h4(String text) {
+  protected final ElementMarkup h4(String text) {
     return $html().h4(text);
   }
 
@@ -932,7 +932,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction h5(Instruction... contents) {
+  protected final ElementMarkup h5(Instruction... contents) {
     return $html().h5(contents);
   }
 
@@ -941,7 +941,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction h5(String text) {
+  protected final ElementMarkup h5(String text) {
     return $html().h5(text);
   }
 
@@ -950,7 +950,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction h6(Instruction... contents) {
+  protected final ElementMarkup h6(Instruction... contents) {
     return $html().h6(contents);
   }
 
@@ -959,7 +959,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction h6(String text) {
+  protected final ElementMarkup h6(String text) {
     return $html().h6(text);
   }
 
@@ -968,7 +968,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction head(Instruction... contents) {
+  protected final ElementMarkup head(Instruction... contents) {
     return $html().head(contents);
   }
 
@@ -977,7 +977,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction head(String text) {
+  protected final ElementMarkup head(String text) {
     return $html().head(text);
   }
 
@@ -986,7 +986,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction header(Instruction... contents) {
+  protected final ElementMarkup header(Instruction... contents) {
     return $html().header(contents);
   }
 
@@ -995,7 +995,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction header(String text) {
+  protected final ElementMarkup header(String text) {
     return $html().header(text);
   }
 
@@ -1004,7 +1004,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction hgroup(Instruction... contents) {
+  protected final ElementMarkup hgroup(Instruction... contents) {
     return $html().hgroup(contents);
   }
 
@@ -1013,7 +1013,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction hgroup(String text) {
+  protected final ElementMarkup hgroup(String text) {
     return $html().hgroup(text);
   }
 
@@ -1022,7 +1022,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction hr(Instruction.OfVoid... contents) {
+  protected final ElementMarkup hr(Instruction.OfVoid... contents) {
     return $html().hr(contents);
   }
 
@@ -1031,7 +1031,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction html(Instruction... contents) {
+  protected final ElementMarkup html(Instruction... contents) {
     return $html().html(contents);
   }
 
@@ -1040,7 +1040,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction html(String text) {
+  protected final ElementMarkup html(String text) {
     return $html().html(text);
   }
 
@@ -1049,7 +1049,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction img(Instruction.OfVoid... contents) {
+  protected final ElementMarkup img(Instruction.OfVoid... contents) {
     return $html().img(contents);
   }
 
@@ -1058,7 +1058,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction input(Instruction.OfVoid... contents) {
+  protected final ElementMarkup input(Instruction.OfVoid... contents) {
     return $html().input(contents);
   }
 
@@ -1067,7 +1067,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction kbd(Instruction... contents) {
+  protected final ElementMarkup kbd(Instruction... contents) {
     return $html().kbd(contents);
   }
 
@@ -1076,7 +1076,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction kbd(String text) {
+  protected final ElementMarkup kbd(String text) {
     return $html().kbd(text);
   }
 
@@ -1085,7 +1085,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction label(Instruction... contents) {
+  protected final ElementMarkup label(Instruction... contents) {
     return $html().label(contents);
   }
 
@@ -1094,7 +1094,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction legend(Instruction... contents) {
+  protected final ElementMarkup legend(Instruction... contents) {
     return $html().legend(contents);
   }
 
@@ -1103,7 +1103,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction legend(String text) {
+  protected final ElementMarkup legend(String text) {
     return $html().legend(text);
   }
 
@@ -1112,7 +1112,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction li(Instruction... contents) {
+  protected final ElementMarkup li(Instruction... contents) {
     return $html().li(contents);
   }
 
@@ -1121,7 +1121,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction li(String text) {
+  protected final ElementMarkup li(String text) {
     return $html().li(text);
   }
 
@@ -1130,7 +1130,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction link(Instruction.OfVoid... contents) {
+  protected final ElementMarkup link(Instruction.OfVoid... contents) {
     return $html().link(contents);
   }
 
@@ -1139,7 +1139,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction main(Instruction... contents) {
+  protected final ElementMarkup main(Instruction... contents) {
     return $html().main(contents);
   }
 
@@ -1148,7 +1148,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction main(String text) {
+  protected final ElementMarkup main(String text) {
     return $html().main(text);
   }
 
@@ -1157,7 +1157,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction menu(Instruction... contents) {
+  protected final ElementMarkup menu(Instruction... contents) {
     return $html().menu(contents);
   }
 
@@ -1166,7 +1166,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction menu(String text) {
+  protected final ElementMarkup menu(String text) {
     return $html().menu(text);
   }
 
@@ -1175,7 +1175,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction meta(Instruction.OfVoid... contents) {
+  protected final ElementMarkup meta(Instruction.OfVoid... contents) {
     return $html().meta(contents);
   }
 
@@ -1184,7 +1184,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction nav(Instruction... contents) {
+  protected final ElementMarkup nav(Instruction... contents) {
     return $html().nav(contents);
   }
 
@@ -1193,7 +1193,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction nav(String text) {
+  protected final ElementMarkup nav(String text) {
     return $html().nav(text);
   }
 
@@ -1202,7 +1202,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction noscript(Instruction... contents) {
+  protected final ElementMarkup noscript(Instruction... contents) {
     return $html().noscript(contents);
   }
 
@@ -1211,7 +1211,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction noscript(String text) {
+  protected final ElementMarkup noscript(String text) {
     return $html().noscript(text);
   }
 
@@ -1220,7 +1220,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction ol(Instruction... contents) {
+  protected final ElementMarkup ol(Instruction... contents) {
     return $html().ol(contents);
   }
 
@@ -1229,7 +1229,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction ol(String text) {
+  protected final ElementMarkup ol(String text) {
     return $html().ol(text);
   }
 
@@ -1238,7 +1238,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction optgroup(Instruction... contents) {
+  protected final ElementMarkup optgroup(Instruction... contents) {
     return $html().optgroup(contents);
   }
 
@@ -1247,7 +1247,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction optgroup(String text) {
+  protected final ElementMarkup optgroup(String text) {
     return $html().optgroup(text);
   }
 
@@ -1256,7 +1256,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction option(Instruction... contents) {
+  protected final ElementMarkup option(Instruction... contents) {
     return $html().option(contents);
   }
 
@@ -1265,7 +1265,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction option(String text) {
+  protected final ElementMarkup option(String text) {
     return $html().option(text);
   }
 
@@ -1274,7 +1274,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction p(Instruction... contents) {
+  protected final ElementMarkup p(Instruction... contents) {
     return $html().p(contents);
   }
 
@@ -1283,7 +1283,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction p(String text) {
+  protected final ElementMarkup p(String text) {
     return $html().p(text);
   }
 
@@ -1292,7 +1292,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction path(Instruction... contents) {
+  protected final ElementMarkup path(Instruction... contents) {
     return $html().path(contents);
   }
 
@@ -1301,7 +1301,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction path(String text) {
+  protected final ElementMarkup path(String text) {
     return $html().path(text);
   }
 
@@ -1310,7 +1310,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction pre(Instruction... contents) {
+  protected final ElementMarkup pre(Instruction... contents) {
     return $html().pre(contents);
   }
 
@@ -1319,7 +1319,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction pre(String text) {
+  protected final ElementMarkup pre(String text) {
     return $html().pre(text);
   }
 
@@ -1328,7 +1328,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction progress(Instruction... contents) {
+  protected final ElementMarkup progress(Instruction... contents) {
     return $html().progress(contents);
   }
 
@@ -1337,7 +1337,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction progress(String text) {
+  protected final ElementMarkup progress(String text) {
     return $html().progress(text);
   }
 
@@ -1346,7 +1346,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction samp(Instruction... contents) {
+  protected final ElementMarkup samp(Instruction... contents) {
     return $html().samp(contents);
   }
 
@@ -1355,7 +1355,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction samp(String text) {
+  protected final ElementMarkup samp(String text) {
     return $html().samp(text);
   }
 
@@ -1364,7 +1364,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction script(Instruction... contents) {
+  protected final ElementMarkup script(Instruction... contents) {
     return $html().script(contents);
   }
 
@@ -1373,7 +1373,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction script(String text) {
+  protected final ElementMarkup script(String text) {
     return $html().script(text);
   }
 
@@ -1382,7 +1382,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction section(Instruction... contents) {
+  protected final ElementMarkup section(Instruction... contents) {
     return $html().section(contents);
   }
 
@@ -1391,7 +1391,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction section(String text) {
+  protected final ElementMarkup section(String text) {
     return $html().section(text);
   }
 
@@ -1400,7 +1400,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction select(Instruction... contents) {
+  protected final ElementMarkup select(Instruction... contents) {
     return $html().select(contents);
   }
 
@@ -1409,7 +1409,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction select(String text) {
+  protected final ElementMarkup select(String text) {
     return $html().select(text);
   }
 
@@ -1418,7 +1418,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction small(Instruction... contents) {
+  protected final ElementMarkup small(Instruction... contents) {
     return $html().small(contents);
   }
 
@@ -1427,7 +1427,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction small(String text) {
+  protected final ElementMarkup small(String text) {
     return $html().small(text);
   }
 
@@ -1436,7 +1436,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction span(Instruction... contents) {
+  protected final ElementMarkup span(Instruction... contents) {
     return $html().span(contents);
   }
 
@@ -1445,7 +1445,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction span(String text) {
+  protected final ElementMarkup span(String text) {
     return $html().span(text);
   }
 
@@ -1454,7 +1454,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction strong(Instruction... contents) {
+  protected final ElementMarkup strong(Instruction... contents) {
     return $html().strong(contents);
   }
 
@@ -1463,7 +1463,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction strong(String text) {
+  protected final ElementMarkup strong(String text) {
     return $html().strong(text);
   }
 
@@ -1472,7 +1472,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction style(Instruction... contents) {
+  protected final ElementMarkup style(Instruction... contents) {
     return $html().style(contents);
   }
 
@@ -1481,7 +1481,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction sub(Instruction... contents) {
+  protected final ElementMarkup sub(Instruction... contents) {
     return $html().sub(contents);
   }
 
@@ -1490,7 +1490,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction sub(String text) {
+  protected final ElementMarkup sub(String text) {
     return $html().sub(text);
   }
 
@@ -1499,7 +1499,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction summary(Instruction... contents) {
+  protected final ElementMarkup summary(Instruction... contents) {
     return $html().summary(contents);
   }
 
@@ -1508,7 +1508,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction summary(String text) {
+  protected final ElementMarkup summary(String text) {
     return $html().summary(text);
   }
 
@@ -1517,7 +1517,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction sup(Instruction... contents) {
+  protected final ElementMarkup sup(Instruction... contents) {
     return $html().sup(contents);
   }
 
@@ -1526,7 +1526,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction sup(String text) {
+  protected final ElementMarkup sup(String text) {
     return $html().sup(text);
   }
 
@@ -1535,7 +1535,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction svg(Instruction... contents) {
+  protected final ElementMarkup svg(Instruction... contents) {
     return $html().svg(contents);
   }
 
@@ -1544,7 +1544,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction svg(String text) {
+  protected final ElementMarkup svg(String text) {
     return $html().svg(text);
   }
 
@@ -1553,7 +1553,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction table(Instruction... contents) {
+  protected final ElementMarkup table(Instruction... contents) {
     return $html().table(contents);
   }
 
@@ -1562,7 +1562,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction table(String text) {
+  protected final ElementMarkup table(String text) {
     return $html().table(text);
   }
 
@@ -1571,7 +1571,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction tbody(Instruction... contents) {
+  protected final ElementMarkup tbody(Instruction... contents) {
     return $html().tbody(contents);
   }
 
@@ -1580,7 +1580,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction tbody(String text) {
+  protected final ElementMarkup tbody(String text) {
     return $html().tbody(text);
   }
 
@@ -1589,7 +1589,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction td(Instruction... contents) {
+  protected final ElementMarkup td(Instruction... contents) {
     return $html().td(contents);
   }
 
@@ -1598,7 +1598,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction td(String text) {
+  protected final ElementMarkup td(String text) {
     return $html().td(text);
   }
 
@@ -1607,7 +1607,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction template(Instruction... contents) {
+  protected final ElementMarkup template(Instruction... contents) {
     return $html().template(contents);
   }
 
@@ -1616,7 +1616,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction template(String text) {
+  protected final ElementMarkup template(String text) {
     return $html().template(text);
   }
 
@@ -1625,7 +1625,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction textarea(Instruction... contents) {
+  protected final ElementMarkup textarea(Instruction... contents) {
     return $html().textarea(contents);
   }
 
@@ -1634,7 +1634,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction textarea(String text) {
+  protected final ElementMarkup textarea(String text) {
     return $html().textarea(text);
   }
 
@@ -1643,7 +1643,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction th(Instruction... contents) {
+  protected final ElementMarkup th(Instruction... contents) {
     return $html().th(contents);
   }
 
@@ -1652,7 +1652,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction th(String text) {
+  protected final ElementMarkup th(String text) {
     return $html().th(text);
   }
 
@@ -1661,7 +1661,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction thead(Instruction... contents) {
+  protected final ElementMarkup thead(Instruction... contents) {
     return $html().thead(contents);
   }
 
@@ -1670,7 +1670,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction thead(String text) {
+  protected final ElementMarkup thead(String text) {
     return $html().thead(text);
   }
 
@@ -1679,7 +1679,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction title(Instruction... contents) {
+  protected final ElementMarkup title(Instruction... contents) {
     return $html().title(contents);
   }
 
@@ -1688,7 +1688,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction tr(Instruction... contents) {
+  protected final ElementMarkup tr(Instruction... contents) {
     return $html().tr(contents);
   }
 
@@ -1697,7 +1697,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction tr(String text) {
+  protected final ElementMarkup tr(String text) {
     return $html().tr(text);
   }
 
@@ -1706,7 +1706,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction ul(Instruction... contents) {
+  protected final ElementMarkup ul(Instruction... contents) {
     return $html().ul(contents);
   }
 
@@ -1715,7 +1715,7 @@ public abstract class Template implements Component {
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementInstruction ul(String text) {
+  protected final ElementMarkup ul(String text) {
     return $html().ul(text);
   }
 
@@ -1728,7 +1728,7 @@ public abstract class Template implements Component {
   /// @param name the attribute name
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction attr(AttributeName name) {
+  protected final AttributeMarkup attr(AttributeName name) {
     return $html().attr(name);
   }
 
@@ -1738,7 +1738,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction attr(AttributeName name, String value) {
+  protected final AttributeMarkup attr(AttributeName name, String value) {
     return $html().attr(name, value);
   }
 
@@ -1747,7 +1747,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction accesskey(String value) {
+  protected final AttributeMarkup accesskey(String value) {
     return $html().accesskey(value);
   }
 
@@ -1756,7 +1756,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction action(String value) {
+  protected final AttributeMarkup action(String value) {
     return $html().action(value);
   }
 
@@ -1765,7 +1765,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction align(String value) {
+  protected final AttributeMarkup align(String value) {
     return $html().align(value);
   }
 
@@ -1774,7 +1774,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction alignmentBaseline(String value) {
+  protected final AttributeMarkup alignmentBaseline(String value) {
     return $html().alignmentBaseline(value);
   }
 
@@ -1783,7 +1783,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction alt(String value) {
+  protected final AttributeMarkup alt(String value) {
     return $html().alt(value);
   }
 
@@ -1792,7 +1792,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction ariaCurrent(String value) {
+  protected final AttributeMarkup ariaCurrent(String value) {
     return $html().ariaCurrent(value);
   }
 
@@ -1801,7 +1801,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction ariaDisabled(String value) {
+  protected final AttributeMarkup ariaDisabled(String value) {
     return $html().ariaDisabled(value);
   }
 
@@ -1810,7 +1810,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction ariaHidden(String value) {
+  protected final AttributeMarkup ariaHidden(String value) {
     return $html().ariaHidden(value);
   }
 
@@ -1819,7 +1819,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction ariaInvalid(String value) {
+  protected final AttributeMarkup ariaInvalid(String value) {
     return $html().ariaInvalid(value);
   }
 
@@ -1828,7 +1828,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction ariaLabel(String value) {
+  protected final AttributeMarkup ariaLabel(String value) {
     return $html().ariaLabel(value);
   }
 
@@ -1837,7 +1837,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction ariaLabelledBy(String value) {
+  protected final AttributeMarkup ariaLabelledBy(String value) {
     return $html().ariaLabelledBy(value);
   }
 
@@ -1846,7 +1846,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction ariaModal(String value) {
+  protected final AttributeMarkup ariaModal(String value) {
     return $html().ariaModal(value);
   }
 
@@ -1855,7 +1855,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction ariaPlaceholder(String value) {
+  protected final AttributeMarkup ariaPlaceholder(String value) {
     return $html().ariaPlaceholder(value);
   }
 
@@ -1864,7 +1864,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction ariaReadonly(String value) {
+  protected final AttributeMarkup ariaReadonly(String value) {
     return $html().ariaReadonly(value);
   }
 
@@ -1873,7 +1873,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction ariaRequired(String value) {
+  protected final AttributeMarkup ariaRequired(String value) {
     return $html().ariaRequired(value);
   }
 
@@ -1882,7 +1882,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction ariaSelected(String value) {
+  protected final AttributeMarkup ariaSelected(String value) {
     return $html().ariaSelected(value);
   }
 
@@ -1891,7 +1891,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction as(String value) {
+  protected final AttributeMarkup as(String value) {
     return $html().as(value);
   }
 
@@ -1900,7 +1900,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction autocomplete(String value) {
+  protected final AttributeMarkup autocomplete(String value) {
     return $html().autocomplete(value);
   }
 
@@ -1909,7 +1909,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction baselineShift(String value) {
+  protected final AttributeMarkup baselineShift(String value) {
     return $html().baselineShift(value);
   }
 
@@ -1918,7 +1918,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction border(String value) {
+  protected final AttributeMarkup border(String value) {
     return $html().border(value);
   }
 
@@ -1927,7 +1927,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction cellpadding(String value) {
+  protected final AttributeMarkup cellpadding(String value) {
     return $html().cellpadding(value);
   }
 
@@ -1936,7 +1936,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction cellspacing(String value) {
+  protected final AttributeMarkup cellspacing(String value) {
     return $html().cellspacing(value);
   }
 
@@ -1945,7 +1945,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction charset(String value) {
+  protected final AttributeMarkup charset(String value) {
     return $html().charset(value);
   }
 
@@ -1954,7 +1954,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction cite(String value) {
+  protected final AttributeMarkup cite(String value) {
     return $html().cite(value);
   }
 
@@ -1963,7 +1963,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction className(String value) {
+  protected final AttributeMarkup className(String value) {
     return $html().className(value);
   }
 
@@ -1972,7 +1972,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction clipRule(String value) {
+  protected final AttributeMarkup clipRule(String value) {
     return $html().clipRule(value);
   }
 
@@ -1981,7 +1981,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction closedby(String value) {
+  protected final AttributeMarkup closedby(String value) {
     return $html().closedby(value);
   }
 
@@ -1990,7 +1990,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction color(String value) {
+  protected final AttributeMarkup color(String value) {
     return $html().color(value);
   }
 
@@ -1999,7 +1999,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction colorInterpolation(String value) {
+  protected final AttributeMarkup colorInterpolation(String value) {
     return $html().colorInterpolation(value);
   }
 
@@ -2009,7 +2009,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction colorInterpolationFilters(String value) {
+  protected final AttributeMarkup colorInterpolationFilters(String value) {
     return $html().colorInterpolationFilters(value);
   }
 
@@ -2018,7 +2018,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction cols(String value) {
+  protected final AttributeMarkup cols(String value) {
     return $html().cols(value);
   }
 
@@ -2027,7 +2027,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction content(String value) {
+  protected final AttributeMarkup content(String value) {
     return $html().content(value);
   }
 
@@ -2036,7 +2036,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction contenteditable(String value) {
+  protected final AttributeMarkup contenteditable(String value) {
     return $html().contenteditable(value);
   }
 
@@ -2045,7 +2045,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction crossorigin(String value) {
+  protected final AttributeMarkup crossorigin(String value) {
     return $html().crossorigin(value);
   }
 
@@ -2054,7 +2054,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction cursor(String value) {
+  protected final AttributeMarkup cursor(String value) {
     return $html().cursor(value);
   }
 
@@ -2063,7 +2063,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction d(String value) {
+  protected final AttributeMarkup d(String value) {
     return $html().d(value);
   }
 
@@ -2072,7 +2072,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction dir(String value) {
+  protected final AttributeMarkup dir(String value) {
     return $html().dir(value);
   }
 
@@ -2081,7 +2081,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction direction(String value) {
+  protected final AttributeMarkup direction(String value) {
     return $html().direction(value);
   }
 
@@ -2090,7 +2090,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction dirname(String value) {
+  protected final AttributeMarkup dirname(String value) {
     return $html().dirname(value);
   }
 
@@ -2099,7 +2099,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction display(String value) {
+  protected final AttributeMarkup display(String value) {
     return $html().display(value);
   }
 
@@ -2108,7 +2108,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction dominantBaseline(String value) {
+  protected final AttributeMarkup dominantBaseline(String value) {
     return $html().dominantBaseline(value);
   }
 
@@ -2117,7 +2117,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction download(String value) {
+  protected final AttributeMarkup download(String value) {
     return $html().download(value);
   }
 
@@ -2126,7 +2126,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction draggable(String value) {
+  protected final AttributeMarkup draggable(String value) {
     return $html().draggable(value);
   }
 
@@ -2135,7 +2135,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction enctype(String value) {
+  protected final AttributeMarkup enctype(String value) {
     return $html().enctype(value);
   }
 
@@ -2144,7 +2144,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction fill(String value) {
+  protected final AttributeMarkup fill(String value) {
     return $html().fill(value);
   }
 
@@ -2153,7 +2153,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction fillOpacity(String value) {
+  protected final AttributeMarkup fillOpacity(String value) {
     return $html().fillOpacity(value);
   }
 
@@ -2162,7 +2162,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction fillRule(String value) {
+  protected final AttributeMarkup fillRule(String value) {
     return $html().fillRule(value);
   }
 
@@ -2171,7 +2171,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction filter(String value) {
+  protected final AttributeMarkup filter(String value) {
     return $html().filter(value);
   }
 
@@ -2180,7 +2180,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction floodColor(String value) {
+  protected final AttributeMarkup floodColor(String value) {
     return $html().floodColor(value);
   }
 
@@ -2189,7 +2189,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction floodOpacity(String value) {
+  protected final AttributeMarkup floodOpacity(String value) {
     return $html().floodOpacity(value);
   }
 
@@ -2198,7 +2198,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction forId(String value) {
+  protected final AttributeMarkup forId(String value) {
     return $html().forId(value);
   }
 
@@ -2208,7 +2208,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction glyphOrientationHorizontal(String value) {
+  protected final AttributeMarkup glyphOrientationHorizontal(String value) {
     return $html().glyphOrientationHorizontal(value);
   }
 
@@ -2218,7 +2218,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction glyphOrientationVertical(String value) {
+  protected final AttributeMarkup glyphOrientationVertical(String value) {
     return $html().glyphOrientationVertical(value);
   }
 
@@ -2227,7 +2227,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction height(String value) {
+  protected final AttributeMarkup height(String value) {
     return $html().height(value);
   }
 
@@ -2236,7 +2236,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction href(String value) {
+  protected final AttributeMarkup href(String value) {
     return $html().href(value);
   }
 
@@ -2245,7 +2245,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction httpEquiv(String value) {
+  protected final AttributeMarkup httpEquiv(String value) {
     return $html().httpEquiv(value);
   }
 
@@ -2254,7 +2254,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction id(String value) {
+  protected final AttributeMarkup id(String value) {
     return $html().id(value);
   }
 
@@ -2263,7 +2263,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction imageRendering(String value) {
+  protected final AttributeMarkup imageRendering(String value) {
     return $html().imageRendering(value);
   }
 
@@ -2272,7 +2272,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction integrity(String value) {
+  protected final AttributeMarkup integrity(String value) {
     return $html().integrity(value);
   }
 
@@ -2281,7 +2281,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction lang(String value) {
+  protected final AttributeMarkup lang(String value) {
     return $html().lang(value);
   }
 
@@ -2290,7 +2290,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction letterSpacing(String value) {
+  protected final AttributeMarkup letterSpacing(String value) {
     return $html().letterSpacing(value);
   }
 
@@ -2299,7 +2299,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction lightingColor(String value) {
+  protected final AttributeMarkup lightingColor(String value) {
     return $html().lightingColor(value);
   }
 
@@ -2308,7 +2308,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction markerEnd(String value) {
+  protected final AttributeMarkup markerEnd(String value) {
     return $html().markerEnd(value);
   }
 
@@ -2317,7 +2317,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction markerMid(String value) {
+  protected final AttributeMarkup markerMid(String value) {
     return $html().markerMid(value);
   }
 
@@ -2326,7 +2326,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction markerStart(String value) {
+  protected final AttributeMarkup markerStart(String value) {
     return $html().markerStart(value);
   }
 
@@ -2335,7 +2335,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction mask(String value) {
+  protected final AttributeMarkup mask(String value) {
     return $html().mask(value);
   }
 
@@ -2344,7 +2344,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction maskType(String value) {
+  protected final AttributeMarkup maskType(String value) {
     return $html().maskType(value);
   }
 
@@ -2353,7 +2353,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction maxlength(String value) {
+  protected final AttributeMarkup maxlength(String value) {
     return $html().maxlength(value);
   }
 
@@ -2362,7 +2362,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction media(String value) {
+  protected final AttributeMarkup media(String value) {
     return $html().media(value);
   }
 
@@ -2371,7 +2371,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction method(String value) {
+  protected final AttributeMarkup method(String value) {
     return $html().method(value);
   }
 
@@ -2380,7 +2380,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction minlength(String value) {
+  protected final AttributeMarkup minlength(String value) {
     return $html().minlength(value);
   }
 
@@ -2389,7 +2389,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction name(String value) {
+  protected final AttributeMarkup name(String value) {
     return $html().name(value);
   }
 
@@ -2398,7 +2398,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction onclick(String value) {
+  protected final AttributeMarkup onclick(String value) {
     return $html().onclick(value);
   }
 
@@ -2407,7 +2407,7 @@ public abstract class Template implements Component {
   /// @param value the action to execute
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction onclick(JsAction value) {
+  protected final AttributeMarkup onclick(JsAction value) {
     return $html().onclick(value);
   }
 
@@ -2416,7 +2416,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction onload(String value) {
+  protected final AttributeMarkup onload(String value) {
     return $html().onload(value);
   }
 
@@ -2425,7 +2425,7 @@ public abstract class Template implements Component {
   /// @param value the action to execute
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction onload(JsAction value) {
+  protected final AttributeMarkup onload(JsAction value) {
     return $html().onload(value);
   }
 
@@ -2434,7 +2434,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction onpopstate(String value) {
+  protected final AttributeMarkup onpopstate(String value) {
     return $html().onpopstate(value);
   }
 
@@ -2443,7 +2443,7 @@ public abstract class Template implements Component {
   /// @param value the action to execute
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction onpopstate(JsAction value) {
+  protected final AttributeMarkup onpopstate(JsAction value) {
     return $html().onpopstate(value);
   }
 
@@ -2452,7 +2452,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction onsubmit(String value) {
+  protected final AttributeMarkup onsubmit(String value) {
     return $html().onsubmit(value);
   }
 
@@ -2461,7 +2461,7 @@ public abstract class Template implements Component {
   /// @param value the action to execute
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction onsubmit(JsAction value) {
+  protected final AttributeMarkup onsubmit(JsAction value) {
     return $html().onsubmit(value);
   }
 
@@ -2470,7 +2470,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction opacity(String value) {
+  protected final AttributeMarkup opacity(String value) {
     return $html().opacity(value);
   }
 
@@ -2479,7 +2479,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction overflow(String value) {
+  protected final AttributeMarkup overflow(String value) {
     return $html().overflow(value);
   }
 
@@ -2488,7 +2488,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction paintOrder(String value) {
+  protected final AttributeMarkup paintOrder(String value) {
     return $html().paintOrder(value);
   }
 
@@ -2497,7 +2497,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction placeholder(String value) {
+  protected final AttributeMarkup placeholder(String value) {
     return $html().placeholder(value);
   }
 
@@ -2506,7 +2506,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction pointerEvents(String value) {
+  protected final AttributeMarkup pointerEvents(String value) {
     return $html().pointerEvents(value);
   }
 
@@ -2515,7 +2515,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction property(String value) {
+  protected final AttributeMarkup property(String value) {
     return $html().property(value);
   }
 
@@ -2524,7 +2524,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction referrerpolicy(String value) {
+  protected final AttributeMarkup referrerpolicy(String value) {
     return $html().referrerpolicy(value);
   }
 
@@ -2533,7 +2533,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction rel(String value) {
+  protected final AttributeMarkup rel(String value) {
     return $html().rel(value);
   }
 
@@ -2542,7 +2542,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction rev(String value) {
+  protected final AttributeMarkup rev(String value) {
     return $html().rev(value);
   }
 
@@ -2551,7 +2551,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction role(String value) {
+  protected final AttributeMarkup role(String value) {
     return $html().role(value);
   }
 
@@ -2560,7 +2560,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction rows(String value) {
+  protected final AttributeMarkup rows(String value) {
     return $html().rows(value);
   }
 
@@ -2569,7 +2569,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction shapeRendering(String value) {
+  protected final AttributeMarkup shapeRendering(String value) {
     return $html().shapeRendering(value);
   }
 
@@ -2578,7 +2578,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction size(String value) {
+  protected final AttributeMarkup size(String value) {
     return $html().size(value);
   }
 
@@ -2587,7 +2587,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction sizes(String value) {
+  protected final AttributeMarkup sizes(String value) {
     return $html().sizes(value);
   }
 
@@ -2596,7 +2596,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction spellcheck(String value) {
+  protected final AttributeMarkup spellcheck(String value) {
     return $html().spellcheck(value);
   }
 
@@ -2605,7 +2605,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction src(String value) {
+  protected final AttributeMarkup src(String value) {
     return $html().src(value);
   }
 
@@ -2614,7 +2614,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction srcset(String value) {
+  protected final AttributeMarkup srcset(String value) {
     return $html().srcset(value);
   }
 
@@ -2623,7 +2623,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction start(String value) {
+  protected final AttributeMarkup start(String value) {
     return $html().start(value);
   }
 
@@ -2632,7 +2632,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction stopColor(String value) {
+  protected final AttributeMarkup stopColor(String value) {
     return $html().stopColor(value);
   }
 
@@ -2641,7 +2641,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction stopOpacity(String value) {
+  protected final AttributeMarkup stopOpacity(String value) {
     return $html().stopOpacity(value);
   }
 
@@ -2650,7 +2650,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction stroke(String value) {
+  protected final AttributeMarkup stroke(String value) {
     return $html().stroke(value);
   }
 
@@ -2659,7 +2659,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction strokeDasharray(String value) {
+  protected final AttributeMarkup strokeDasharray(String value) {
     return $html().strokeDasharray(value);
   }
 
@@ -2668,7 +2668,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction strokeDashoffset(String value) {
+  protected final AttributeMarkup strokeDashoffset(String value) {
     return $html().strokeDashoffset(value);
   }
 
@@ -2677,7 +2677,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction strokeLinecap(String value) {
+  protected final AttributeMarkup strokeLinecap(String value) {
     return $html().strokeLinecap(value);
   }
 
@@ -2686,7 +2686,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction strokeLinejoin(String value) {
+  protected final AttributeMarkup strokeLinejoin(String value) {
     return $html().strokeLinejoin(value);
   }
 
@@ -2695,7 +2695,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction strokeMiterlimit(String value) {
+  protected final AttributeMarkup strokeMiterlimit(String value) {
     return $html().strokeMiterlimit(value);
   }
 
@@ -2704,7 +2704,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction strokeOpacity(String value) {
+  protected final AttributeMarkup strokeOpacity(String value) {
     return $html().strokeOpacity(value);
   }
 
@@ -2713,7 +2713,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction strokeWidth(String value) {
+  protected final AttributeMarkup strokeWidth(String value) {
     return $html().strokeWidth(value);
   }
 
@@ -2722,7 +2722,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction tabindex(String value) {
+  protected final AttributeMarkup tabindex(String value) {
     return $html().tabindex(value);
   }
 
@@ -2731,7 +2731,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction target(String value) {
+  protected final AttributeMarkup target(String value) {
     return $html().target(value);
   }
 
@@ -2740,7 +2740,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction textAnchor(String value) {
+  protected final AttributeMarkup textAnchor(String value) {
     return $html().textAnchor(value);
   }
 
@@ -2749,7 +2749,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction textDecoration(String value) {
+  protected final AttributeMarkup textDecoration(String value) {
     return $html().textDecoration(value);
   }
 
@@ -2758,7 +2758,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction textOverflow(String value) {
+  protected final AttributeMarkup textOverflow(String value) {
     return $html().textOverflow(value);
   }
 
@@ -2767,7 +2767,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction textRendering(String value) {
+  protected final AttributeMarkup textRendering(String value) {
     return $html().textRendering(value);
   }
 
@@ -2776,7 +2776,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction transform(String value) {
+  protected final AttributeMarkup transform(String value) {
     return $html().transform(value);
   }
 
@@ -2785,7 +2785,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction transformOrigin(String value) {
+  protected final AttributeMarkup transformOrigin(String value) {
     return $html().transformOrigin(value);
   }
 
@@ -2794,7 +2794,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction translate(String value) {
+  protected final AttributeMarkup translate(String value) {
     return $html().translate(value);
   }
 
@@ -2803,7 +2803,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction type(String value) {
+  protected final AttributeMarkup type(String value) {
     return $html().type(value);
   }
 
@@ -2812,7 +2812,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction unicodeBidi(String value) {
+  protected final AttributeMarkup unicodeBidi(String value) {
     return $html().unicodeBidi(value);
   }
 
@@ -2821,7 +2821,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction value(String value) {
+  protected final AttributeMarkup value(String value) {
     return $html().value(value);
   }
 
@@ -2830,7 +2830,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction vectorEffect(String value) {
+  protected final AttributeMarkup vectorEffect(String value) {
     return $html().vectorEffect(value);
   }
 
@@ -2839,7 +2839,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction viewBox(String value) {
+  protected final AttributeMarkup viewBox(String value) {
     return $html().viewBox(value);
   }
 
@@ -2848,7 +2848,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction visibility(String value) {
+  protected final AttributeMarkup visibility(String value) {
     return $html().visibility(value);
   }
 
@@ -2857,7 +2857,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction whiteSpace(String value) {
+  protected final AttributeMarkup whiteSpace(String value) {
     return $html().whiteSpace(value);
   }
 
@@ -2866,7 +2866,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction width(String value) {
+  protected final AttributeMarkup width(String value) {
     return $html().width(value);
   }
 
@@ -2875,7 +2875,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction wordSpacing(String value) {
+  protected final AttributeMarkup wordSpacing(String value) {
     return $html().wordSpacing(value);
   }
 
@@ -2884,7 +2884,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction wrap(String value) {
+  protected final AttributeMarkup wrap(String value) {
     return $html().wrap(value);
   }
 
@@ -2893,7 +2893,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction writingMode(String value) {
+  protected final AttributeMarkup writingMode(String value) {
     return $html().writingMode(value);
   }
 
@@ -2902,7 +2902,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  protected final AttributeInstruction xmlns(String value) {
+  protected final AttributeMarkup xmlns(String value) {
     return $html().xmlns(value);
   }
 

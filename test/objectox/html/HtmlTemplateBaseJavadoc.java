@@ -19,7 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import java.util.List;
 import objectos.html.Template;
-import objectos.html.markup.ElementInstruction;
+import objectos.html.markup.ElementMarkup;
 import objectos.html.markup.Instruction;
 import org.testng.annotations.Test;
 
@@ -42,7 +42,7 @@ public class HtmlTemplateBaseJavadoc {
         );
       }
 
-      private ElementInstruction myComponent(Instruction... contents) {
+      private ElementMarkup myComponent(Instruction... contents) {
         return div(
             className("my-component"),
 

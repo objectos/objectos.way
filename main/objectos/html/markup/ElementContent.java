@@ -13,9 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html.attr;
+package objectos.html.markup;
 
-import objectos.html.AttributeName;
-import objectos.html.AttributeObject;
+import objectos.html.Attribute;
 
-public record AttributeObjectPojo(AttributeName attrName, String attrValue) implements AttributeObject {}
+/// Represents an object allowed as an argument to an HTML element
+/// rendering method.
+public sealed interface ElementContent
+    permits
+    Attribute,
+    ElementMarkup,
+    NoOpInstruction {}

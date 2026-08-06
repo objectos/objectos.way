@@ -19,7 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import objectos.html.format.QuotationMarkStyle;
 import objectos.html.stream.RenderAttribute;
-import objectox.html.attr.AttributeNamePojo;
+import objectox.html.markup.AttributeNamePojo;
 import objectox.html.stream.RenderAttributeEvent;
 import org.testng.annotations.Test;
 

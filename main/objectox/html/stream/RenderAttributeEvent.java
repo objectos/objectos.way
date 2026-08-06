@@ -17,7 +17,7 @@ package objectox.html.stream;
 
 import objectos.html.AttributeName;
 import objectos.html.stream.RenderAttribute;
-import objectox.html.attr.AttributeNamePojo;
+import objectox.html.markup.AttributeNamePojo;
 
 public record RenderAttributeEvent(AttributeName attributeName, String value) implements RenderAttribute {
 

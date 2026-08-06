@@ -20,9 +20,8 @@ import static org.testng.Assert.assertEquals;
 import java.util.Arrays;
 import java.util.function.IntConsumer;
 import objectos.html.AttributeName;
-import objectos.html.AttributeObject;
+import objectos.html.Attribute;
 import objectos.html.markup.Instruction;
-import objectox.html.attr.AttributeNamePojo;
 import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 
@@ -165,7 +164,7 @@ public class ContentsRecorderTest {
     subject.record(
         2,
         new AttributePointer(11),
-        AttributeObject.of(AttributeName.AUTOFOCUS),
+        Attribute.of(AttributeName.AUTOFOCUS),
         new AttributePointer(22)
     );
 

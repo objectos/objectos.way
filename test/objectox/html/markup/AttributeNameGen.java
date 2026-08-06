@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html.attr;
+package objectox.html.markup;
 
+import objectox.html.AttributeSpec;
 import objectox.html.HtmlSpec;
 
 public class AttributeNameGen {

@@ -17,7 +17,6 @@ package objectox.html;
 
 import java.util.Iterator;
 import java.util.Set;
-import objectox.html.attr.AttributeSpec;
 import objectox.html.elem.ElementSpec;
 
 public class MarkupGeneratedGen {

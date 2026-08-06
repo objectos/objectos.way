@@ -16,11 +16,11 @@
 package objectos.html;
 
 import java.util.Objects;
-import objectox.html.attr.AttributeNamePojo;
-import objectox.html.attr.IdPojo;
+import objectox.html.markup.AttributeNamePojo;
+import objectox.html.markup.IdPojo;
 
-/// Represents an HTML {@code id} attribute and its value.
-public sealed interface Id extends AttributeObject permits IdPojo {
+/// Represents an HTML `id` attribute and its value.
+public sealed interface Id extends Attribute permits IdPojo {
 
   /**
    * Creates a new {@code Id} instance with the specified value.

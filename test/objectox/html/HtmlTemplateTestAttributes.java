@@ -21,7 +21,7 @@ import objectos.html.AttributeName;
 import objectos.html.Id;
 import objectos.html.Template;
 import objectos.script.Js;
-import objectox.html.attr.AttributeNamePojo;
+import objectox.html.markup.AttributeNamePojo;
 import org.testng.annotations.Test;
 
 public class HtmlTemplateTestAttributes {

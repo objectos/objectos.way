@@ -18,11 +18,11 @@ package objectox.html;
 import java.util.Collection;
 import java.util.Objects;
 import objectos.html.AttributeName;
-import objectos.html.AttributeObject;
+import objectos.html.Attribute;
 import objectos.html.ElementName;
 import objectos.html.markup.AmbiguousInstruction;
-import objectos.html.markup.AttributeInstruction;
-import objectos.html.markup.ElementInstruction;
+import objectos.html.markup.AttributeMarkup;
+import objectos.html.markup.ElementMarkup;
 import objectos.html.markup.FlattenInstruction;
 import objectos.html.markup.Fragment0;
 import objectos.html.markup.Fragment1;
@@ -35,8 +35,8 @@ import objectos.html.markup.NoOpInstruction;
 import objectos.html.markup.RawInstruction;
 import objectos.html.markup.TextInstruction;
 import objectos.script.JsAction;
-import objectox.html.attr.AttributeNamePojo;
 import objectox.html.elem.ElementNamePojo;
+import objectox.html.markup.AttributeNamePojo;
 
 sealed abstract class MarkupGenerated permits MarkupPojo {
 
@@ -45,7 +45,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
   /// @param object the attribute
   ///
   /// @return an instruction representing the attribute
-  public abstract AttributeInstruction attr(AttributeObject object);
+  public abstract AttributeMarkup attr(Attribute object);
 
   // START generated code
 
@@ -78,7 +78,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
 ///
 /// @param value the text block containing class names, possibly spread across multiple lines
 /// @return an instruction representing this attribute.
-public abstract AttributeInstruction css(String value);
+public abstract AttributeMarkup css(String value);
 
 /// Renders the specified fragment as part of this document.
 ///
@@ -285,9 +285,9 @@ public abstract NoOpInstruction noop();
   // ELEMENTS
   //
 
-  abstract ElementInstruction elem0(ElementName name, Instruction... contents);
+  abstract ElementMarkup elem0(ElementName name, Instruction... contents);
 
-  abstract ElementInstruction elem0(ElementName name, String text);
+  abstract ElementMarkup elem0(ElementName name, String text);
 
   /// Renders an HTML element with the specified name and contents.
   ///
@@ -295,7 +295,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element
-  public final ElementInstruction elem(ElementName name, Instruction... contents) {
+  public final ElementMarkup elem(ElementName name, Instruction... contents) {
     Objects.requireNonNull(name, "name == null");
     return elem0(name, contents);
   }
@@ -306,7 +306,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of this element
   ///
   /// @return an instruction representing the element
-  public final ElementInstruction elem(ElementName name, String text) {
+  public final ElementMarkup elem(ElementName name, String text) {
     Objects.requireNonNull(name, "name == null");
     return elem0(name, text);
   }
@@ -319,7 +319,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction a(Instruction... contents) {
+  public final ElementMarkup a(Instruction... contents) {
     return elem0(ElementNamePojo.A, contents);
   }
 
@@ -328,7 +328,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction a(String text) {
+  public final ElementMarkup a(String text) {
     return elem0(ElementNamePojo.A, text);
   }
 
@@ -337,7 +337,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction abbr(Instruction... contents) {
+  public final ElementMarkup abbr(Instruction... contents) {
     return elem0(ElementNamePojo.ABBR, contents);
   }
 
@@ -346,7 +346,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction abbr(String text) {
+  public final ElementMarkup abbr(String text) {
     return elem0(ElementNamePojo.ABBR, text);
   }
 
@@ -355,7 +355,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction article(Instruction... contents) {
+  public final ElementMarkup article(Instruction... contents) {
     return elem0(ElementNamePojo.ARTICLE, contents);
   }
 
@@ -364,7 +364,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction article(String text) {
+  public final ElementMarkup article(String text) {
     return elem0(ElementNamePojo.ARTICLE, text);
   }
 
@@ -373,7 +373,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction aside(Instruction... contents) {
+  public final ElementMarkup aside(Instruction... contents) {
     return elem0(ElementNamePojo.ASIDE, contents);
   }
 
@@ -382,7 +382,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction aside(String text) {
+  public final ElementMarkup aside(String text) {
     return elem0(ElementNamePojo.ASIDE, text);
   }
 
@@ -391,7 +391,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction b(Instruction... contents) {
+  public final ElementMarkup b(Instruction... contents) {
     return elem0(ElementNamePojo.B, contents);
   }
 
@@ -400,7 +400,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction b(String text) {
+  public final ElementMarkup b(String text) {
     return elem0(ElementNamePojo.B, text);
   }
 
@@ -409,7 +409,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction blockquote(Instruction... contents) {
+  public final ElementMarkup blockquote(Instruction... contents) {
     return elem0(ElementNamePojo.BLOCKQUOTE, contents);
   }
 
@@ -418,7 +418,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction blockquote(String text) {
+  public final ElementMarkup blockquote(String text) {
     return elem0(ElementNamePojo.BLOCKQUOTE, text);
   }
 
@@ -427,7 +427,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction body(Instruction... contents) {
+  public final ElementMarkup body(Instruction... contents) {
     return elem0(ElementNamePojo.BODY, contents);
   }
 
@@ -436,7 +436,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction body(String text) {
+  public final ElementMarkup body(String text) {
     return elem0(ElementNamePojo.BODY, text);
   }
 
@@ -445,7 +445,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction br(Instruction.OfVoid... contents) {
+  public final ElementMarkup br(Instruction.OfVoid... contents) {
     return elem0(ElementNamePojo.BR, contents);
   }
 
@@ -454,7 +454,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction button(Instruction... contents) {
+  public final ElementMarkup button(Instruction... contents) {
     return elem0(ElementNamePojo.BUTTON, contents);
   }
 
@@ -463,7 +463,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction button(String text) {
+  public final ElementMarkup button(String text) {
     return elem0(ElementNamePojo.BUTTON, text);
   }
 
@@ -472,7 +472,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction clipPath(Instruction... contents) {
+  public final ElementMarkup clipPath(Instruction... contents) {
     return elem0(ElementNamePojo.CLIPPATH, contents);
   }
 
@@ -481,7 +481,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction code(Instruction... contents) {
+  public final ElementMarkup code(Instruction... contents) {
     return elem0(ElementNamePojo.CODE, contents);
   }
 
@@ -490,7 +490,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction code(String text) {
+  public final ElementMarkup code(String text) {
     return elem0(ElementNamePojo.CODE, text);
   }
 
@@ -499,7 +499,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction dd(Instruction... contents) {
+  public final ElementMarkup dd(Instruction... contents) {
     return elem0(ElementNamePojo.DD, contents);
   }
 
@@ -508,7 +508,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction dd(String text) {
+  public final ElementMarkup dd(String text) {
     return elem0(ElementNamePojo.DD, text);
   }
 
@@ -517,7 +517,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction defs(Instruction... contents) {
+  public final ElementMarkup defs(Instruction... contents) {
     return elem0(ElementNamePojo.DEFS, contents);
   }
 
@@ -526,7 +526,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction defs(String text) {
+  public final ElementMarkup defs(String text) {
     return elem0(ElementNamePojo.DEFS, text);
   }
 
@@ -535,7 +535,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction details(Instruction... contents) {
+  public final ElementMarkup details(Instruction... contents) {
     return elem0(ElementNamePojo.DETAILS, contents);
   }
 
@@ -544,7 +544,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction details(String text) {
+  public final ElementMarkup details(String text) {
     return elem0(ElementNamePojo.DETAILS, text);
   }
 
@@ -553,7 +553,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction dialog(Instruction... contents) {
+  public final ElementMarkup dialog(Instruction... contents) {
     return elem0(ElementNamePojo.DIALOG, contents);
   }
 
@@ -562,7 +562,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction dialog(String text) {
+  public final ElementMarkup dialog(String text) {
     return elem0(ElementNamePojo.DIALOG, text);
   }
 
@@ -571,7 +571,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction div(Instruction... contents) {
+  public final ElementMarkup div(Instruction... contents) {
     return elem0(ElementNamePojo.DIV, contents);
   }
 
@@ -580,7 +580,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction div(String text) {
+  public final ElementMarkup div(String text) {
     return elem0(ElementNamePojo.DIV, text);
   }
 
@@ -589,7 +589,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction dl(Instruction... contents) {
+  public final ElementMarkup dl(Instruction... contents) {
     return elem0(ElementNamePojo.DL, contents);
   }
 
@@ -598,7 +598,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction dl(String text) {
+  public final ElementMarkup dl(String text) {
     return elem0(ElementNamePojo.DL, text);
   }
 
@@ -607,7 +607,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction dt(Instruction... contents) {
+  public final ElementMarkup dt(Instruction... contents) {
     return elem0(ElementNamePojo.DT, contents);
   }
 
@@ -616,7 +616,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction dt(String text) {
+  public final ElementMarkup dt(String text) {
     return elem0(ElementNamePojo.DT, text);
   }
 
@@ -625,7 +625,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction em(Instruction... contents) {
+  public final ElementMarkup em(Instruction... contents) {
     return elem0(ElementNamePojo.EM, contents);
   }
 
@@ -634,7 +634,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction em(String text) {
+  public final ElementMarkup em(String text) {
     return elem0(ElementNamePojo.EM, text);
   }
 
@@ -643,7 +643,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction fieldset(Instruction... contents) {
+  public final ElementMarkup fieldset(Instruction... contents) {
     return elem0(ElementNamePojo.FIELDSET, contents);
   }
 
@@ -652,7 +652,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction fieldset(String text) {
+  public final ElementMarkup fieldset(String text) {
     return elem0(ElementNamePojo.FIELDSET, text);
   }
 
@@ -661,7 +661,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction figure(Instruction... contents) {
+  public final ElementMarkup figure(Instruction... contents) {
     return elem0(ElementNamePojo.FIGURE, contents);
   }
 
@@ -670,7 +670,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction figure(String text) {
+  public final ElementMarkup figure(String text) {
     return elem0(ElementNamePojo.FIGURE, text);
   }
 
@@ -679,7 +679,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction footer(Instruction... contents) {
+  public final ElementMarkup footer(Instruction... contents) {
     return elem0(ElementNamePojo.FOOTER, contents);
   }
 
@@ -688,7 +688,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction footer(String text) {
+  public final ElementMarkup footer(String text) {
     return elem0(ElementNamePojo.FOOTER, text);
   }
 
@@ -697,7 +697,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction form(Instruction... contents) {
+  public final ElementMarkup form(Instruction... contents) {
     return elem0(ElementNamePojo.FORM, contents);
   }
 
@@ -706,7 +706,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction g(Instruction... contents) {
+  public final ElementMarkup g(Instruction... contents) {
     return elem0(ElementNamePojo.G, contents);
   }
 
@@ -715,7 +715,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction g(String text) {
+  public final ElementMarkup g(String text) {
     return elem0(ElementNamePojo.G, text);
   }
 
@@ -724,7 +724,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction h1(Instruction... contents) {
+  public final ElementMarkup h1(Instruction... contents) {
     return elem0(ElementNamePojo.H1, contents);
   }
 
@@ -733,7 +733,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction h1(String text) {
+  public final ElementMarkup h1(String text) {
     return elem0(ElementNamePojo.H1, text);
   }
 
@@ -742,7 +742,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction h2(Instruction... contents) {
+  public final ElementMarkup h2(Instruction... contents) {
     return elem0(ElementNamePojo.H2, contents);
   }
 
@@ -751,7 +751,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction h2(String text) {
+  public final ElementMarkup h2(String text) {
     return elem0(ElementNamePojo.H2, text);
   }
 
@@ -760,7 +760,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction h3(Instruction... contents) {
+  public final ElementMarkup h3(Instruction... contents) {
     return elem0(ElementNamePojo.H3, contents);
   }
 
@@ -769,7 +769,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction h3(String text) {
+  public final ElementMarkup h3(String text) {
     return elem0(ElementNamePojo.H3, text);
   }
 
@@ -778,7 +778,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction h4(Instruction... contents) {
+  public final ElementMarkup h4(Instruction... contents) {
     return elem0(ElementNamePojo.H4, contents);
   }
 
@@ -787,7 +787,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction h4(String text) {
+  public final ElementMarkup h4(String text) {
     return elem0(ElementNamePojo.H4, text);
   }
 
@@ -796,7 +796,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction h5(Instruction... contents) {
+  public final ElementMarkup h5(Instruction... contents) {
     return elem0(ElementNamePojo.H5, contents);
   }
 
@@ -805,7 +805,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction h5(String text) {
+  public final ElementMarkup h5(String text) {
     return elem0(ElementNamePojo.H5, text);
   }
 
@@ -814,7 +814,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction h6(Instruction... contents) {
+  public final ElementMarkup h6(Instruction... contents) {
     return elem0(ElementNamePojo.H6, contents);
   }
 
@@ -823,7 +823,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction h6(String text) {
+  public final ElementMarkup h6(String text) {
     return elem0(ElementNamePojo.H6, text);
   }
 
@@ -832,7 +832,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction head(Instruction... contents) {
+  public final ElementMarkup head(Instruction... contents) {
     return elem0(ElementNamePojo.HEAD, contents);
   }
 
@@ -841,7 +841,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction head(String text) {
+  public final ElementMarkup head(String text) {
     return elem0(ElementNamePojo.HEAD, text);
   }
 
@@ -850,7 +850,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction header(Instruction... contents) {
+  public final ElementMarkup header(Instruction... contents) {
     return elem0(ElementNamePojo.HEADER, contents);
   }
 
@@ -859,7 +859,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction header(String text) {
+  public final ElementMarkup header(String text) {
     return elem0(ElementNamePojo.HEADER, text);
   }
 
@@ -868,7 +868,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction hgroup(Instruction... contents) {
+  public final ElementMarkup hgroup(Instruction... contents) {
     return elem0(ElementNamePojo.HGROUP, contents);
   }
 
@@ -877,7 +877,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction hgroup(String text) {
+  public final ElementMarkup hgroup(String text) {
     return elem0(ElementNamePojo.HGROUP, text);
   }
 
@@ -886,7 +886,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction hr(Instruction.OfVoid... contents) {
+  public final ElementMarkup hr(Instruction.OfVoid... contents) {
     return elem0(ElementNamePojo.HR, contents);
   }
 
@@ -895,7 +895,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction html(Instruction... contents) {
+  public final ElementMarkup html(Instruction... contents) {
     return elem0(ElementNamePojo.HTML, contents);
   }
 
@@ -904,7 +904,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction html(String text) {
+  public final ElementMarkup html(String text) {
     return elem0(ElementNamePojo.HTML, text);
   }
 
@@ -913,7 +913,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction img(Instruction.OfVoid... contents) {
+  public final ElementMarkup img(Instruction.OfVoid... contents) {
     return elem0(ElementNamePojo.IMG, contents);
   }
 
@@ -922,7 +922,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction input(Instruction.OfVoid... contents) {
+  public final ElementMarkup input(Instruction.OfVoid... contents) {
     return elem0(ElementNamePojo.INPUT, contents);
   }
 
@@ -931,7 +931,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction kbd(Instruction... contents) {
+  public final ElementMarkup kbd(Instruction... contents) {
     return elem0(ElementNamePojo.KBD, contents);
   }
 
@@ -940,7 +940,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction kbd(String text) {
+  public final ElementMarkup kbd(String text) {
     return elem0(ElementNamePojo.KBD, text);
   }
 
@@ -949,7 +949,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction label(Instruction... contents) {
+  public final ElementMarkup label(Instruction... contents) {
     return elem0(ElementNamePojo.LABEL, contents);
   }
 
@@ -958,7 +958,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction legend(Instruction... contents) {
+  public final ElementMarkup legend(Instruction... contents) {
     return elem0(ElementNamePojo.LEGEND, contents);
   }
 
@@ -967,7 +967,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction legend(String text) {
+  public final ElementMarkup legend(String text) {
     return elem0(ElementNamePojo.LEGEND, text);
   }
 
@@ -976,7 +976,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction li(Instruction... contents) {
+  public final ElementMarkup li(Instruction... contents) {
     return elem0(ElementNamePojo.LI, contents);
   }
 
@@ -985,7 +985,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction li(String text) {
+  public final ElementMarkup li(String text) {
     return elem0(ElementNamePojo.LI, text);
   }
 
@@ -994,7 +994,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction link(Instruction.OfVoid... contents) {
+  public final ElementMarkup link(Instruction.OfVoid... contents) {
     return elem0(ElementNamePojo.LINK, contents);
   }
 
@@ -1003,7 +1003,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction main(Instruction... contents) {
+  public final ElementMarkup main(Instruction... contents) {
     return elem0(ElementNamePojo.MAIN, contents);
   }
 
@@ -1012,7 +1012,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction main(String text) {
+  public final ElementMarkup main(String text) {
     return elem0(ElementNamePojo.MAIN, text);
   }
 
@@ -1021,7 +1021,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction menu(Instruction... contents) {
+  public final ElementMarkup menu(Instruction... contents) {
     return elem0(ElementNamePojo.MENU, contents);
   }
 
@@ -1030,7 +1030,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction menu(String text) {
+  public final ElementMarkup menu(String text) {
     return elem0(ElementNamePojo.MENU, text);
   }
 
@@ -1039,7 +1039,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction meta(Instruction.OfVoid... contents) {
+  public final ElementMarkup meta(Instruction.OfVoid... contents) {
     return elem0(ElementNamePojo.META, contents);
   }
 
@@ -1048,7 +1048,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction nav(Instruction... contents) {
+  public final ElementMarkup nav(Instruction... contents) {
     return elem0(ElementNamePojo.NAV, contents);
   }
 
@@ -1057,7 +1057,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction nav(String text) {
+  public final ElementMarkup nav(String text) {
     return elem0(ElementNamePojo.NAV, text);
   }
 
@@ -1066,7 +1066,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction noscript(Instruction... contents) {
+  public final ElementMarkup noscript(Instruction... contents) {
     return elem0(ElementNamePojo.NOSCRIPT, contents);
   }
 
@@ -1075,7 +1075,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction noscript(String text) {
+  public final ElementMarkup noscript(String text) {
     return elem0(ElementNamePojo.NOSCRIPT, text);
   }
 
@@ -1084,7 +1084,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction ol(Instruction... contents) {
+  public final ElementMarkup ol(Instruction... contents) {
     return elem0(ElementNamePojo.OL, contents);
   }
 
@@ -1093,7 +1093,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction ol(String text) {
+  public final ElementMarkup ol(String text) {
     return elem0(ElementNamePojo.OL, text);
   }
 
@@ -1102,7 +1102,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction optgroup(Instruction... contents) {
+  public final ElementMarkup optgroup(Instruction... contents) {
     return elem0(ElementNamePojo.OPTGROUP, contents);
   }
 
@@ -1111,7 +1111,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction optgroup(String text) {
+  public final ElementMarkup optgroup(String text) {
     return elem0(ElementNamePojo.OPTGROUP, text);
   }
 
@@ -1120,7 +1120,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction option(Instruction... contents) {
+  public final ElementMarkup option(Instruction... contents) {
     return elem0(ElementNamePojo.OPTION, contents);
   }
 
@@ -1129,7 +1129,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction option(String text) {
+  public final ElementMarkup option(String text) {
     return elem0(ElementNamePojo.OPTION, text);
   }
 
@@ -1138,7 +1138,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction p(Instruction... contents) {
+  public final ElementMarkup p(Instruction... contents) {
     return elem0(ElementNamePojo.P, contents);
   }
 
@@ -1147,7 +1147,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction p(String text) {
+  public final ElementMarkup p(String text) {
     return elem0(ElementNamePojo.P, text);
   }
 
@@ -1156,7 +1156,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction path(Instruction... contents) {
+  public final ElementMarkup path(Instruction... contents) {
     return elem0(ElementNamePojo.PATH, contents);
   }
 
@@ -1165,7 +1165,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction path(String text) {
+  public final ElementMarkup path(String text) {
     return elem0(ElementNamePojo.PATH, text);
   }
 
@@ -1174,7 +1174,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction pre(Instruction... contents) {
+  public final ElementMarkup pre(Instruction... contents) {
     return elem0(ElementNamePojo.PRE, contents);
   }
 
@@ -1183,7 +1183,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction pre(String text) {
+  public final ElementMarkup pre(String text) {
     return elem0(ElementNamePojo.PRE, text);
   }
 
@@ -1192,7 +1192,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction progress(Instruction... contents) {
+  public final ElementMarkup progress(Instruction... contents) {
     return elem0(ElementNamePojo.PROGRESS, contents);
   }
 
@@ -1201,7 +1201,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction progress(String text) {
+  public final ElementMarkup progress(String text) {
     return elem0(ElementNamePojo.PROGRESS, text);
   }
 
@@ -1210,7 +1210,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction samp(Instruction... contents) {
+  public final ElementMarkup samp(Instruction... contents) {
     return elem0(ElementNamePojo.SAMP, contents);
   }
 
@@ -1219,7 +1219,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction samp(String text) {
+  public final ElementMarkup samp(String text) {
     return elem0(ElementNamePojo.SAMP, text);
   }
 
@@ -1228,7 +1228,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction script(Instruction... contents) {
+  public final ElementMarkup script(Instruction... contents) {
     return elem0(ElementNamePojo.SCRIPT, contents);
   }
 
@@ -1237,7 +1237,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction script(String text) {
+  public final ElementMarkup script(String text) {
     return elem0(ElementNamePojo.SCRIPT, text);
   }
 
@@ -1246,7 +1246,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction section(Instruction... contents) {
+  public final ElementMarkup section(Instruction... contents) {
     return elem0(ElementNamePojo.SECTION, contents);
   }
 
@@ -1255,7 +1255,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction section(String text) {
+  public final ElementMarkup section(String text) {
     return elem0(ElementNamePojo.SECTION, text);
   }
 
@@ -1264,7 +1264,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction select(Instruction... contents) {
+  public final ElementMarkup select(Instruction... contents) {
     return elem0(ElementNamePojo.SELECT, contents);
   }
 
@@ -1273,7 +1273,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction select(String text) {
+  public final ElementMarkup select(String text) {
     return elem0(ElementNamePojo.SELECT, text);
   }
 
@@ -1282,7 +1282,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction small(Instruction... contents) {
+  public final ElementMarkup small(Instruction... contents) {
     return elem0(ElementNamePojo.SMALL, contents);
   }
 
@@ -1291,7 +1291,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction small(String text) {
+  public final ElementMarkup small(String text) {
     return elem0(ElementNamePojo.SMALL, text);
   }
 
@@ -1300,7 +1300,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction span(Instruction... contents) {
+  public final ElementMarkup span(Instruction... contents) {
     return elem0(ElementNamePojo.SPAN, contents);
   }
 
@@ -1309,7 +1309,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction span(String text) {
+  public final ElementMarkup span(String text) {
     return elem0(ElementNamePojo.SPAN, text);
   }
 
@@ -1318,7 +1318,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction strong(Instruction... contents) {
+  public final ElementMarkup strong(Instruction... contents) {
     return elem0(ElementNamePojo.STRONG, contents);
   }
 
@@ -1327,7 +1327,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction strong(String text) {
+  public final ElementMarkup strong(String text) {
     return elem0(ElementNamePojo.STRONG, text);
   }
 
@@ -1336,7 +1336,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction style(Instruction... contents) {
+  public final ElementMarkup style(Instruction... contents) {
     return elem0(ElementNamePojo.STYLE, contents);
   }
 
@@ -1345,7 +1345,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction sub(Instruction... contents) {
+  public final ElementMarkup sub(Instruction... contents) {
     return elem0(ElementNamePojo.SUB, contents);
   }
 
@@ -1354,7 +1354,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction sub(String text) {
+  public final ElementMarkup sub(String text) {
     return elem0(ElementNamePojo.SUB, text);
   }
 
@@ -1363,7 +1363,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction summary(Instruction... contents) {
+  public final ElementMarkup summary(Instruction... contents) {
     return elem0(ElementNamePojo.SUMMARY, contents);
   }
 
@@ -1372,7 +1372,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction summary(String text) {
+  public final ElementMarkup summary(String text) {
     return elem0(ElementNamePojo.SUMMARY, text);
   }
 
@@ -1381,7 +1381,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction sup(Instruction... contents) {
+  public final ElementMarkup sup(Instruction... contents) {
     return elem0(ElementNamePojo.SUP, contents);
   }
 
@@ -1390,7 +1390,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction sup(String text) {
+  public final ElementMarkup sup(String text) {
     return elem0(ElementNamePojo.SUP, text);
   }
 
@@ -1399,7 +1399,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction svg(Instruction... contents) {
+  public final ElementMarkup svg(Instruction... contents) {
     return elem0(ElementNamePojo.SVG, contents);
   }
 
@@ -1408,7 +1408,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction svg(String text) {
+  public final ElementMarkup svg(String text) {
     return elem0(ElementNamePojo.SVG, text);
   }
 
@@ -1417,7 +1417,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction table(Instruction... contents) {
+  public final ElementMarkup table(Instruction... contents) {
     return elem0(ElementNamePojo.TABLE, contents);
   }
 
@@ -1426,7 +1426,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction table(String text) {
+  public final ElementMarkup table(String text) {
     return elem0(ElementNamePojo.TABLE, text);
   }
 
@@ -1435,7 +1435,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction tbody(Instruction... contents) {
+  public final ElementMarkup tbody(Instruction... contents) {
     return elem0(ElementNamePojo.TBODY, contents);
   }
 
@@ -1444,7 +1444,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction tbody(String text) {
+  public final ElementMarkup tbody(String text) {
     return elem0(ElementNamePojo.TBODY, text);
   }
 
@@ -1453,7 +1453,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction td(Instruction... contents) {
+  public final ElementMarkup td(Instruction... contents) {
     return elem0(ElementNamePojo.TD, contents);
   }
 
@@ -1462,7 +1462,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction td(String text) {
+  public final ElementMarkup td(String text) {
     return elem0(ElementNamePojo.TD, text);
   }
 
@@ -1471,7 +1471,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction template(Instruction... contents) {
+  public final ElementMarkup template(Instruction... contents) {
     return elem0(ElementNamePojo.TEMPLATE, contents);
   }
 
@@ -1480,7 +1480,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction template(String text) {
+  public final ElementMarkup template(String text) {
     return elem0(ElementNamePojo.TEMPLATE, text);
   }
 
@@ -1489,7 +1489,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction textarea(Instruction... contents) {
+  public final ElementMarkup textarea(Instruction... contents) {
     return elem0(ElementNamePojo.TEXTAREA, contents);
   }
 
@@ -1498,7 +1498,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction textarea(String text) {
+  public final ElementMarkup textarea(String text) {
     return elem0(ElementNamePojo.TEXTAREA, text);
   }
 
@@ -1507,7 +1507,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction th(Instruction... contents) {
+  public final ElementMarkup th(Instruction... contents) {
     return elem0(ElementNamePojo.TH, contents);
   }
 
@@ -1516,7 +1516,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction th(String text) {
+  public final ElementMarkup th(String text) {
     return elem0(ElementNamePojo.TH, text);
   }
 
@@ -1525,7 +1525,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction thead(Instruction... contents) {
+  public final ElementMarkup thead(Instruction... contents) {
     return elem0(ElementNamePojo.THEAD, contents);
   }
 
@@ -1534,7 +1534,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction thead(String text) {
+  public final ElementMarkup thead(String text) {
     return elem0(ElementNamePojo.THEAD, text);
   }
 
@@ -1543,7 +1543,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction title(Instruction... contents) {
+  public final ElementMarkup title(Instruction... contents) {
     return elem0(ElementNamePojo.TITLE, contents);
   }
 
@@ -1552,7 +1552,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction tr(Instruction... contents) {
+  public final ElementMarkup tr(Instruction... contents) {
     return elem0(ElementNamePojo.TR, contents);
   }
 
@@ -1561,7 +1561,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction tr(String text) {
+  public final ElementMarkup tr(String text) {
     return elem0(ElementNamePojo.TR, text);
   }
 
@@ -1570,7 +1570,7 @@ public abstract NoOpInstruction noop();
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction ul(Instruction... contents) {
+  public final ElementMarkup ul(Instruction... contents) {
     return elem0(ElementNamePojo.UL, contents);
   }
 
@@ -1579,7 +1579,7 @@ public abstract NoOpInstruction noop();
   /// @param text the text value of the element
   ///
   /// @return an instruction representing the element.
-  public final ElementInstruction ul(String text) {
+  public final ElementMarkup ul(String text) {
     return elem0(ElementNamePojo.UL, text);
   }
 
@@ -1587,16 +1587,16 @@ public abstract NoOpInstruction noop();
   // ATTRIBUTES
   //
 
-  abstract AttributeInstruction attr0(AttributeName name);
+  abstract AttributeMarkup attr0(AttributeName name);
 
-  abstract AttributeInstruction attr0(AttributeName name, Object value);
+  abstract AttributeMarkup attr0(AttributeName name, Object value);
 
   /// Renders an attribute with the specified name.
   ///
   /// @param name the attribute name
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction attr(AttributeName name) {
+  public final AttributeMarkup attr(AttributeName name) {
     Objects.requireNonNull(name, "name == null");
     return attr0(name);
   }
@@ -1607,7 +1607,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction attr(AttributeName name, String value) {
+  public final AttributeMarkup attr(AttributeName name, String value) {
     Objects.requireNonNull(name, "name == null");
     return attr0(name, value);
   }
@@ -1617,7 +1617,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction accesskey(String value) {
+  public final AttributeMarkup accesskey(String value) {
     return attr0(AttributeNamePojo.ACCESSKEY, value);
   }
 
@@ -1626,7 +1626,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction action(String value) {
+  public final AttributeMarkup action(String value) {
     return attr0(AttributeNamePojo.ACTION, value);
   }
 
@@ -1635,7 +1635,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction align(String value) {
+  public final AttributeMarkup align(String value) {
     return attr0(AttributeNamePojo.ALIGN, value);
   }
 
@@ -1644,7 +1644,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction alignmentBaseline(String value) {
+  public final AttributeMarkup alignmentBaseline(String value) {
     return attr0(AttributeNamePojo.ALIGNMENT_BASELINE, value);
   }
 
@@ -1653,7 +1653,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction alt(String value) {
+  public final AttributeMarkup alt(String value) {
     return attr0(AttributeNamePojo.ALT, value);
   }
 
@@ -1662,7 +1662,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction ariaCurrent(String value) {
+  public final AttributeMarkup ariaCurrent(String value) {
     return attr0(AttributeNamePojo.ARIA_CURRENT, value);
   }
 
@@ -1671,7 +1671,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction ariaDisabled(String value) {
+  public final AttributeMarkup ariaDisabled(String value) {
     return attr0(AttributeNamePojo.ARIA_DISABLED, value);
   }
 
@@ -1680,7 +1680,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction ariaHidden(String value) {
+  public final AttributeMarkup ariaHidden(String value) {
     return attr0(AttributeNamePojo.ARIA_HIDDEN, value);
   }
 
@@ -1689,7 +1689,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction ariaInvalid(String value) {
+  public final AttributeMarkup ariaInvalid(String value) {
     return attr0(AttributeNamePojo.ARIA_INVALID, value);
   }
 
@@ -1698,7 +1698,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction ariaLabel(String value) {
+  public final AttributeMarkup ariaLabel(String value) {
     return attr0(AttributeNamePojo.ARIA_LABEL, value);
   }
 
@@ -1707,7 +1707,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction ariaLabelledBy(String value) {
+  public final AttributeMarkup ariaLabelledBy(String value) {
     return attr0(AttributeNamePojo.ARIA_LABELLED_BY, value);
   }
 
@@ -1716,7 +1716,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction ariaModal(String value) {
+  public final AttributeMarkup ariaModal(String value) {
     return attr0(AttributeNamePojo.ARIA_MODAL, value);
   }
 
@@ -1725,7 +1725,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction ariaPlaceholder(String value) {
+  public final AttributeMarkup ariaPlaceholder(String value) {
     return attr0(AttributeNamePojo.ARIA_PLACEHOLDER, value);
   }
 
@@ -1734,7 +1734,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction ariaReadonly(String value) {
+  public final AttributeMarkup ariaReadonly(String value) {
     return attr0(AttributeNamePojo.ARIA_READONLY, value);
   }
 
@@ -1743,7 +1743,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction ariaRequired(String value) {
+  public final AttributeMarkup ariaRequired(String value) {
     return attr0(AttributeNamePojo.ARIA_REQUIRED, value);
   }
 
@@ -1752,7 +1752,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction ariaSelected(String value) {
+  public final AttributeMarkup ariaSelected(String value) {
     return attr0(AttributeNamePojo.ARIA_SELECTED, value);
   }
 
@@ -1761,7 +1761,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction as(String value) {
+  public final AttributeMarkup as(String value) {
     return attr0(AttributeNamePojo.AS, value);
   }
 
@@ -1770,7 +1770,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction autocomplete(String value) {
+  public final AttributeMarkup autocomplete(String value) {
     return attr0(AttributeNamePojo.AUTOCOMPLETE, value);
   }
 
@@ -1779,7 +1779,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction baselineShift(String value) {
+  public final AttributeMarkup baselineShift(String value) {
     return attr0(AttributeNamePojo.BASELINE_SHIFT, value);
   }
 
@@ -1788,7 +1788,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction border(String value) {
+  public final AttributeMarkup border(String value) {
     return attr0(AttributeNamePojo.BORDER, value);
   }
 
@@ -1797,7 +1797,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction cellpadding(String value) {
+  public final AttributeMarkup cellpadding(String value) {
     return attr0(AttributeNamePojo.CELLPADDING, value);
   }
 
@@ -1806,7 +1806,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction cellspacing(String value) {
+  public final AttributeMarkup cellspacing(String value) {
     return attr0(AttributeNamePojo.CELLSPACING, value);
   }
 
@@ -1815,7 +1815,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction charset(String value) {
+  public final AttributeMarkup charset(String value) {
     return attr0(AttributeNamePojo.CHARSET, value);
   }
 
@@ -1824,7 +1824,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction cite(String value) {
+  public final AttributeMarkup cite(String value) {
     return attr0(AttributeNamePojo.CITE, value);
   }
 
@@ -1833,7 +1833,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction className(String value) {
+  public final AttributeMarkup className(String value) {
     return attr0(AttributeNamePojo.CLASS, value);
   }
 
@@ -1842,7 +1842,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction clipRule(String value) {
+  public final AttributeMarkup clipRule(String value) {
     return attr0(AttributeNamePojo.CLIP_RULE, value);
   }
 
@@ -1851,7 +1851,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction closedby(String value) {
+  public final AttributeMarkup closedby(String value) {
     return attr0(AttributeNamePojo.CLOSEDBY, value);
   }
 
@@ -1860,7 +1860,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction color(String value) {
+  public final AttributeMarkup color(String value) {
     return attr0(AttributeNamePojo.COLOR, value);
   }
 
@@ -1869,7 +1869,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction colorInterpolation(String value) {
+  public final AttributeMarkup colorInterpolation(String value) {
     return attr0(AttributeNamePojo.COLOR_INTERPOLATION, value);
   }
 
@@ -1879,7 +1879,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction colorInterpolationFilters(String value) {
+  public final AttributeMarkup colorInterpolationFilters(String value) {
     return attr0(AttributeNamePojo.COLOR_INTERPOLATION_FILTERS, value);
   }
 
@@ -1888,7 +1888,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction cols(String value) {
+  public final AttributeMarkup cols(String value) {
     return attr0(AttributeNamePojo.COLS, value);
   }
 
@@ -1897,7 +1897,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction content(String value) {
+  public final AttributeMarkup content(String value) {
     return attr0(AttributeNamePojo.CONTENT, value);
   }
 
@@ -1906,7 +1906,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction contenteditable(String value) {
+  public final AttributeMarkup contenteditable(String value) {
     return attr0(AttributeNamePojo.CONTENTEDITABLE, value);
   }
 
@@ -1915,7 +1915,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction crossorigin(String value) {
+  public final AttributeMarkup crossorigin(String value) {
     return attr0(AttributeNamePojo.CROSSORIGIN, value);
   }
 
@@ -1924,7 +1924,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction cursor(String value) {
+  public final AttributeMarkup cursor(String value) {
     return attr0(AttributeNamePojo.CURSOR, value);
   }
 
@@ -1933,7 +1933,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction d(String value) {
+  public final AttributeMarkup d(String value) {
     return attr0(AttributeNamePojo.D, value);
   }
 
@@ -1942,7 +1942,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction dir(String value) {
+  public final AttributeMarkup dir(String value) {
     return attr0(AttributeNamePojo.DIR, value);
   }
 
@@ -1951,7 +1951,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction direction(String value) {
+  public final AttributeMarkup direction(String value) {
     return attr0(AttributeNamePojo.DIRECTION, value);
   }
 
@@ -1960,7 +1960,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction dirname(String value) {
+  public final AttributeMarkup dirname(String value) {
     return attr0(AttributeNamePojo.DIRNAME, value);
   }
 
@@ -1969,7 +1969,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction display(String value) {
+  public final AttributeMarkup display(String value) {
     return attr0(AttributeNamePojo.DISPLAY, value);
   }
 
@@ -1978,7 +1978,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction dominantBaseline(String value) {
+  public final AttributeMarkup dominantBaseline(String value) {
     return attr0(AttributeNamePojo.DOMINANT_BASELINE, value);
   }
 
@@ -1987,7 +1987,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction download(String value) {
+  public final AttributeMarkup download(String value) {
     return attr0(AttributeNamePojo.DOWNLOAD, value);
   }
 
@@ -1996,7 +1996,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction draggable(String value) {
+  public final AttributeMarkup draggable(String value) {
     return attr0(AttributeNamePojo.DRAGGABLE, value);
   }
 
@@ -2005,7 +2005,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction enctype(String value) {
+  public final AttributeMarkup enctype(String value) {
     return attr0(AttributeNamePojo.ENCTYPE, value);
   }
 
@@ -2014,7 +2014,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction fill(String value) {
+  public final AttributeMarkup fill(String value) {
     return attr0(AttributeNamePojo.FILL, value);
   }
 
@@ -2023,7 +2023,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction fillOpacity(String value) {
+  public final AttributeMarkup fillOpacity(String value) {
     return attr0(AttributeNamePojo.FILL_OPACITY, value);
   }
 
@@ -2032,7 +2032,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction fillRule(String value) {
+  public final AttributeMarkup fillRule(String value) {
     return attr0(AttributeNamePojo.FILL_RULE, value);
   }
 
@@ -2041,7 +2041,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction filter(String value) {
+  public final AttributeMarkup filter(String value) {
     return attr0(AttributeNamePojo.FILTER, value);
   }
 
@@ -2050,7 +2050,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction floodColor(String value) {
+  public final AttributeMarkup floodColor(String value) {
     return attr0(AttributeNamePojo.FLOOD_COLOR, value);
   }
 
@@ -2059,7 +2059,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction floodOpacity(String value) {
+  public final AttributeMarkup floodOpacity(String value) {
     return attr0(AttributeNamePojo.FLOOD_OPACITY, value);
   }
 
@@ -2068,7 +2068,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction forId(String value) {
+  public final AttributeMarkup forId(String value) {
     return attr0(AttributeNamePojo.FOR, value);
   }
 
@@ -2078,7 +2078,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction glyphOrientationHorizontal(String value) {
+  public final AttributeMarkup glyphOrientationHorizontal(String value) {
     return attr0(AttributeNamePojo.GLYPH_ORIENTATION_HORIZONTAL, value);
   }
 
@@ -2088,7 +2088,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction glyphOrientationVertical(String value) {
+  public final AttributeMarkup glyphOrientationVertical(String value) {
     return attr0(AttributeNamePojo.GLYPH_ORIENTATION_VERTICAL, value);
   }
 
@@ -2097,7 +2097,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction height(String value) {
+  public final AttributeMarkup height(String value) {
     return attr0(AttributeNamePojo.HEIGHT, value);
   }
 
@@ -2106,7 +2106,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction href(String value) {
+  public final AttributeMarkup href(String value) {
     return attr0(AttributeNamePojo.HREF, value);
   }
 
@@ -2115,7 +2115,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction httpEquiv(String value) {
+  public final AttributeMarkup httpEquiv(String value) {
     return attr0(AttributeNamePojo.HTTP_EQUIV, value);
   }
 
@@ -2124,7 +2124,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction id(String value) {
+  public final AttributeMarkup id(String value) {
     return attr0(AttributeNamePojo.ID, value);
   }
 
@@ -2133,7 +2133,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction imageRendering(String value) {
+  public final AttributeMarkup imageRendering(String value) {
     return attr0(AttributeNamePojo.IMAGE_RENDERING, value);
   }
 
@@ -2142,7 +2142,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction integrity(String value) {
+  public final AttributeMarkup integrity(String value) {
     return attr0(AttributeNamePojo.INTEGRITY, value);
   }
 
@@ -2151,7 +2151,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction lang(String value) {
+  public final AttributeMarkup lang(String value) {
     return attr0(AttributeNamePojo.LANG, value);
   }
 
@@ -2160,7 +2160,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction letterSpacing(String value) {
+  public final AttributeMarkup letterSpacing(String value) {
     return attr0(AttributeNamePojo.LETTER_SPACING, value);
   }
 
@@ -2169,7 +2169,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction lightingColor(String value) {
+  public final AttributeMarkup lightingColor(String value) {
     return attr0(AttributeNamePojo.LIGHTING_COLOR, value);
   }
 
@@ -2178,7 +2178,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction markerEnd(String value) {
+  public final AttributeMarkup markerEnd(String value) {
     return attr0(AttributeNamePojo.MARKER_END, value);
   }
 
@@ -2187,7 +2187,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction markerMid(String value) {
+  public final AttributeMarkup markerMid(String value) {
     return attr0(AttributeNamePojo.MARKER_MID, value);
   }
 
@@ -2196,7 +2196,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction markerStart(String value) {
+  public final AttributeMarkup markerStart(String value) {
     return attr0(AttributeNamePojo.MARKER_START, value);
   }
 
@@ -2205,7 +2205,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction mask(String value) {
+  public final AttributeMarkup mask(String value) {
     return attr0(AttributeNamePojo.MASK, value);
   }
 
@@ -2214,7 +2214,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction maskType(String value) {
+  public final AttributeMarkup maskType(String value) {
     return attr0(AttributeNamePojo.MASK_TYPE, value);
   }
 
@@ -2223,7 +2223,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction maxlength(String value) {
+  public final AttributeMarkup maxlength(String value) {
     return attr0(AttributeNamePojo.MAXLENGTH, value);
   }
 
@@ -2232,7 +2232,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction media(String value) {
+  public final AttributeMarkup media(String value) {
     return attr0(AttributeNamePojo.MEDIA, value);
   }
 
@@ -2241,7 +2241,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction method(String value) {
+  public final AttributeMarkup method(String value) {
     return attr0(AttributeNamePojo.METHOD, value);
   }
 
@@ -2250,7 +2250,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction minlength(String value) {
+  public final AttributeMarkup minlength(String value) {
     return attr0(AttributeNamePojo.MINLENGTH, value);
   }
 
@@ -2259,7 +2259,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction name(String value) {
+  public final AttributeMarkup name(String value) {
     return attr0(AttributeNamePojo.NAME, value);
   }
 
@@ -2268,7 +2268,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction onclick(String value) {
+  public final AttributeMarkup onclick(String value) {
     return attr0(AttributeNamePojo.ONCLICK, value);
   }
 
@@ -2277,7 +2277,7 @@ public abstract NoOpInstruction noop();
   /// @param value the action to be executed
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction onclick(JsAction value) {
+  public final AttributeMarkup onclick(JsAction value) {
     return attr0(AttributeNamePojo.ONCLICK, value);
   }
 
@@ -2286,7 +2286,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction onload(String value) {
+  public final AttributeMarkup onload(String value) {
     return attr0(AttributeNamePojo.ONLOAD, value);
   }
 
@@ -2295,7 +2295,7 @@ public abstract NoOpInstruction noop();
   /// @param value the action to be executed
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction onload(JsAction value) {
+  public final AttributeMarkup onload(JsAction value) {
     return attr0(AttributeNamePojo.ONLOAD, value);
   }
 
@@ -2304,7 +2304,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction onpopstate(String value) {
+  public final AttributeMarkup onpopstate(String value) {
     return attr0(AttributeNamePojo.ONPOPSTATE, value);
   }
 
@@ -2313,7 +2313,7 @@ public abstract NoOpInstruction noop();
   /// @param value the action to be executed
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction onpopstate(JsAction value) {
+  public final AttributeMarkup onpopstate(JsAction value) {
     return attr0(AttributeNamePojo.ONPOPSTATE, value);
   }
 
@@ -2322,7 +2322,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction onsubmit(String value) {
+  public final AttributeMarkup onsubmit(String value) {
     return attr0(AttributeNamePojo.ONSUBMIT, value);
   }
 
@@ -2331,7 +2331,7 @@ public abstract NoOpInstruction noop();
   /// @param value the action to be executed
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction onsubmit(JsAction value) {
+  public final AttributeMarkup onsubmit(JsAction value) {
     return attr0(AttributeNamePojo.ONSUBMIT, value);
   }
 
@@ -2340,7 +2340,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction opacity(String value) {
+  public final AttributeMarkup opacity(String value) {
     return attr0(AttributeNamePojo.OPACITY, value);
   }
 
@@ -2349,7 +2349,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction overflow(String value) {
+  public final AttributeMarkup overflow(String value) {
     return attr0(AttributeNamePojo.OVERFLOW, value);
   }
 
@@ -2358,7 +2358,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction paintOrder(String value) {
+  public final AttributeMarkup paintOrder(String value) {
     return attr0(AttributeNamePojo.PAINT_ORDER, value);
   }
 
@@ -2367,7 +2367,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction placeholder(String value) {
+  public final AttributeMarkup placeholder(String value) {
     return attr0(AttributeNamePojo.PLACEHOLDER, value);
   }
 
@@ -2376,7 +2376,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction pointerEvents(String value) {
+  public final AttributeMarkup pointerEvents(String value) {
     return attr0(AttributeNamePojo.POINTER_EVENTS, value);
   }
 
@@ -2385,7 +2385,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction property(String value) {
+  public final AttributeMarkup property(String value) {
     return attr0(AttributeNamePojo.PROPERTY, value);
   }
 
@@ -2394,7 +2394,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction referrerpolicy(String value) {
+  public final AttributeMarkup referrerpolicy(String value) {
     return attr0(AttributeNamePojo.REFERRERPOLICY, value);
   }
 
@@ -2403,7 +2403,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction rel(String value) {
+  public final AttributeMarkup rel(String value) {
     return attr0(AttributeNamePojo.REL, value);
   }
 
@@ -2412,7 +2412,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction rev(String value) {
+  public final AttributeMarkup rev(String value) {
     return attr0(AttributeNamePojo.REV, value);
   }
 
@@ -2421,7 +2421,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction role(String value) {
+  public final AttributeMarkup role(String value) {
     return attr0(AttributeNamePojo.ROLE, value);
   }
 
@@ -2430,7 +2430,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction rows(String value) {
+  public final AttributeMarkup rows(String value) {
     return attr0(AttributeNamePojo.ROWS, value);
   }
 
@@ -2439,7 +2439,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction shapeRendering(String value) {
+  public final AttributeMarkup shapeRendering(String value) {
     return attr0(AttributeNamePojo.SHAPE_RENDERING, value);
   }
 
@@ -2448,7 +2448,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction size(String value) {
+  public final AttributeMarkup size(String value) {
     return attr0(AttributeNamePojo.SIZE, value);
   }
 
@@ -2457,7 +2457,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction sizes(String value) {
+  public final AttributeMarkup sizes(String value) {
     return attr0(AttributeNamePojo.SIZES, value);
   }
 
@@ -2466,7 +2466,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction spellcheck(String value) {
+  public final AttributeMarkup spellcheck(String value) {
     return attr0(AttributeNamePojo.SPELLCHECK, value);
   }
 
@@ -2475,7 +2475,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction src(String value) {
+  public final AttributeMarkup src(String value) {
     return attr0(AttributeNamePojo.SRC, value);
   }
 
@@ -2484,7 +2484,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction srcset(String value) {
+  public final AttributeMarkup srcset(String value) {
     return attr0(AttributeNamePojo.SRCSET, value);
   }
 
@@ -2493,7 +2493,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction start(String value) {
+  public final AttributeMarkup start(String value) {
     return attr0(AttributeNamePojo.START, value);
   }
 
@@ -2502,7 +2502,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction stopColor(String value) {
+  public final AttributeMarkup stopColor(String value) {
     return attr0(AttributeNamePojo.STOP_COLOR, value);
   }
 
@@ -2511,7 +2511,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction stopOpacity(String value) {
+  public final AttributeMarkup stopOpacity(String value) {
     return attr0(AttributeNamePojo.STOP_OPACITY, value);
   }
 
@@ -2520,7 +2520,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction stroke(String value) {
+  public final AttributeMarkup stroke(String value) {
     return attr0(AttributeNamePojo.STROKE, value);
   }
 
@@ -2529,7 +2529,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction strokeDasharray(String value) {
+  public final AttributeMarkup strokeDasharray(String value) {
     return attr0(AttributeNamePojo.STROKE_DASHARRAY, value);
   }
 
@@ -2538,7 +2538,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction strokeDashoffset(String value) {
+  public final AttributeMarkup strokeDashoffset(String value) {
     return attr0(AttributeNamePojo.STROKE_DASHOFFSET, value);
   }
 
@@ -2547,7 +2547,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction strokeLinecap(String value) {
+  public final AttributeMarkup strokeLinecap(String value) {
     return attr0(AttributeNamePojo.STROKE_LINECAP, value);
   }
 
@@ -2556,7 +2556,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction strokeLinejoin(String value) {
+  public final AttributeMarkup strokeLinejoin(String value) {
     return attr0(AttributeNamePojo.STROKE_LINEJOIN, value);
   }
 
@@ -2565,7 +2565,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction strokeMiterlimit(String value) {
+  public final AttributeMarkup strokeMiterlimit(String value) {
     return attr0(AttributeNamePojo.STROKE_MITERLIMIT, value);
   }
 
@@ -2574,7 +2574,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction strokeOpacity(String value) {
+  public final AttributeMarkup strokeOpacity(String value) {
     return attr0(AttributeNamePojo.STROKE_OPACITY, value);
   }
 
@@ -2583,7 +2583,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction strokeWidth(String value) {
+  public final AttributeMarkup strokeWidth(String value) {
     return attr0(AttributeNamePojo.STROKE_WIDTH, value);
   }
 
@@ -2592,7 +2592,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction tabindex(String value) {
+  public final AttributeMarkup tabindex(String value) {
     return attr0(AttributeNamePojo.TABINDEX, value);
   }
 
@@ -2601,7 +2601,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction target(String value) {
+  public final AttributeMarkup target(String value) {
     return attr0(AttributeNamePojo.TARGET, value);
   }
 
@@ -2610,7 +2610,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction textAnchor(String value) {
+  public final AttributeMarkup textAnchor(String value) {
     return attr0(AttributeNamePojo.TEXT_ANCHOR, value);
   }
 
@@ -2619,7 +2619,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction textDecoration(String value) {
+  public final AttributeMarkup textDecoration(String value) {
     return attr0(AttributeNamePojo.TEXT_DECORATION, value);
   }
 
@@ -2628,7 +2628,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction textOverflow(String value) {
+  public final AttributeMarkup textOverflow(String value) {
     return attr0(AttributeNamePojo.TEXT_OVERFLOW, value);
   }
 
@@ -2637,7 +2637,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction textRendering(String value) {
+  public final AttributeMarkup textRendering(String value) {
     return attr0(AttributeNamePojo.TEXT_RENDERING, value);
   }
 
@@ -2646,7 +2646,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction transform(String value) {
+  public final AttributeMarkup transform(String value) {
     return attr0(AttributeNamePojo.TRANSFORM, value);
   }
 
@@ -2655,7 +2655,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction transformOrigin(String value) {
+  public final AttributeMarkup transformOrigin(String value) {
     return attr0(AttributeNamePojo.TRANSFORM_ORIGIN, value);
   }
 
@@ -2664,7 +2664,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction translate(String value) {
+  public final AttributeMarkup translate(String value) {
     return attr0(AttributeNamePojo.TRANSLATE, value);
   }
 
@@ -2673,7 +2673,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction type(String value) {
+  public final AttributeMarkup type(String value) {
     return attr0(AttributeNamePojo.TYPE, value);
   }
 
@@ -2682,7 +2682,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction unicodeBidi(String value) {
+  public final AttributeMarkup unicodeBidi(String value) {
     return attr0(AttributeNamePojo.UNICODE_BIDI, value);
   }
 
@@ -2691,7 +2691,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction value(String value) {
+  public final AttributeMarkup value(String value) {
     return attr0(AttributeNamePojo.VALUE, value);
   }
 
@@ -2700,7 +2700,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction vectorEffect(String value) {
+  public final AttributeMarkup vectorEffect(String value) {
     return attr0(AttributeNamePojo.VECTOR_EFFECT, value);
   }
 
@@ -2709,7 +2709,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction viewBox(String value) {
+  public final AttributeMarkup viewBox(String value) {
     return attr0(AttributeNamePojo.VIEWBOX, value);
   }
 
@@ -2718,7 +2718,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction visibility(String value) {
+  public final AttributeMarkup visibility(String value) {
     return attr0(AttributeNamePojo.VISIBILITY, value);
   }
 
@@ -2727,7 +2727,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction whiteSpace(String value) {
+  public final AttributeMarkup whiteSpace(String value) {
     return attr0(AttributeNamePojo.WHITE_SPACE, value);
   }
 
@@ -2736,7 +2736,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction width(String value) {
+  public final AttributeMarkup width(String value) {
     return attr0(AttributeNamePojo.WIDTH, value);
   }
 
@@ -2745,7 +2745,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction wordSpacing(String value) {
+  public final AttributeMarkup wordSpacing(String value) {
     return attr0(AttributeNamePojo.WORD_SPACING, value);
   }
 
@@ -2754,7 +2754,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction wrap(String value) {
+  public final AttributeMarkup wrap(String value) {
     return attr0(AttributeNamePojo.WRAP, value);
   }
 
@@ -2763,7 +2763,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction writingMode(String value) {
+  public final AttributeMarkup writingMode(String value) {
     return attr0(AttributeNamePojo.WRITING_MODE, value);
   }
 
@@ -2772,7 +2772,7 @@ public abstract NoOpInstruction noop();
   /// @param value the attribute value
   ///
   /// @return an instruction representing the attribute
-  public final AttributeInstruction xmlns(String value) {
+  public final AttributeMarkup xmlns(String value) {
     return attr0(AttributeNamePojo.XMLNS, value);
   }
 

@@ -18,9 +18,9 @@ package objectos.html;
 import java.util.Iterator;
 import java.util.Set;
 import objectox.html.AmbiguousSpec;
+import objectox.html.AttributeSpec;
 import objectox.html.HtmlSpec;
 import objectox.html.MethodSpec;
-import objectox.html.attr.AttributeSpec;
 import objectox.html.elem.ElementSpec;
 
 public class MarkupGen {
@@ -130,14 +130,14 @@ public class MarkupGen {
     /// Renders an HTML element with the specified name and contents.
     /// @param name the element name
     /// @param contents the attributes and children of the element
-    /// @return an instruction representing the element
-    ElementInstruction elem(ElementName name, Instruction... contents);
+    /// @return an object representing the encoded element
+    ElementMarkup elem(ElementName name, ElementContent... contents);
 
     /// Renders an HTML element with the specified name and text.
     /// @param name the element name
     /// @param text the text value of this element
-    /// @return an instruction representing the element
-    ElementInstruction elem(ElementName name, String text);
+    /// @return an object representing the encoded element
+    ElementMarkup elem(ElementName name, String text);
 
     /// Renders the `<!DOCTYPE html>` doctype.
     void doctype();
@@ -155,8 +155,8 @@ public class MarkupGen {
 
         /// Renders the `%s` element with the specified content.
         /// @param contents the attributes and children of the element
-        /// @return an instruction representing the element.
-        ElementInstruction %s(Instruction... contents);
+        /// @return an object representing the encoded element
+        ElementMarkup %s(ElementContent... contents);
         """.formatted(elem.htmlName(), elem.htmlName()));
       }
 
@@ -165,13 +165,13 @@ public class MarkupGen {
 
         /// Renders the `%1$s` element with the specified content.
         /// @param contents the attributes and children of the element
-        /// @return an instruction representing the element.
-        ElementInstruction %2$s(Instruction... contents);
+        /// @return an object representing the encoded element
+        ElementMarkup %2$s(Instruction... contents);
 
         /// Renders the `%1$s` element with the specified text.
         /// @param text the text value of the element
-        /// @return an instruction representing the element.
-        ElementInstruction %2$s(String text);
+        /// @return an object representing the encoded element
+        ElementMarkup %2$s(String text);
         """.formatted(elem.htmlName(), elem.htmlName(), elem.javaName()));
       }
 
@@ -180,8 +180,8 @@ public class MarkupGen {
 
         /// Renders the `%s` element with the specified content.
         /// @param contents the attributes of the element
-        /// @return an instruction representing the element.
-        ElementInstruction %s(Instruction.OfVoid... contents);
+        /// @return an object representing the encoded element
+        ElementMarkup %s(Instruction.OfVoid... contents);
         """.formatted(elem.htmlName(), elem.htmlName()));
       }
     }
@@ -198,13 +198,13 @@ public class MarkupGen {
     /// Renders an attribute with the specified name.
     /// @param name the attribute name
     /// @return an instruction representing the attribute
-    AttributeInstruction attr(AttributeName name);
+    Attribute attr(AttributeName name);
 
     /// Renders an attribute with the specified name and value.
     /// @param name the attribute name
     /// @param value the attribute value
     /// @return an instruction representing the attribute
-    AttributeInstruction attr(AttributeName name, String value);
+    Attribute attr(AttributeName name, String value);
     """);
 
     final Set<String> ambiguous;
@@ -219,7 +219,7 @@ public class MarkupGen {
         fields.append("""
 
         /// The `%s` boolean attribute.
-        AttributeObject %s = AttributeObject.of(AttributeName.%s);
+        BooleanAttribute %s = BooleanAttribute.of(AttributeName.%s);
         """.formatted(attr.htmlName(), attr.methodName(), attr.constantName()));
       }
 
@@ -229,7 +229,7 @@ public class MarkupGen {
         /// Renders the `%s` attribute with the specified value.
         /// @param value the attribute value
         /// @return an instruction representing the attribute
-        AttributeInstruction %s(String value);
+        Attribute %s(String value);
         """.formatted(attr.htmlName(), attr.methodName()));
 
         if (attr.eventAttribute()) {
@@ -238,7 +238,7 @@ public class MarkupGen {
         /// Renders the `%s` attribute with the specified action.
         /// @param value the action to be executed
         /// @return an instruction representing the attribute
-        AttributeInstruction %s(JsAction value);
+        Attribute %s(JsAction value);
         """.formatted(attr.htmlName(), attr.methodName()));
         }
       }

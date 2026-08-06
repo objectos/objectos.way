@@ -18,7 +18,6 @@ package objectox.html;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import objectox.html.attr.AttributeSpec;
 import objectox.html.elem.ElementSpec;
 
 public final class HtmlSpec {
@@ -414,7 +413,7 @@ public final class HtmlSpec {
 
   public static List<MethodSpec> wayNodes() {
     return List.of(
-        new MethodSpec("AttributeInstruction css(String value)", "css(value)", """
+        new MethodSpec("Attribute css(String value)", "css(value)", """
         Renders the `class` attribute by processing the specified value.
 
         This method is designed to work with Java text blocks. It first removes
@@ -439,16 +438,6 @@ public final class HtmlSpec {
         @param value the text block containing class names, possibly spread across multiple lines
         @return an instruction representing this attribute.
         """),
-        //        new MethodSpec("ComponentInstruction c(Component... components)", "c(components)", """
-        //        Renders the specified components in order as part of this document.
-        //        @param components the components to be rendered as part of this document
-        //        @return an instruction representing the rendered components.
-        //        """),
-        //        new MethodSpec("ComponentInstruction c(Iterable<? extends Component> components)", "c(components)", """
-        //        Renders the specified components in order as part of this document.
-        //        @param components the components to be rendered as part of this document
-        //        @return an instruction representing the rendered components.
-        //        """),
         new MethodSpec("FragmentInstruction f(Fragment0 fragment)", "f(fragment)", """
         Renders the specified fragment as part of this document.
 
