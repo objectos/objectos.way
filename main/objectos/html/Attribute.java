@@ -15,36 +15,22 @@
  */
 package objectos.html;
 
-import java.util.Objects;
 import objectos.html.markup.RegularElementContent;
 import objectos.html.markup.VoidElementContent;
 import objectox.html.markup.AttributePojo;
 
-/// Represents an HTML attribute.
+/// Represents a non-boolean HTML attribute.
 public non-sealed interface Attribute
     extends
     RegularElementContent,
     VoidElementContent {
-
-  /// Creates an object representing an HTML boolean attribute with the
-  /// specified name.
-  ///
-  /// @param name the boolean attribute name
-  ///
-  /// @return a newly created object representing an HTML boolean attribute
-  static Attribute of(AttributeName name) {
-    return new AttributePojo(
-        Objects.requireNonNull(name, "name == null"),
-        null
-    );
-  }
 
   /// Returns a new attribute object with the specified name and value.
   ///
   /// @param name the attribute name
   /// @param value the attribute value
   ///
-  /// @return a newly created object representing an HTML attribute
+  /// @return a newly created object representing a non-boolean HTML attribute
   static Attribute of(AttributeName name, String value) {
     return AttributePojo.of(name, value);
   }
@@ -52,11 +38,11 @@ public non-sealed interface Attribute
   /// Returns the attribute name.
   ///
   /// @return the attribute name
-  AttributeName attrName();
+  AttributeName name();
 
   /// Returns the attribute value.
   ///
   /// @return the attribute value
-  String attrValue();
+  String value();
 
 }

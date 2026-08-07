@@ -42,7 +42,7 @@ public sealed interface Id extends Attribute permits IdPojo {
    * @return the {@code id} attribute name
    */
   @Override
-  default AttributeName attrName() {
+  default AttributeName name() {
     return AttributeNamePojo.ID;
   }
 
@@ -52,6 +52,6 @@ public sealed interface Id extends Attribute permits IdPojo {
    * @return the {@code id} value
    */
   @Override
-  String attrValue();
+  String value();
 
 }

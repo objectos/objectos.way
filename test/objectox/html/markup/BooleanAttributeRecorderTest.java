@@ -21,21 +21,38 @@ import org.testng.annotations.Test;
 
 public class BooleanAttributeRecorderTest {
 
-  @Test(description = "BOOLEAN8")
-  public void record01() {
+  @Test(
+      description = "reject null name",
+      expectedExceptions = NullPointerException.class,
+      expectedExceptionsMessageRegExp = "Attribute provided a null name")
+  public void reject01() {
     final HtmlSink sink;
     sink = new HtmlSink();
-
-    final AttributeNamePojo name;
-    name = AttributeNamePojo.AUTOFOCUS;
 
     final BooleanAttributeRecorder subject;
     subject = new BooleanAttributeRecorder(sink);
 
-    final AttributePointer res;
-    res = subject.record(name);
+    final BooleanAttributePojo attribute;
+    attribute = new BooleanAttributePojo(null);
 
-    assertEquals(res.value(), 0);
+    subject.record(attribute);
+  }
+
+  @Test(description = "BOOLEAN8")
+  public void boolean8() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final BooleanAttributeRecorder subject;
+    subject = new BooleanAttributeRecorder(sink);
+
+    final AttributeNamePojo name;
+    name = AttributeNamePojo.AUTOFOCUS;
+
+    final BooleanAttributePojo attribute;
+    attribute = new BooleanAttributePojo(name);
+
+    subject.record(attribute);
 
     assertEquals(
         sink,

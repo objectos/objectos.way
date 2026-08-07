@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import objectos.html.Attribute;
 import objectos.html.AttributeName;
+import objectos.html.BooleanAttribute;
 import objectos.html.ElementName;
 import objectos.html.markup.ElementContent;
 import org.testng.annotations.Test;
@@ -62,6 +63,24 @@ public class ElementAttributesRecorderTest {
           opts.addByte(HtmlBytes.ATTRIBUTE88);
           opts.addInt8(name.index());
           opts.addInt8(opts.addObject(value));
+        })
+    );
+  }
+
+  @Test
+  public void booleanAttribute01() {
+    final AttributeName name;
+    name = AttributeName.AUTOFOCUS;
+
+    final BooleanAttribute attr;
+    attr = BooleanAttribute.of(name);
+
+    assertEquals(
+        record(attr),
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.BOOLEAN8);
+          opts.addInt8(name.index());
         })
     );
   }

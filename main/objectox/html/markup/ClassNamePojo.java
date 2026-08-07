@@ -17,4 +17,4 @@ package objectox.html.markup;
 
 import objectos.html.ClassName;
 
-public record ClassNamePojo(String attrValue) implements ClassName {}
+public record ClassNamePojo(String value) implements ClassName {}

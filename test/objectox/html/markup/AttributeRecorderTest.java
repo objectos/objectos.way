@@ -48,7 +48,7 @@ public class AttributeRecorderTest {
       description = "reject null name",
       expectedExceptions = NullPointerException.class,
       expectedExceptionsMessageRegExp = "Attribute provided a null name")
-  public void record01() {
+  public void reject01() {
     final AttributeNamePojo name;
     name = null;
 
@@ -62,7 +62,7 @@ public class AttributeRecorderTest {
       description = "reject null value",
       expectedExceptions = NullPointerException.class,
       expectedExceptionsMessageRegExp = "Attribute provided a null value")
-  public void record02() {
+  public void reject02() {
     final AttributeNamePojo name;
     name = AttributeNamePojo.ID;
 

@@ -16,6 +16,7 @@
 package objectos.html.markup;
 
 import objectos.html.Attribute;
+import objectos.html.BooleanAttribute;
 
 /// Represents an object allowed as an argument to an HTML void element
 /// rendering method.
@@ -24,4 +25,5 @@ public sealed interface VoidElementContent
     ElementContent
     permits
     Attribute,
+    BooleanAttribute,
     NoOpInstruction {}

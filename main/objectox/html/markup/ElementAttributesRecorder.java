@@ -16,15 +16,26 @@
 package objectox.html.markup;
 
 import objectos.html.Attribute;
+import objectos.html.BooleanAttribute;
 import objectos.html.ElementName;
 import objectos.html.markup.ElementContent;
+import objectos.html.markup.ElementMarkup;
+import objectos.html.markup.NoOpInstruction;
 
 final class ElementAttributesRecorder {
 
   private final AttributeRecorder attributeRecorder;
 
-  ElementAttributesRecorder(AttributeRecorder attributeRecorder) {
+  private final BooleanAttributeRecorder booleanAttributeRecorder;
+
+  ElementAttributesRecorder(
+      AttributeRecorder attributeRecorder,
+
+      BooleanAttributeRecorder booleanAttributeRecorder
+  ) {
     this.attributeRecorder = attributeRecorder;
+
+    this.booleanAttributeRecorder = booleanAttributeRecorder;
   }
 
   public final void record(ElementName elementName, ElementContent... contents) {
@@ -37,7 +48,11 @@ final class ElementAttributesRecorder {
     switch (value) {
       case Attribute attr -> attributeRecorder.record(attr);
 
-      default -> {}
+      case BooleanAttribute attr -> booleanAttributeRecorder.record(attr);
+
+      case ElementMarkup _ -> {}
+
+      case NoOpInstruction _ -> {}
     }
   }
 

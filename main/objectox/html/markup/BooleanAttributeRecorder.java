@@ -16,6 +16,7 @@
 package objectox.html.markup;
 
 import objectos.html.AttributeName;
+import objectos.html.BooleanAttribute;
 
 final class BooleanAttributeRecorder {
 
@@ -25,21 +26,27 @@ final class BooleanAttributeRecorder {
     this.sink = sink;
   }
 
-  public final AttributePointer record(AttributeName name) {
-    final int startIndex;
+  public final void record(BooleanAttribute attribute) {
+    final AttributeName name;
+    name = attribute.name();
+
+    if (name == null) {
+      final String msg;
+      msg = "Attribute provided a null name";
+
+      throw new NullPointerException(msg);
+    }
 
     final int nameIndex;
     nameIndex = name.index();
 
     if (nameIndex <= HtmlSink.MAX_INT8) {
-      startIndex = sink.addByte(HtmlBytes.BOOLEAN8);
+      sink.addByte(HtmlBytes.BOOLEAN8);
 
       sink.addInt8(nameIndex);
     } else {
       throw new UnsupportedOperationException("Implement me");
     }
-
-    return new AttributePointer(startIndex);
   }
 
 }

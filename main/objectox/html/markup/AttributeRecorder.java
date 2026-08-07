@@ -29,7 +29,7 @@ final class AttributeRecorder {
 
   public final void record(Attribute attribute) {
     final AttributeName name;
-    name = attribute.attrName();
+    name = attribute.name();
 
     if (name == null) {
       final String msg;
@@ -39,7 +39,7 @@ final class AttributeRecorder {
     }
 
     final String value;
-    value = attribute.attrValue();
+    value = attribute.value();
 
     if (value == null) {
       final String msg;

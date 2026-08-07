@@ -19,7 +19,7 @@ import objectos.html.AttributeName;
 import java.util.Objects;
 import objectos.html.Attribute;
 
-public record AttributePojo(AttributeName attrName, String attrValue) implements Attribute {
+public record AttributePojo(AttributeName name, String value) implements Attribute {
 
   public static AttributePojo of(AttributeName name, String value) {
     final AttributeName n;
@@ -28,13 +28,7 @@ public record AttributePojo(AttributeName attrName, String attrValue) implements
     final String v;
     v = Objects.requireNonNull(value, "value == null");
 
-    final AttributeValueEscaper escaper;
-    escaper = new AttributeValueEscaper(v);
-
-    final String escaped;
-    escaped = escaper.escape();
-
-    return new AttributePojo(n, escaped);
+    return new AttributePojo(n, v);
   }
 
 }

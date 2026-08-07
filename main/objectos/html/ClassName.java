@@ -45,7 +45,7 @@ public sealed interface ClassName extends Attribute permits ClassNamePojo {
       cn = values[i];
 
       String value;
-      value = cn.attrValue();
+      value = cn.value();
 
       sb.append(value);
     }
@@ -115,7 +115,7 @@ public sealed interface ClassName extends Attribute permits ClassNamePojo {
    * @return the {@code class} attribute name
    */
   @Override
-  default AttributeName attrName() {
+  default AttributeName name() {
     return AttributeNamePojo.CLASS;
   }
 
@@ -125,6 +125,6 @@ public sealed interface ClassName extends Attribute permits ClassNamePojo {
    * @return the {@code class} value
    */
   @Override
-  String attrValue();
+  String value();
 
 }
