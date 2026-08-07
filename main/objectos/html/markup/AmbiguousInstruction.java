@@ -21,7 +21,6 @@ import objectox.html.markup.AmbiguousPointer;
 /// Objectos HTML document.
 public sealed interface AmbiguousInstruction
     extends
-    AttributeMarkup,
-    ElementMarkup
+    AttributeMarkup
     permits
     AmbiguousPointer {}

@@ -16,7 +16,7 @@
 package objectos.html.markup;
 
 /// Represents an object that can be used in any element rendering method.
-public sealed interface ElementContent
+public sealed interface ElementValue
     permits
-    RegularElementContent,
-    VoidElementContent {}
+    RegularElementValue,
+    VoidElementValue {}

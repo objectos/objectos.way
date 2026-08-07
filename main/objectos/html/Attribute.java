@@ -15,15 +15,15 @@
  */
 package objectos.html;
 
-import objectos.html.markup.RegularElementContent;
-import objectos.html.markup.VoidElementContent;
+import objectos.html.markup.RegularElementValue;
+import objectos.html.markup.VoidElementValue;
 import objectox.html.markup.AttributePojo;
 
 /// Represents a non-boolean HTML attribute.
 public non-sealed interface Attribute
     extends
-    RegularElementContent,
-    VoidElementContent {
+    RegularElementValue,
+    VoidElementValue {
 
   /// Returns a new attribute object with the specified name and value.
   ///

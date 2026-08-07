@@ -21,24 +21,27 @@ import objectos.html.Attribute;
 import objectos.html.AttributeName;
 import objectos.html.BooleanAttribute;
 import objectos.html.ElementName;
-import objectos.html.markup.ElementContent;
+import objectos.html.markup.ElementValue;
 import org.testng.annotations.Test;
 
 public class ElementAttributesRecorderTest {
 
-  private HtmlSink record(ElementContent... contents) {
+  private HtmlSink record(ElementValue... contents) {
     return record(ElementName.HTML, contents);
   }
 
-  private HtmlSink record(ElementName elementName, ElementContent... contents) {
+  private HtmlSink record(ElementName elementName, ElementValue... contents) {
     final HtmlSink sink;
     sink = new HtmlSink();
 
     final AttributeRecorder attributeRecorder;
     attributeRecorder = new AttributeRecorder(sink);
 
+    final BooleanAttributeRecorder booleanAttributeRecorder;
+    booleanAttributeRecorder = new BooleanAttributeRecorder(sink);
+
     final ElementAttributesRecorder subject;
-    subject = new ElementAttributesRecorder(attributeRecorder);
+    subject = new ElementAttributesRecorder(attributeRecorder, booleanAttributeRecorder);
 
     subject.record(elementName, contents);
 

@@ -18,7 +18,7 @@ package objectox.html.markup;
 import objectos.html.Attribute;
 import objectos.html.BooleanAttribute;
 import objectos.html.ElementName;
-import objectos.html.markup.ElementContent;
+import objectos.html.markup.ElementValue;
 import objectos.html.markup.ElementMarkup;
 import objectos.html.markup.NoOpInstruction;
 
@@ -38,13 +38,13 @@ final class ElementAttributesRecorder {
     this.booleanAttributeRecorder = booleanAttributeRecorder;
   }
 
-  public final void record(ElementName elementName, ElementContent... contents) {
-    for (ElementContent value : contents) {
+  public final void record(ElementName elementName, ElementValue... contents) {
+    for (ElementValue value : contents) {
       record0(elementName, value);
     }
   }
 
-  private void record0(ElementName elementName, ElementContent value) {
+  private void record0(ElementName elementName, ElementValue value) {
     switch (value) {
       case Attribute attr -> attributeRecorder.record(attr);
 

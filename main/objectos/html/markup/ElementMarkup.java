@@ -20,5 +20,5 @@ import objectox.html.markup.ElementPointer;
 /// Represents the encoded markup of an Objectos HTML element.
 public sealed interface ElementMarkup
     extends
-    RegularElementContent
-    permits AmbiguousInstruction, ElementPointer {}
+    RegularElementValue
+    permits ElementPointer {}

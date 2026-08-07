@@ -20,6 +20,6 @@ import objectox.html.markup.NoOpInstructionPojo;
 /// Represents a no-op instruction.
 public sealed interface NoOpInstruction
     extends
-    VoidElementContent
+    VoidElementValue
     permits
     NoOpInstructionPojo {}

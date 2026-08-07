@@ -23,7 +23,7 @@ import objectos.html.Html;
 import objectos.html.Markup;
 import objectos.html.markup.AmbiguousInstruction;
 import objectos.html.markup.AttributeMarkup;
-import objectos.html.markup.ElementContent;
+import objectos.html.markup.ElementValue;
 import objectos.html.markup.ElementMarkup;
 import objectos.html.markup.FlattenInstruction;
 import objectos.html.markup.Fragment0;
@@ -260,7 +260,7 @@ public sealed abstract class MarkupPojo
   }
 
   @Override
-  final ElementMarkup elem0(ElementName name, ElementContent... contents) {
+  final ElementMarkup elem0(ElementName name, ElementValue... contents) {
     return recorder.element(name, contents);
   }
 

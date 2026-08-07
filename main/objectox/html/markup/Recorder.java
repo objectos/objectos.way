@@ -18,7 +18,7 @@ package objectox.html.markup;
 import objectos.html.AttributeName;
 import objectos.html.ElementName;
 import objectos.html.Html;
-import objectos.html.markup.ElementContent;
+import objectos.html.markup.ElementValue;
 import objectos.html.markup.Fragment0;
 import objectos.html.markup.Fragment1;
 import objectos.html.markup.Fragment2;
@@ -151,7 +151,7 @@ public final class Recorder {
     doctypeRecorder.record();
   }
 
-  public final ElementPointer element(ElementName name, ElementContent... contents) {
+  public final ElementPointer element(ElementName name, ElementValue... contents) {
     return elementRecorder.record(name, contents);
   }
 

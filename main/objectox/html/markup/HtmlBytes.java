@@ -34,11 +34,11 @@ public final class HtmlBytes {
   public static final byte ATTRIBUTE824 = -122;
   public static final byte BOOLEAN8 = -121;
 
-  // ambiguous
+  // child
 
-  public static final byte AMBIGUOUS88 = -120;
-  public static final byte AMBIGUOUS816 = -119;
-  public static final byte AMBIGUOUS824 = -118;
+  public static final byte ELEM8 = -120;
+  public static final byte ELEM16 = -119;
+  public static final byte ELEM24 = -118;
 
   // text
 
@@ -52,93 +52,19 @@ public final class HtmlBytes {
   public static final byte RAW16 = -113;
   public static final byte RAW24 = -112;
 
-  // flatten
-
-  public static final byte STARTFLAT = -111;
-
-  // fragment
-
-  public static final byte STARTFRAG = -110;
-  public static final byte ENDFRAG = -109;
-
-  // contents
-
-  public static final byte VALUES8 = -108;
-  public static final byte VALUES16 = -107;
-  public static final byte VALUES24 = -106;
-
   // xelement
 
-  public static final byte xSTARTTAG8 = -105;
+  public static final byte xSTARTTAG8 = -111;
 
-  // xattributes
+  // control flow
 
-  public static final byte xATTRIBUTE88 = -104;
-  public static final byte xATTRIBUTE816 = -103;
-  public static final byte xATTRIBUTE824 = -102;
-  public static final byte xBOOLEAN8 = -101;
-
-  // xambiguous
-
-  public static final byte xAMBIGUOUS88 = -100;
-  public static final byte xAMBIGUOUS816 = -99;
-  public static final byte xAMBIGUOUS824 = -98;
-
-  // xtext
-
-  public static final byte xTEXT8 = -97;
-  public static final byte xTEXT16 = -96;
-  public static final byte xTEXT24 = -95;
-
-  // xraw
-
-  public static final byte xRAW8 = -94;
-  public static final byte xRAW16 = -93;
-  public static final byte xRAW24 = -92;
-
-  // xflatten
-
-  public static final byte xSTARTFLAT = -91;
-
-  // xfragment
-
-  public static final byte xSTARTFRAG = -90;
+  public static final byte JMP24 = -110;
 
   private HtmlBytes() {}
 
   public static byte consume(byte source) {
     return switch (source) {
       case STARTTAG8, xSTARTTAG8 -> xSTARTTAG8;
-
-      case ATTRIBUTE88, xATTRIBUTE88 -> xATTRIBUTE88;
-
-      case ATTRIBUTE816, xATTRIBUTE816 -> xATTRIBUTE816;
-
-      case ATTRIBUTE824, xATTRIBUTE824 -> xATTRIBUTE824;
-
-      case BOOLEAN8, xBOOLEAN8 -> xBOOLEAN8;
-
-      case AMBIGUOUS88, xAMBIGUOUS88 -> xAMBIGUOUS88;
-
-      case AMBIGUOUS816, xAMBIGUOUS816 -> xAMBIGUOUS816;
-
-      case AMBIGUOUS824, xAMBIGUOUS824 -> xAMBIGUOUS824;
-
-      case TEXT8, xTEXT8 -> xTEXT8;
-
-      case TEXT16, xTEXT16 -> xTEXT16;
-
-      case TEXT24, xTEXT24 -> xTEXT24;
-
-      case RAW8, xRAW8 -> xRAW8;
-
-      case RAW16, xRAW16 -> xRAW16;
-
-      case RAW24, xRAW24 -> xRAW24;
-
-      case STARTFLAT, xSTARTFLAT -> xSTARTFLAT;
-
-      case STARTFRAG, xSTARTFRAG -> xSTARTFRAG;
 
       default -> throw new IllegalArgumentException("source=" + source);
     };

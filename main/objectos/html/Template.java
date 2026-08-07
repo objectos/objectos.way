@@ -19,20 +19,20 @@ import java.util.Collection;
 import objectos.html.markup.AmbiguousInstruction;
 import objectos.html.markup.AttributeMarkup;
 import objectos.html.markup.ElementMarkup;
-import objectos.html.markup.ElementContent;
+import objectos.html.markup.ElementValue;
 import objectos.html.markup.FlattenInstruction;
 import objectos.html.markup.Fragment0;
 import objectos.html.markup.Fragment1;
 import objectos.html.markup.Fragment2;
 import objectos.html.markup.Fragment3;
 import objectos.html.markup.Fragment4;
-import objectos.html.markup.RegularElementContent;
+import objectos.html.markup.RegularElementValue;
 import objectos.html.markup.FragmentInstruction;
 import objectos.html.markup.Instruction;
 import objectos.html.markup.NoOpInstruction;
 import objectos.html.markup.RawInstruction;
 import objectos.html.markup.TextInstruction;
-import objectos.html.markup.VoidElementContent;
+import objectos.html.markup.VoidElementValue;
 import objectos.internal.Check;
 import objectos.script.JsAction;
 
@@ -434,7 +434,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element
-  protected final ElementMarkup elem(ElementName name, ElementContent... contents) {
+  protected final ElementMarkup elem(ElementName name, ElementValue... contents) {
     return $html().elem(name, contents);
   }
 
@@ -458,7 +458,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup a(RegularElementContent... contents) {
+  protected final ElementMarkup a(RegularElementValue... contents) {
     return $html().a(contents);
   }
 
@@ -476,7 +476,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup abbr(RegularElementContent... contents) {
+  protected final ElementMarkup abbr(RegularElementValue... contents) {
     return $html().abbr(contents);
   }
 
@@ -494,7 +494,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup article(RegularElementContent... contents) {
+  protected final ElementMarkup article(RegularElementValue... contents) {
     return $html().article(contents);
   }
 
@@ -512,7 +512,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup aside(RegularElementContent... contents) {
+  protected final ElementMarkup aside(RegularElementValue... contents) {
     return $html().aside(contents);
   }
 
@@ -530,7 +530,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup b(RegularElementContent... contents) {
+  protected final ElementMarkup b(RegularElementValue... contents) {
     return $html().b(contents);
   }
 
@@ -548,7 +548,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup blockquote(RegularElementContent... contents) {
+  protected final ElementMarkup blockquote(RegularElementValue... contents) {
     return $html().blockquote(contents);
   }
 
@@ -566,7 +566,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup body(RegularElementContent... contents) {
+  protected final ElementMarkup body(RegularElementValue... contents) {
     return $html().body(contents);
   }
 
@@ -584,7 +584,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup br(VoidElementContent... contents) {
+  protected final ElementMarkup br(VoidElementValue... contents) {
     return $html().br(contents);
   }
 
@@ -593,7 +593,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup button(RegularElementContent... contents) {
+  protected final ElementMarkup button(RegularElementValue... contents) {
     return $html().button(contents);
   }
 
@@ -611,7 +611,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup clipPath(RegularElementContent... contents) {
+  protected final ElementMarkup clipPath(RegularElementValue... contents) {
     return $html().clipPath(contents);
   }
 
@@ -620,7 +620,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup code(RegularElementContent... contents) {
+  protected final ElementMarkup code(RegularElementValue... contents) {
     return $html().code(contents);
   }
 
@@ -638,7 +638,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup dd(RegularElementContent... contents) {
+  protected final ElementMarkup dd(RegularElementValue... contents) {
     return $html().dd(contents);
   }
 
@@ -656,7 +656,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup defs(RegularElementContent... contents) {
+  protected final ElementMarkup defs(RegularElementValue... contents) {
     return $html().defs(contents);
   }
 
@@ -674,7 +674,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup details(RegularElementContent... contents) {
+  protected final ElementMarkup details(RegularElementValue... contents) {
     return $html().details(contents);
   }
 
@@ -692,7 +692,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup dialog(RegularElementContent... contents) {
+  protected final ElementMarkup dialog(RegularElementValue... contents) {
     return $html().dialog(contents);
   }
 
@@ -710,7 +710,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup div(RegularElementContent... contents) {
+  protected final ElementMarkup div(RegularElementValue... contents) {
     return $html().div(contents);
   }
 
@@ -728,7 +728,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup dl(RegularElementContent... contents) {
+  protected final ElementMarkup dl(RegularElementValue... contents) {
     return $html().dl(contents);
   }
 
@@ -746,7 +746,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup dt(RegularElementContent... contents) {
+  protected final ElementMarkup dt(RegularElementValue... contents) {
     return $html().dt(contents);
   }
 
@@ -764,7 +764,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup em(RegularElementContent... contents) {
+  protected final ElementMarkup em(RegularElementValue... contents) {
     return $html().em(contents);
   }
 
@@ -782,7 +782,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup fieldset(RegularElementContent... contents) {
+  protected final ElementMarkup fieldset(RegularElementValue... contents) {
     return $html().fieldset(contents);
   }
 
@@ -800,7 +800,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup figure(RegularElementContent... contents) {
+  protected final ElementMarkup figure(RegularElementValue... contents) {
     return $html().figure(contents);
   }
 
@@ -818,7 +818,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup footer(RegularElementContent... contents) {
+  protected final ElementMarkup footer(RegularElementValue... contents) {
     return $html().footer(contents);
   }
 
@@ -836,7 +836,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup form(RegularElementContent... contents) {
+  protected final ElementMarkup form(RegularElementValue... contents) {
     return $html().form(contents);
   }
 
@@ -845,7 +845,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup g(RegularElementContent... contents) {
+  protected final ElementMarkup g(RegularElementValue... contents) {
     return $html().g(contents);
   }
 
@@ -863,7 +863,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup h1(RegularElementContent... contents) {
+  protected final ElementMarkup h1(RegularElementValue... contents) {
     return $html().h1(contents);
   }
 
@@ -881,7 +881,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup h2(RegularElementContent... contents) {
+  protected final ElementMarkup h2(RegularElementValue... contents) {
     return $html().h2(contents);
   }
 
@@ -899,7 +899,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup h3(RegularElementContent... contents) {
+  protected final ElementMarkup h3(RegularElementValue... contents) {
     return $html().h3(contents);
   }
 
@@ -917,7 +917,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup h4(RegularElementContent... contents) {
+  protected final ElementMarkup h4(RegularElementValue... contents) {
     return $html().h4(contents);
   }
 
@@ -935,7 +935,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup h5(RegularElementContent... contents) {
+  protected final ElementMarkup h5(RegularElementValue... contents) {
     return $html().h5(contents);
   }
 
@@ -953,7 +953,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup h6(RegularElementContent... contents) {
+  protected final ElementMarkup h6(RegularElementValue... contents) {
     return $html().h6(contents);
   }
 
@@ -971,7 +971,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup head(RegularElementContent... contents) {
+  protected final ElementMarkup head(RegularElementValue... contents) {
     return $html().head(contents);
   }
 
@@ -989,7 +989,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup header(RegularElementContent... contents) {
+  protected final ElementMarkup header(RegularElementValue... contents) {
     return $html().header(contents);
   }
 
@@ -1007,7 +1007,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup hgroup(RegularElementContent... contents) {
+  protected final ElementMarkup hgroup(RegularElementValue... contents) {
     return $html().hgroup(contents);
   }
 
@@ -1025,7 +1025,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup hr(VoidElementContent... contents) {
+  protected final ElementMarkup hr(VoidElementValue... contents) {
     return $html().hr(contents);
   }
 
@@ -1034,7 +1034,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup html(RegularElementContent... contents) {
+  protected final ElementMarkup html(RegularElementValue... contents) {
     return $html().html(contents);
   }
 
@@ -1052,7 +1052,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup img(VoidElementContent... contents) {
+  protected final ElementMarkup img(VoidElementValue... contents) {
     return $html().img(contents);
   }
 
@@ -1061,7 +1061,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup input(VoidElementContent... contents) {
+  protected final ElementMarkup input(VoidElementValue... contents) {
     return $html().input(contents);
   }
 
@@ -1070,7 +1070,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup kbd(RegularElementContent... contents) {
+  protected final ElementMarkup kbd(RegularElementValue... contents) {
     return $html().kbd(contents);
   }
 
@@ -1088,7 +1088,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup label(RegularElementContent... contents) {
+  protected final ElementMarkup label(RegularElementValue... contents) {
     return $html().label(contents);
   }
 
@@ -1097,7 +1097,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup legend(RegularElementContent... contents) {
+  protected final ElementMarkup legend(RegularElementValue... contents) {
     return $html().legend(contents);
   }
 
@@ -1115,7 +1115,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup li(RegularElementContent... contents) {
+  protected final ElementMarkup li(RegularElementValue... contents) {
     return $html().li(contents);
   }
 
@@ -1133,7 +1133,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup link(VoidElementContent... contents) {
+  protected final ElementMarkup link(VoidElementValue... contents) {
     return $html().link(contents);
   }
 
@@ -1142,7 +1142,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup main(RegularElementContent... contents) {
+  protected final ElementMarkup main(RegularElementValue... contents) {
     return $html().main(contents);
   }
 
@@ -1160,7 +1160,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup menu(RegularElementContent... contents) {
+  protected final ElementMarkup menu(RegularElementValue... contents) {
     return $html().menu(contents);
   }
 
@@ -1178,7 +1178,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup meta(VoidElementContent... contents) {
+  protected final ElementMarkup meta(VoidElementValue... contents) {
     return $html().meta(contents);
   }
 
@@ -1187,7 +1187,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup nav(RegularElementContent... contents) {
+  protected final ElementMarkup nav(RegularElementValue... contents) {
     return $html().nav(contents);
   }
 
@@ -1205,7 +1205,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup noscript(RegularElementContent... contents) {
+  protected final ElementMarkup noscript(RegularElementValue... contents) {
     return $html().noscript(contents);
   }
 
@@ -1223,7 +1223,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup ol(RegularElementContent... contents) {
+  protected final ElementMarkup ol(RegularElementValue... contents) {
     return $html().ol(contents);
   }
 
@@ -1241,7 +1241,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup optgroup(RegularElementContent... contents) {
+  protected final ElementMarkup optgroup(RegularElementValue... contents) {
     return $html().optgroup(contents);
   }
 
@@ -1259,7 +1259,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup option(RegularElementContent... contents) {
+  protected final ElementMarkup option(RegularElementValue... contents) {
     return $html().option(contents);
   }
 
@@ -1277,7 +1277,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup p(RegularElementContent... contents) {
+  protected final ElementMarkup p(RegularElementValue... contents) {
     return $html().p(contents);
   }
 
@@ -1295,7 +1295,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup path(RegularElementContent... contents) {
+  protected final ElementMarkup path(RegularElementValue... contents) {
     return $html().path(contents);
   }
 
@@ -1313,7 +1313,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup pre(RegularElementContent... contents) {
+  protected final ElementMarkup pre(RegularElementValue... contents) {
     return $html().pre(contents);
   }
 
@@ -1331,7 +1331,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup progress(RegularElementContent... contents) {
+  protected final ElementMarkup progress(RegularElementValue... contents) {
     return $html().progress(contents);
   }
 
@@ -1349,7 +1349,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup samp(RegularElementContent... contents) {
+  protected final ElementMarkup samp(RegularElementValue... contents) {
     return $html().samp(contents);
   }
 
@@ -1367,7 +1367,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup script(RegularElementContent... contents) {
+  protected final ElementMarkup script(RegularElementValue... contents) {
     return $html().script(contents);
   }
 
@@ -1385,7 +1385,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup section(RegularElementContent... contents) {
+  protected final ElementMarkup section(RegularElementValue... contents) {
     return $html().section(contents);
   }
 
@@ -1403,7 +1403,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup select(RegularElementContent... contents) {
+  protected final ElementMarkup select(RegularElementValue... contents) {
     return $html().select(contents);
   }
 
@@ -1421,7 +1421,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup small(RegularElementContent... contents) {
+  protected final ElementMarkup small(RegularElementValue... contents) {
     return $html().small(contents);
   }
 
@@ -1439,7 +1439,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup span(RegularElementContent... contents) {
+  protected final ElementMarkup span(RegularElementValue... contents) {
     return $html().span(contents);
   }
 
@@ -1457,7 +1457,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup strong(RegularElementContent... contents) {
+  protected final ElementMarkup strong(RegularElementValue... contents) {
     return $html().strong(contents);
   }
 
@@ -1475,7 +1475,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup style(RegularElementContent... contents) {
+  protected final ElementMarkup style(RegularElementValue... contents) {
     return $html().style(contents);
   }
 
@@ -1484,7 +1484,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup sub(RegularElementContent... contents) {
+  protected final ElementMarkup sub(RegularElementValue... contents) {
     return $html().sub(contents);
   }
 
@@ -1502,7 +1502,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup summary(RegularElementContent... contents) {
+  protected final ElementMarkup summary(RegularElementValue... contents) {
     return $html().summary(contents);
   }
 
@@ -1520,7 +1520,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup sup(RegularElementContent... contents) {
+  protected final ElementMarkup sup(RegularElementValue... contents) {
     return $html().sup(contents);
   }
 
@@ -1538,7 +1538,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup svg(RegularElementContent... contents) {
+  protected final ElementMarkup svg(RegularElementValue... contents) {
     return $html().svg(contents);
   }
 
@@ -1556,7 +1556,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup table(RegularElementContent... contents) {
+  protected final ElementMarkup table(RegularElementValue... contents) {
     return $html().table(contents);
   }
 
@@ -1574,7 +1574,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup tbody(RegularElementContent... contents) {
+  protected final ElementMarkup tbody(RegularElementValue... contents) {
     return $html().tbody(contents);
   }
 
@@ -1592,7 +1592,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup td(RegularElementContent... contents) {
+  protected final ElementMarkup td(RegularElementValue... contents) {
     return $html().td(contents);
   }
 
@@ -1610,7 +1610,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup template(RegularElementContent... contents) {
+  protected final ElementMarkup template(RegularElementValue... contents) {
     return $html().template(contents);
   }
 
@@ -1628,7 +1628,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup textarea(RegularElementContent... contents) {
+  protected final ElementMarkup textarea(RegularElementValue... contents) {
     return $html().textarea(contents);
   }
 
@@ -1646,7 +1646,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup th(RegularElementContent... contents) {
+  protected final ElementMarkup th(RegularElementValue... contents) {
     return $html().th(contents);
   }
 
@@ -1664,7 +1664,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup thead(RegularElementContent... contents) {
+  protected final ElementMarkup thead(RegularElementValue... contents) {
     return $html().thead(contents);
   }
 
@@ -1682,7 +1682,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup title(RegularElementContent... contents) {
+  protected final ElementMarkup title(RegularElementValue... contents) {
     return $html().title(contents);
   }
 
@@ -1691,7 +1691,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup tr(RegularElementContent... contents) {
+  protected final ElementMarkup tr(RegularElementValue... contents) {
     return $html().tr(contents);
   }
 
@@ -1709,7 +1709,7 @@ public abstract class Template implements Component {
   /// @param contents the attributes and children of the element
   ///
   /// @return an instruction representing the element.
-  protected final ElementMarkup ul(RegularElementContent... contents) {
+  protected final ElementMarkup ul(RegularElementValue... contents) {
     return $html().ul(contents);
   }
 

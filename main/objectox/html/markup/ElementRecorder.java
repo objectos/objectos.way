@@ -17,7 +17,7 @@ package objectox.html.markup;
 
 import java.util.Objects;
 import objectos.html.ElementName;
-import objectos.html.markup.ElementContent;
+import objectos.html.markup.ElementValue;
 import objectos.html.markup.Instruction;
 import objectox.html.IntSize;
 import objectox.html.elem.ElementNamePojo;
@@ -38,7 +38,7 @@ final class ElementRecorder {
     this.contentsRecorder = contentsRecorder;
   }
 
-  public final ElementPointer record(ElementName name, ElementContent... contents) {
+  public final ElementPointer record(ElementName name, ElementValue... contents) {
     final Instruction[] instructions;
     instructions = Objects.requireNonNull(contents, "contents == null");
 

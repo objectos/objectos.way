@@ -42,11 +42,11 @@ public class HtmlBytesGen {
     value("ATTRIBUTE824");
     value("BOOLEAN8");
 
-    comment("ambiguous");
+    comment("child");
 
-    value("AMBIGUOUS88");
-    value("AMBIGUOUS816");
-    value("AMBIGUOUS824");
+    value("ELEM8");
+    value("ELEM16");
+    value("ELEM24");
 
     comment("text");
 
@@ -60,57 +60,13 @@ public class HtmlBytesGen {
     value("RAW16");
     value("RAW24");
 
-    comment("flatten");
-
-    value("STARTFLAT");
-
-    comment("fragment");
-
-    value("STARTFRAG");
-    value("ENDFRAG");
-
-    comment("contents");
-
-    value("VALUES8");
-    value("VALUES16");
-    value("VALUES24");
-
     comment("xelement");
 
     value("xSTARTTAG8");
 
-    comment("xattributes");
+    comment("control flow");
 
-    value("xATTRIBUTE88");
-    value("xATTRIBUTE816");
-    value("xATTRIBUTE824");
-    value("xBOOLEAN8");
-
-    comment("xambiguous");
-
-    value("xAMBIGUOUS88");
-    value("xAMBIGUOUS816");
-    value("xAMBIGUOUS824");
-
-    comment("xtext");
-
-    value("xTEXT8");
-    value("xTEXT16");
-    value("xTEXT24");
-
-    comment("xraw");
-
-    value("xRAW8");
-    value("xRAW16");
-    value("xRAW24");
-
-    comment("xflatten");
-
-    value("xSTARTFLAT");
-
-    comment("xfragment");
-
-    value("xSTARTFRAG");
+    value("JMP24");
   }
 
   protected int value = -128;

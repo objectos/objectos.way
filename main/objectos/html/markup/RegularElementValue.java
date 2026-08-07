@@ -18,12 +18,12 @@ package objectos.html.markup;
 import objectos.html.Attribute;
 import objectos.html.BooleanAttribute;
 
-/// Represents an object allowed as an argument to an HTML void element
+/// Represents an object allowed as an argument to an HTML non-void element
 /// rendering method.
-public sealed interface VoidElementContent
+public sealed interface RegularElementValue
     extends
-    ElementContent
+    ElementValue
     permits
     Attribute,
     BooleanAttribute,
-    NoOpInstruction {}
+    ElementMarkup {}
