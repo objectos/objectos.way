@@ -21,11 +21,19 @@ import objectos.html.ElementName;
 import objectos.html.markup.ElementValue;
 import objectos.html.markup.NoOpInstruction;
 
-final class ElementsChildrenRecorder {
+final class ElementChildrenRecorder {
+
+  private final ChildElementMarker childElementMarker;
 
   private final ChildElementRecorder childElementRecorder;
 
-  ElementsChildrenRecorder(ChildElementRecorder childElementRecorder) {
+  ElementChildrenRecorder(
+      ChildElementMarker childElementMarker,
+
+      ChildElementRecorder childElementRecorder
+  ) {
+    this.childElementMarker = childElementMarker;
+
     this.childElementRecorder = childElementRecorder;
   }
 
@@ -37,7 +45,11 @@ final class ElementsChildrenRecorder {
 
   private void record0(ElementName elementName, ElementValue value) {
     switch (value) {
-      case ElementPointer child -> childElementRecorder.record(child);
+      case ElementPointer child -> {
+        childElementMarker.mark(child);
+
+        childElementRecorder.record(child);
+      }
 
       case Attribute _ -> {}
 

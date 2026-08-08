@@ -85,21 +85,7 @@ public final class HtmlSink {
     return codeIndex;
   }
 
-  public final void addInt8(int value) {
-    if (value < 0 || value > MAX_INT8) {
-      final String msg;
-      msg = "Invalid 1-byte int value: %d".formatted(value);
-
-      throw new IllegalArgumentException(msg);
-    }
-
-    final byte b;
-    b = (byte) value;
-
-    addByte(b);
-  }
-
-  public final void addInt16(int value) {
+  public final int addInt16(int value) {
     if (value < 0 || value > MAX_INT16) {
       final String msg;
       msg = "Invalid 2-byte int value: %d".formatted(value);
@@ -118,32 +104,33 @@ public final class HtmlSink {
     code[idx0] = (byte) (value >>> 8);
 
     code[idx1] = (byte) value;
+
+    return idx0;
   }
 
-  public final void addInt24(int value) {
-    if (value < 0 || value > MAX_INT24) {
+  public final int addInt24(int value) {
+    final int startIndex;
+    startIndex = codeIndex;
+
+    set24(startIndex, value);
+
+    codeIndex += 3;
+
+    return startIndex;
+  }
+
+  public final int addInt8(int value) {
+    if (value < 0 || value > MAX_INT8) {
       final String msg;
-      msg = "Invalid 3-byte int value: %d".formatted(value);
+      msg = "Invalid 1-byte int value: %d".formatted(value);
 
       throw new IllegalArgumentException(msg);
     }
 
-    final int idx0;
-    idx0 = codeIndex++;
+    final byte b;
+    b = (byte) value;
 
-    final int idx1;
-    idx1 = codeIndex++;
-
-    final int idx2;
-    idx2 = codeIndex++;
-
-    code = Util.growIfNecessary(code, idx2);
-
-    code[idx0] = (byte) (value >>> 16);
-
-    code[idx1] = (byte) (value >>> 8);
-
-    code[idx2] = (byte) value;
+    return addByte(b);
   }
 
   public final int addObject(Object value) {
@@ -157,18 +144,15 @@ public final class HtmlSink {
     return idx;
   }
 
+  public final byte[] code() {
+    return Arrays.copyOf(code, codeIndex);
+  }
+
   public final void consume(int value) {
     final byte original;
     original = code[value];
 
     code[value] = HtmlBytes.consume(original);
-  }
-
-  @Override
-  public final boolean equals(Object obj) {
-    return obj == this || obj instanceof HtmlSink that
-        && Arrays.equals(code, 0, codeIndex, that.code, 0, that.codeIndex)
-        && Arrays.equals(objects, 0, objectsIndex, that.objects, 0, that.objectsIndex);
   }
 
   public final int ensure(int offset, IntSize size, int length) {
@@ -186,6 +170,21 @@ public final class HtmlSink {
     return requiredIndex;
   }
 
+  @Override
+  public final boolean equals(Object obj) {
+    return obj == this || obj instanceof HtmlSink that
+        && Arrays.equals(code, 0, codeIndex, that.code, 0, that.codeIndex)
+        && Arrays.equals(objects, 0, objectsIndex, that.objects, 0, that.objectsIndex);
+  }
+
+  public final void jmp24(int index) {
+    set24(index, codeIndex);
+  }
+
+  public final Object[] objects() {
+    return Arrays.copyOf(objects, objectsIndex);
+  }
+
   public final HtmlSink offset(int offset, int length, IntSize size) {
     final int multiplier;
     multiplier = size.bytes();
@@ -197,6 +196,32 @@ public final class HtmlSink {
     requiredIndex = codeIndex + bytes + offset;
 
     return new HtmlSink(code, requiredIndex, objects, objectsIndex);
+  }
+
+  private void set24(int index, int value) {
+    if (value < 0 || value > MAX_INT24) {
+      final String msg;
+      msg = "Invalid 3-byte int value: %d".formatted(value);
+
+      throw new IllegalArgumentException(msg);
+    }
+
+    final int idx0;
+    idx0 = index + 0;
+
+    final int idx1;
+    idx1 = index + 1;
+
+    final int idx2;
+    idx2 = index + 2;
+
+    code = Util.growIfNecessary(code, idx2);
+
+    code[idx0] = (byte) (value >>> 16);
+
+    code[idx1] = (byte) (value >>> 8);
+
+    code[idx2] = (byte) value;
   }
 
   @Override
@@ -211,14 +236,6 @@ public final class HtmlSink {
     code    = %s
     objects = %s
     """.formatted(HexFormat.of().formatHex($code), Arrays.toString($objects));
-  }
-
-  public final byte[] code() {
-    return Arrays.copyOf(code, codeIndex);
-  }
-
-  public final Object[] objects() {
-    return Arrays.copyOf(objects, objectsIndex);
   }
 
 }

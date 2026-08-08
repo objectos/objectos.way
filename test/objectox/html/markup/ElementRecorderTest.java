@@ -30,30 +30,33 @@ public class ElementRecorderTest {
     final BooleanAttributeRecorder booleanAttributeRecorder;
     booleanAttributeRecorder = new BooleanAttributeRecorder(sink);
 
-    final ContentsPrecorder contentsPrecorder;
-    contentsPrecorder = new ContentsPrecorder(attributeRecorder, booleanAttributeRecorder);
+    final ElementAttributesRecorder attributesRecorder;
+    attributesRecorder = new ElementAttributesRecorder(attributeRecorder, booleanAttributeRecorder);
 
-    final ContentsRecorder contentsRecorder;
-    contentsRecorder = new ContentsRecorder(sink);
+    final ChildElementMarker childElementMarker;
+    childElementMarker = new ChildElementMarker(sink);
 
-    return new ElementRecorder(sink, contentsPrecorder, contentsRecorder);
+    final ChildElementRecorder childElementRecorder;
+    childElementRecorder = new ChildElementRecorder(sink);
+
+    final ElementChildrenRecorder childrenRecorder;
+    childrenRecorder = new ElementChildrenRecorder(childElementMarker, childElementRecorder);
+
+    return new ElementRecorder(sink, attributesRecorder, childrenRecorder);
   }
 
   @Test(description = """
-  <html></html>
+  STARTAG8, jump, ENDTAG8
   """)
-  public void record01() {
+  public void tags01() {
     final HtmlSink sink;
     sink = new HtmlSink();
 
     final ElementRecorder subject;
     subject = create(sink);
 
-    final ElementNamePojo name;
-    name = ElementNamePojo.HTML;
-
     final ElementPointer res;
-    res = subject.record(name);
+    res = subject.record(ElementNamePojo.HTML);
 
     assertEquals(res.value(), 0);
 
@@ -62,97 +65,47 @@ public class ElementRecorderTest {
 
         HtmlSinkY.create(opts -> {
           opts.addByte(HtmlBytes.STARTTAG8);
-          opts.addInt8(name.index());
-          opts.addByte(HtmlBytes.VALUES8);
-          opts.addInt8(0);
+          opts.addInt8(ElementNamePojo.HTML.index());
+          opts.addByte(HtmlBytes.JMP24);
+          opts.addInt24(8);
           opts.addByte(HtmlBytes.ENDTAG8);
-          opts.addInt8(name.index());
+          opts.addInt8(ElementNamePojo.HTML.index());
         })
     );
   }
 
   @Test(description = """
-  <html lang="pt-BR"></html>
+  STARTAG8, jump, VOIDELEM
   """)
-  public void record02() {
+  public void tags02() {
     final HtmlSink sink;
     sink = new HtmlSink();
-
-    final int attrIndex;
-    attrIndex = sink.addByte(HtmlBytes.ATTRIBUTE88);
-
-    final AttributePointer attr;
-    attr = new AttributePointer(attrIndex);
 
     final ElementRecorder subject;
     subject = create(sink);
 
-    final ElementNamePojo name;
-    name = ElementNamePojo.HTML;
-
     final ElementPointer res;
-    res = subject.record(name, attr);
+    res = subject.record(ElementNamePojo.BR);
 
-    assertEquals(res.value(), 1);
+    assertEquals(res.value(), 0);
 
     assertEquals(
         sink,
 
         HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.xATTRIBUTE88);
           opts.addByte(HtmlBytes.STARTTAG8);
-          opts.addInt8(name.index());
-          opts.addByte(HtmlBytes.VALUES8);
-          opts.addInt8(1);
-          opts.addInt8(0);
-          opts.addByte(HtmlBytes.ENDTAG8);
-          opts.addInt8(name.index());
+          opts.addInt8(ElementNamePojo.BR.index());
+          opts.addByte(HtmlBytes.JMP24);
+          opts.addInt24(7);
+          opts.addByte(HtmlBytes.VOIDELEM);
         })
     );
   }
 
   @Test(description = """
-  <html autofocus></html>
+  ElementAttributesRecorder delegation
   """)
-  public void record03() {
-    final HtmlSink sink;
-    sink = new HtmlSink();
-
-    final Attribute attr;
-    attr = Attribute.of(AttributeNamePojo.AUTOFOCUS);
-
-    final ElementRecorder subject;
-    subject = create(sink);
-
-    final ElementNamePojo name;
-    name = ElementNamePojo.HTML;
-
-    final ElementPointer res;
-    res = subject.record(name, attr);
-
-    assertEquals(res.value(), 2);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.xBOOLEAN8);
-          opts.addInt8(AttributeNamePojo.AUTOFOCUS.index());
-          opts.addByte(HtmlBytes.STARTTAG8);
-          opts.addInt8(name.index());
-          opts.addByte(HtmlBytes.VALUES8);
-          opts.addInt8(1);
-          opts.addInt8(0);
-          opts.addByte(HtmlBytes.ENDTAG8);
-          opts.addInt8(name.index());
-        })
-    );
-  }
-
-  @Test(description = """
-  <html><head></head></html>
-  """)
-  public void record04() {
+  public void attrs01() {
     final HtmlSink sink;
     sink = new HtmlSink();
 
@@ -162,26 +115,23 @@ public class ElementRecorderTest {
     final ElementPointer res;
     res = subject.record(
         ElementNamePojo.HTML,
-        subject.record(ElementNamePojo.HEAD)
+
+        Attribute.of(AttributeNamePojo.CHARSET, "UTF-8")
     );
 
-    assertEquals(res.value(), 6);
+    assertEquals(res.value(), 0);
 
     assertEquals(
         sink,
 
         HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.xSTARTTAG8);
-          opts.addInt8(ElementNamePojo.HEAD.index());
-          opts.addByte(HtmlBytes.VALUES8);
-          opts.addInt8(0);
-          opts.addByte(HtmlBytes.ENDTAG8);
-          opts.addInt8(ElementNamePojo.HEAD.index());
           opts.addByte(HtmlBytes.STARTTAG8);
           opts.addInt8(ElementNamePojo.HTML.index());
-          opts.addByte(HtmlBytes.VALUES8);
-          opts.addInt8(1);
-          opts.addInt8(0);
+          opts.addByte(HtmlBytes.JMP24);
+          opts.addInt24(11);
+          opts.addByte(HtmlBytes.ATTRIBUTE88);
+          opts.addInt8(AttributeNamePojo.CHARSET.index());
+          opts.addInt8(opts.addObject("UTF-8"));
           opts.addByte(HtmlBytes.ENDTAG8);
           opts.addInt8(ElementNamePojo.HTML.index());
         })
@@ -189,50 +139,101 @@ public class ElementRecorderTest {
   }
 
   @Test(description = """
-  <head><meta charset="UTF-8"></head>
+  ElementAttributesRecorder before ElementsChildrenRecorder
   """)
-  public void record05() {
+  public void attrs02() {
     final HtmlSink sink;
-    sink = new HtmlSink();
-
-    int charset = sink.addByte(HtmlBytes.ATTRIBUTE88);
-    sink.addInt8(AttributeNamePojo.CHARSET.index());
-    sink.addInt8(sink.addObject("UTF-8"));
-
-    final AttributePointer charsetPointer;
-    charsetPointer = new AttributePointer(charset);
+    sink = HtmlSinkY.create(opts -> {
+      opts.addByte(HtmlBytes.STARTTAG8);
+      opts.addInt8(ElementNamePojo.B.index());
+      opts.addByte(HtmlBytes.JMP24);
+      opts.addInt24(8);
+      opts.addByte(HtmlBytes.ENDTAG8);
+      opts.addInt8(ElementNamePojo.B.index());
+    });
 
     final ElementRecorder subject;
     subject = create(sink);
 
     final ElementPointer res;
     res = subject.record(
-        ElementNamePojo.HEAD,
-        subject.record(ElementNamePojo.META, charsetPointer)
+        ElementNamePojo.DIV,
+
+        Attribute.of(AttributeNamePojo.ID, "x"),
+        new ElementPointer(0)
     );
 
-    assertEquals(res.value(), 9);
+    assertEquals(res.value(), 8);
 
     assertEquals(
         sink,
 
         HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.xATTRIBUTE88);
-          opts.addInt8(AttributeNamePojo.CHARSET.index());
-          opts.addInt8(opts.addObject("UTF-8"));
           opts.addByte(HtmlBytes.xSTARTTAG8);
-          opts.addInt8(ElementNamePojo.META.index());
-          opts.addByte(HtmlBytes.VALUES8);
-          opts.addInt8(1);
-          opts.addInt8(0);
-          opts.addByte(HtmlBytes.VOIDELEM);
+          opts.addInt8(ElementNamePojo.B.index());
+          opts.addByte(HtmlBytes.JMP24);
+          opts.addInt24(8);
+          opts.addByte(HtmlBytes.ENDTAG8);
+          opts.addInt8(ElementNamePojo.B.index());
           opts.addByte(HtmlBytes.STARTTAG8);
+          opts.addInt8(ElementNamePojo.DIV.index());
+          opts.addByte(HtmlBytes.JMP24);
+          opts.addInt24(21);
+          opts.addByte(HtmlBytes.ATTRIBUTE88);
+          opts.addInt8(AttributeNamePojo.ID.index());
+          opts.addInt8(opts.addObject("x"));
+          opts.addByte(HtmlBytes.ELEM8);
+          opts.addInt8(0);
+          opts.addByte(HtmlBytes.ENDTAG8);
+          opts.addInt8(ElementNamePojo.DIV.index());
+        })
+    );
+  }
+
+  @Test(description = """
+  ElementChildrenRecorder delegation
+  """)
+  public void children01() {
+    final HtmlSink sink;
+    sink = HtmlSinkY.create(opts -> {
+      opts.addByte(HtmlBytes.STARTTAG8);
+      opts.addInt8(ElementNamePojo.HEAD.index());
+      opts.addByte(HtmlBytes.JMP24);
+      opts.addInt24(8);
+      opts.addByte(HtmlBytes.ENDTAG8);
+      opts.addInt8(ElementNamePojo.HEAD.index());
+    });
+
+    final ElementRecorder subject;
+    subject = create(sink);
+
+    final ElementPointer res;
+    res = subject.record(
+        ElementNamePojo.HTML,
+
+        new ElementPointer(0)
+    );
+
+    assertEquals(res.value(), 8);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.xSTARTTAG8);
           opts.addInt8(ElementNamePojo.HEAD.index());
-          opts.addByte(HtmlBytes.VALUES8);
-          opts.addInt8(1);
-          opts.addInt8(3);
+          opts.addByte(HtmlBytes.JMP24);
+          opts.addInt24(8);
           opts.addByte(HtmlBytes.ENDTAG8);
           opts.addInt8(ElementNamePojo.HEAD.index());
+          opts.addByte(HtmlBytes.STARTTAG8);
+          opts.addInt8(ElementNamePojo.HTML.index());
+          opts.addByte(HtmlBytes.JMP24);
+          opts.addInt24(18);
+          opts.addByte(HtmlBytes.ELEM8);
+          opts.addInt8(0);
+          opts.addByte(HtmlBytes.ENDTAG8);
+          opts.addInt8(ElementNamePojo.HTML.index());
         })
     );
   }

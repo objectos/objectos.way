@@ -19,23 +19,20 @@ import static org.testng.Assert.assertEquals;
 
 import objectos.html.ElementName;
 import objectos.html.markup.ElementValue;
+import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 
-public class ElementsChildrenRecorderTest {
+public class ElementChildrenRecorderTest {
 
-  private HtmlSink record(ElementValue... contents) {
-    return record(ElementName.HTML, contents);
-  }
-
-  private HtmlSink record(ElementName elementName, ElementValue... contents) {
-    final HtmlSink sink;
-    sink = new HtmlSink();
+  private HtmlSink record(HtmlSink sink, ElementName elementName, ElementValue... contents) {
+    final ChildElementMarker childElementMarker;
+    childElementMarker = new ChildElementMarker(sink);
 
     final ChildElementRecorder childElementRecorder;
     childElementRecorder = new ChildElementRecorder(sink);
 
-    final ElementsChildrenRecorder subject;
-    subject = new ElementsChildrenRecorder(childElementRecorder);
+    final ElementChildrenRecorder subject;
+    subject = new ElementChildrenRecorder(childElementMarker, childElementRecorder);
 
     subject.record(elementName, contents);
 
@@ -44,15 +41,34 @@ public class ElementsChildrenRecorderTest {
 
   @Test
   public void element01() {
+    final HtmlSink sink;
+    sink = HtmlSinkY.create(opts -> {
+      opts.addByte(HtmlBytes.STARTTAG8);
+      opts.addInt8(ElementNamePojo.HEAD.index());
+      opts.addByte(HtmlBytes.JMP24);
+      opts.addInt24(8);
+      opts.addByte(HtmlBytes.ENDTAG8);
+      opts.addInt8(ElementNamePojo.HEAD.index());
+    });
+
+    final int childStart;
+    childStart = 0;
+
     final ElementPointer child;
-    child = new ElementPointer(32);
+    child = new ElementPointer(childStart);
 
     assertEquals(
-        record(child),
+        record(sink, ElementName.HTML, child),
 
         HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.xSTARTTAG8);
+          opts.addInt8(ElementNamePojo.HEAD.index());
+          opts.addByte(HtmlBytes.JMP24);
+          opts.addInt24(8);
+          opts.addByte(HtmlBytes.ENDTAG8);
+          opts.addInt8(ElementNamePojo.HEAD.index());
           opts.addByte(HtmlBytes.ELEM8);
-          opts.addInt8(32);
+          opts.addInt8(childStart);
         })
     );
   }

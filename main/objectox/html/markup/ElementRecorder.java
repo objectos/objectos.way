@@ -18,7 +18,6 @@ package objectox.html.markup;
 import java.util.Objects;
 import objectos.html.ElementName;
 import objectos.html.markup.ElementValue;
-import objectos.html.markup.Instruction;
 import objectox.html.IntSize;
 import objectox.html.elem.ElementNamePojo;
 
@@ -26,61 +25,93 @@ final class ElementRecorder {
 
   private final HtmlSink sink;
 
-  private final ContentsPrecorder contentsPrecorder;
+  private final ElementAttributesRecorder attributesRecorder;
 
-  private final ContentsRecorder contentsRecorder;
+  private final ElementChildrenRecorder childrenRecorder;
 
-  ElementRecorder(HtmlSink sink, ContentsPrecorder contentsPrecorder, ContentsRecorder contentsRecorder) {
+  ElementRecorder(HtmlSink sink, ElementAttributesRecorder attributesRecorder, ElementChildrenRecorder childrenRecorder) {
     this.sink = sink;
 
-    this.contentsPrecorder = contentsPrecorder;
+    this.attributesRecorder = attributesRecorder;
 
-    this.contentsRecorder = contentsRecorder;
+    this.childrenRecorder = childrenRecorder;
   }
 
-  public final ElementPointer record(ElementName name, ElementValue... contents) {
-    final Instruction[] instructions;
-    instructions = Objects.requireNonNull(contents, "contents == null");
+  public final ElementPointer record(ElementName elementName, ElementValue... contents) {
+    Objects.requireNonNull(contents, "contents == null");
 
-    final Instruction[] precorded;
-    precorded = contentsPrecorder.precord(instructions);
-
-    final ElementNamePojo namePojo;
-    namePojo = (ElementNamePojo) name;
+    final ElementNamePojo name;
+    name = (ElementNamePojo) elementName;
 
     final int nameIndex;
-    nameIndex = namePojo.index();
+    nameIndex = name.index();
 
     final IntSize nameSize;
     nameSize = IntSize.of(nameIndex);
 
     final int startIndex;
-    startIndex = switch (nameSize) {
-      case BIT8 -> record8(nameIndex, precorded, namePojo);
+    startIndex = startTag(nameIndex, nameSize);
 
-      case BIT16, BIT24 -> throw new UnsupportedOperationException();
-    };
+    final int jmpIndex;
+    jmpIndex = contents(name, contents);
+
+    end(name, nameIndex, nameSize);
+
+    sink.jmp24(jmpIndex);
 
     return new ElementPointer(startIndex);
   }
 
-  private int record8(int nameIndex, Instruction[] instructions, ElementNamePojo namePojo) {
+  private int startTag(int nameIndex, IntSize nameSize) {
+    return switch (nameSize) {
+      case BIT8 -> startTag8(nameIndex);
+
+      case BIT16, BIT24 -> throw new UnsupportedOperationException();
+    };
+  }
+
+  private int startTag8(int nameIndex) {
     final int startIndex;
     startIndex = sink.addByte(HtmlBytes.STARTTAG8);
 
     sink.addInt8(nameIndex);
 
-    contentsRecorder.record(instructions);
+    return startIndex;
+  }
 
-    if (namePojo.endTag()) {
-      sink.addByte(HtmlBytes.ENDTAG8);
+  private int contents(ElementNamePojo name, ElementValue[] contents) {
+    sink.addByte(HtmlBytes.JMP24);
 
-      sink.addInt8(nameIndex);
+    final int jmpIndex;
+    jmpIndex = sink.addInt24(0);
+
+    attributesRecorder.record(name, contents);
+
+    childrenRecorder.record(name, contents);
+
+    return jmpIndex;
+  }
+
+  private void end(ElementNamePojo name, int nameIndex, IntSize nameSize) {
+    if (name.endTag()) {
+      endTag(nameIndex, nameSize);
     } else {
       sink.addByte(HtmlBytes.VOIDELEM);
     }
+  }
 
-    return startIndex;
+  private void endTag(int nameIndex, IntSize nameSize) {
+    switch (nameSize) {
+      case BIT8 -> endTag8(nameIndex);
+
+      case BIT16, BIT24 -> throw new UnsupportedOperationException();
+    }
+  }
+
+  private void endTag8(int nameIndex) {
+    sink.addByte(HtmlBytes.ENDTAG8);
+
+    sink.addInt8(nameIndex);
   }
 
 }
