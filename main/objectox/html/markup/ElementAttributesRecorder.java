@@ -20,7 +20,7 @@ import objectos.html.BooleanAttribute;
 import objectos.html.ElementName;
 import objectos.html.markup.ElementValue;
 import objectos.html.markup.ElementMarkup;
-import objectos.html.markup.NoOpInstruction;
+import objectos.html.markup.NoOpMarkup;
 
 final class ElementAttributesRecorder {
 
@@ -52,7 +52,7 @@ final class ElementAttributesRecorder {
 
       case ElementMarkup _ -> {}
 
-      case NoOpInstruction _ -> {}
+      case NoOpMarkup _ -> {}
     }
   }
 

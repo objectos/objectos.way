@@ -15,12 +15,12 @@
  */
 package objectos.html.markup;
 
-import objectox.html.markup.AmbiguousPointer;
+import objectox.html.markup.NoOpInstructionPojo;
 
-/// Represents an instruction that may render an attribute or element in an
-/// Objectos HTML document.
-public sealed interface AmbiguousInstruction
+/// Represents the encoded markup that does not render anything.
+public sealed interface NoOpMarkup
     extends
-    AttributeMarkup
+    RegularElementValue,
+    VoidElementValue
     permits
-    AmbiguousPointer {}
+    NoOpInstructionPojo {}

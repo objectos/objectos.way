@@ -15,8 +15,8 @@
  */
 package objectox.html.markup;
 
-import objectos.html.markup.AmbiguousInstruction;
+import objectos.html.markup.AmbiguousMarkup;
 
 public final record AmbiguousPointer(int value)
     implements
-    AmbiguousInstruction {}
+    AmbiguousMarkup {}

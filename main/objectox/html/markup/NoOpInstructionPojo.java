@@ -15,11 +15,11 @@
  */
 package objectox.html.markup;
 
-import objectos.html.markup.NoOpInstruction;
+import objectos.html.markup.NoOpMarkup;
 
-public final class NoOpInstructionPojo implements NoOpInstruction {
+public final class NoOpInstructionPojo implements NoOpMarkup {
 
-  public static final NoOpInstruction INSTANCE = new NoOpInstructionPojo();
+  public static final NoOpMarkup INSTANCE = new NoOpInstructionPojo();
 
   private NoOpInstructionPojo() {}
 

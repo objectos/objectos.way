@@ -21,7 +21,7 @@ import objectos.html.Attribute;
 import objectos.html.ElementName;
 import objectos.html.Html;
 import objectos.html.Markup;
-import objectos.html.markup.AmbiguousInstruction;
+import objectos.html.markup.AmbiguousMarkup;
 import objectos.html.markup.AttributeMarkup;
 import objectos.html.markup.ElementValue;
 import objectos.html.markup.ElementMarkup;
@@ -33,7 +33,7 @@ import objectos.html.markup.Fragment3;
 import objectos.html.markup.Fragment4;
 import objectos.html.markup.FragmentInstruction;
 import objectos.html.markup.Instruction;
-import objectos.html.markup.NoOpInstruction;
+import objectos.html.markup.NoOpMarkup;
 import objectos.html.markup.RawInstruction;
 import objectos.html.markup.TextInstruction;
 import objectox.html.markup.AttributeNamePojo;
@@ -114,7 +114,7 @@ public sealed abstract class MarkupPojo
   }
 
   @Override
-  public final NoOpInstruction noop() {
+  public final NoOpMarkup noop() {
     return NoOpInstructionPojo.INSTANCE;
   }
 
@@ -236,7 +236,7 @@ public sealed abstract class MarkupPojo
   }
 
   @Override
-  public final NoOpInstruction testableNewLine() {
+  public final NoOpMarkup testableNewLine() {
     return noop();
   }
 
@@ -245,7 +245,7 @@ public sealed abstract class MarkupPojo
   // ##################################################################
 
   @Override
-  final AmbiguousInstruction ambiguous(Ambiguous name, String value) {
+  final AmbiguousMarkup ambiguous(Ambiguous name, String value) {
     return recorder.ambiguous(name, value);
   }
 

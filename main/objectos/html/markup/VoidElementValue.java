@@ -26,4 +26,4 @@ public sealed interface VoidElementValue
     permits
     Attribute,
     BooleanAttribute,
-    NoOpInstruction {}
+    NoOpMarkup {}

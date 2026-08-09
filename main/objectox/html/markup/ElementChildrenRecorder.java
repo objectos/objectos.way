@@ -19,7 +19,7 @@ import objectos.html.Attribute;
 import objectos.html.BooleanAttribute;
 import objectos.html.ElementName;
 import objectos.html.markup.ElementValue;
-import objectos.html.markup.NoOpInstruction;
+import objectos.html.markup.NoOpMarkup;
 
 final class ElementChildrenRecorder {
 
@@ -55,7 +55,7 @@ final class ElementChildrenRecorder {
 
       case BooleanAttribute _ -> {}
 
-      case NoOpInstruction _ -> {}
+      case NoOpMarkup _ -> {}
     }
   }
 

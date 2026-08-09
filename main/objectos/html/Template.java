@@ -16,7 +16,7 @@
 package objectos.html;
 
 import java.util.Collection;
-import objectos.html.markup.AmbiguousInstruction;
+import objectos.html.markup.AmbiguousMarkup;
 import objectos.html.markup.AttributeMarkup;
 import objectos.html.markup.ElementMarkup;
 import objectos.html.markup.ElementValue;
@@ -29,7 +29,7 @@ import objectos.html.markup.Fragment4;
 import objectos.html.markup.RegularElementValue;
 import objectos.html.markup.FragmentInstruction;
 import objectos.html.markup.Instruction;
-import objectos.html.markup.NoOpInstruction;
+import objectos.html.markup.NoOpMarkup;
 import objectos.html.markup.RawInstruction;
 import objectos.html.markup.TextInstruction;
 import objectos.html.markup.VoidElementValue;
@@ -314,7 +314,7 @@ public abstract class Template implements Component {
 
   /// The no-op instruction.
   /// @return the no-op instruction.
-  protected final NoOpInstruction noop() {
+  protected final NoOpMarkup noop() {
     return $html().noop();
   }
 
@@ -420,7 +420,7 @@ public abstract class Template implements Component {
   /// Formats a line separator at the testable output exclusively.
   ///
   /// @return a no-op instruction
-  protected final NoOpInstruction testableNewLine() {
+  protected final NoOpMarkup testableNewLine() {
     return $html().testableNewLine();
   }
 
@@ -2919,7 +2919,7 @@ public abstract class Template implements Component {
   /// @param text the attribute value or the text content of the element
   ///
   /// @return an instruction representing the attribute or the element
-  protected final AmbiguousInstruction clipPath(String text) {
+  protected final AmbiguousMarkup clipPath(String text) {
     return $html().clipPath(text);
   }
 
@@ -2929,7 +2929,7 @@ public abstract class Template implements Component {
   /// @param text the attribute value or the text content of the element
   ///
   /// @return an instruction representing the attribute or the element
-  protected final AmbiguousInstruction form(String text) {
+  protected final AmbiguousMarkup form(String text) {
     return $html().form(text);
   }
 
@@ -2939,7 +2939,7 @@ public abstract class Template implements Component {
   /// @param text the attribute value or the text content of the element
   ///
   /// @return an instruction representing the attribute or the element
-  protected final AmbiguousInstruction label(String text) {
+  protected final AmbiguousMarkup label(String text) {
     return $html().label(text);
   }
 
@@ -2949,7 +2949,7 @@ public abstract class Template implements Component {
   /// @param text the attribute value or the text content of the element
   ///
   /// @return an instruction representing the attribute or the element
-  protected final AmbiguousInstruction style(String text) {
+  protected final AmbiguousMarkup style(String text) {
     return $html().style(text);
   }
 
@@ -2959,7 +2959,7 @@ public abstract class Template implements Component {
   /// @param text the attribute value or the text content of the element
   ///
   /// @return an instruction representing the attribute or the element
-  protected final AmbiguousInstruction title(String text) {
+  protected final AmbiguousMarkup title(String text) {
     return $html().title(text);
   }
 

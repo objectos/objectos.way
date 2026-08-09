@@ -88,29 +88,29 @@ public class MarkupGeneratedGen {
     // ELEMENTS
     //
 
-    abstract ElementInstruction elem0(ElementName name, Instruction... contents);
+    abstract ElementMarkup elem0(ElementName name, ElementValue... values);
 
-    abstract ElementInstruction elem0(ElementName name, String text);
+    abstract ElementMarkup elem0(ElementName name, String text);
 
-    /// Renders an HTML element with the specified name and contents.
+    /// Encodes an HTML element with the specified name and contents.
     /// @param name the element name
     /// @param contents the attributes and children of the element
-    /// @return an instruction representing the element
-    public final ElementInstruction elem(ElementName name, Instruction... contents) {
+    /// @return an object representing the encoded attribute
+    public final ElementMarkup elem(ElementName name, Instruction... contents) {
       Objects.requireNonNull(name, "name == null");
       return elem0(name, contents);
     }
 
-    /// Renders an HTML element with the specified name and text.
+    /// Encodes an HTML element with the specified name and text.
     /// @param name the element name
     /// @param text the text value of this element
     /// @return an instruction representing the element
-    public final ElementInstruction elem(ElementName name, String text) {
+    public final ElementMarkup elem(ElementName name, String text) {
       Objects.requireNonNull(name, "name == null");
       return elem0(name, text);
     }
 
-    /// Renders the `<!DOCTYPE html>` doctype.
+    /// Encodes the `<!DOCTYPE html>` doctype.
     public abstract void doctype();
     """);
 
@@ -124,10 +124,10 @@ public class MarkupGeneratedGen {
       if (ambiguousNames.contains(htmlName)) {
         methods.append("""
 
-        /// Renders the `%s` element with the specified content.
+        /// Encodes the `%s` element with the specified content.
         /// @param contents the attributes and children of the element
         /// @return an instruction representing the element.
-        public final ElementInstruction %s(Instruction... contents) {
+        public final ElementMarkup %s(Instruction... contents) {
           return elem0(ElementNamePojo.%s, contents);
         }
         """.formatted(elem.htmlName(), elem.htmlName(), elem.javaName()));
@@ -136,17 +136,17 @@ public class MarkupGeneratedGen {
       else if (elem.endTag()) {
         methods.append("""
 
-        /// Renders the `%s` element with the specified content.
+        /// Encodes the `%s` element with the specified content.
         /// @param contents the attributes and children of the element
         /// @return an instruction representing the element.
-        public final ElementInstruction %s(Instruction... contents) {
+        public final ElementMarkup %s(Instruction... contents) {
           return elem0(ElementNamePojo.%s, contents);
         }
 
-        /// Renders the `%s` element with the specified text.
+        /// Encodes the `%s` element with the specified text.
         /// @param text the text value of the element
         /// @return an instruction representing the element.
-        public final ElementInstruction %s(String text) {
+        public final ElementMarkup %s(String text) {
           return elem0(ElementNamePojo.%s, text);
         }
         """.formatted(
@@ -158,10 +158,10 @@ public class MarkupGeneratedGen {
       else {
         methods.append("""
 
-        /// Renders the `%s` element with the specified content.
+        /// Encodes the `%s` element with the specified content.
         /// @param contents the attributes of the element
         /// @return an instruction representing the element.
-        public final ElementInstruction %s(Instruction.OfVoid... contents) {
+        public final ElementMarkup %s(Instruction.OfVoid... contents) {
           return elem0(ElementNamePojo.%s, contents);
         }
         """.formatted(elem.htmlName(), elem.htmlName(), elem.javaName()));
@@ -181,15 +181,15 @@ public class MarkupGeneratedGen {
 
     abstract AttributeInstruction attr0(AttributeName name, Object value);
 
-    /// Renders an attribute with the specified name.
+    /// Encodes a boolean attribute with the specified name.
     /// @param name the attribute name
     /// @return an instruction representing the attribute
-    public final AttributeInstruction attr(AttributeName name) {
+    public final BooleanAttribute attr(AttributeName name) {
       Objects.requireNonNull(name, "name == null");
       return attr0(name);
     }
 
-    /// Renders an attribute with the specified name and value.
+    /// Encodes an attribute with the specified name and value.
     /// @param name the attribute name
     /// @param value the attribute value
     /// @return an instruction representing the attribute
@@ -209,7 +209,7 @@ public class MarkupGeneratedGen {
 
       methods.append("""
 
-      /// Renders the `%s` attribute with the specified value.
+      /// Encodes the `%s` attribute with the specified value.
       /// @param value the attribute value
       /// @return an instruction representing the attribute
       public final AttributeInstruction %s(String value) {
@@ -223,7 +223,7 @@ public class MarkupGeneratedGen {
 
       methods.append("""
 
-      /// Renders the `%s` attribute with the specified action.
+      /// Encodes the `%s` attribute with the specified action.
       /// @param value the action to be executed
       /// @return an instruction representing the attribute
       public final AttributeInstruction %s(JsAction value) {
@@ -246,7 +246,7 @@ public class MarkupGeneratedGen {
     for (AmbiguousSpec spec : HtmlSpec.ambiguous()) {
       methods.append("""
 
-      /// Renders the `%s` attribute or the `%s` element with the specified text.
+      /// Encodes the `%s` attribute or the `%s` element with the specified text.
       /// @param text the attribute value or the text content of the element
       /// @return an instruction representing the attribute or the element
       public final AmbiguousInstruction %s(String text) {

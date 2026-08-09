@@ -16,7 +16,7 @@
 package objectos.html;
 
 import java.util.Collection;
-import objectos.html.markup.AmbiguousInstruction;
+import objectos.html.markup.AmbiguousMarkup;
 import objectos.html.markup.AttributeMarkup;
 import objectos.html.markup.ElementMarkup;
 import objectos.html.markup.FlattenInstruction;
@@ -29,7 +29,7 @@ import objectos.html.markup.RegularElementValue;
 import objectos.html.markup.ElementValue;
 import objectos.html.markup.FragmentInstruction;
 import objectos.html.markup.Instruction;
-import objectos.html.markup.NoOpInstruction;
+import objectos.html.markup.NoOpMarkup;
 import objectos.html.markup.RawInstruction;
 import objectos.html.markup.TextInstruction;
 import objectos.html.markup.VoidElementValue;
@@ -62,43 +62,43 @@ public sealed interface Markup permits MarkupPojo {
   // START generated code
 
   /// The `async` boolean attribute.
-  Attribute async = Attribute.of(AttributeName.ASYNC);
+  BooleanAttribute async = BooleanAttribute.of(AttributeName.ASYNC);
 
   /// The `autofocus` boolean attribute.
-  Attribute autofocus = Attribute.of(AttributeName.AUTOFOCUS);
+  BooleanAttribute autofocus = BooleanAttribute.of(AttributeName.AUTOFOCUS);
 
   /// The `checked` boolean attribute.
-  Attribute checked = Attribute.of(AttributeName.CHECKED);
+  BooleanAttribute checked = BooleanAttribute.of(AttributeName.CHECKED);
 
   /// The `defer` boolean attribute.
-  Attribute defer = Attribute.of(AttributeName.DEFER);
+  BooleanAttribute defer = BooleanAttribute.of(AttributeName.DEFER);
 
   /// The `disabled` boolean attribute.
-  Attribute disabled = Attribute.of(AttributeName.DISABLED);
+  BooleanAttribute disabled = BooleanAttribute.of(AttributeName.DISABLED);
 
   /// The `hidden` boolean attribute.
-  Attribute hidden = Attribute.of(AttributeName.HIDDEN);
+  BooleanAttribute hidden = BooleanAttribute.of(AttributeName.HIDDEN);
 
   /// The `multiple` boolean attribute.
-  Attribute multiple = Attribute.of(AttributeName.MULTIPLE);
+  BooleanAttribute multiple = BooleanAttribute.of(AttributeName.MULTIPLE);
 
   /// The `nomodule` boolean attribute.
-  Attribute nomodule = Attribute.of(AttributeName.NOMODULE);
+  BooleanAttribute nomodule = BooleanAttribute.of(AttributeName.NOMODULE);
 
   /// The `open` boolean attribute.
-  Attribute open = Attribute.of(AttributeName.OPEN);
+  BooleanAttribute open = BooleanAttribute.of(AttributeName.OPEN);
 
   /// The `readonly` boolean attribute.
-  Attribute readonly = Attribute.of(AttributeName.READONLY);
+  BooleanAttribute readonly = BooleanAttribute.of(AttributeName.READONLY);
 
   /// The `required` boolean attribute.
-  Attribute required = Attribute.of(AttributeName.REQUIRED);
+  BooleanAttribute required = BooleanAttribute.of(AttributeName.REQUIRED);
 
   /// The `reversed` boolean attribute.
-  Attribute reversed = Attribute.of(AttributeName.REVERSED);
+  BooleanAttribute reversed = BooleanAttribute.of(AttributeName.REVERSED);
 
   /// The `selected` boolean attribute.
-  Attribute selected = Attribute.of(AttributeName.SELECTED);
+  BooleanAttribute selected = BooleanAttribute.of(AttributeName.SELECTED);
 
   //
   // WAY
@@ -129,7 +129,7 @@ public sealed interface Markup permits MarkupPojo {
   ///
   /// @param value the text block containing class names, possibly spread across multiple lines
   /// @return an instruction representing this attribute.
-  AttributeMarkup css(String value);
+  Attribute css(String value);
 
   /// Renders the specified fragment as part of this document.
   ///
@@ -244,9 +244,9 @@ public sealed interface Markup permits MarkupPojo {
   /// @return an instruction representing this flatten operation
   FlattenInstruction flatten(Collection<? extends Instruction> contents);
 
-  /// The no-op instruction.
-  /// @return the no-op instruction.
-  NoOpInstruction noop();
+  /// The no-op markup.
+  /// @return the no-op markup.
+  NoOpMarkup noop();
 
   // @formatter:on
 
@@ -256,88 +256,88 @@ public sealed interface Markup permits MarkupPojo {
 
   /// Formats the specified value as a testable table cell with the specified
   /// fixed width (optional operation).
-  ///
+  /// 
   /// @param value the cell value
   /// @param width the fixed width of the cell
-  ///
+  /// 
   /// @return always the cell value
   String testableCell(String value, int width);
 
   /// Formats the specified name and value as a testable field (optional
   /// operation).
-  ///
+  /// 
   /// @param name the field name
   /// @param value the field value
-  ///
+  /// 
   /// @return always the field value
   String testableField(String name, String value);
 
   /// Formats the specified name as a testable field name (optional operation).
-  ///
+  /// 
   /// @param name the field name
-  ///
+  /// 
   /// @return the specified field name
   String testableFieldName(String name);
 
   /// Formats the specified value as a testable field value (optional
   /// operation).
-  ///
+  /// 
   /// @param value the field value
-  ///
+  /// 
   /// @return the specified field value
   String testableFieldValue(String value);
 
   /// Formats the specified value as a testable heading level 1 (optional
   /// operation).
-  ///
+  /// 
   /// @param value the heading value
-  ///
+  /// 
   /// @return the specified value
   String testableH1(String value);
 
   /// Formats the specified value as a testable heading level 2 (optional
   /// operation).
-  ///
+  /// 
   /// @param value the heading value
-  ///
+  /// 
   /// @return the specified value
   String testableH2(String value);
 
   /// Formats the specified value as a testable heading level 3 (optional
   /// operation).
-  ///
+  /// 
   /// @param value the heading value
-  ///
+  /// 
   /// @return the specified value
   String testableH3(String value);
 
   /// Formats the specified value as a testable heading level 4 (optional
   /// operation).
-  ///
+  /// 
   /// @param value the heading value
-  ///
+  /// 
   /// @return the specified value
   String testableH4(String value);
 
   /// Formats the specified value as a testable heading level 5 (optional
   /// operation).
-  ///
+  /// 
   /// @param value the heading value
-  ///
+  /// 
   /// @return the specified value
   String testableH5(String value);
 
   /// Formats the specified value as a testable heading level 6 (optional
   /// operation).
-  ///
+  /// 
   /// @param value the heading value
-  ///
+  /// 
   /// @return the specified value
   String testableH6(String value);
 
   /// Formats a line separator at the testable output exclusively (optional
   /// operation).
-  ///
+  /// 
   /// @return a no-op instruction
   NoOpInstruction testableNewLine();
 
@@ -345,2003 +345,2003 @@ public sealed interface Markup permits MarkupPojo {
   // ELEMENTS
   //
 
-  /// Renders an HTML element with the specified name and contents.
-  ///
+  /// Encodes an HTML element with the specified name and values.
+  /// 
   /// @param name the element name
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element
-  ElementMarkup elem(ElementName name, ElementValue... contents);
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup elem(ElementName name, ElementValue... values);
 
-  /// Renders an HTML element with the specified name and text.
-  ///
+  /// Encodes an HTML element with the specified name and text.
+  /// 
   /// @param name the element name
   /// @param text the text value of this element
-  ///
-  /// @return an instruction representing the element
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup elem(ElementName name, String text);
 
-  /// Renders the `<!DOCTYPE html>` doctype.
+  /// Encodes the `<!DOCTYPE html>` doctype.
   void doctype();
 
-  /// Renders the `a` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup a(RegularElementValue... contents);
+  /// Encodes the `a` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup a(RegularElementVaule... values);
 
-  /// Renders the `a` element with the specified text.
-  ///
+  /// Encodes the `a` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup a(String text);
 
-  /// Renders the `abbr` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup abbr(RegularElementValue... contents);
+  /// Encodes the `abbr` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup abbr(RegularElementVaule... values);
 
-  /// Renders the `abbr` element with the specified text.
-  ///
+  /// Encodes the `abbr` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup abbr(String text);
 
-  /// Renders the `article` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup article(RegularElementValue... contents);
+  /// Encodes the `article` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup article(RegularElementVaule... values);
 
-  /// Renders the `article` element with the specified text.
-  ///
+  /// Encodes the `article` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup article(String text);
 
-  /// Renders the `aside` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup aside(RegularElementValue... contents);
+  /// Encodes the `aside` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup aside(RegularElementVaule... values);
 
-  /// Renders the `aside` element with the specified text.
-  ///
+  /// Encodes the `aside` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup aside(String text);
 
-  /// Renders the `b` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup b(RegularElementValue... contents);
+  /// Encodes the `b` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup b(RegularElementVaule... values);
 
-  /// Renders the `b` element with the specified text.
-  ///
+  /// Encodes the `b` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup b(String text);
 
-  /// Renders the `blockquote` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup blockquote(RegularElementValue... contents);
+  /// Encodes the `blockquote` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup blockquote(RegularElementVaule... values);
 
-  /// Renders the `blockquote` element with the specified text.
-  ///
+  /// Encodes the `blockquote` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup blockquote(String text);
 
-  /// Renders the `body` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup body(RegularElementValue... contents);
+  /// Encodes the `body` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup body(RegularElementVaule... values);
 
-  /// Renders the `body` element with the specified text.
-  ///
+  /// Encodes the `body` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup body(String text);
 
-  /// Renders the `br` element with the specified content.
-  ///
-  /// @param contents the attributes of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup br(VoidElementValue... contents);
+  /// Encodes the `br` element with the specified content.
+  /// 
+  /// @param contents the encoded attributes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup br(VoidElementContent... contents);
 
-  /// Renders the `button` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup button(RegularElementValue... contents);
+  /// Encodes the `button` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup button(RegularElementVaule... values);
 
-  /// Renders the `button` element with the specified text.
-  ///
+  /// Encodes the `button` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup button(String text);
 
-  /// Renders the `clipPath` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup clipPath(RegularElementValue... contents);
+  /// Encodes the `clipPath` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup clipPath(RegularElementValue... values);
 
-  /// Renders the `code` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup code(RegularElementValue... contents);
+  /// Encodes the `code` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup code(RegularElementVaule... values);
 
-  /// Renders the `code` element with the specified text.
-  ///
+  /// Encodes the `code` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup code(String text);
 
-  /// Renders the `dd` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup dd(RegularElementValue... contents);
+  /// Encodes the `dd` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup dd(RegularElementVaule... values);
 
-  /// Renders the `dd` element with the specified text.
-  ///
+  /// Encodes the `dd` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup dd(String text);
 
-  /// Renders the `defs` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup defs(RegularElementValue... contents);
+  /// Encodes the `defs` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup defs(RegularElementVaule... values);
 
-  /// Renders the `defs` element with the specified text.
-  ///
+  /// Encodes the `defs` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup defs(String text);
 
-  /// Renders the `details` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup details(RegularElementValue... contents);
+  /// Encodes the `details` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup details(RegularElementVaule... values);
 
-  /// Renders the `details` element with the specified text.
-  ///
+  /// Encodes the `details` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup details(String text);
 
-  /// Renders the `dialog` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup dialog(RegularElementValue... contents);
+  /// Encodes the `dialog` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup dialog(RegularElementVaule... values);
 
-  /// Renders the `dialog` element with the specified text.
-  ///
+  /// Encodes the `dialog` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup dialog(String text);
 
-  /// Renders the `div` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup div(RegularElementValue... contents);
+  /// Encodes the `div` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup div(RegularElementVaule... values);
 
-  /// Renders the `div` element with the specified text.
-  ///
+  /// Encodes the `div` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup div(String text);
 
-  /// Renders the `dl` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup dl(RegularElementValue... contents);
+  /// Encodes the `dl` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup dl(RegularElementVaule... values);
 
-  /// Renders the `dl` element with the specified text.
-  ///
+  /// Encodes the `dl` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup dl(String text);
 
-  /// Renders the `dt` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup dt(RegularElementValue... contents);
+  /// Encodes the `dt` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup dt(RegularElementVaule... values);
 
-  /// Renders the `dt` element with the specified text.
-  ///
+  /// Encodes the `dt` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup dt(String text);
 
-  /// Renders the `em` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup em(RegularElementValue... contents);
+  /// Encodes the `em` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup em(RegularElementVaule... values);
 
-  /// Renders the `em` element with the specified text.
-  ///
+  /// Encodes the `em` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup em(String text);
 
-  /// Renders the `fieldset` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup fieldset(RegularElementValue... contents);
+  /// Encodes the `fieldset` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup fieldset(RegularElementVaule... values);
 
-  /// Renders the `fieldset` element with the specified text.
-  ///
+  /// Encodes the `fieldset` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup fieldset(String text);
 
-  /// Renders the `figure` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup figure(RegularElementValue... contents);
+  /// Encodes the `figure` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup figure(RegularElementVaule... values);
 
-  /// Renders the `figure` element with the specified text.
-  ///
+  /// Encodes the `figure` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup figure(String text);
 
-  /// Renders the `footer` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup footer(RegularElementValue... contents);
+  /// Encodes the `footer` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup footer(RegularElementVaule... values);
 
-  /// Renders the `footer` element with the specified text.
-  ///
+  /// Encodes the `footer` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup footer(String text);
 
-  /// Renders the `form` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup form(RegularElementValue... contents);
+  /// Encodes the `form` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup form(RegularElementValue... values);
 
-  /// Renders the `g` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup g(RegularElementValue... contents);
+  /// Encodes the `g` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup g(RegularElementVaule... values);
 
-  /// Renders the `g` element with the specified text.
-  ///
+  /// Encodes the `g` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup g(String text);
 
-  /// Renders the `h1` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup h1(RegularElementValue... contents);
+  /// Encodes the `h1` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup h1(RegularElementVaule... values);
 
-  /// Renders the `h1` element with the specified text.
-  ///
+  /// Encodes the `h1` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup h1(String text);
 
-  /// Renders the `h2` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup h2(RegularElementValue... contents);
+  /// Encodes the `h2` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup h2(RegularElementVaule... values);
 
-  /// Renders the `h2` element with the specified text.
-  ///
+  /// Encodes the `h2` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup h2(String text);
 
-  /// Renders the `h3` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup h3(RegularElementValue... contents);
+  /// Encodes the `h3` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup h3(RegularElementVaule... values);
 
-  /// Renders the `h3` element with the specified text.
-  ///
+  /// Encodes the `h3` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup h3(String text);
 
-  /// Renders the `h4` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup h4(RegularElementValue... contents);
+  /// Encodes the `h4` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup h4(RegularElementVaule... values);
 
-  /// Renders the `h4` element with the specified text.
-  ///
+  /// Encodes the `h4` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup h4(String text);
 
-  /// Renders the `h5` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup h5(RegularElementValue... contents);
+  /// Encodes the `h5` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup h5(RegularElementVaule... values);
 
-  /// Renders the `h5` element with the specified text.
-  ///
+  /// Encodes the `h5` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup h5(String text);
 
-  /// Renders the `h6` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup h6(RegularElementValue... contents);
+  /// Encodes the `h6` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup h6(RegularElementVaule... values);
 
-  /// Renders the `h6` element with the specified text.
-  ///
+  /// Encodes the `h6` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup h6(String text);
 
-  /// Renders the `head` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup head(RegularElementValue... contents);
+  /// Encodes the `head` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup head(RegularElementVaule... values);
 
-  /// Renders the `head` element with the specified text.
-  ///
+  /// Encodes the `head` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup head(String text);
 
-  /// Renders the `header` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup header(RegularElementValue... contents);
+  /// Encodes the `header` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup header(RegularElementVaule... values);
 
-  /// Renders the `header` element with the specified text.
-  ///
+  /// Encodes the `header` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup header(String text);
 
-  /// Renders the `hgroup` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup hgroup(RegularElementValue... contents);
+  /// Encodes the `hgroup` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup hgroup(RegularElementVaule... values);
 
-  /// Renders the `hgroup` element with the specified text.
-  ///
+  /// Encodes the `hgroup` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup hgroup(String text);
 
-  /// Renders the `hr` element with the specified content.
-  ///
-  /// @param contents the attributes of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup hr(VoidElementValue... contents);
+  /// Encodes the `hr` element with the specified content.
+  /// 
+  /// @param contents the encoded attributes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup hr(VoidElementContent... contents);
 
-  /// Renders the `html` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup html(RegularElementValue... contents);
+  /// Encodes the `html` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup html(RegularElementVaule... values);
 
-  /// Renders the `html` element with the specified text.
-  ///
+  /// Encodes the `html` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup html(String text);
 
-  /// Renders the `img` element with the specified content.
-  ///
-  /// @param contents the attributes of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup img(VoidElementValue... contents);
+  /// Encodes the `img` element with the specified content.
+  /// 
+  /// @param contents the encoded attributes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup img(VoidElementContent... contents);
 
-  /// Renders the `input` element with the specified content.
-  ///
-  /// @param contents the attributes of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup input(VoidElementValue... contents);
+  /// Encodes the `input` element with the specified content.
+  /// 
+  /// @param contents the encoded attributes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup input(VoidElementContent... contents);
 
-  /// Renders the `kbd` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup kbd(RegularElementValue... contents);
+  /// Encodes the `kbd` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup kbd(RegularElementVaule... values);
 
-  /// Renders the `kbd` element with the specified text.
-  ///
+  /// Encodes the `kbd` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup kbd(String text);
 
-  /// Renders the `label` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup label(RegularElementValue... contents);
+  /// Encodes the `label` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup label(RegularElementValue... values);
 
-  /// Renders the `legend` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup legend(RegularElementValue... contents);
+  /// Encodes the `legend` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup legend(RegularElementVaule... values);
 
-  /// Renders the `legend` element with the specified text.
-  ///
+  /// Encodes the `legend` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup legend(String text);
 
-  /// Renders the `li` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup li(RegularElementValue... contents);
+  /// Encodes the `li` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup li(RegularElementVaule... values);
 
-  /// Renders the `li` element with the specified text.
-  ///
+  /// Encodes the `li` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup li(String text);
 
-  /// Renders the `link` element with the specified content.
-  ///
-  /// @param contents the attributes of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup link(VoidElementValue... contents);
+  /// Encodes the `link` element with the specified content.
+  /// 
+  /// @param contents the encoded attributes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup link(VoidElementContent... contents);
 
-  /// Renders the `main` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup main(RegularElementValue... contents);
+  /// Encodes the `main` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup main(RegularElementVaule... values);
 
-  /// Renders the `main` element with the specified text.
-  ///
+  /// Encodes the `main` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup main(String text);
 
-  /// Renders the `menu` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup menu(RegularElementValue... contents);
+  /// Encodes the `menu` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup menu(RegularElementVaule... values);
 
-  /// Renders the `menu` element with the specified text.
-  ///
+  /// Encodes the `menu` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup menu(String text);
 
-  /// Renders the `meta` element with the specified content.
-  ///
-  /// @param contents the attributes of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup meta(VoidElementValue... contents);
+  /// Encodes the `meta` element with the specified content.
+  /// 
+  /// @param contents the encoded attributes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup meta(VoidElementContent... contents);
 
-  /// Renders the `nav` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup nav(RegularElementValue... contents);
+  /// Encodes the `nav` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup nav(RegularElementVaule... values);
 
-  /// Renders the `nav` element with the specified text.
-  ///
+  /// Encodes the `nav` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup nav(String text);
 
-  /// Renders the `noscript` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup noscript(RegularElementValue... contents);
+  /// Encodes the `noscript` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup noscript(RegularElementVaule... values);
 
-  /// Renders the `noscript` element with the specified text.
-  ///
+  /// Encodes the `noscript` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup noscript(String text);
 
-  /// Renders the `ol` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup ol(RegularElementValue... contents);
+  /// Encodes the `ol` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup ol(RegularElementVaule... values);
 
-  /// Renders the `ol` element with the specified text.
-  ///
+  /// Encodes the `ol` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup ol(String text);
 
-  /// Renders the `optgroup` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup optgroup(RegularElementValue... contents);
+  /// Encodes the `optgroup` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup optgroup(RegularElementVaule... values);
 
-  /// Renders the `optgroup` element with the specified text.
-  ///
+  /// Encodes the `optgroup` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup optgroup(String text);
 
-  /// Renders the `option` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup option(RegularElementValue... contents);
+  /// Encodes the `option` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup option(RegularElementVaule... values);
 
-  /// Renders the `option` element with the specified text.
-  ///
+  /// Encodes the `option` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup option(String text);
 
-  /// Renders the `p` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup p(RegularElementValue... contents);
+  /// Encodes the `p` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup p(RegularElementVaule... values);
 
-  /// Renders the `p` element with the specified text.
-  ///
+  /// Encodes the `p` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup p(String text);
 
-  /// Renders the `path` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup path(RegularElementValue... contents);
+  /// Encodes the `path` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup path(RegularElementVaule... values);
 
-  /// Renders the `path` element with the specified text.
-  ///
+  /// Encodes the `path` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup path(String text);
 
-  /// Renders the `pre` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup pre(RegularElementValue... contents);
+  /// Encodes the `pre` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup pre(RegularElementVaule... values);
 
-  /// Renders the `pre` element with the specified text.
-  ///
+  /// Encodes the `pre` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup pre(String text);
 
-  /// Renders the `progress` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup progress(RegularElementValue... contents);
+  /// Encodes the `progress` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup progress(RegularElementVaule... values);
 
-  /// Renders the `progress` element with the specified text.
-  ///
+  /// Encodes the `progress` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup progress(String text);
 
-  /// Renders the `samp` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup samp(RegularElementValue... contents);
+  /// Encodes the `samp` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup samp(RegularElementVaule... values);
 
-  /// Renders the `samp` element with the specified text.
-  ///
+  /// Encodes the `samp` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup samp(String text);
 
-  /// Renders the `script` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup script(RegularElementValue... contents);
+  /// Encodes the `script` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup script(RegularElementVaule... values);
 
-  /// Renders the `script` element with the specified text.
-  ///
+  /// Encodes the `script` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup script(String text);
 
-  /// Renders the `section` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup section(RegularElementValue... contents);
+  /// Encodes the `section` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup section(RegularElementVaule... values);
 
-  /// Renders the `section` element with the specified text.
-  ///
+  /// Encodes the `section` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup section(String text);
 
-  /// Renders the `select` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup select(RegularElementValue... contents);
+  /// Encodes the `select` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup select(RegularElementVaule... values);
 
-  /// Renders the `select` element with the specified text.
-  ///
+  /// Encodes the `select` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup select(String text);
 
-  /// Renders the `small` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup small(RegularElementValue... contents);
+  /// Encodes the `small` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup small(RegularElementVaule... values);
 
-  /// Renders the `small` element with the specified text.
-  ///
+  /// Encodes the `small` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup small(String text);
 
-  /// Renders the `span` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup span(RegularElementValue... contents);
+  /// Encodes the `span` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup span(RegularElementVaule... values);
 
-  /// Renders the `span` element with the specified text.
-  ///
+  /// Encodes the `span` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup span(String text);
 
-  /// Renders the `strong` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup strong(RegularElementValue... contents);
+  /// Encodes the `strong` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup strong(RegularElementVaule... values);
 
-  /// Renders the `strong` element with the specified text.
-  ///
+  /// Encodes the `strong` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup strong(String text);
 
-  /// Renders the `style` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup style(RegularElementValue... contents);
+  /// Encodes the `style` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup style(RegularElementValue... values);
 
-  /// Renders the `sub` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup sub(RegularElementValue... contents);
+  /// Encodes the `sub` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup sub(RegularElementVaule... values);
 
-  /// Renders the `sub` element with the specified text.
-  ///
+  /// Encodes the `sub` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup sub(String text);
 
-  /// Renders the `summary` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup summary(RegularElementValue... contents);
+  /// Encodes the `summary` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup summary(RegularElementVaule... values);
 
-  /// Renders the `summary` element with the specified text.
-  ///
+  /// Encodes the `summary` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup summary(String text);
 
-  /// Renders the `sup` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup sup(RegularElementValue... contents);
+  /// Encodes the `sup` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup sup(RegularElementVaule... values);
 
-  /// Renders the `sup` element with the specified text.
-  ///
+  /// Encodes the `sup` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup sup(String text);
 
-  /// Renders the `svg` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup svg(RegularElementValue... contents);
+  /// Encodes the `svg` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup svg(RegularElementVaule... values);
 
-  /// Renders the `svg` element with the specified text.
-  ///
+  /// Encodes the `svg` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup svg(String text);
 
-  /// Renders the `table` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup table(RegularElementValue... contents);
+  /// Encodes the `table` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup table(RegularElementVaule... values);
 
-  /// Renders the `table` element with the specified text.
-  ///
+  /// Encodes the `table` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup table(String text);
 
-  /// Renders the `tbody` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup tbody(RegularElementValue... contents);
+  /// Encodes the `tbody` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup tbody(RegularElementVaule... values);
 
-  /// Renders the `tbody` element with the specified text.
-  ///
+  /// Encodes the `tbody` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup tbody(String text);
 
-  /// Renders the `td` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup td(RegularElementValue... contents);
+  /// Encodes the `td` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup td(RegularElementVaule... values);
 
-  /// Renders the `td` element with the specified text.
-  ///
+  /// Encodes the `td` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup td(String text);
 
-  /// Renders the `template` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup template(RegularElementValue... contents);
+  /// Encodes the `template` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup template(RegularElementVaule... values);
 
-  /// Renders the `template` element with the specified text.
-  ///
+  /// Encodes the `template` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup template(String text);
 
-  /// Renders the `textarea` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup textarea(RegularElementValue... contents);
+  /// Encodes the `textarea` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup textarea(RegularElementVaule... values);
 
-  /// Renders the `textarea` element with the specified text.
-  ///
+  /// Encodes the `textarea` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup textarea(String text);
 
-  /// Renders the `th` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup th(RegularElementValue... contents);
+  /// Encodes the `th` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup th(RegularElementVaule... values);
 
-  /// Renders the `th` element with the specified text.
-  ///
+  /// Encodes the `th` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup th(String text);
 
-  /// Renders the `thead` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup thead(RegularElementValue... contents);
+  /// Encodes the `thead` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup thead(RegularElementVaule... values);
 
-  /// Renders the `thead` element with the specified text.
-  ///
+  /// Encodes the `thead` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup thead(String text);
 
-  /// Renders the `title` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup title(RegularElementValue... contents);
+  /// Encodes the `title` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup title(RegularElementValue... values);
 
-  /// Renders the `tr` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup tr(RegularElementValue... contents);
+  /// Encodes the `tr` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup tr(RegularElementVaule... values);
 
-  /// Renders the `tr` element with the specified text.
-  ///
+  /// Encodes the `tr` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup tr(String text);
 
-  /// Renders the `ul` element with the specified content.
-  ///
-  /// @param contents the attributes and children of the element
-  ///
-  /// @return an instruction representing the element.
-  ElementMarkup ul(RegularElementValue... contents);
+  /// Encodes the `ul` element with the specified values.
+  /// 
+  /// @param values the encoded attributes and encoded child nodes of the element
+  /// 
+  /// @return an object representing the encoded element
+  ElementMarkup ul(RegularElementVaule... values);
 
-  /// Renders the `ul` element with the specified text.
-  ///
+  /// Encodes the `ul` element with the specified text.
+  /// 
   /// @param text the text value of the element
-  ///
-  /// @return an instruction representing the element.
+  /// 
+  /// @return an object representing the encoded element
   ElementMarkup ul(String text);
 
   //
   // ATTRIBUTES
   //
 
-  /// Renders an attribute with the specified name.
-  ///
+  /// Encodes a boolean attribute with the specified name.
+  /// 
+  /// @param name the boolean attribute name
+  /// 
+  /// @return an object representing the encoded boolean attribute
+  BooleanAttribute attr(AttributeName name);
+
+  /// Encodes an attribute with the specified name and value.
+  /// 
   /// @param name the attribute name
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup attr(AttributeName name);
-
-  /// Renders an attribute with the specified name and value.
-  ///
-  /// @param name the attribute name
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup attr(AttributeName name, String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute attr(AttributeName name, String value);
 
-  /// Renders the `accesskey` attribute with the specified value.
-  ///
+  /// Encodes the `accesskey` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup accesskey(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute accesskey(String value);
 
-  /// Renders the `action` attribute with the specified value.
-  ///
+  /// Encodes the `action` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup action(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute action(String value);
 
-  /// Renders the `align` attribute with the specified value.
-  ///
+  /// Encodes the `align` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup align(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute align(String value);
 
-  /// Renders the `alignment-baseline` attribute with the specified value.
-  ///
+  /// Encodes the `alignment-baseline` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup alignmentBaseline(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute alignmentBaseline(String value);
 
-  /// Renders the `alt` attribute with the specified value.
-  ///
+  /// Encodes the `alt` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup alt(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute alt(String value);
 
-  /// Renders the `aria-current` attribute with the specified value.
-  ///
+  /// Encodes the `aria-current` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup ariaCurrent(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute ariaCurrent(String value);
 
-  /// Renders the `aria-disabled` attribute with the specified value.
-  ///
+  /// Encodes the `aria-disabled` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup ariaDisabled(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute ariaDisabled(String value);
 
-  /// Renders the `aria-hidden` attribute with the specified value.
-  ///
+  /// Encodes the `aria-hidden` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup ariaHidden(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute ariaHidden(String value);
 
-  /// Renders the `aria-invalid` attribute with the specified value.
-  ///
+  /// Encodes the `aria-invalid` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup ariaInvalid(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute ariaInvalid(String value);
 
-  /// Renders the `aria-label` attribute with the specified value.
-  ///
+  /// Encodes the `aria-label` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup ariaLabel(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute ariaLabel(String value);
 
-  /// Renders the `aria-labelledby` attribute with the specified value.
-  ///
+  /// Encodes the `aria-labelledby` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup ariaLabelledBy(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute ariaLabelledBy(String value);
 
-  /// Renders the `aria-modal` attribute with the specified value.
-  ///
+  /// Encodes the `aria-modal` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup ariaModal(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute ariaModal(String value);
 
-  /// Renders the `aria-placeholder` attribute with the specified value.
-  ///
+  /// Encodes the `aria-placeholder` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup ariaPlaceholder(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute ariaPlaceholder(String value);
 
-  /// Renders the `aria-readonly` attribute with the specified value.
-  ///
+  /// Encodes the `aria-readonly` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup ariaReadonly(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute ariaReadonly(String value);
 
-  /// Renders the `aria-required` attribute with the specified value.
-  ///
+  /// Encodes the `aria-required` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup ariaRequired(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute ariaRequired(String value);
 
-  /// Renders the `aria-selected` attribute with the specified value.
-  ///
+  /// Encodes the `aria-selected` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup ariaSelected(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute ariaSelected(String value);
 
-  /// Renders the `as` attribute with the specified value.
-  ///
+  /// Encodes the `as` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup as(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute as(String value);
 
-  /// Renders the `autocomplete` attribute with the specified value.
-  ///
+  /// Encodes the `autocomplete` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup autocomplete(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute autocomplete(String value);
 
-  /// Renders the `baseline-shift` attribute with the specified value.
-  ///
+  /// Encodes the `baseline-shift` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup baselineShift(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute baselineShift(String value);
 
-  /// Renders the `border` attribute with the specified value.
-  ///
+  /// Encodes the `border` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup border(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute border(String value);
 
-  /// Renders the `cellpadding` attribute with the specified value.
-  ///
+  /// Encodes the `cellpadding` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup cellpadding(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute cellpadding(String value);
 
-  /// Renders the `cellspacing` attribute with the specified value.
-  ///
+  /// Encodes the `cellspacing` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup cellspacing(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute cellspacing(String value);
 
-  /// Renders the `charset` attribute with the specified value.
-  ///
+  /// Encodes the `charset` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup charset(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute charset(String value);
 
-  /// Renders the `cite` attribute with the specified value.
-  ///
+  /// Encodes the `cite` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup cite(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute cite(String value);
 
-  /// Renders the `class` attribute with the specified value.
-  ///
+  /// Encodes the `class` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup className(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute className(String value);
 
-  /// Renders the `clip-rule` attribute with the specified value.
-  ///
+  /// Encodes the `clip-rule` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup clipRule(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute clipRule(String value);
 
-  /// Renders the `closedby` attribute with the specified value.
-  ///
+  /// Encodes the `closedby` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup closedby(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute closedby(String value);
 
-  /// Renders the `color` attribute with the specified value.
-  ///
+  /// Encodes the `color` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup color(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute color(String value);
 
-  /// Renders the `color-interpolation` attribute with the specified value.
-  ///
+  /// Encodes the `color-interpolation` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup colorInterpolation(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute colorInterpolation(String value);
 
-  /// Renders the `color-interpolation-filters` attribute with the specified
+  /// Encodes the `color-interpolation-filters` attribute with the specified
   /// value.
-  ///
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup colorInterpolationFilters(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute colorInterpolationFilters(String value);
 
-  /// Renders the `cols` attribute with the specified value.
-  ///
+  /// Encodes the `cols` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup cols(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute cols(String value);
 
-  /// Renders the `content` attribute with the specified value.
-  ///
+  /// Encodes the `content` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup content(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute content(String value);
 
-  /// Renders the `contenteditable` attribute with the specified value.
-  ///
+  /// Encodes the `contenteditable` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup contenteditable(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute contenteditable(String value);
 
-  /// Renders the `crossorigin` attribute with the specified value.
-  ///
+  /// Encodes the `crossorigin` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup crossorigin(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute crossorigin(String value);
 
-  /// Renders the `cursor` attribute with the specified value.
-  ///
+  /// Encodes the `cursor` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup cursor(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute cursor(String value);
 
-  /// Renders the `d` attribute with the specified value.
-  ///
+  /// Encodes the `d` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup d(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute d(String value);
 
-  /// Renders the `dir` attribute with the specified value.
-  ///
+  /// Encodes the `dir` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup dir(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute dir(String value);
 
-  /// Renders the `direction` attribute with the specified value.
-  ///
+  /// Encodes the `direction` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup direction(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute direction(String value);
 
-  /// Renders the `dirname` attribute with the specified value.
-  ///
+  /// Encodes the `dirname` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup dirname(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute dirname(String value);
 
-  /// Renders the `display` attribute with the specified value.
-  ///
+  /// Encodes the `display` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup display(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute display(String value);
 
-  /// Renders the `dominant-baseline` attribute with the specified value.
-  ///
+  /// Encodes the `dominant-baseline` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup dominantBaseline(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute dominantBaseline(String value);
 
-  /// Renders the `download` attribute with the specified value.
-  ///
+  /// Encodes the `download` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup download(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute download(String value);
 
-  /// Renders the `draggable` attribute with the specified value.
-  ///
+  /// Encodes the `draggable` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup draggable(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute draggable(String value);
 
-  /// Renders the `enctype` attribute with the specified value.
-  ///
+  /// Encodes the `enctype` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup enctype(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute enctype(String value);
 
-  /// Renders the `fill` attribute with the specified value.
-  ///
+  /// Encodes the `fill` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup fill(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute fill(String value);
 
-  /// Renders the `fill-opacity` attribute with the specified value.
-  ///
+  /// Encodes the `fill-opacity` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup fillOpacity(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute fillOpacity(String value);
 
-  /// Renders the `fill-rule` attribute with the specified value.
-  ///
+  /// Encodes the `fill-rule` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup fillRule(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute fillRule(String value);
 
-  /// Renders the `filter` attribute with the specified value.
-  ///
+  /// Encodes the `filter` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup filter(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute filter(String value);
 
-  /// Renders the `flood-color` attribute with the specified value.
-  ///
+  /// Encodes the `flood-color` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup floodColor(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute floodColor(String value);
 
-  /// Renders the `flood-opacity` attribute with the specified value.
-  ///
+  /// Encodes the `flood-opacity` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup floodOpacity(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute floodOpacity(String value);
 
-  /// Renders the `for` attribute with the specified value.
-  ///
+  /// Encodes the `for` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup forId(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute forId(String value);
 
-  /// Renders the `glyph-orientation-horizontal` attribute with the specified
+  /// Encodes the `glyph-orientation-horizontal` attribute with the specified
   /// value.
-  ///
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup glyphOrientationHorizontal(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute glyphOrientationHorizontal(String value);
 
-  /// Renders the `glyph-orientation-vertical` attribute with the specified
+  /// Encodes the `glyph-orientation-vertical` attribute with the specified
   /// value.
-  ///
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup glyphOrientationVertical(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute glyphOrientationVertical(String value);
 
-  /// Renders the `height` attribute with the specified value.
-  ///
+  /// Encodes the `height` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup height(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute height(String value);
 
-  /// Renders the `href` attribute with the specified value.
-  ///
+  /// Encodes the `href` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup href(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute href(String value);
 
-  /// Renders the `http-equiv` attribute with the specified value.
-  ///
+  /// Encodes the `http-equiv` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup httpEquiv(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute httpEquiv(String value);
 
-  /// Renders the `id` attribute with the specified value.
-  ///
+  /// Encodes the `id` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup id(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute id(String value);
 
-  /// Renders the `image-rendering` attribute with the specified value.
-  ///
+  /// Encodes the `image-rendering` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup imageRendering(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute imageRendering(String value);
 
-  /// Renders the `integrity` attribute with the specified value.
-  ///
+  /// Encodes the `integrity` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup integrity(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute integrity(String value);
 
-  /// Renders the `lang` attribute with the specified value.
-  ///
+  /// Encodes the `lang` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup lang(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute lang(String value);
 
-  /// Renders the `letter-spacing` attribute with the specified value.
-  ///
+  /// Encodes the `letter-spacing` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup letterSpacing(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute letterSpacing(String value);
 
-  /// Renders the `lighting-color` attribute with the specified value.
-  ///
+  /// Encodes the `lighting-color` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup lightingColor(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute lightingColor(String value);
 
-  /// Renders the `marker-end` attribute with the specified value.
-  ///
+  /// Encodes the `marker-end` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup markerEnd(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute markerEnd(String value);
 
-  /// Renders the `marker-mid` attribute with the specified value.
-  ///
+  /// Encodes the `marker-mid` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup markerMid(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute markerMid(String value);
 
-  /// Renders the `marker-start` attribute with the specified value.
-  ///
+  /// Encodes the `marker-start` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup markerStart(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute markerStart(String value);
 
-  /// Renders the `mask` attribute with the specified value.
-  ///
+  /// Encodes the `mask` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup mask(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute mask(String value);
 
-  /// Renders the `mask-type` attribute with the specified value.
-  ///
+  /// Encodes the `mask-type` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup maskType(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute maskType(String value);
 
-  /// Renders the `maxlength` attribute with the specified value.
-  ///
+  /// Encodes the `maxlength` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup maxlength(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute maxlength(String value);
 
-  /// Renders the `media` attribute with the specified value.
-  ///
+  /// Encodes the `media` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup media(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute media(String value);
 
-  /// Renders the `method` attribute with the specified value.
-  ///
+  /// Encodes the `method` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup method(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute method(String value);
 
-  /// Renders the `minlength` attribute with the specified value.
-  ///
+  /// Encodes the `minlength` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup minlength(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute minlength(String value);
 
-  /// Renders the `name` attribute with the specified value.
-  ///
+  /// Encodes the `name` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup name(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute name(String value);
 
-  /// Renders the `onclick` attribute with the specified value.
-  ///
+  /// Encodes the `onclick` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup onclick(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute onclick(String value);
 
-  /// Renders the `onclick` attribute with the specified action.
-  ///
+  /// Encodes the `onclick` attribute with the specified action.
+  /// 
   /// @param value the action to be executed
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup onclick(JsAction value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute onclick(JsAction value);
 
-  /// Renders the `onload` attribute with the specified value.
-  ///
+  /// Encodes the `onload` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup onload(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute onload(String value);
 
-  /// Renders the `onload` attribute with the specified action.
-  ///
+  /// Encodes the `onload` attribute with the specified action.
+  /// 
   /// @param value the action to be executed
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup onload(JsAction value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute onload(JsAction value);
 
-  /// Renders the `onpopstate` attribute with the specified value.
-  ///
+  /// Encodes the `onpopstate` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup onpopstate(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute onpopstate(String value);
 
-  /// Renders the `onpopstate` attribute with the specified action.
-  ///
+  /// Encodes the `onpopstate` attribute with the specified action.
+  /// 
   /// @param value the action to be executed
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup onpopstate(JsAction value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute onpopstate(JsAction value);
 
-  /// Renders the `onsubmit` attribute with the specified value.
-  ///
+  /// Encodes the `onsubmit` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup onsubmit(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute onsubmit(String value);
 
-  /// Renders the `onsubmit` attribute with the specified action.
-  ///
+  /// Encodes the `onsubmit` attribute with the specified action.
+  /// 
   /// @param value the action to be executed
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup onsubmit(JsAction value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute onsubmit(JsAction value);
 
-  /// Renders the `opacity` attribute with the specified value.
-  ///
+  /// Encodes the `opacity` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup opacity(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute opacity(String value);
 
-  /// Renders the `overflow` attribute with the specified value.
-  ///
+  /// Encodes the `overflow` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup overflow(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute overflow(String value);
 
-  /// Renders the `paint-order` attribute with the specified value.
-  ///
+  /// Encodes the `paint-order` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup paintOrder(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute paintOrder(String value);
 
-  /// Renders the `placeholder` attribute with the specified value.
-  ///
+  /// Encodes the `placeholder` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup placeholder(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute placeholder(String value);
 
-  /// Renders the `pointer-events` attribute with the specified value.
-  ///
+  /// Encodes the `pointer-events` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup pointerEvents(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute pointerEvents(String value);
 
-  /// Renders the `property` attribute with the specified value.
-  ///
+  /// Encodes the `property` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup property(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute property(String value);
 
-  /// Renders the `referrerpolicy` attribute with the specified value.
-  ///
+  /// Encodes the `referrerpolicy` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup referrerpolicy(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute referrerpolicy(String value);
 
-  /// Renders the `rel` attribute with the specified value.
-  ///
+  /// Encodes the `rel` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup rel(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute rel(String value);
 
-  /// Renders the `rev` attribute with the specified value.
-  ///
+  /// Encodes the `rev` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup rev(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute rev(String value);
 
-  /// Renders the `role` attribute with the specified value.
-  ///
+  /// Encodes the `role` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup role(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute role(String value);
 
-  /// Renders the `rows` attribute with the specified value.
-  ///
+  /// Encodes the `rows` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup rows(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute rows(String value);
 
-  /// Renders the `shape-rendering` attribute with the specified value.
-  ///
+  /// Encodes the `shape-rendering` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup shapeRendering(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute shapeRendering(String value);
 
-  /// Renders the `size` attribute with the specified value.
-  ///
+  /// Encodes the `size` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup size(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute size(String value);
 
-  /// Renders the `sizes` attribute with the specified value.
-  ///
+  /// Encodes the `sizes` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup sizes(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute sizes(String value);
 
-  /// Renders the `spellcheck` attribute with the specified value.
-  ///
+  /// Encodes the `spellcheck` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup spellcheck(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute spellcheck(String value);
 
-  /// Renders the `src` attribute with the specified value.
-  ///
+  /// Encodes the `src` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup src(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute src(String value);
 
-  /// Renders the `srcset` attribute with the specified value.
-  ///
+  /// Encodes the `srcset` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup srcset(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute srcset(String value);
 
-  /// Renders the `start` attribute with the specified value.
-  ///
+  /// Encodes the `start` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup start(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute start(String value);
 
-  /// Renders the `stop-color` attribute with the specified value.
-  ///
+  /// Encodes the `stop-color` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup stopColor(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute stopColor(String value);
 
-  /// Renders the `stop-opacity` attribute with the specified value.
-  ///
+  /// Encodes the `stop-opacity` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup stopOpacity(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute stopOpacity(String value);
 
-  /// Renders the `stroke` attribute with the specified value.
-  ///
+  /// Encodes the `stroke` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup stroke(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute stroke(String value);
 
-  /// Renders the `stroke-dasharray` attribute with the specified value.
-  ///
+  /// Encodes the `stroke-dasharray` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup strokeDasharray(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute strokeDasharray(String value);
 
-  /// Renders the `stroke-dashoffset` attribute with the specified value.
-  ///
+  /// Encodes the `stroke-dashoffset` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup strokeDashoffset(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute strokeDashoffset(String value);
 
-  /// Renders the `stroke-linecap` attribute with the specified value.
-  ///
+  /// Encodes the `stroke-linecap` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup strokeLinecap(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute strokeLinecap(String value);
 
-  /// Renders the `stroke-linejoin` attribute with the specified value.
-  ///
+  /// Encodes the `stroke-linejoin` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup strokeLinejoin(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute strokeLinejoin(String value);
 
-  /// Renders the `stroke-miterlimit` attribute with the specified value.
-  ///
+  /// Encodes the `stroke-miterlimit` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup strokeMiterlimit(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute strokeMiterlimit(String value);
 
-  /// Renders the `stroke-opacity` attribute with the specified value.
-  ///
+  /// Encodes the `stroke-opacity` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup strokeOpacity(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute strokeOpacity(String value);
 
-  /// Renders the `stroke-width` attribute with the specified value.
-  ///
+  /// Encodes the `stroke-width` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup strokeWidth(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute strokeWidth(String value);
 
-  /// Renders the `tabindex` attribute with the specified value.
-  ///
+  /// Encodes the `tabindex` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup tabindex(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute tabindex(String value);
 
-  /// Renders the `target` attribute with the specified value.
-  ///
+  /// Encodes the `target` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup target(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute target(String value);
 
-  /// Renders the `text-anchor` attribute with the specified value.
-  ///
+  /// Encodes the `text-anchor` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup textAnchor(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute textAnchor(String value);
 
-  /// Renders the `text-decoration` attribute with the specified value.
-  ///
+  /// Encodes the `text-decoration` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup textDecoration(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute textDecoration(String value);
 
-  /// Renders the `text-overflow` attribute with the specified value.
-  ///
+  /// Encodes the `text-overflow` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup textOverflow(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute textOverflow(String value);
 
-  /// Renders the `text-rendering` attribute with the specified value.
-  ///
+  /// Encodes the `text-rendering` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup textRendering(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute textRendering(String value);
 
-  /// Renders the `transform` attribute with the specified value.
-  ///
+  /// Encodes the `transform` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup transform(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute transform(String value);
 
-  /// Renders the `transform-origin` attribute with the specified value.
-  ///
+  /// Encodes the `transform-origin` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup transformOrigin(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute transformOrigin(String value);
 
-  /// Renders the `translate` attribute with the specified value.
-  ///
+  /// Encodes the `translate` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup translate(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute translate(String value);
 
-  /// Renders the `type` attribute with the specified value.
-  ///
+  /// Encodes the `type` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup type(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute type(String value);
 
-  /// Renders the `unicode-bidi` attribute with the specified value.
-  ///
+  /// Encodes the `unicode-bidi` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup unicodeBidi(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute unicodeBidi(String value);
 
-  /// Renders the `value` attribute with the specified value.
-  ///
+  /// Encodes the `value` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup value(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute value(String value);
 
-  /// Renders the `vector-effect` attribute with the specified value.
-  ///
+  /// Encodes the `vector-effect` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup vectorEffect(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute vectorEffect(String value);
 
-  /// Renders the `viewBox` attribute with the specified value.
-  ///
+  /// Encodes the `viewBox` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup viewBox(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute viewBox(String value);
 
-  /// Renders the `visibility` attribute with the specified value.
-  ///
+  /// Encodes the `visibility` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup visibility(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute visibility(String value);
 
-  /// Renders the `white-space` attribute with the specified value.
-  ///
+  /// Encodes the `white-space` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup whiteSpace(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute whiteSpace(String value);
 
-  /// Renders the `width` attribute with the specified value.
-  ///
+  /// Encodes the `width` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup width(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute width(String value);
 
-  /// Renders the `word-spacing` attribute with the specified value.
-  ///
+  /// Encodes the `word-spacing` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup wordSpacing(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute wordSpacing(String value);
 
-  /// Renders the `wrap` attribute with the specified value.
-  ///
+  /// Encodes the `wrap` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup wrap(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute wrap(String value);
 
-  /// Renders the `writing-mode` attribute with the specified value.
-  ///
+  /// Encodes the `writing-mode` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup writingMode(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute writingMode(String value);
 
-  /// Renders the `xmlns` attribute with the specified value.
-  ///
+  /// Encodes the `xmlns` attribute with the specified value.
+  /// 
   /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup xmlns(String value);
+  /// 
+  /// @return an object representing the encoded attribute
+  Attribute xmlns(String value);
 
   //
   // AMBIGUOUS
   //
 
-  /// Renders the `clip-path` attribute or the `clipPath` element with the
+  /// Encodes the `clip-path` attribute or the `clipPath` element with the
   /// specified text.
-  ///
+  /// 
   /// @param text the attribute value or the text content of the element
-  ///
-  /// @return an instruction representing the attribute or the element
-  AmbiguousInstruction clipPath(String text);
+  /// 
+  /// @return an object representing the encoded attribute or element
+  AmbiguousMarkup clipPath(String text);
 
-  /// Renders the `form` attribute or the `form` element with the specified
+  /// Encodes the `form` attribute or the `form` element with the specified
   /// text.
-  ///
+  /// 
   /// @param text the attribute value or the text content of the element
-  ///
-  /// @return an instruction representing the attribute or the element
-  AmbiguousInstruction form(String text);
+  /// 
+  /// @return an object representing the encoded attribute or element
+  AmbiguousMarkup form(String text);
 
-  /// Renders the `label` attribute or the `label` element with the specified
+  /// Encodes the `label` attribute or the `label` element with the specified
   /// text.
-  ///
+  /// 
   /// @param text the attribute value or the text content of the element
-  ///
-  /// @return an instruction representing the attribute or the element
-  AmbiguousInstruction label(String text);
+  /// 
+  /// @return an object representing the encoded attribute or element
+  AmbiguousMarkup label(String text);
 
-  /// Renders the `style` attribute or the `style` element with the specified
+  /// Encodes the `style` attribute or the `style` element with the specified
   /// text.
-  ///
+  /// 
   /// @param text the attribute value or the text content of the element
-  ///
-  /// @return an instruction representing the attribute or the element
-  AmbiguousInstruction style(String text);
+  /// 
+  /// @return an object representing the encoded attribute or element
+  AmbiguousMarkup style(String text);
 
-  /// Renders the `title` attribute or the `title` element with the specified
+  /// Encodes the `title` attribute or the `title` element with the specified
   /// text.
-  ///
+  /// 
   /// @param text the attribute value or the text content of the element
-  ///
-  /// @return an instruction representing the attribute or the element
-  AmbiguousInstruction title(String text);
+  /// 
+  /// @return an object representing the encoded attribute or element
+  AmbiguousMarkup title(String text);
 
   //
   // TEXT
   //
 
   /// Renders the non-breaking space `&nbsp;` HTML character entity.
-  ///
+  /// 
   /// @return an instruction representing the non-breaking space
   ///         character entity.
   RawInstruction nbsp();
 
   /// Renders the specified value as raw HTML.
-  ///
+  /// 
   /// @param value the raw HTML value
-  ///
+  /// 
   /// @return a raw HTML instruction
   RawInstruction raw(String value);
 
   /// Renders a text node with the specified value. The text value is escaped
   /// before being emitted to the output.
-  ///
+  /// 
   /// @param value the text value
-  ///
+  /// 
   /// @return an instruction representing the text node
   TextInstruction text(String value);
 

@@ -127,19 +127,19 @@ public class MarkupGen {
     // ELEMENTS
     //
 
-    /// Renders an HTML element with the specified name and contents.
+    /// Encodes an HTML element with the specified name and values.
     /// @param name the element name
-    /// @param contents the attributes and children of the element
+    /// @param values the encoded attributes and encoded child nodes of the element
     /// @return an object representing the encoded element
-    ElementMarkup elem(ElementName name, ElementContent... contents);
+    ElementMarkup elem(ElementName name, ElementValue... values);
 
-    /// Renders an HTML element with the specified name and text.
+    /// Encodes an HTML element with the specified name and text.
     /// @param name the element name
     /// @param text the text value of this element
     /// @return an object representing the encoded element
     ElementMarkup elem(ElementName name, String text);
 
-    /// Renders the `<!DOCTYPE html>` doctype.
+    /// Encodes the `<!DOCTYPE html>` doctype.
     void doctype();
     """);
 
@@ -153,22 +153,22 @@ public class MarkupGen {
       if (ambiguousNames.contains(htmlName)) {
         methods.append("""
 
-        /// Renders the `%s` element with the specified content.
-        /// @param contents the attributes and children of the element
+        /// Encodes the `%s` element with the specified values.
+        /// @param values the encoded attributes and encoded child nodes of the element
         /// @return an object representing the encoded element
-        ElementMarkup %s(ElementContent... contents);
+        ElementMarkup %s(RegularElementValue... values);
         """.formatted(elem.htmlName(), elem.htmlName()));
       }
 
       else if (elem.endTag()) {
         methods.append("""
 
-        /// Renders the `%1$s` element with the specified content.
-        /// @param contents the attributes and children of the element
+        /// Encodes the `%1$s` element with the specified values.
+        /// @param values the encoded attributes and encoded child nodes of the element
         /// @return an object representing the encoded element
-        ElementMarkup %2$s(Instruction... contents);
+        ElementMarkup %2$s(RegularElementVaule... values);
 
-        /// Renders the `%1$s` element with the specified text.
+        /// Encodes the `%1$s` element with the specified text.
         /// @param text the text value of the element
         /// @return an object representing the encoded element
         ElementMarkup %2$s(String text);
@@ -178,10 +178,10 @@ public class MarkupGen {
       else {
         methods.append("""
 
-        /// Renders the `%s` element with the specified content.
-        /// @param contents the attributes of the element
+        /// Encodes the `%s` element with the specified content.
+        /// @param contents the encoded attributes of the element
         /// @return an object representing the encoded element
-        ElementMarkup %s(Instruction.OfVoid... contents);
+        ElementMarkup %s(VoidElementContent... contents);
         """.formatted(elem.htmlName(), elem.htmlName()));
       }
     }
@@ -195,15 +195,15 @@ public class MarkupGen {
     // ATTRIBUTES
     //
 
-    /// Renders an attribute with the specified name.
-    /// @param name the attribute name
-    /// @return an instruction representing the attribute
-    Attribute attr(AttributeName name);
+    /// Encodes a boolean attribute with the specified name.
+    /// @param name the boolean attribute name
+    /// @return an object representing the encoded boolean attribute
+    BooleanAttribute attr(AttributeName name);
 
-    /// Renders an attribute with the specified name and value.
+    /// Encodes an attribute with the specified name and value.
     /// @param name the attribute name
     /// @param value the attribute value
-    /// @return an instruction representing the attribute
+    /// @return an object representing the encoded attribute
     Attribute attr(AttributeName name, String value);
     """);
 
@@ -226,18 +226,18 @@ public class MarkupGen {
       else {
         methods.append("""
 
-        /// Renders the `%s` attribute with the specified value.
+        /// Encodes the `%s` attribute with the specified value.
         /// @param value the attribute value
-        /// @return an instruction representing the attribute
+        /// @return an object representing the encoded attribute
         Attribute %s(String value);
         """.formatted(attr.htmlName(), attr.methodName()));
 
         if (attr.eventAttribute()) {
           methods.append("""
 
-        /// Renders the `%s` attribute with the specified action.
+        /// Encodes the `%s` attribute with the specified action.
         /// @param value the action to be executed
-        /// @return an instruction representing the attribute
+        /// @return an object representing the encoded attribute
         Attribute %s(JsAction value);
         """.formatted(attr.htmlName(), attr.methodName()));
         }
@@ -256,10 +256,10 @@ public class MarkupGen {
     for (AmbiguousSpec spec : HtmlSpec.ambiguous()) {
       methods.append("""
 
-      /// Renders the `%s` attribute or the `%s` element with the specified text.
+      /// Encodes the `%s` attribute or the `%s` element with the specified text.
       /// @param text the attribute value or the text content of the element
-      /// @return an instruction representing the attribute or the element
-      AmbiguousInstruction %s(String text);
+      /// @return an object representing the encoded attribute or element
+      AmbiguousMarkup %s(String text);
       """.formatted(spec.attributeName(), spec.elementName(), spec.methodName(), spec.constantName()));
     }
   }

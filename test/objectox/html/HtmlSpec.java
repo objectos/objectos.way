@@ -551,9 +551,9 @@ public final class HtmlSpec {
         @param contents the instructions to be flattened
         @return an instruction representing this flatten operation
         """),
-        new MethodSpec("NoOpInstruction noop()", "noop()", """
-        The no-op instruction.
-        @return the no-op instruction.
+        new MethodSpec("NoOpMarkup noop()", "noop()", """
+        The no-op markup.
+        @return the no-op markup.
         """)
     );
   }

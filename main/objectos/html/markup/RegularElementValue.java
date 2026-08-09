@@ -24,6 +24,8 @@ public sealed interface RegularElementValue
     extends
     ElementValue
     permits
+    AmbiguousMarkup,
     Attribute,
     BooleanAttribute,
-    ElementMarkup {}
+    ElementMarkup,
+    NoOpMarkup {}

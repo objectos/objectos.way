@@ -19,4 +19,4 @@ import objectox.html.markup.AttributePointer;
 
 /// Represents the encoded markup of an Objectos HTML attribute.
 public sealed interface AttributeMarkup
-    permits AmbiguousInstruction, AttributePointer {}
+    permits AttributePointer {}

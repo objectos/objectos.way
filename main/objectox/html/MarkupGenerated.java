@@ -20,7 +20,7 @@ import java.util.Objects;
 import objectos.html.AttributeName;
 import objectos.html.Attribute;
 import objectos.html.ElementName;
-import objectos.html.markup.AmbiguousInstruction;
+import objectos.html.markup.AmbiguousMarkup;
 import objectos.html.markup.AttributeMarkup;
 import objectos.html.markup.RegularElementValue;
 import objectos.html.markup.ElementValue;
@@ -33,7 +33,7 @@ import objectos.html.markup.Fragment3;
 import objectos.html.markup.Fragment4;
 import objectos.html.markup.FragmentInstruction;
 import objectos.html.markup.Instruction;
-import objectos.html.markup.NoOpInstruction;
+import objectos.html.markup.NoOpMarkup;
 import objectos.html.markup.RawInstruction;
 import objectos.html.markup.TextInstruction;
 import objectos.html.markup.VoidElementValue;
@@ -198,7 +198,7 @@ public abstract FlattenInstruction flatten(Collection<? extends Instruction> con
 
 /// The no-op instruction.
 /// @return the no-op instruction.
-public abstract NoOpInstruction noop();
+public abstract NoOpMarkup noop();
 
 // @formatter:on
 
@@ -282,7 +282,7 @@ public abstract NoOpInstruction noop();
   /// Formats a line separator at the testable output exclusively.
   ///
   /// @return a no-op instruction
-  public abstract NoOpInstruction testableNewLine();
+  public abstract NoOpMarkup testableNewLine();
 
   //
   // ELEMENTS
@@ -2783,7 +2783,7 @@ public abstract NoOpInstruction noop();
   // AMBIGUOUS
   //
 
-  abstract AmbiguousInstruction ambiguous(Ambiguous name, String text);
+  abstract AmbiguousMarkup ambiguous(Ambiguous name, String text);
 
   /// Renders the `clip-path` attribute or the `clipPath` element with the
   /// specified text.
@@ -2791,7 +2791,7 @@ public abstract NoOpInstruction noop();
   /// @param text the attribute value or the text content of the element
   ///
   /// @return an instruction representing the attribute or the element
-  public final AmbiguousInstruction clipPath(String text) {
+  public final AmbiguousMarkup clipPath(String text) {
     return ambiguous(Ambiguous.CLIPPATH, text);
   }
 
@@ -2801,7 +2801,7 @@ public abstract NoOpInstruction noop();
   /// @param text the attribute value or the text content of the element
   ///
   /// @return an instruction representing the attribute or the element
-  public final AmbiguousInstruction form(String text) {
+  public final AmbiguousMarkup form(String text) {
     return ambiguous(Ambiguous.FORM, text);
   }
 
@@ -2811,7 +2811,7 @@ public abstract NoOpInstruction noop();
   /// @param text the attribute value or the text content of the element
   ///
   /// @return an instruction representing the attribute or the element
-  public final AmbiguousInstruction label(String text) {
+  public final AmbiguousMarkup label(String text) {
     return ambiguous(Ambiguous.LABEL, text);
   }
 
@@ -2821,7 +2821,7 @@ public abstract NoOpInstruction noop();
   /// @param text the attribute value or the text content of the element
   ///
   /// @return an instruction representing the attribute or the element
-  public final AmbiguousInstruction style(String text) {
+  public final AmbiguousMarkup style(String text) {
     return ambiguous(Ambiguous.STYLE, text);
   }
 
@@ -2831,7 +2831,7 @@ public abstract NoOpInstruction noop();
   /// @param text the attribute value or the text content of the element
   ///
   /// @return an instruction representing the attribute or the element
-  public final AmbiguousInstruction title(String text) {
+  public final AmbiguousMarkup title(String text) {
     return ambiguous(Ambiguous.TITLE, text);
   }
 
