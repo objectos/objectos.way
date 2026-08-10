@@ -15,7 +15,6 @@
  */
 package objectox.html.markup;
 
-import java.util.Objects;
 import objectos.html.ElementName;
 import objectos.html.markup.ElementValue;
 import objectox.html.IntSize;
@@ -37,9 +36,7 @@ final class ElementRecorder {
     this.childrenRecorder = childrenRecorder;
   }
 
-  public final ElementPointer record(ElementName elementName, ElementValue... contents) {
-    Objects.requireNonNull(contents, "contents == null");
-
+  public final ElementPointer record(ElementName elementName, ElementValue... values) {
     final ElementNamePojo name;
     name = (ElementNamePojo) elementName;
 
@@ -53,7 +50,7 @@ final class ElementRecorder {
     startIndex = startTag(nameIndex, nameSize);
 
     final int jmpIndex;
-    jmpIndex = contents(name, contents);
+    jmpIndex = values(name, values);
 
     end(name, nameIndex, nameSize);
 
@@ -79,15 +76,15 @@ final class ElementRecorder {
     return startIndex;
   }
 
-  private int contents(ElementNamePojo name, ElementValue[] contents) {
+  private int values(ElementNamePojo name, ElementValue[] values) {
     sink.addByte(HtmlBytes.JMP24);
 
     final int jmpIndex;
     jmpIndex = sink.addInt24(0);
 
-    attributesRecorder.record(name, contents);
+    attributesRecorder.record(name, values);
 
-    childrenRecorder.record(name, contents);
+    childrenRecorder.record(name, values);
 
     return jmpIndex;
   }

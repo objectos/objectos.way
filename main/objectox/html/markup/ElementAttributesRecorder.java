@@ -41,8 +41,8 @@ final class ElementAttributesRecorder {
     this.booleanAttributeRecorder = booleanAttributeRecorder;
   }
 
-  public final void record(ElementName elementName, ElementValue... contents) {
-    for (ElementValue value : contents) {
+  public final void record(ElementName elementName, ElementValue... values) {
+    for (ElementValue value : values) {
       record0(elementName, value);
     }
   }
