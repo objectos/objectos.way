@@ -20,18 +20,26 @@ import objectos.html.BooleanAttribute;
 import objectos.html.ElementName;
 import objectos.html.markup.ElementValue;
 import objectos.html.markup.NoOpMarkup;
+import objectox.html.AmbiguousName;
+import objectox.html.elem.ElementNamePojo;
 
 final class ElementChildrenRecorder {
+
+  private final ChildAmbiguousRecorder childAmbiguousRecorder;
 
   private final ChildElementMarker childElementMarker;
 
   private final ChildElementRecorder childElementRecorder;
 
   ElementChildrenRecorder(
+      ChildAmbiguousRecorder childAmbiguousRecorder,
+
       ChildElementMarker childElementMarker,
 
       ChildElementRecorder childElementRecorder
   ) {
+    this.childAmbiguousRecorder = childAmbiguousRecorder;
+
     this.childElementMarker = childElementMarker;
 
     this.childElementRecorder = childElementRecorder;
@@ -45,8 +53,15 @@ final class ElementChildrenRecorder {
 
   private void record0(ElementName elementName, ElementValue value) {
     switch (value) {
-      case AmbiguousPojo amb -> {
-        throw new UnsupportedOperationException("Implement me :: " + amb);
+      case AmbiguousPojo(AmbiguousName name, String text) -> {
+        if (name.isAttributeOf(elementName)) {
+          break;
+        }
+
+        final ElementNamePojo ambiguousElementName;
+        ambiguousElementName = name.element;
+
+        childAmbiguousRecorder.record(ambiguousElementName, text);
       }
 
       case Attribute _ -> {}

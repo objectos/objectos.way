@@ -19,24 +19,47 @@ import static org.testng.Assert.assertEquals;
 
 import objectos.html.ElementName;
 import objectos.html.markup.ElementValue;
+import objectox.html.AmbiguousName;
 import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 
 public class ElementChildrenRecorderTest {
 
-  private HtmlSink record(HtmlSink sink, ElementName elementName, ElementValue... contents) {
-    final ChildElementMarker childElementMarker;
-    childElementMarker = new ChildElementMarker(sink);
+  @Test(description = "ambiguous name that resolves to a child element")
+  public void ambiguous01() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
 
-    final ChildElementRecorder childElementRecorder;
-    childElementRecorder = new ChildElementRecorder(sink);
+    final String text;
+    text = "foo";
 
-    final ElementChildrenRecorder subject;
-    subject = new ElementChildrenRecorder(childElementMarker, childElementRecorder);
+    final AmbiguousPojo value;
+    value = AmbiguousPojo.of0(AmbiguousName.TITLE, text);
 
-    subject.record(elementName, contents);
+    assertEquals(
+        record(sink, ElementNamePojo.HEAD, value),
 
-    return sink;
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.ELTXT88);
+          opts.addInt8(ElementNamePojo.TITLE.index());
+          opts.addInt8(opts.addObject(text));
+        })
+    );
+  }
+
+  @Test(description = "ambiguous name that resolves to an attribute")
+  public void ambiguous02() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final AmbiguousPojo value;
+    value = AmbiguousPojo.of0(AmbiguousName.TITLE, "foo");
+
+    assertEquals(
+        record(sink, ElementName.HTML, value),
+
+        HtmlSinkY.create(_ -> {})
+    );
   }
 
   @Test
@@ -71,6 +94,24 @@ public class ElementChildrenRecorderTest {
           opts.addInt8(childStart);
         })
     );
+  }
+
+  private HtmlSink record(HtmlSink sink, ElementName elementName, ElementValue... contents) {
+    final ChildAmbiguousRecorder childAmbiguousRecorder;
+    childAmbiguousRecorder = new ChildAmbiguousRecorder(sink);
+
+    final ChildElementMarker childElementMarker;
+    childElementMarker = new ChildElementMarker(sink);
+
+    final ChildElementRecorder childElementRecorder;
+    childElementRecorder = new ChildElementRecorder(sink);
+
+    final ElementChildrenRecorder subject;
+    subject = new ElementChildrenRecorder(childAmbiguousRecorder, childElementMarker, childElementRecorder);
+
+    subject.record(elementName, contents);
+
+    return sink;
   }
 
 }

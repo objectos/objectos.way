@@ -17,4 +17,4 @@ package objectox.html.markup;
 
 import objectos.html.Id;
 
-public record IdPojo(String attrValue) implements Id {}
+public record IdPojo(String value) implements Id {}

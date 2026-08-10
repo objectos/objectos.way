@@ -26,37 +26,7 @@ public class HtmlBytesTest {
   public Object[][] consumeProvider() {
     return new Object[][] {
         {HtmlBytes.STARTTAG8, HtmlBytes.xSTARTTAG8},
-        {HtmlBytes.ATTRIBUTE88, HtmlBytes.xATTRIBUTE88},
-        {HtmlBytes.ATTRIBUTE816, HtmlBytes.xATTRIBUTE816},
-        {HtmlBytes.ATTRIBUTE824, HtmlBytes.xATTRIBUTE824},
-        {HtmlBytes.BOOLEAN8, HtmlBytes.xBOOLEAN8},
-        {HtmlBytes.AMBIGUOUS88, HtmlBytes.xAMBIGUOUS88},
-        {HtmlBytes.AMBIGUOUS816, HtmlBytes.xAMBIGUOUS816},
-        {HtmlBytes.AMBIGUOUS824, HtmlBytes.xAMBIGUOUS824},
-        {HtmlBytes.TEXT8, HtmlBytes.xTEXT8},
-        {HtmlBytes.TEXT16, HtmlBytes.xTEXT16},
-        {HtmlBytes.TEXT24, HtmlBytes.xTEXT24},
-        {HtmlBytes.RAW8, HtmlBytes.xRAW8},
-        {HtmlBytes.RAW16, HtmlBytes.xRAW16},
-        {HtmlBytes.RAW24, HtmlBytes.xRAW24},
-        {HtmlBytes.STARTFLAT, HtmlBytes.xSTARTFLAT},
-        {HtmlBytes.STARTFRAG, HtmlBytes.xSTARTFRAG},
-        {HtmlBytes.xSTARTTAG8, HtmlBytes.xSTARTTAG8},
-        {HtmlBytes.xATTRIBUTE88, HtmlBytes.xATTRIBUTE88},
-        {HtmlBytes.xATTRIBUTE816, HtmlBytes.xATTRIBUTE816},
-        {HtmlBytes.xATTRIBUTE824, HtmlBytes.xATTRIBUTE824},
-        {HtmlBytes.xBOOLEAN8, HtmlBytes.xBOOLEAN8},
-        {HtmlBytes.xAMBIGUOUS88, HtmlBytes.xAMBIGUOUS88},
-        {HtmlBytes.xAMBIGUOUS816, HtmlBytes.xAMBIGUOUS816},
-        {HtmlBytes.xAMBIGUOUS824, HtmlBytes.xAMBIGUOUS824},
-        {HtmlBytes.xTEXT8, HtmlBytes.xTEXT8},
-        {HtmlBytes.xTEXT16, HtmlBytes.xTEXT16},
-        {HtmlBytes.xTEXT24, HtmlBytes.xTEXT24},
-        {HtmlBytes.xRAW8, HtmlBytes.xRAW8},
-        {HtmlBytes.xRAW16, HtmlBytes.xRAW16},
-        {HtmlBytes.xRAW24, HtmlBytes.xRAW24},
-        {HtmlBytes.xSTARTFLAT, HtmlBytes.xSTARTFLAT},
-        {HtmlBytes.xSTARTFRAG, HtmlBytes.xSTARTFRAG}
+        {HtmlBytes.xSTARTTAG8, HtmlBytes.xSTARTTAG8}
     };
   }
 

@@ -33,6 +33,9 @@ public class ElementRecorderTest {
     final ElementAttributesRecorder attributesRecorder;
     attributesRecorder = new ElementAttributesRecorder(attributeRecorder, booleanAttributeRecorder);
 
+    final ChildAmbiguousRecorder childAmbiguousRecorder;
+    childAmbiguousRecorder = new ChildAmbiguousRecorder(sink);
+
     final ChildElementMarker childElementMarker;
     childElementMarker = new ChildElementMarker(sink);
 
@@ -40,7 +43,7 @@ public class ElementRecorderTest {
     childElementRecorder = new ChildElementRecorder(sink);
 
     final ElementChildrenRecorder childrenRecorder;
-    childrenRecorder = new ElementChildrenRecorder(childElementMarker, childElementRecorder);
+    childrenRecorder = new ElementChildrenRecorder(childAmbiguousRecorder, childElementMarker, childElementRecorder);
 
     return new ElementRecorder(sink, attributesRecorder, childrenRecorder);
   }

@@ -47,6 +47,9 @@ public class HtmlBytesGen {
     value("ELEM8");
     value("ELEM16");
     value("ELEM24");
+    value("ELTXT88");
+    value("ELTXT816");
+    value("ELTXT824");
 
     comment("text");
 

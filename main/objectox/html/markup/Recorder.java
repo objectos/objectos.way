@@ -84,12 +84,6 @@ public final class Recorder {
     final BooleanAttributeRecorder booleanAttributeRecorder;
     booleanAttributeRecorder = new BooleanAttributeRecorder(sink);
 
-    final ContentsPrecorder contentsPrecorder;
-    contentsPrecorder = new ContentsPrecorder(attributeRecorder, booleanAttributeRecorder);
-
-    final ContentsRecorder contentsRecorder;
-    contentsRecorder = new ContentsRecorder(sink);
-
     return new Recorder(
         new DoctypeRecorder(sink),
 
