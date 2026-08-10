@@ -30,8 +30,8 @@ import objectos.html.markup.RegularElementValue;
 import objectos.html.markup.FragmentInstruction;
 import objectos.html.markup.Instruction;
 import objectos.html.markup.NoOpMarkup;
-import objectos.html.markup.RawInstruction;
-import objectos.html.markup.TextInstruction;
+import objectos.html.markup.RawMarkup;
+import objectos.html.markup.TextMarkup;
 import objectos.html.markup.VoidElementValue;
 import objectos.internal.Check;
 import objectos.script.JsAction;
@@ -2971,7 +2971,7 @@ public abstract class Template implements Component {
   ///
   /// @return an instruction representing the non-breaking space
   ///         character entity.
-  protected final RawInstruction nbsp() {
+  protected final RawMarkup nbsp() {
     return $html().nbsp();
   }
 
@@ -2980,7 +2980,7 @@ public abstract class Template implements Component {
   /// @param value the raw HTML value
   ///
   /// @return a raw HTML instruction
-  protected final RawInstruction raw(String value) {
+  protected final RawMarkup raw(String value) {
     return $html().raw(value);
   }
 
@@ -2990,7 +2990,7 @@ public abstract class Template implements Component {
   /// @param value the text value
   ///
   /// @return an instruction representing the text node
-  protected final TextInstruction text(String value) {
+  protected final TextMarkup text(String value) {
     return $html().text(value);
   }
 

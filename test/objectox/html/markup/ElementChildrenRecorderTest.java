@@ -96,6 +96,48 @@ public class ElementChildrenRecorderTest {
     );
   }
 
+  @Test(description = "raw node child")
+  public void raw01() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final String value;
+    value = "Ipsum";
+
+    final RawNode raw;
+    raw = new RawNode(value);
+
+    assertEquals(
+        record(sink, ElementNamePojo.HEAD, raw),
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.RAW8);
+          opts.addInt8(opts.addObject(value));
+        })
+    );
+  }
+
+  @Test(description = "text node child")
+  public void text01() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final String value;
+    value = "Ipsum";
+
+    final TextNode text;
+    text = new TextNode(value);
+
+    assertEquals(
+        record(sink, ElementNamePojo.HEAD, text),
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.TEXT8);
+          opts.addInt8(opts.addObject(value));
+        })
+    );
+  }
+
   private HtmlSink record(HtmlSink sink, ElementName elementName, ElementValue... contents) {
     final ChildAmbiguousRecorder childAmbiguousRecorder;
     childAmbiguousRecorder = new ChildAmbiguousRecorder(sink);
@@ -106,8 +148,14 @@ public class ElementChildrenRecorderTest {
     final ChildElementRecorder childElementRecorder;
     childElementRecorder = new ChildElementRecorder(sink);
 
+    final ChildRawRecorder childRawRecorder;
+    childRawRecorder = new ChildRawRecorder(sink);
+
+    final ChildTextRecorder childTextRecorder;
+    childTextRecorder = new ChildTextRecorder(sink);
+
     final ElementChildrenRecorder subject;
-    subject = new ElementChildrenRecorder(childAmbiguousRecorder, childElementMarker, childElementRecorder);
+    subject = new ElementChildrenRecorder(childAmbiguousRecorder, childElementMarker, childElementRecorder, childRawRecorder, childTextRecorder);
 
     subject.record(elementName, contents);
 

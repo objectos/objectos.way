@@ -21,7 +21,7 @@ import java.util.stream.IntStream;
 import objectos.internal.Util;
 import org.testng.annotations.Test;
 
-public class RawRecorderTest {
+public class ChildTextRecorderTest {
 
   @Test(
       description = "reject null value",
@@ -31,88 +31,105 @@ public class RawRecorderTest {
     final HtmlSink sink;
     sink = new HtmlSink();
 
-    final RawRecorder subject;
-    subject = new RawRecorder(sink);
+    final ChildTextRecorder subject;
+    subject = new ChildTextRecorder(sink);
 
     subject.record(null);
   }
 
-  @Test(description = "RAW8")
+  @Test(description = "TEXT8")
   public void record02() {
     final HtmlSink sink;
     sink = new HtmlSink();
 
-    final RawRecorder subject;
-    subject = new RawRecorder(sink);
+    final ChildTextRecorder subject;
+    subject = new ChildTextRecorder(sink);
 
     final String value;
     value = "Ipsum";
 
-    final RawPointer res;
-    res = subject.record(value);
-
-    assertEquals(res.value(), 0);
+    subject.record(value);
 
     assertEquals(
         sink,
 
         HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.RAW8);
+          opts.addByte(HtmlBytes.TEXT8);
           opts.addInt8(opts.addObject(value));
         })
     );
   }
 
-  @Test(description = "RAW16")
+  @Test(description = "TEXT16")
   public void record03() {
     final HtmlSink sink;
     sink = new HtmlSink(Util.EMPTY_BYTE_ARRAY, new Object[256]);
 
-    final RawRecorder subject;
-    subject = new RawRecorder(sink);
+    final ChildTextRecorder subject;
+    subject = new ChildTextRecorder(sink);
 
     final String value;
     value = "Ipsum";
 
-    final RawPointer res;
-    res = subject.record(value);
-
-    assertEquals(res.value(), 0);
+    subject.record(value);
 
     assertEquals(
         sink,
 
         HtmlSinkY.create(opts -> {
           IntStream.range(0, 256).forEach(_ -> opts.addObject(null));
-          opts.addByte(HtmlBytes.RAW16);
+          opts.addByte(HtmlBytes.TEXT16);
           opts.addInt16(opts.addObject(value));
         })
     );
   }
 
-  @Test(description = "RAW24")
+  @Test(description = "TEXT24")
   public void record04() {
     final HtmlSink sink;
     sink = new HtmlSink(Util.EMPTY_BYTE_ARRAY, new Object[1 << 16]);
 
-    final RawRecorder subject;
-    subject = new RawRecorder(sink);
+    final ChildTextRecorder subject;
+    subject = new ChildTextRecorder(sink);
 
     final String value;
     value = "Ipsum";
 
-    final RawPointer res;
-    res = subject.record(value);
-
-    assertEquals(res.value(), 0);
+    subject.record(value);
 
     assertEquals(
         sink,
 
         HtmlSinkY.create(opts -> {
           IntStream.range(0, 1 << 16).forEach(_ -> opts.addObject(null));
-          opts.addByte(HtmlBytes.RAW24);
+          opts.addByte(HtmlBytes.TEXT24);
           opts.addInt24(opts.addObject(value));
+        })
+    );
+  }
+
+  @Test(description = "TEXT8 escaped")
+  public void record05() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final ChildTextRecorder subject;
+    subject = new ChildTextRecorder(sink);
+
+    final String value;
+    value = "A&B";
+
+    final String escaped;
+    escaped = "A&amp;B";
+
+    subject.record(value);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.TEXT8);
+          opts.addInt8(opts.addObject(escaped));
         })
     );
   }

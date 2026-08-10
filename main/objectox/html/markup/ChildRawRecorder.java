@@ -18,15 +18,15 @@ package objectox.html.markup;
 import java.util.Objects;
 import objectox.html.IntSize;
 
-final class RawRecorder {
+final class ChildRawRecorder {
 
   private final HtmlSink sink;
 
-  RawRecorder(HtmlSink sink) {
+  ChildRawRecorder(HtmlSink sink) {
     this.sink = sink;
   }
 
-  public final RawPointer record(String value) {
+  public final void record(String value) {
     final String v;
     v = Objects.requireNonNull(value, "value == null");
 
@@ -36,43 +36,31 @@ final class RawRecorder {
     final IntSize valueSize;
     valueSize = IntSize.of(valueIndex);
 
-    final int startIndex;
-    startIndex = switch (valueSize) {
+    switch (valueSize) {
       case BIT8 -> record8(valueIndex);
 
       case BIT16 -> record16(valueIndex);
 
       case BIT24 -> record24(valueIndex);
-    };
-
-    return new RawPointer(startIndex);
+    }
   }
 
-  private int record8(int valueIndex) {
-    final int startIndex;
-    startIndex = sink.addByte(HtmlBytes.RAW8);
+  private void record8(int valueIndex) {
+    sink.addByte(HtmlBytes.RAW8);
 
     sink.addInt8(valueIndex);
-
-    return startIndex;
   }
 
-  private int record16(int valueIndex) {
-    final int startIndex;
-    startIndex = sink.addByte(HtmlBytes.RAW16);
+  private void record16(int valueIndex) {
+    sink.addByte(HtmlBytes.RAW16);
 
     sink.addInt16(valueIndex);
-
-    return startIndex;
   }
 
-  private int record24(int valueIndex) {
-    final int startIndex;
-    startIndex = sink.addByte(HtmlBytes.RAW24);
+  private void record24(int valueIndex) {
+    sink.addByte(HtmlBytes.RAW24);
 
     sink.addInt24(valueIndex);
-
-    return startIndex;
   }
 
 }

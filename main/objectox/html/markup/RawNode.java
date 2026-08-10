@@ -15,8 +15,17 @@
  */
 package objectox.html.markup;
 
-import objectos.html.markup.TextInstruction;
+import java.util.Objects;
+import objectos.html.markup.RawMarkup;
 
-public record TextPointer(int value) implements TextInstruction {
+public record RawNode(String value)
+    implements
+    RawMarkup {
+
+  public static RawMarkup of(String value) {
+    return new RawNode(
+        Objects.requireNonNull(value, "value == null")
+    );
+  }
 
 }

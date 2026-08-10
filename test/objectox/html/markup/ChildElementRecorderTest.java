@@ -21,33 +21,6 @@ import org.testng.annotations.Test;
 
 public class ChildElementRecorderTest {
 
-  private HtmlSink record(ElementPointer child) {
-    final HtmlSink sink;
-    sink = new HtmlSink();
-
-    final ChildElementRecorder subject;
-    subject = new ChildElementRecorder(sink);
-
-    subject.record(child);
-
-    return sink;
-  }
-
-  @Test(description = "ELEM8")
-  public void element8() {
-    final ElementPointer child;
-    child = new ElementPointer(32);
-
-    assertEquals(
-        record(child),
-
-        HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.ELEM8);
-          opts.addInt8(32);
-        })
-    );
-  }
-
   @Test(description = "ELEM16")
   public void element16() {
     final ElementPointer child;
@@ -76,6 +49,55 @@ public class ChildElementRecorderTest {
           opts.addInt24(HtmlSink.MAX_INT24);
         })
     );
+  }
+
+  @Test(description = "ELEM8")
+  public void element8() {
+    final ElementPointer child;
+    child = new ElementPointer(32);
+
+    assertEquals(
+        record(child),
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.ELEM8);
+          opts.addInt8(32);
+        })
+    );
+  }
+
+  @Test(
+      description = "reject negative value",
+      expectedExceptions = IllegalArgumentException.class,
+      expectedExceptionsMessageRegExp = "Illegal int value: negative values \\(-1\\) are now allowed")
+  public void reject01() {
+    final ElementPointer child;
+    child = new ElementPointer(-1);
+
+    record(child);
+  }
+
+  @Test(
+      description = "reject value that is too large",
+      expectedExceptions = IllegalArgumentException.class,
+      expectedExceptionsMessageRegExp = "Illegal int value: \\(16777216\\) is too large")
+  public void reject02() {
+    final ElementPointer child;
+    child = new ElementPointer(HtmlSink.MAX_INT24 + 1);
+
+    record(child);
+  }
+
+  private HtmlSink record(ElementPointer child) {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final ChildElementRecorder subject;
+    subject = new ChildElementRecorder(sink);
+
+    subject.record(child);
+
+    return sink;
   }
 
 }

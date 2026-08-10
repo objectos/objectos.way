@@ -13,10 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html.markup;
+package objectos.html.markup;
 
-import objectos.html.markup.RawInstruction;
+import objectox.html.markup.TextNode;
 
-public record RawPointer(int value) implements RawInstruction {
-
-}
+/// Represents the encoded markup of an Objectos HTML text node.
+public sealed interface TextMarkup
+    extends
+    RegularElementValue
+    permits
+    TextNode {}

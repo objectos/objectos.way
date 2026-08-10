@@ -37,8 +37,14 @@ final class ChildAmbiguousRecorder {
     final IntSize nameSize;
     nameSize = IntSize.of(nameIndex);
 
+    final TextEscaper escaper;
+    escaper = new TextEscaper(text);
+
+    final String escaped;
+    escaped = escaper.escape();
+
     final int textIndex;
-    textIndex = sink.addObject(text);
+    textIndex = sink.addObject(escaped);
 
     switch (nameSize) {
       case BIT8 -> record8(nameIndex, textIndex);

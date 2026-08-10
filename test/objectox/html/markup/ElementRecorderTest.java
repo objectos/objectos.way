@@ -18,92 +18,11 @@ package objectox.html.markup;
 import static org.testng.Assert.assertEquals;
 
 import objectos.html.Attribute;
+import objectox.html.AmbiguousName;
 import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 
 public class ElementRecorderTest {
-
-  private ElementRecorder create(HtmlSink sink) {
-    final AttributeRecorder attributeRecorder;
-    attributeRecorder = new AttributeRecorder(sink);
-
-    final BooleanAttributeRecorder booleanAttributeRecorder;
-    booleanAttributeRecorder = new BooleanAttributeRecorder(sink);
-
-    final ElementAttributesRecorder attributesRecorder;
-    attributesRecorder = new ElementAttributesRecorder(attributeRecorder, booleanAttributeRecorder);
-
-    final ChildAmbiguousRecorder childAmbiguousRecorder;
-    childAmbiguousRecorder = new ChildAmbiguousRecorder(sink);
-
-    final ChildElementMarker childElementMarker;
-    childElementMarker = new ChildElementMarker(sink);
-
-    final ChildElementRecorder childElementRecorder;
-    childElementRecorder = new ChildElementRecorder(sink);
-
-    final ElementChildrenRecorder childrenRecorder;
-    childrenRecorder = new ElementChildrenRecorder(childAmbiguousRecorder, childElementMarker, childElementRecorder);
-
-    return new ElementRecorder(sink, attributesRecorder, childrenRecorder);
-  }
-
-  @Test(description = """
-  STARTAG8, jump, ENDTAG8
-  """)
-  public void tags01() {
-    final HtmlSink sink;
-    sink = new HtmlSink();
-
-    final ElementRecorder subject;
-    subject = create(sink);
-
-    final ElementPointer res;
-    res = subject.record(ElementNamePojo.HTML);
-
-    assertEquals(res.value(), 0);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.STARTTAG8);
-          opts.addInt8(ElementNamePojo.HTML.index());
-          opts.addByte(HtmlBytes.JMP24);
-          opts.addInt24(8);
-          opts.addByte(HtmlBytes.ENDTAG8);
-          opts.addInt8(ElementNamePojo.HTML.index());
-        })
-    );
-  }
-
-  @Test(description = """
-  STARTAG8, jump, VOIDELEM
-  """)
-  public void tags02() {
-    final HtmlSink sink;
-    sink = new HtmlSink();
-
-    final ElementRecorder subject;
-    subject = create(sink);
-
-    final ElementPointer res;
-    res = subject.record(ElementNamePojo.BR);
-
-    assertEquals(res.value(), 0);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.STARTTAG8);
-          opts.addInt8(ElementNamePojo.BR.index());
-          opts.addByte(HtmlBytes.JMP24);
-          opts.addInt24(7);
-          opts.addByte(HtmlBytes.VOIDELEM);
-        })
-    );
-  }
 
   @Test(description = """
   ElementAttributesRecorder delegation
@@ -239,6 +158,200 @@ public class ElementRecorderTest {
           opts.addInt8(ElementNamePojo.HTML.index());
         })
     );
+  }
+
+  @Test(description = """
+  <html>Ipsum</html>
+  """)
+  public void children02() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final ElementRecorder subject;
+    subject = create(sink);
+
+    final String value;
+    value = "Ipsum";
+
+    final ElementPointer res;
+    res = subject.record(ElementNamePojo.HTML, new RawNode(value));
+
+    assertEquals(res.value(), 0);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.STARTTAG8);
+          opts.addInt8(ElementNamePojo.HTML.index());
+          opts.addByte(HtmlBytes.JMP24);
+          opts.addInt24(10);
+          opts.addByte(HtmlBytes.RAW8);
+          opts.addInt8(opts.addObject(value));
+          opts.addByte(HtmlBytes.ENDTAG8);
+          opts.addInt8(ElementNamePojo.HTML.index());
+        })
+    );
+  }
+
+  @Test(description = """
+  <html>Ipsum</html>
+  """)
+  public void children03() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final ElementRecorder subject;
+    subject = create(sink);
+
+    final String value;
+    value = "Ipsum";
+
+    final ElementPointer res;
+    res = subject.record(ElementNamePojo.HTML, new TextNode(value));
+
+    assertEquals(res.value(), 0);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.STARTTAG8);
+          opts.addInt8(ElementNamePojo.HTML.index());
+          opts.addByte(HtmlBytes.JMP24);
+          opts.addInt24(10);
+          opts.addByte(HtmlBytes.TEXT8);
+          opts.addInt8(opts.addObject(value));
+          opts.addByte(HtmlBytes.ENDTAG8);
+          opts.addInt8(ElementNamePojo.HTML.index());
+        })
+    );
+  }
+
+  @Test(description = """
+  <head><title>foo</title></head>
+  """)
+  public void children04() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final ElementRecorder subject;
+    subject = create(sink);
+
+    final String text;
+    text = "foo";
+
+    final AmbiguousPojo value;
+    value = AmbiguousPojo.of0(AmbiguousName.TITLE, text);
+
+    final ElementPointer res;
+    res = subject.record(ElementNamePojo.HEAD, value);
+
+    assertEquals(res.value(), 0);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.STARTTAG8);
+          opts.addInt8(ElementNamePojo.HEAD.index());
+          opts.addByte(HtmlBytes.JMP24);
+          opts.addInt24(11);
+          opts.addByte(HtmlBytes.ELTXT88);
+          opts.addInt8(ElementNamePojo.TITLE.index());
+          opts.addInt8(opts.addObject(text));
+          opts.addByte(HtmlBytes.ENDTAG8);
+          opts.addInt8(ElementNamePojo.HEAD.index());
+        })
+    );
+  }
+
+  @Test(description = """
+  STARTAG8, jump, ENDTAG8
+  """)
+  public void tags01() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final ElementRecorder subject;
+    subject = create(sink);
+
+    final ElementPointer res;
+    res = subject.record(ElementNamePojo.HTML);
+
+    assertEquals(res.value(), 0);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.STARTTAG8);
+          opts.addInt8(ElementNamePojo.HTML.index());
+          opts.addByte(HtmlBytes.JMP24);
+          opts.addInt24(8);
+          opts.addByte(HtmlBytes.ENDTAG8);
+          opts.addInt8(ElementNamePojo.HTML.index());
+        })
+    );
+  }
+
+  @Test(description = """
+  STARTAG8, jump, VOIDELEM
+  """)
+  public void tags02() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final ElementRecorder subject;
+    subject = create(sink);
+
+    final ElementPointer res;
+    res = subject.record(ElementNamePojo.BR);
+
+    assertEquals(res.value(), 0);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.STARTTAG8);
+          opts.addInt8(ElementNamePojo.BR.index());
+          opts.addByte(HtmlBytes.JMP24);
+          opts.addInt24(7);
+          opts.addByte(HtmlBytes.VOIDELEM);
+        })
+    );
+  }
+
+  private ElementRecorder create(HtmlSink sink) {
+    final AttributeRecorder attributeRecorder;
+    attributeRecorder = new AttributeRecorder(sink);
+
+    final BooleanAttributeRecorder booleanAttributeRecorder;
+    booleanAttributeRecorder = new BooleanAttributeRecorder(sink);
+
+    final ElementAttributesRecorder attributesRecorder;
+    attributesRecorder = new ElementAttributesRecorder(attributeRecorder, booleanAttributeRecorder);
+
+    final ChildAmbiguousRecorder childAmbiguousRecorder;
+    childAmbiguousRecorder = new ChildAmbiguousRecorder(sink);
+
+    final ChildElementMarker childElementMarker;
+    childElementMarker = new ChildElementMarker(sink);
+
+    final ChildElementRecorder childElementRecorder;
+    childElementRecorder = new ChildElementRecorder(sink);
+
+    final ChildRawRecorder childRawRecorder;
+    childRawRecorder = new ChildRawRecorder(sink);
+
+    final ChildTextRecorder childTextRecorder;
+    childTextRecorder = new ChildTextRecorder(sink);
+
+    final ElementChildrenRecorder childrenRecorder;
+    childrenRecorder = new ElementChildrenRecorder(childAmbiguousRecorder, childElementMarker, childElementRecorder, childRawRecorder, childTextRecorder);
+
+    return new ElementRecorder(sink, attributesRecorder, childrenRecorder);
   }
 
 }

@@ -34,8 +34,8 @@ import objectos.html.markup.Fragment4;
 import objectos.html.markup.FragmentInstruction;
 import objectos.html.markup.Instruction;
 import objectos.html.markup.NoOpMarkup;
-import objectos.html.markup.RawInstruction;
-import objectos.html.markup.TextInstruction;
+import objectos.html.markup.RawMarkup;
+import objectos.html.markup.TextMarkup;
 import objectox.html.markup.AttributeNamePojo;
 import objectox.html.markup.AttributePojo;
 import objectox.html.markup.NoOpInstructionPojo;
@@ -160,29 +160,6 @@ public sealed abstract class MarkupPojo
   // ##################################################################
 
   // ##################################################################
-  // # BEGIN: Text
-  // ##################################################################
-
-  @Override
-  public final RawInstruction nbsp() {
-    return recorder.raw("&nbsp;");
-  }
-
-  @Override
-  public final RawInstruction raw(String text) {
-    return recorder.raw(text);
-  }
-
-  @Override
-  public final TextInstruction text(String text) {
-    return recorder.text(text);
-  }
-
-  // ##################################################################
-  // # END: Text
-  // ##################################################################
-
-  // ##################################################################
   // # BEGIN: Testable
   // ##################################################################
 
@@ -252,10 +229,7 @@ public sealed abstract class MarkupPojo
 
   @Override
   final ElementMarkup elem0(ElementName name, String text) {
-    final Instruction t;
-    t = recorder.text(text);
-
-    return recorder.element(name, t);
+    return recorder.element(name, text(text));
   }
 
 }

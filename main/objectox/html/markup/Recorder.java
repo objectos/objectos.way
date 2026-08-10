@@ -15,7 +15,6 @@
  */
 package objectox.html.markup;
 
-import objectos.html.AttributeName;
 import objectos.html.ElementName;
 import objectos.html.Html;
 import objectos.html.markup.ElementValue;
@@ -25,7 +24,6 @@ import objectos.html.markup.Fragment2;
 import objectos.html.markup.Fragment3;
 import objectos.html.markup.Fragment4;
 import objectos.html.markup.Instruction;
-import objectox.html.AmbiguousName;
 
 public final class Recorder {
 
@@ -39,10 +37,6 @@ public final class Recorder {
 
   private final FragmentRecorder fragmentRecorder;
 
-  private final RawRecorder rawRecorder;
-
-  private final TextRecorder textRecorder;
-
   Recorder(
       DoctypeRecorder doctypeRecorder,
 
@@ -52,11 +46,7 @@ public final class Recorder {
 
       FlattenRecorder flattenRecorder,
 
-      FragmentRecorder fragmentRecorder,
-
-      RawRecorder rawRecorder,
-
-      TextRecorder textRecorder
+      FragmentRecorder fragmentRecorder
   ) {
     this.doctypeRecorder = doctypeRecorder;
 
@@ -67,10 +57,6 @@ public final class Recorder {
     this.flattenRecorder = flattenRecorder;
 
     this.fragmentRecorder = fragmentRecorder;
-
-    this.rawRecorder = rawRecorder;
-
-    this.textRecorder = textRecorder;
   }
 
   public static Recorder create() {
@@ -89,15 +75,31 @@ public final class Recorder {
 
         new DocumentCompiler(sink),
 
-        new ElementRecorder(sink, contentsPrecorder, contentsRecorder),
+        new ElementRecorder(
+            sink,
 
-        new FlattenRecorder(sink, contentsPrecorder, contentsRecorder),
+            new ElementAttributesRecorder(
+                attributeRecorder,
 
-        new FragmentRecorder(sink),
+                booleanAttributeRecorder
+            ),
 
-        new RawRecorder(sink),
+            new ElementChildrenRecorder(
+                new ChildAmbiguousRecorder(sink),
 
-        new TextRecorder(sink)
+                new ChildElementMarker(sink),
+
+                new ChildElementRecorder(sink),
+
+                new ChildRawRecorder(sink),
+
+                new ChildTextRecorder(sink)
+            )
+        ),
+
+        null,
+
+        new FragmentRecorder(sink)
     );
   }
 
@@ -135,14 +137,6 @@ public final class Recorder {
 
   public final <T1, T2, T3, T4> FragmentPointer fragment(Fragment4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
     return fragmentRecorder.record(fragment, arg1, arg2, arg3, arg4);
-  }
-
-  public final RawPointer raw(String value) {
-    return rawRecorder.record(value);
-  }
-
-  public final TextPointer text(String value) {
-    return textRecorder.record(value);
   }
 
 }

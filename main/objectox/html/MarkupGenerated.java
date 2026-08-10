@@ -32,9 +32,9 @@ import objectos.html.markup.Fragment4;
 import objectos.html.markup.FragmentInstruction;
 import objectos.html.markup.Instruction;
 import objectos.html.markup.NoOpMarkup;
-import objectos.html.markup.RawInstruction;
+import objectos.html.markup.RawMarkup;
 import objectos.html.markup.RegularElementValue;
-import objectos.html.markup.TextInstruction;
+import objectos.html.markup.TextMarkup;
 import objectos.html.markup.VoidElementValue;
 import objectos.script.JsAction;
 import objectox.html.elem.ElementNamePojo;
@@ -42,6 +42,8 @@ import objectox.html.markup.AmbiguousPojo;
 import objectox.html.markup.AttributeJsAction;
 import objectox.html.markup.AttributeNamePojo;
 import objectox.html.markup.AttributePojo;
+import objectox.html.markup.RawNode;
+import objectox.html.markup.TextNode;
 
 sealed abstract class MarkupGenerated permits MarkupPojo {
 
@@ -2818,14 +2820,18 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an instruction representing the non-breaking space
   ///         character entity.
-  public abstract RawInstruction nbsp();
+  public final RawMarkup nbsp() {
+    return new RawNode("&nbsp;");
+  }
 
   /// Renders the specified value as raw HTML.
   ///
   /// @param value the raw HTML value
   ///
   /// @return a raw HTML instruction
-  public abstract RawInstruction raw(String value);
+  public final RawMarkup raw(String value) {
+    return RawNode.of(value);
+  }
 
   /// Renders a text node with the specified value. The text value is escaped
   /// before being emitted to the output.
@@ -2833,7 +2839,9 @@ public abstract NoOpMarkup noop();
   /// @param value the text value
   ///
   /// @return an instruction representing the text node
-  public abstract TextInstruction text(String value);
+  public final TextMarkup text(String value) {
+    return TextNode.of(value);
+  }
 
   // END generated code
 

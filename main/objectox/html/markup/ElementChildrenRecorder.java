@@ -31,18 +31,30 @@ final class ElementChildrenRecorder {
 
   private final ChildElementRecorder childElementRecorder;
 
+  private final ChildRawRecorder childRawRecorder;
+
+  private final ChildTextRecorder childTextRecorder;
+
   ElementChildrenRecorder(
       ChildAmbiguousRecorder childAmbiguousRecorder,
 
       ChildElementMarker childElementMarker,
 
-      ChildElementRecorder childElementRecorder
+      ChildElementRecorder childElementRecorder,
+
+      ChildRawRecorder childRawRecorder,
+
+      ChildTextRecorder childTextRecorder
   ) {
     this.childAmbiguousRecorder = childAmbiguousRecorder;
 
     this.childElementMarker = childElementMarker;
 
     this.childElementRecorder = childElementRecorder;
+
+    this.childRawRecorder = childRawRecorder;
+
+    this.childTextRecorder = childTextRecorder;
   }
 
   public final void record(ElementName elementName, ElementValue... contents) {
@@ -75,6 +87,10 @@ final class ElementChildrenRecorder {
       }
 
       case NoOpMarkup _ -> {}
+
+      case RawNode(String v) -> childRawRecorder.record(v);
+
+      case TextNode(String v) -> childTextRecorder.record(v);
     }
   }
 

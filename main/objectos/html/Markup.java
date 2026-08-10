@@ -30,8 +30,8 @@ import objectos.html.markup.ElementValue;
 import objectos.html.markup.FragmentInstruction;
 import objectos.html.markup.Instruction;
 import objectos.html.markup.NoOpMarkup;
-import objectos.html.markup.RawInstruction;
-import objectos.html.markup.TextInstruction;
+import objectos.html.markup.RawMarkup;
+import objectos.html.markup.TextMarkup;
 import objectos.html.markup.VoidElementValue;
 import objectos.script.JsAction;
 import objectox.html.MarkupPojo;
@@ -2313,14 +2313,14 @@ public sealed interface Markup permits MarkupPojo {
   ///
   /// @return an instruction representing the non-breaking space
   ///         character entity.
-  RawInstruction nbsp();
+  RawMarkup nbsp();
 
   /// Renders the specified value as raw HTML.
   ///
   /// @param value the raw HTML value
   ///
   /// @return a raw HTML instruction
-  RawInstruction raw(String value);
+  RawMarkup raw(String value);
 
   /// Renders a text node with the specified value. The text value is escaped
   /// before being emitted to the output.
@@ -2328,7 +2328,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param value the text value
   ///
   /// @return an instruction representing the text node
-  TextInstruction text(String value);
+  TextMarkup text(String value);
 
   // END generated code
 

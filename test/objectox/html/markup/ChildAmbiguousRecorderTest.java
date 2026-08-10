@@ -25,41 +25,6 @@ import org.testng.annotations.Test;
 
 public class ChildAmbiguousRecorderTest {
 
-  private HtmlSink record(ElementName name, String text) {
-    final HtmlSink sink;
-    sink = new HtmlSink();
-
-    record(sink, name, text);
-
-    return sink;
-  }
-
-  private void record(HtmlSink sink, ElementName name, String text) {
-    final ChildAmbiguousRecorder subject;
-    subject = new ChildAmbiguousRecorder(sink);
-
-    subject.record(name, text);
-  }
-
-  @Test(description = "ELTXT88")
-  public void eltxt88() {
-    final ElementName name;
-    name = ElementNamePojo.TITLE;
-
-    final String text;
-    text = "foo";
-
-    assertEquals(
-        record(name, text),
-
-        HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.ELTXT88);
-          opts.addInt8(ElementNamePojo.TITLE.index());
-          opts.addInt8(opts.addObject(text));
-        })
-    );
-  }
-
   @Test(description = "ELTXT816")
   public void eltxt816() {
     final HtmlSink sink;
@@ -102,6 +67,63 @@ public class ChildAmbiguousRecorderTest {
           opts.addInt24(opts.addObject("foo"));
         })
     );
+  }
+
+  @Test(description = "ELTXT88")
+  public void eltxt88() {
+    final ElementName name;
+    name = ElementNamePojo.TITLE;
+
+    final String text;
+    text = "foo";
+
+    assertEquals(
+        record(name, text),
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.ELTXT88);
+          opts.addInt8(ElementNamePojo.TITLE.index());
+          opts.addInt8(opts.addObject(text));
+        })
+    );
+  }
+
+  @Test(description = "value should be escaped via TextEscaper")
+  public void escape01() {
+    final ElementName name;
+    name = ElementNamePojo.TITLE;
+
+    final String value;
+    value = "A&B";
+
+    final String escaped;
+    escaped = "A&amp;B";
+
+    assertEquals(
+        record(name, value),
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.ELTXT88);
+          opts.addInt8(ElementNamePojo.TITLE.index());
+          opts.addInt8(opts.addObject(escaped));
+        })
+    );
+  }
+
+  private HtmlSink record(ElementName name, String text) {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    record(sink, name, text);
+
+    return sink;
+  }
+
+  private void record(HtmlSink sink, ElementName name, String text) {
+    final ChildAmbiguousRecorder subject;
+    subject = new ChildAmbiguousRecorder(sink);
+
+    subject.record(name, text);
   }
 
 }

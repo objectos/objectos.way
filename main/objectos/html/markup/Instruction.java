@@ -19,9 +19,7 @@ package objectos.html.markup;
 /// HTML document.
 public sealed interface Instruction
     permits
-    FlattenInstruction,
-    RawInstruction,
-    TextInstruction {
+    FlattenInstruction {
 
   /// Returns the encoded value of this markup.
   ///

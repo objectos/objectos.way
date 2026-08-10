@@ -22,6 +22,8 @@ import objectos.html.ElementName;
 import objectos.html.markup.ElementValue;
 import objectos.html.markup.ElementMarkup;
 import objectos.html.markup.NoOpMarkup;
+import objectos.html.markup.RawMarkup;
+import objectos.html.markup.TextMarkup;
 import objectos.script.JsAction;
 import objectox.html.AmbiguousName;
 
@@ -67,6 +69,10 @@ final class ElementAttributesRecorder {
       case ElementMarkup _ -> {}
 
       case NoOpMarkup _ -> {}
+
+      case RawMarkup _ -> {}
+
+      case TextMarkup _ -> {}
     }
   }
 

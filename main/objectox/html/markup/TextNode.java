@@ -13,14 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.markup;
+package objectox.html.markup;
 
-import objectox.html.markup.TextPointer;
+import java.util.Objects;
+import objectos.html.markup.TextMarkup;
 
-/// Represents an instruction to render a text node in a Objectos HTML document.
-public sealed interface TextInstruction
-    extends
-    Instruction
-    permits
-    TextPointer {
+public record TextNode(String value)
+    implements
+    TextMarkup {
+
+  public static TextMarkup of(String value) {
+    return new TextNode(
+        Objects.requireNonNull(value, "value == null")
+    );
+  }
+
 }

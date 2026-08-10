@@ -18,15 +18,15 @@ package objectox.html.markup;
 import java.util.Objects;
 import objectox.html.IntSize;
 
-final class TextRecorder {
+final class ChildTextRecorder {
 
   private final HtmlSink sink;
 
-  TextRecorder(HtmlSink sink) {
+  ChildTextRecorder(HtmlSink sink) {
     this.sink = sink;
   }
 
-  public final TextPointer record(String value) {
+  public final void record(String value) {
     final String v;
     v = Objects.requireNonNull(value, "value == null");
 
@@ -42,43 +42,31 @@ final class TextRecorder {
     final IntSize valueSize;
     valueSize = IntSize.of(valueIndex);
 
-    final int startIndex;
-    startIndex = switch (valueSize) {
+    switch (valueSize) {
       case BIT8 -> record8(valueIndex);
 
       case BIT16 -> record16(valueIndex);
 
       case BIT24 -> record24(valueIndex);
-    };
-
-    return new TextPointer(startIndex);
+    }
   }
 
-  private int record8(int valueIndex) {
-    final int startIndex;
-    startIndex = sink.addByte(HtmlBytes.TEXT8);
+  private void record8(int valueIndex) {
+    sink.addByte(HtmlBytes.TEXT8);
 
     sink.addInt8(valueIndex);
-
-    return startIndex;
   }
 
-  private int record16(int valueIndex) {
-    final int startIndex;
-    startIndex = sink.addByte(HtmlBytes.TEXT16);
+  private void record16(int valueIndex) {
+    sink.addByte(HtmlBytes.TEXT16);
 
     sink.addInt16(valueIndex);
-
-    return startIndex;
   }
 
-  private int record24(int valueIndex) {
-    final int startIndex;
-    startIndex = sink.addByte(HtmlBytes.TEXT24);
+  private void record24(int valueIndex) {
+    sink.addByte(HtmlBytes.TEXT24);
 
     sink.addInt24(valueIndex);
-
-    return startIndex;
   }
 
 }
