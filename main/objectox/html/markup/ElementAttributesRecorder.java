@@ -16,11 +16,14 @@
 package objectox.html.markup;
 
 import objectos.html.Attribute;
+import objectos.html.AttributeName;
 import objectos.html.BooleanAttribute;
 import objectos.html.ElementName;
 import objectos.html.markup.ElementValue;
 import objectos.html.markup.ElementMarkup;
 import objectos.html.markup.NoOpMarkup;
+import objectos.script.JsAction;
+import objectox.html.AmbiguousName;
 
 final class ElementAttributesRecorder {
 
@@ -46,6 +49,17 @@ final class ElementAttributesRecorder {
 
   private void record0(ElementName elementName, ElementValue value) {
     switch (value) {
+      case AmbiguousPojo(AmbiguousName name, String text) -> {
+        if (name.isAttributeOf(elementName)) {
+          final AttributeName attributeName;
+          attributeName = name.attribute;
+
+          attributeRecorder.record(attributeName, text);
+        }
+      }
+
+      case AttributeJsAction(AttributeName name, JsAction action) -> attributeRecorder.record(name, action);
+
       case Attribute attr -> attributeRecorder.record(attr);
 
       case BooleanAttribute attr -> booleanAttributeRecorder.record(attr);

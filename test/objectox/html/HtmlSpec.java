@@ -361,7 +361,7 @@ public final class HtmlSpec {
         @param value the heading value
         @return the specified value
         """),
-        new MethodSpec("NoOpInstruction testableNewLine()", "testableNewLine()", """
+        new MethodSpec("NoOpMarkup testableNewLine()", "testableNewLine()", """
         Formats a line separator at the testable output exclusively.
         @return a no-op instruction
         """)

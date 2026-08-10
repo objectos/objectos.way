@@ -37,6 +37,7 @@ import objectos.html.markup.NoOpMarkup;
 import objectos.html.markup.RawInstruction;
 import objectos.html.markup.TextInstruction;
 import objectox.html.markup.AttributeNamePojo;
+import objectox.html.markup.AttributePojo;
 import objectox.html.markup.NoOpInstructionPojo;
 import objectox.html.markup.Recorder;
 
@@ -90,14 +91,14 @@ public sealed abstract class MarkupPojo
   }
 
   @Override
-  public final AttributeMarkup css(String value) {
+  public final Attribute css(String value) {
     final StringBuilder sb;
     sb = new StringBuilder();
 
     final String formatted;
     formatted = AttributeNamePojo.formatAttrValue(value, sb);
 
-    return attr0(AttributeNamePojo.CLASS, formatted);
+    return AttributePojo.of0(AttributeNamePojo.CLASS, formatted);
   }
 
   @Override
@@ -142,10 +143,10 @@ public sealed abstract class MarkupPojo
   @Override
   public final AttributeMarkup attr(Attribute object) {
     final AttributeName name;
-    name = object.attrName();
+    name = object.name();
 
     final String value;
-    value = object.attrValue();
+    value = object.value();
 
     if (value == null) {
       return attr0(name);
@@ -243,21 +244,6 @@ public sealed abstract class MarkupPojo
   // ##################################################################
   // # END: Testable
   // ##################################################################
-
-  @Override
-  final AmbiguousMarkup ambiguous(Ambiguous name, String value) {
-    return recorder.ambiguous(name, value);
-  }
-
-  @Override
-  final AttributeMarkup attr0(AttributeName name) {
-    return recorder.attribute(name);
-  }
-
-  @Override
-  final AttributeMarkup attr0(AttributeName name, Object value) {
-    return recorder.attribute(name, value);
-  }
 
   @Override
   final ElementMarkup elem0(ElementName name, ElementValue... contents) {

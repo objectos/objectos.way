@@ -101,7 +101,7 @@ public final class JsArray extends JsObject {
       }
 
       final String s;
-      s = id.attrValue();
+      s = id.value();
 
       raw(s, name);
     }
@@ -112,7 +112,7 @@ public final class JsArray extends JsObject {
       }
 
       final String s;
-      s = id.attrValue();
+      s = id.value();
 
       raw(s, name);
     }

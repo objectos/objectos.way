@@ -40,7 +40,7 @@ public class ClassNameTest {
     ClassName cn;
     cn = ClassName.of(value);
 
-    assertEquals(cn.attrValue(), expected);
+    assertEquals(cn.value(), expected);
   }
 
   @Test(description = "ofText: single class name")
@@ -75,7 +75,7 @@ public class ClassNameTest {
     ClassName cn;
     cn = ClassName.ofText(value);
 
-    assertEquals(cn.attrValue(), expected);
+    assertEquals(cn.value(), expected);
   }
 
 }

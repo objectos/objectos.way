@@ -25,15 +25,9 @@ import objectos.html.markup.Fragment2;
 import objectos.html.markup.Fragment3;
 import objectos.html.markup.Fragment4;
 import objectos.html.markup.Instruction;
-import objectox.html.Ambiguous;
+import objectox.html.AmbiguousName;
 
 public final class Recorder {
-
-  private final AmbiguousRecorder ambiguousRecorder;
-
-  private final AttributeRecorder attributeRecorder;
-
-  private final BooleanAttributeRecorder booleanAttributeRecorder;
 
   private final DoctypeRecorder doctypeRecorder;
 
@@ -50,12 +44,6 @@ public final class Recorder {
   private final TextRecorder textRecorder;
 
   Recorder(
-      AmbiguousRecorder ambiguousRecorder,
-
-      AttributeRecorder attributeRecorder,
-
-      BooleanAttributeRecorder booleanAttributeRecorder,
-
       DoctypeRecorder doctypeRecorder,
 
       DocumentCompiler documentCompiler,
@@ -70,12 +58,6 @@ public final class Recorder {
 
       TextRecorder textRecorder
   ) {
-    this.ambiguousRecorder = ambiguousRecorder;
-
-    this.attributeRecorder = attributeRecorder;
-
-    this.booleanAttributeRecorder = booleanAttributeRecorder;
-
     this.doctypeRecorder = doctypeRecorder;
 
     this.documentCompiler = documentCompiler;
@@ -109,12 +91,6 @@ public final class Recorder {
     contentsRecorder = new ContentsRecorder(sink);
 
     return new Recorder(
-        new AmbiguousRecorder(sink),
-
-        attributeRecorder,
-
-        booleanAttributeRecorder,
-
         new DoctypeRecorder(sink),
 
         new DocumentCompiler(sink),
@@ -129,18 +105,6 @@ public final class Recorder {
 
         new TextRecorder(sink)
     );
-  }
-
-  public final AmbiguousPointer ambiguous(Ambiguous ambiguous, String value) {
-    return ambiguousRecorder.record(ambiguous, value);
-  }
-
-  public final AttributePointer attribute(AttributeName name) {
-    return booleanAttributeRecorder.record(name);
-  }
-
-  public final AttributePointer attribute(AttributeName name, Object value) {
-    return attributeRecorder.record(name, value);
   }
 
   public final Html compile() {

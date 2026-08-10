@@ -25,10 +25,14 @@ public record AttributePojo(AttributeName name, String value) implements Attribu
     final AttributeName n;
     n = Objects.requireNonNull(name, "name == null");
 
+    return of0(n, value);
+  }
+
+  public static AttributePojo of0(AttributeName name, String value) {
     final String v;
     v = Objects.requireNonNull(value, "value == null");
 
-    return new AttributePojo(n, v);
+    return new AttributePojo(name, v);
   }
 
 }

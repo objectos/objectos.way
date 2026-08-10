@@ -45,15 +45,19 @@ final class ElementChildrenRecorder {
 
   private void record0(ElementName elementName, ElementValue value) {
     switch (value) {
-      case ElementPointer child -> {
-        childElementMarker.mark(child);
-
-        childElementRecorder.record(child);
+      case AmbiguousPojo amb -> {
+        throw new UnsupportedOperationException("Implement me :: " + amb);
       }
 
       case Attribute _ -> {}
 
       case BooleanAttribute _ -> {}
+
+      case ElementPointer child -> {
+        childElementMarker.mark(child);
+
+        childElementRecorder.record(child);
+      }
 
       case NoOpMarkup _ -> {}
     }

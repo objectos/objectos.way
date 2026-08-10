@@ -22,30 +22,45 @@ import objectos.html.AttributeName;
 import objectos.html.BooleanAttribute;
 import objectos.html.ElementName;
 import objectos.html.markup.ElementValue;
+import objectos.script.Js;
+import objectos.script.JsAction;
+import objectox.html.AmbiguousName;
 import org.testng.annotations.Test;
 
 public class ElementAttributesRecorderTest {
 
-  private HtmlSink record(ElementValue... contents) {
-    return record(ElementName.HTML, contents);
+  @Test(description = "ambiguous name that resolves to an attribute")
+  public void ambiguous01() {
+    final AttributeName name;
+    name = AmbiguousName.TITLE.attribute;
+
+    final String text;
+    text = "foo";
+
+    final AmbiguousPojo value;
+    value = AmbiguousPojo.of0(AmbiguousName.TITLE, text);
+
+    assertEquals(
+        record(ElementName.HTML, value),
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.ATTRIBUTE88);
+          opts.addInt8(name.index());
+          opts.addInt8(opts.addObject(text));
+        })
+    );
   }
 
-  private HtmlSink record(ElementName elementName, ElementValue... contents) {
-    final HtmlSink sink;
-    sink = new HtmlSink();
+  @Test(description = "ambiguous name that does not resolve to an attribute")
+  public void ambiguous02() {
+    final AmbiguousPojo value;
+    value = AmbiguousPojo.of0(AmbiguousName.TITLE, "foo");
 
-    final AttributeRecorder attributeRecorder;
-    attributeRecorder = new AttributeRecorder(sink);
+    assertEquals(
+        record(ElementName.HEAD, value),
 
-    final BooleanAttributeRecorder booleanAttributeRecorder;
-    booleanAttributeRecorder = new BooleanAttributeRecorder(sink);
-
-    final ElementAttributesRecorder subject;
-    subject = new ElementAttributesRecorder(attributeRecorder, booleanAttributeRecorder);
-
-    subject.record(elementName, contents);
-
-    return sink;
+        HtmlSinkY.create(_ -> {})
+    );
   }
 
   @Test
@@ -71,6 +86,28 @@ public class ElementAttributesRecorderTest {
   }
 
   @Test
+  public void attributeJsAction01() {
+    final AttributeName name;
+    name = AttributeNamePojo.ONCLICK;
+
+    final JsAction action;
+    action = Js.submit();
+
+    final AttributeJsAction value;
+    value = AttributeJsAction.of0(name, action);
+
+    assertEquals(
+        record(value),
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.ATTRIBUTE88);
+          opts.addInt8(name.index());
+          opts.addInt8(opts.addObject(action));
+        })
+    );
+  }
+
+  @Test
   public void booleanAttribute01() {
     final AttributeName name;
     name = AttributeName.AUTOFOCUS;
@@ -86,6 +123,28 @@ public class ElementAttributesRecorderTest {
           opts.addInt8(name.index());
         })
     );
+  }
+
+  private HtmlSink record(ElementName elementName, ElementValue... contents) {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final AttributeRecorder attributeRecorder;
+    attributeRecorder = new AttributeRecorder(sink);
+
+    final BooleanAttributeRecorder booleanAttributeRecorder;
+    booleanAttributeRecorder = new BooleanAttributeRecorder(sink);
+
+    final ElementAttributesRecorder subject;
+    subject = new ElementAttributesRecorder(attributeRecorder, booleanAttributeRecorder);
+
+    subject.record(elementName, contents);
+
+    return sink;
+  }
+
+  private HtmlSink record(ElementValue... contents) {
+    return record(ElementName.HTML, contents);
   }
 
 }

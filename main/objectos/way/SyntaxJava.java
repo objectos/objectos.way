@@ -74,11 +74,9 @@ final class SyntaxJava implements Component {
 
   private void renderLine() {
     html.span(
-
         html.attr(Syntax.DATA_LINE, Integer.toString(line++)),
 
         html.f(this::parseLine)
-
     );
   }
 
@@ -238,11 +236,9 @@ final class SyntaxJava implements Component {
     text = source.substring(beginIndex, sourceIndex);
 
     html.span(
-
         html.attr(Syntax.DATA_HIGH, "comment"),
 
         html.text(text)
-
     );
 
     normalIndex = sourceIndex;
@@ -320,11 +316,9 @@ final class SyntaxJava implements Component {
     text = source.substring(beginIndex, sourceIndex);
 
     html.span(
-
         html.attr(Syntax.DATA_HIGH, "comment"),
 
         html.text(text)
-
     );
 
     // do not emit normal text
@@ -424,11 +418,9 @@ final class SyntaxJava implements Component {
     text = source.substring(beginIndex, sourceIndex);
 
     html.span(
-
         html.attr(Syntax.DATA_HIGH, "string"),
 
         html.text(text)
-
     );
 
     // do not emit normal text

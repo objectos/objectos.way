@@ -15,7 +15,7 @@
  */
 package objectos.html.markup;
 
-import objectox.html.markup.AmbiguousPointer;
+import objectox.html.markup.AmbiguousPojo;
 
 /// Represents encoded markup that may render an attribute or it may render
 /// an element.
@@ -23,4 +23,4 @@ public sealed interface AmbiguousMarkup
     extends
     RegularElementValue
     permits
-    AmbiguousPointer {}
+    AmbiguousPojo {}

@@ -166,7 +166,7 @@ public class MarkupGen {
         /// Encodes the `%1$s` element with the specified values.
         /// @param values the encoded attributes and encoded child nodes of the element
         /// @return an object representing the encoded element
-        ElementMarkup %2$s(RegularElementVaule... values);
+        ElementMarkup %2$s(RegularElementValue... values);
 
         /// Encodes the `%1$s` element with the specified text.
         /// @param text the text value of the element
@@ -179,9 +179,9 @@ public class MarkupGen {
         methods.append("""
 
         /// Encodes the `%s` element with the specified content.
-        /// @param contents the encoded attributes of the element
+        /// @param values the encoded attributes of the element
         /// @return an object representing the encoded element
-        ElementMarkup %s(VoidElementContent... contents);
+        ElementMarkup %s(VoidElementValue... values);
         """.formatted(elem.htmlName(), elem.htmlName()));
       }
     }
@@ -194,17 +194,6 @@ public class MarkupGen {
     //
     // ATTRIBUTES
     //
-
-    /// Encodes a boolean attribute with the specified name.
-    /// @param name the boolean attribute name
-    /// @return an object representing the encoded boolean attribute
-    BooleanAttribute attr(AttributeName name);
-
-    /// Encodes an attribute with the specified name and value.
-    /// @param name the attribute name
-    /// @param value the attribute value
-    /// @return an object representing the encoded attribute
-    Attribute attr(AttributeName name, String value);
     """);
 
     final Set<String> ambiguous;

@@ -15,8 +15,23 @@
  */
 package objectox.html.markup;
 
-import objectos.html.markup.AmbiguousMarkup;
+import objectos.html.AttributeName;
+import objectos.script.JsAction;
+import java.util.Objects;
+import objectos.html.Attribute;
 
-public final record AmbiguousPointer(int value)
-    implements
-    AmbiguousMarkup {}
+public record AttributeJsAction(AttributeName name, JsAction action) implements Attribute {
+
+  public static AttributeJsAction of0(AttributeName name, JsAction value) {
+    final JsAction v;
+    v = Objects.requireNonNull(value, "value == null");
+
+    return new AttributeJsAction(name, v);
+  }
+
+  @Override
+  public final String value() {
+    return action.toString();
+  }
+
+}

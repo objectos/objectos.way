@@ -44,7 +44,7 @@ public final class Js {
   /// @return the element
   public static JsElement byId(Id value) {
     final String v;
-    v = value.attrValue();
+    v = value.value();
 
     final JsString id;
     id = JsString.of(v);

@@ -17,14 +17,12 @@ package objectox.html;
 
 import java.util.Collection;
 import java.util.Objects;
-import objectos.html.AttributeName;
 import objectos.html.Attribute;
 import objectos.html.ElementName;
 import objectos.html.markup.AmbiguousMarkup;
 import objectos.html.markup.AttributeMarkup;
-import objectos.html.markup.RegularElementValue;
-import objectos.html.markup.ElementValue;
 import objectos.html.markup.ElementMarkup;
+import objectos.html.markup.ElementValue;
 import objectos.html.markup.FlattenInstruction;
 import objectos.html.markup.Fragment0;
 import objectos.html.markup.Fragment1;
@@ -35,11 +33,15 @@ import objectos.html.markup.FragmentInstruction;
 import objectos.html.markup.Instruction;
 import objectos.html.markup.NoOpMarkup;
 import objectos.html.markup.RawInstruction;
+import objectos.html.markup.RegularElementValue;
 import objectos.html.markup.TextInstruction;
 import objectos.html.markup.VoidElementValue;
 import objectos.script.JsAction;
 import objectox.html.elem.ElementNamePojo;
+import objectox.html.markup.AmbiguousPojo;
+import objectox.html.markup.AttributeJsAction;
 import objectox.html.markup.AttributeNamePojo;
+import objectox.html.markup.AttributePojo;
 
 sealed abstract class MarkupGenerated permits MarkupPojo {
 
@@ -81,7 +83,7 @@ sealed abstract class MarkupGenerated permits MarkupPojo {
 ///
 /// @param value the text block containing class names, possibly spread across multiple lines
 /// @return an instruction representing this attribute.
-public abstract AttributeMarkup css(String value);
+public abstract Attribute css(String value);
 
 /// Renders the specified fragment as part of this document.
 ///
@@ -196,8 +198,8 @@ public abstract FlattenInstruction flatten(Instruction... contents);
 /// @return an instruction representing this flatten operation
 public abstract FlattenInstruction flatten(Collection<? extends Instruction> contents);
 
-/// The no-op instruction.
-/// @return the no-op instruction.
+/// The no-op markup.
+/// @return the no-op markup.
 public abstract NoOpMarkup noop();
 
 // @formatter:on
@@ -288,1300 +290,1300 @@ public abstract NoOpMarkup noop();
   // ELEMENTS
   //
 
-  abstract ElementMarkup elem0(ElementName name, ElementValue... contents);
+  abstract ElementMarkup elem0(ElementName name, ElementValue... values);
 
   abstract ElementMarkup elem0(ElementName name, String text);
 
-  /// Renders an HTML element with the specified name and contents.
+  /// Encodes an HTML element with the specified name and values.
   ///
   /// @param name the element name
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element
-  public final ElementMarkup elem(ElementName name, ElementValue... contents) {
+  /// @return an object representing the encoded element
+  public final ElementMarkup elem(ElementName name, ElementValue... values) {
     Objects.requireNonNull(name, "name == null");
-    return elem0(name, contents);
+    return elem0(name, values);
   }
 
-  /// Renders an HTML element with the specified name and text.
+  /// Encodes an HTML element with the specified name and text.
   ///
   /// @param name the element name
   /// @param text the text value of this element
   ///
-  /// @return an instruction representing the element
+  /// @return an object representing the encoded element
   public final ElementMarkup elem(ElementName name, String text) {
     Objects.requireNonNull(name, "name == null");
     return elem0(name, text);
   }
 
-  /// Renders the `<!DOCTYPE html>` doctype.
+  /// Encodes the `<!DOCTYPE html>` doctype.
   public abstract void doctype();
 
-  /// Renders the `a` element with the specified content.
+  /// Encodes the `a` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup a(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.A, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup a(RegularElementValue... values) {
+    return elem0(ElementNamePojo.A, values);
   }
 
-  /// Renders the `a` element with the specified text.
+  /// Encodes the `a` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup a(String text) {
     return elem0(ElementNamePojo.A, text);
   }
 
-  /// Renders the `abbr` element with the specified content.
+  /// Encodes the `abbr` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup abbr(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.ABBR, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup abbr(RegularElementValue... values) {
+    return elem0(ElementNamePojo.ABBR, values);
   }
 
-  /// Renders the `abbr` element with the specified text.
+  /// Encodes the `abbr` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup abbr(String text) {
     return elem0(ElementNamePojo.ABBR, text);
   }
 
-  /// Renders the `article` element with the specified content.
+  /// Encodes the `article` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup article(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.ARTICLE, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup article(RegularElementValue... values) {
+    return elem0(ElementNamePojo.ARTICLE, values);
   }
 
-  /// Renders the `article` element with the specified text.
+  /// Encodes the `article` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup article(String text) {
     return elem0(ElementNamePojo.ARTICLE, text);
   }
 
-  /// Renders the `aside` element with the specified content.
+  /// Encodes the `aside` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup aside(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.ASIDE, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup aside(RegularElementValue... values) {
+    return elem0(ElementNamePojo.ASIDE, values);
   }
 
-  /// Renders the `aside` element with the specified text.
+  /// Encodes the `aside` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup aside(String text) {
     return elem0(ElementNamePojo.ASIDE, text);
   }
 
-  /// Renders the `b` element with the specified content.
+  /// Encodes the `b` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup b(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.B, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup b(RegularElementValue... values) {
+    return elem0(ElementNamePojo.B, values);
   }
 
-  /// Renders the `b` element with the specified text.
+  /// Encodes the `b` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup b(String text) {
     return elem0(ElementNamePojo.B, text);
   }
 
-  /// Renders the `blockquote` element with the specified content.
+  /// Encodes the `blockquote` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup blockquote(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.BLOCKQUOTE, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup blockquote(RegularElementValue... values) {
+    return elem0(ElementNamePojo.BLOCKQUOTE, values);
   }
 
-  /// Renders the `blockquote` element with the specified text.
+  /// Encodes the `blockquote` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup blockquote(String text) {
     return elem0(ElementNamePojo.BLOCKQUOTE, text);
   }
 
-  /// Renders the `body` element with the specified content.
+  /// Encodes the `body` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup body(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.BODY, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup body(RegularElementValue... values) {
+    return elem0(ElementNamePojo.BODY, values);
   }
 
-  /// Renders the `body` element with the specified text.
+  /// Encodes the `body` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup body(String text) {
     return elem0(ElementNamePojo.BODY, text);
   }
 
-  /// Renders the `br` element with the specified content.
+  /// Encodes the `br` element with the specified content.
   ///
-  /// @param contents the attributes of the element
+  /// @param contents the encoded attributes of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup br(VoidElementValue... contents) {
     return elem0(ElementNamePojo.BR, contents);
   }
 
-  /// Renders the `button` element with the specified content.
+  /// Encodes the `button` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup button(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.BUTTON, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup button(RegularElementValue... values) {
+    return elem0(ElementNamePojo.BUTTON, values);
   }
 
-  /// Renders the `button` element with the specified text.
+  /// Encodes the `button` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup button(String text) {
     return elem0(ElementNamePojo.BUTTON, text);
   }
 
-  /// Renders the `clipPath` element with the specified content.
+  /// Encodes the `clipPath` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup clipPath(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.CLIPPATH, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup clipPath(RegularElementValue... values) {
+    return elem0(ElementNamePojo.CLIPPATH, values);
   }
 
-  /// Renders the `code` element with the specified content.
+  /// Encodes the `code` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup code(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.CODE, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup code(RegularElementValue... values) {
+    return elem0(ElementNamePojo.CODE, values);
   }
 
-  /// Renders the `code` element with the specified text.
+  /// Encodes the `code` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup code(String text) {
     return elem0(ElementNamePojo.CODE, text);
   }
 
-  /// Renders the `dd` element with the specified content.
+  /// Encodes the `dd` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup dd(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.DD, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup dd(RegularElementValue... values) {
+    return elem0(ElementNamePojo.DD, values);
   }
 
-  /// Renders the `dd` element with the specified text.
+  /// Encodes the `dd` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup dd(String text) {
     return elem0(ElementNamePojo.DD, text);
   }
 
-  /// Renders the `defs` element with the specified content.
+  /// Encodes the `defs` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup defs(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.DEFS, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup defs(RegularElementValue... values) {
+    return elem0(ElementNamePojo.DEFS, values);
   }
 
-  /// Renders the `defs` element with the specified text.
+  /// Encodes the `defs` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup defs(String text) {
     return elem0(ElementNamePojo.DEFS, text);
   }
 
-  /// Renders the `details` element with the specified content.
+  /// Encodes the `details` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup details(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.DETAILS, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup details(RegularElementValue... values) {
+    return elem0(ElementNamePojo.DETAILS, values);
   }
 
-  /// Renders the `details` element with the specified text.
+  /// Encodes the `details` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup details(String text) {
     return elem0(ElementNamePojo.DETAILS, text);
   }
 
-  /// Renders the `dialog` element with the specified content.
+  /// Encodes the `dialog` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup dialog(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.DIALOG, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup dialog(RegularElementValue... values) {
+    return elem0(ElementNamePojo.DIALOG, values);
   }
 
-  /// Renders the `dialog` element with the specified text.
+  /// Encodes the `dialog` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup dialog(String text) {
     return elem0(ElementNamePojo.DIALOG, text);
   }
 
-  /// Renders the `div` element with the specified content.
+  /// Encodes the `div` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup div(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.DIV, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup div(RegularElementValue... values) {
+    return elem0(ElementNamePojo.DIV, values);
   }
 
-  /// Renders the `div` element with the specified text.
+  /// Encodes the `div` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup div(String text) {
     return elem0(ElementNamePojo.DIV, text);
   }
 
-  /// Renders the `dl` element with the specified content.
+  /// Encodes the `dl` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup dl(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.DL, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup dl(RegularElementValue... values) {
+    return elem0(ElementNamePojo.DL, values);
   }
 
-  /// Renders the `dl` element with the specified text.
+  /// Encodes the `dl` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup dl(String text) {
     return elem0(ElementNamePojo.DL, text);
   }
 
-  /// Renders the `dt` element with the specified content.
+  /// Encodes the `dt` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup dt(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.DT, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup dt(RegularElementValue... values) {
+    return elem0(ElementNamePojo.DT, values);
   }
 
-  /// Renders the `dt` element with the specified text.
+  /// Encodes the `dt` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup dt(String text) {
     return elem0(ElementNamePojo.DT, text);
   }
 
-  /// Renders the `em` element with the specified content.
+  /// Encodes the `em` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup em(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.EM, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup em(RegularElementValue... values) {
+    return elem0(ElementNamePojo.EM, values);
   }
 
-  /// Renders the `em` element with the specified text.
+  /// Encodes the `em` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup em(String text) {
     return elem0(ElementNamePojo.EM, text);
   }
 
-  /// Renders the `fieldset` element with the specified content.
+  /// Encodes the `fieldset` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup fieldset(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.FIELDSET, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup fieldset(RegularElementValue... values) {
+    return elem0(ElementNamePojo.FIELDSET, values);
   }
 
-  /// Renders the `fieldset` element with the specified text.
+  /// Encodes the `fieldset` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup fieldset(String text) {
     return elem0(ElementNamePojo.FIELDSET, text);
   }
 
-  /// Renders the `figure` element with the specified content.
+  /// Encodes the `figure` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup figure(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.FIGURE, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup figure(RegularElementValue... values) {
+    return elem0(ElementNamePojo.FIGURE, values);
   }
 
-  /// Renders the `figure` element with the specified text.
+  /// Encodes the `figure` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup figure(String text) {
     return elem0(ElementNamePojo.FIGURE, text);
   }
 
-  /// Renders the `footer` element with the specified content.
+  /// Encodes the `footer` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup footer(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.FOOTER, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup footer(RegularElementValue... values) {
+    return elem0(ElementNamePojo.FOOTER, values);
   }
 
-  /// Renders the `footer` element with the specified text.
+  /// Encodes the `footer` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup footer(String text) {
     return elem0(ElementNamePojo.FOOTER, text);
   }
 
-  /// Renders the `form` element with the specified content.
+  /// Encodes the `form` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup form(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.FORM, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup form(RegularElementValue... values) {
+    return elem0(ElementNamePojo.FORM, values);
   }
 
-  /// Renders the `g` element with the specified content.
+  /// Encodes the `g` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup g(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.G, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup g(RegularElementValue... values) {
+    return elem0(ElementNamePojo.G, values);
   }
 
-  /// Renders the `g` element with the specified text.
+  /// Encodes the `g` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup g(String text) {
     return elem0(ElementNamePojo.G, text);
   }
 
-  /// Renders the `h1` element with the specified content.
+  /// Encodes the `h1` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup h1(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.H1, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup h1(RegularElementValue... values) {
+    return elem0(ElementNamePojo.H1, values);
   }
 
-  /// Renders the `h1` element with the specified text.
+  /// Encodes the `h1` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup h1(String text) {
     return elem0(ElementNamePojo.H1, text);
   }
 
-  /// Renders the `h2` element with the specified content.
+  /// Encodes the `h2` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup h2(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.H2, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup h2(RegularElementValue... values) {
+    return elem0(ElementNamePojo.H2, values);
   }
 
-  /// Renders the `h2` element with the specified text.
+  /// Encodes the `h2` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup h2(String text) {
     return elem0(ElementNamePojo.H2, text);
   }
 
-  /// Renders the `h3` element with the specified content.
+  /// Encodes the `h3` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup h3(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.H3, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup h3(RegularElementValue... values) {
+    return elem0(ElementNamePojo.H3, values);
   }
 
-  /// Renders the `h3` element with the specified text.
+  /// Encodes the `h3` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup h3(String text) {
     return elem0(ElementNamePojo.H3, text);
   }
 
-  /// Renders the `h4` element with the specified content.
+  /// Encodes the `h4` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup h4(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.H4, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup h4(RegularElementValue... values) {
+    return elem0(ElementNamePojo.H4, values);
   }
 
-  /// Renders the `h4` element with the specified text.
+  /// Encodes the `h4` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup h4(String text) {
     return elem0(ElementNamePojo.H4, text);
   }
 
-  /// Renders the `h5` element with the specified content.
+  /// Encodes the `h5` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup h5(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.H5, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup h5(RegularElementValue... values) {
+    return elem0(ElementNamePojo.H5, values);
   }
 
-  /// Renders the `h5` element with the specified text.
+  /// Encodes the `h5` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup h5(String text) {
     return elem0(ElementNamePojo.H5, text);
   }
 
-  /// Renders the `h6` element with the specified content.
+  /// Encodes the `h6` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup h6(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.H6, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup h6(RegularElementValue... values) {
+    return elem0(ElementNamePojo.H6, values);
   }
 
-  /// Renders the `h6` element with the specified text.
+  /// Encodes the `h6` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup h6(String text) {
     return elem0(ElementNamePojo.H6, text);
   }
 
-  /// Renders the `head` element with the specified content.
+  /// Encodes the `head` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup head(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.HEAD, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup head(RegularElementValue... values) {
+    return elem0(ElementNamePojo.HEAD, values);
   }
 
-  /// Renders the `head` element with the specified text.
+  /// Encodes the `head` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup head(String text) {
     return elem0(ElementNamePojo.HEAD, text);
   }
 
-  /// Renders the `header` element with the specified content.
+  /// Encodes the `header` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup header(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.HEADER, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup header(RegularElementValue... values) {
+    return elem0(ElementNamePojo.HEADER, values);
   }
 
-  /// Renders the `header` element with the specified text.
+  /// Encodes the `header` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup header(String text) {
     return elem0(ElementNamePojo.HEADER, text);
   }
 
-  /// Renders the `hgroup` element with the specified content.
+  /// Encodes the `hgroup` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup hgroup(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.HGROUP, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup hgroup(RegularElementValue... values) {
+    return elem0(ElementNamePojo.HGROUP, values);
   }
 
-  /// Renders the `hgroup` element with the specified text.
+  /// Encodes the `hgroup` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup hgroup(String text) {
     return elem0(ElementNamePojo.HGROUP, text);
   }
 
-  /// Renders the `hr` element with the specified content.
+  /// Encodes the `hr` element with the specified content.
   ///
-  /// @param contents the attributes of the element
+  /// @param contents the encoded attributes of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup hr(VoidElementValue... contents) {
     return elem0(ElementNamePojo.HR, contents);
   }
 
-  /// Renders the `html` element with the specified content.
+  /// Encodes the `html` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup html(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.HTML, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup html(RegularElementValue... values) {
+    return elem0(ElementNamePojo.HTML, values);
   }
 
-  /// Renders the `html` element with the specified text.
+  /// Encodes the `html` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup html(String text) {
     return elem0(ElementNamePojo.HTML, text);
   }
 
-  /// Renders the `img` element with the specified content.
+  /// Encodes the `img` element with the specified content.
   ///
-  /// @param contents the attributes of the element
+  /// @param contents the encoded attributes of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup img(VoidElementValue... contents) {
     return elem0(ElementNamePojo.IMG, contents);
   }
 
-  /// Renders the `input` element with the specified content.
+  /// Encodes the `input` element with the specified content.
   ///
-  /// @param contents the attributes of the element
+  /// @param contents the encoded attributes of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup input(VoidElementValue... contents) {
     return elem0(ElementNamePojo.INPUT, contents);
   }
 
-  /// Renders the `kbd` element with the specified content.
+  /// Encodes the `kbd` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup kbd(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.KBD, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup kbd(RegularElementValue... values) {
+    return elem0(ElementNamePojo.KBD, values);
   }
 
-  /// Renders the `kbd` element with the specified text.
+  /// Encodes the `kbd` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup kbd(String text) {
     return elem0(ElementNamePojo.KBD, text);
   }
 
-  /// Renders the `label` element with the specified content.
+  /// Encodes the `label` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup label(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.LABEL, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup label(RegularElementValue... values) {
+    return elem0(ElementNamePojo.LABEL, values);
   }
 
-  /// Renders the `legend` element with the specified content.
+  /// Encodes the `legend` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup legend(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.LEGEND, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup legend(RegularElementValue... values) {
+    return elem0(ElementNamePojo.LEGEND, values);
   }
 
-  /// Renders the `legend` element with the specified text.
+  /// Encodes the `legend` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup legend(String text) {
     return elem0(ElementNamePojo.LEGEND, text);
   }
 
-  /// Renders the `li` element with the specified content.
+  /// Encodes the `li` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup li(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.LI, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup li(RegularElementValue... values) {
+    return elem0(ElementNamePojo.LI, values);
   }
 
-  /// Renders the `li` element with the specified text.
+  /// Encodes the `li` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup li(String text) {
     return elem0(ElementNamePojo.LI, text);
   }
 
-  /// Renders the `link` element with the specified content.
+  /// Encodes the `link` element with the specified content.
   ///
-  /// @param contents the attributes of the element
+  /// @param contents the encoded attributes of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup link(VoidElementValue... contents) {
     return elem0(ElementNamePojo.LINK, contents);
   }
 
-  /// Renders the `main` element with the specified content.
+  /// Encodes the `main` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup main(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.MAIN, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup main(RegularElementValue... values) {
+    return elem0(ElementNamePojo.MAIN, values);
   }
 
-  /// Renders the `main` element with the specified text.
+  /// Encodes the `main` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup main(String text) {
     return elem0(ElementNamePojo.MAIN, text);
   }
 
-  /// Renders the `menu` element with the specified content.
+  /// Encodes the `menu` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup menu(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.MENU, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup menu(RegularElementValue... values) {
+    return elem0(ElementNamePojo.MENU, values);
   }
 
-  /// Renders the `menu` element with the specified text.
+  /// Encodes the `menu` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup menu(String text) {
     return elem0(ElementNamePojo.MENU, text);
   }
 
-  /// Renders the `meta` element with the specified content.
+  /// Encodes the `meta` element with the specified content.
   ///
-  /// @param contents the attributes of the element
+  /// @param contents the encoded attributes of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup meta(VoidElementValue... contents) {
     return elem0(ElementNamePojo.META, contents);
   }
 
-  /// Renders the `nav` element with the specified content.
+  /// Encodes the `nav` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup nav(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.NAV, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup nav(RegularElementValue... values) {
+    return elem0(ElementNamePojo.NAV, values);
   }
 
-  /// Renders the `nav` element with the specified text.
+  /// Encodes the `nav` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup nav(String text) {
     return elem0(ElementNamePojo.NAV, text);
   }
 
-  /// Renders the `noscript` element with the specified content.
+  /// Encodes the `noscript` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup noscript(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.NOSCRIPT, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup noscript(RegularElementValue... values) {
+    return elem0(ElementNamePojo.NOSCRIPT, values);
   }
 
-  /// Renders the `noscript` element with the specified text.
+  /// Encodes the `noscript` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup noscript(String text) {
     return elem0(ElementNamePojo.NOSCRIPT, text);
   }
 
-  /// Renders the `ol` element with the specified content.
+  /// Encodes the `ol` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup ol(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.OL, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup ol(RegularElementValue... values) {
+    return elem0(ElementNamePojo.OL, values);
   }
 
-  /// Renders the `ol` element with the specified text.
+  /// Encodes the `ol` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup ol(String text) {
     return elem0(ElementNamePojo.OL, text);
   }
 
-  /// Renders the `optgroup` element with the specified content.
+  /// Encodes the `optgroup` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup optgroup(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.OPTGROUP, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup optgroup(RegularElementValue... values) {
+    return elem0(ElementNamePojo.OPTGROUP, values);
   }
 
-  /// Renders the `optgroup` element with the specified text.
+  /// Encodes the `optgroup` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup optgroup(String text) {
     return elem0(ElementNamePojo.OPTGROUP, text);
   }
 
-  /// Renders the `option` element with the specified content.
+  /// Encodes the `option` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup option(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.OPTION, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup option(RegularElementValue... values) {
+    return elem0(ElementNamePojo.OPTION, values);
   }
 
-  /// Renders the `option` element with the specified text.
+  /// Encodes the `option` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup option(String text) {
     return elem0(ElementNamePojo.OPTION, text);
   }
 
-  /// Renders the `p` element with the specified content.
+  /// Encodes the `p` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup p(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.P, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup p(RegularElementValue... values) {
+    return elem0(ElementNamePojo.P, values);
   }
 
-  /// Renders the `p` element with the specified text.
+  /// Encodes the `p` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup p(String text) {
     return elem0(ElementNamePojo.P, text);
   }
 
-  /// Renders the `path` element with the specified content.
+  /// Encodes the `path` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup path(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.PATH, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup path(RegularElementValue... values) {
+    return elem0(ElementNamePojo.PATH, values);
   }
 
-  /// Renders the `path` element with the specified text.
+  /// Encodes the `path` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup path(String text) {
     return elem0(ElementNamePojo.PATH, text);
   }
 
-  /// Renders the `pre` element with the specified content.
+  /// Encodes the `pre` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup pre(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.PRE, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup pre(RegularElementValue... values) {
+    return elem0(ElementNamePojo.PRE, values);
   }
 
-  /// Renders the `pre` element with the specified text.
+  /// Encodes the `pre` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup pre(String text) {
     return elem0(ElementNamePojo.PRE, text);
   }
 
-  /// Renders the `progress` element with the specified content.
+  /// Encodes the `progress` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup progress(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.PROGRESS, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup progress(RegularElementValue... values) {
+    return elem0(ElementNamePojo.PROGRESS, values);
   }
 
-  /// Renders the `progress` element with the specified text.
+  /// Encodes the `progress` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup progress(String text) {
     return elem0(ElementNamePojo.PROGRESS, text);
   }
 
-  /// Renders the `samp` element with the specified content.
+  /// Encodes the `samp` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup samp(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.SAMP, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup samp(RegularElementValue... values) {
+    return elem0(ElementNamePojo.SAMP, values);
   }
 
-  /// Renders the `samp` element with the specified text.
+  /// Encodes the `samp` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup samp(String text) {
     return elem0(ElementNamePojo.SAMP, text);
   }
 
-  /// Renders the `script` element with the specified content.
+  /// Encodes the `script` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup script(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.SCRIPT, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup script(RegularElementValue... values) {
+    return elem0(ElementNamePojo.SCRIPT, values);
   }
 
-  /// Renders the `script` element with the specified text.
+  /// Encodes the `script` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup script(String text) {
     return elem0(ElementNamePojo.SCRIPT, text);
   }
 
-  /// Renders the `section` element with the specified content.
+  /// Encodes the `section` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup section(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.SECTION, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup section(RegularElementValue... values) {
+    return elem0(ElementNamePojo.SECTION, values);
   }
 
-  /// Renders the `section` element with the specified text.
+  /// Encodes the `section` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup section(String text) {
     return elem0(ElementNamePojo.SECTION, text);
   }
 
-  /// Renders the `select` element with the specified content.
+  /// Encodes the `select` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup select(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.SELECT, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup select(RegularElementValue... values) {
+    return elem0(ElementNamePojo.SELECT, values);
   }
 
-  /// Renders the `select` element with the specified text.
+  /// Encodes the `select` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup select(String text) {
     return elem0(ElementNamePojo.SELECT, text);
   }
 
-  /// Renders the `small` element with the specified content.
+  /// Encodes the `small` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup small(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.SMALL, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup small(RegularElementValue... values) {
+    return elem0(ElementNamePojo.SMALL, values);
   }
 
-  /// Renders the `small` element with the specified text.
+  /// Encodes the `small` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup small(String text) {
     return elem0(ElementNamePojo.SMALL, text);
   }
 
-  /// Renders the `span` element with the specified content.
+  /// Encodes the `span` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup span(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.SPAN, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup span(RegularElementValue... values) {
+    return elem0(ElementNamePojo.SPAN, values);
   }
 
-  /// Renders the `span` element with the specified text.
+  /// Encodes the `span` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup span(String text) {
     return elem0(ElementNamePojo.SPAN, text);
   }
 
-  /// Renders the `strong` element with the specified content.
+  /// Encodes the `strong` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup strong(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.STRONG, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup strong(RegularElementValue... values) {
+    return elem0(ElementNamePojo.STRONG, values);
   }
 
-  /// Renders the `strong` element with the specified text.
+  /// Encodes the `strong` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup strong(String text) {
     return elem0(ElementNamePojo.STRONG, text);
   }
 
-  /// Renders the `style` element with the specified content.
+  /// Encodes the `style` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup style(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.STYLE, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup style(RegularElementValue... values) {
+    return elem0(ElementNamePojo.STYLE, values);
   }
 
-  /// Renders the `sub` element with the specified content.
+  /// Encodes the `sub` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup sub(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.SUB, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup sub(RegularElementValue... values) {
+    return elem0(ElementNamePojo.SUB, values);
   }
 
-  /// Renders the `sub` element with the specified text.
+  /// Encodes the `sub` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup sub(String text) {
     return elem0(ElementNamePojo.SUB, text);
   }
 
-  /// Renders the `summary` element with the specified content.
+  /// Encodes the `summary` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup summary(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.SUMMARY, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup summary(RegularElementValue... values) {
+    return elem0(ElementNamePojo.SUMMARY, values);
   }
 
-  /// Renders the `summary` element with the specified text.
+  /// Encodes the `summary` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup summary(String text) {
     return elem0(ElementNamePojo.SUMMARY, text);
   }
 
-  /// Renders the `sup` element with the specified content.
+  /// Encodes the `sup` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup sup(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.SUP, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup sup(RegularElementValue... values) {
+    return elem0(ElementNamePojo.SUP, values);
   }
 
-  /// Renders the `sup` element with the specified text.
+  /// Encodes the `sup` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup sup(String text) {
     return elem0(ElementNamePojo.SUP, text);
   }
 
-  /// Renders the `svg` element with the specified content.
+  /// Encodes the `svg` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup svg(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.SVG, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup svg(RegularElementValue... values) {
+    return elem0(ElementNamePojo.SVG, values);
   }
 
-  /// Renders the `svg` element with the specified text.
+  /// Encodes the `svg` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup svg(String text) {
     return elem0(ElementNamePojo.SVG, text);
   }
 
-  /// Renders the `table` element with the specified content.
+  /// Encodes the `table` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup table(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.TABLE, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup table(RegularElementValue... values) {
+    return elem0(ElementNamePojo.TABLE, values);
   }
 
-  /// Renders the `table` element with the specified text.
+  /// Encodes the `table` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup table(String text) {
     return elem0(ElementNamePojo.TABLE, text);
   }
 
-  /// Renders the `tbody` element with the specified content.
+  /// Encodes the `tbody` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup tbody(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.TBODY, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup tbody(RegularElementValue... values) {
+    return elem0(ElementNamePojo.TBODY, values);
   }
 
-  /// Renders the `tbody` element with the specified text.
+  /// Encodes the `tbody` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup tbody(String text) {
     return elem0(ElementNamePojo.TBODY, text);
   }
 
-  /// Renders the `td` element with the specified content.
+  /// Encodes the `td` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup td(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.TD, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup td(RegularElementValue... values) {
+    return elem0(ElementNamePojo.TD, values);
   }
 
-  /// Renders the `td` element with the specified text.
+  /// Encodes the `td` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup td(String text) {
     return elem0(ElementNamePojo.TD, text);
   }
 
-  /// Renders the `template` element with the specified content.
+  /// Encodes the `template` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup template(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.TEMPLATE, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup template(RegularElementValue... values) {
+    return elem0(ElementNamePojo.TEMPLATE, values);
   }
 
-  /// Renders the `template` element with the specified text.
+  /// Encodes the `template` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup template(String text) {
     return elem0(ElementNamePojo.TEMPLATE, text);
   }
 
-  /// Renders the `textarea` element with the specified content.
+  /// Encodes the `textarea` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup textarea(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.TEXTAREA, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup textarea(RegularElementValue... values) {
+    return elem0(ElementNamePojo.TEXTAREA, values);
   }
 
-  /// Renders the `textarea` element with the specified text.
+  /// Encodes the `textarea` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup textarea(String text) {
     return elem0(ElementNamePojo.TEXTAREA, text);
   }
 
-  /// Renders the `th` element with the specified content.
+  /// Encodes the `th` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup th(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.TH, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup th(RegularElementValue... values) {
+    return elem0(ElementNamePojo.TH, values);
   }
 
-  /// Renders the `th` element with the specified text.
+  /// Encodes the `th` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup th(String text) {
     return elem0(ElementNamePojo.TH, text);
   }
 
-  /// Renders the `thead` element with the specified content.
+  /// Encodes the `thead` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup thead(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.THEAD, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup thead(RegularElementValue... values) {
+    return elem0(ElementNamePojo.THEAD, values);
   }
 
-  /// Renders the `thead` element with the specified text.
+  /// Encodes the `thead` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup thead(String text) {
     return elem0(ElementNamePojo.THEAD, text);
   }
 
-  /// Renders the `title` element with the specified content.
+  /// Encodes the `title` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup title(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.TITLE, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup title(RegularElementValue... values) {
+    return elem0(ElementNamePojo.TITLE, values);
   }
 
-  /// Renders the `tr` element with the specified content.
+  /// Encodes the `tr` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup tr(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.TR, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup tr(RegularElementValue... values) {
+    return elem0(ElementNamePojo.TR, values);
   }
 
-  /// Renders the `tr` element with the specified text.
+  /// Encodes the `tr` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup tr(String text) {
     return elem0(ElementNamePojo.TR, text);
   }
 
-  /// Renders the `ul` element with the specified content.
+  /// Encodes the `ul` element with the specified values.
   ///
-  /// @param contents the attributes and children of the element
+  /// @param values the encoded attributes and encoded child nodes of the element
   ///
-  /// @return an instruction representing the element.
-  public final ElementMarkup ul(RegularElementValue... contents) {
-    return elem0(ElementNamePojo.UL, contents);
+  /// @return an object representing the encoded element
+  public final ElementMarkup ul(RegularElementValue... values) {
+    return elem0(ElementNamePojo.UL, values);
   }
 
-  /// Renders the `ul` element with the specified text.
+  /// Encodes the `ul` element with the specified text.
   ///
   /// @param text the text value of the element
   ///
-  /// @return an instruction representing the element.
+  /// @return an object representing the encoded element
   public final ElementMarkup ul(String text) {
     return elem0(ElementNamePojo.UL, text);
   }
@@ -1590,1249 +1592,1222 @@ public abstract NoOpMarkup noop();
   // ATTRIBUTES
   //
 
-  abstract AttributeMarkup attr0(AttributeName name);
-
-  abstract AttributeMarkup attr0(AttributeName name, Object value);
-
-  /// Renders an attribute with the specified name.
-  ///
-  /// @param name the attribute name
-  ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup attr(AttributeName name) {
-    Objects.requireNonNull(name, "name == null");
-    return attr0(name);
-  }
-
-  /// Renders an attribute with the specified name and value.
-  ///
-  /// @param name the attribute name
-  /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup attr(AttributeName name, String value) {
-    Objects.requireNonNull(name, "name == null");
-    return attr0(name, value);
-  }
-
-  /// Renders the `accesskey` attribute with the specified value.
+  /// Encodes the `accesskey` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup accesskey(String value) {
-    return attr0(AttributeNamePojo.ACCESSKEY, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute accesskey(String value) {
+    return AttributePojo.of0(AttributeNamePojo.ACCESSKEY, value);
   }
 
-  /// Renders the `action` attribute with the specified value.
+  /// Encodes the `action` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup action(String value) {
-    return attr0(AttributeNamePojo.ACTION, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute action(String value) {
+    return AttributePojo.of0(AttributeNamePojo.ACTION, value);
   }
 
-  /// Renders the `align` attribute with the specified value.
+  /// Encodes the `align` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup align(String value) {
-    return attr0(AttributeNamePojo.ALIGN, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute align(String value) {
+    return AttributePojo.of0(AttributeNamePojo.ALIGN, value);
   }
 
-  /// Renders the `alignment-baseline` attribute with the specified value.
+  /// Encodes the `alignment-baseline` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup alignmentBaseline(String value) {
-    return attr0(AttributeNamePojo.ALIGNMENT_BASELINE, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute alignmentBaseline(String value) {
+    return AttributePojo.of0(AttributeNamePojo.ALIGNMENT_BASELINE, value);
   }
 
-  /// Renders the `alt` attribute with the specified value.
+  /// Encodes the `alt` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup alt(String value) {
-    return attr0(AttributeNamePojo.ALT, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute alt(String value) {
+    return AttributePojo.of0(AttributeNamePojo.ALT, value);
   }
 
-  /// Renders the `aria-current` attribute with the specified value.
+  /// Encodes the `aria-current` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup ariaCurrent(String value) {
-    return attr0(AttributeNamePojo.ARIA_CURRENT, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute ariaCurrent(String value) {
+    return AttributePojo.of0(AttributeNamePojo.ARIA_CURRENT, value);
   }
 
-  /// Renders the `aria-disabled` attribute with the specified value.
+  /// Encodes the `aria-disabled` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup ariaDisabled(String value) {
-    return attr0(AttributeNamePojo.ARIA_DISABLED, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute ariaDisabled(String value) {
+    return AttributePojo.of0(AttributeNamePojo.ARIA_DISABLED, value);
   }
 
-  /// Renders the `aria-hidden` attribute with the specified value.
+  /// Encodes the `aria-hidden` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup ariaHidden(String value) {
-    return attr0(AttributeNamePojo.ARIA_HIDDEN, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute ariaHidden(String value) {
+    return AttributePojo.of0(AttributeNamePojo.ARIA_HIDDEN, value);
   }
 
-  /// Renders the `aria-invalid` attribute with the specified value.
+  /// Encodes the `aria-invalid` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup ariaInvalid(String value) {
-    return attr0(AttributeNamePojo.ARIA_INVALID, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute ariaInvalid(String value) {
+    return AttributePojo.of0(AttributeNamePojo.ARIA_INVALID, value);
   }
 
-  /// Renders the `aria-label` attribute with the specified value.
+  /// Encodes the `aria-label` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup ariaLabel(String value) {
-    return attr0(AttributeNamePojo.ARIA_LABEL, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute ariaLabel(String value) {
+    return AttributePojo.of0(AttributeNamePojo.ARIA_LABEL, value);
   }
 
-  /// Renders the `aria-labelledby` attribute with the specified value.
+  /// Encodes the `aria-labelledby` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup ariaLabelledBy(String value) {
-    return attr0(AttributeNamePojo.ARIA_LABELLED_BY, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute ariaLabelledBy(String value) {
+    return AttributePojo.of0(AttributeNamePojo.ARIA_LABELLED_BY, value);
   }
 
-  /// Renders the `aria-modal` attribute with the specified value.
+  /// Encodes the `aria-modal` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup ariaModal(String value) {
-    return attr0(AttributeNamePojo.ARIA_MODAL, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute ariaModal(String value) {
+    return AttributePojo.of0(AttributeNamePojo.ARIA_MODAL, value);
   }
 
-  /// Renders the `aria-placeholder` attribute with the specified value.
+  /// Encodes the `aria-placeholder` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup ariaPlaceholder(String value) {
-    return attr0(AttributeNamePojo.ARIA_PLACEHOLDER, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute ariaPlaceholder(String value) {
+    return AttributePojo.of0(AttributeNamePojo.ARIA_PLACEHOLDER, value);
   }
 
-  /// Renders the `aria-readonly` attribute with the specified value.
+  /// Encodes the `aria-readonly` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup ariaReadonly(String value) {
-    return attr0(AttributeNamePojo.ARIA_READONLY, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute ariaReadonly(String value) {
+    return AttributePojo.of0(AttributeNamePojo.ARIA_READONLY, value);
   }
 
-  /// Renders the `aria-required` attribute with the specified value.
+  /// Encodes the `aria-required` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup ariaRequired(String value) {
-    return attr0(AttributeNamePojo.ARIA_REQUIRED, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute ariaRequired(String value) {
+    return AttributePojo.of0(AttributeNamePojo.ARIA_REQUIRED, value);
   }
 
-  /// Renders the `aria-selected` attribute with the specified value.
+  /// Encodes the `aria-selected` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup ariaSelected(String value) {
-    return attr0(AttributeNamePojo.ARIA_SELECTED, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute ariaSelected(String value) {
+    return AttributePojo.of0(AttributeNamePojo.ARIA_SELECTED, value);
   }
 
-  /// Renders the `as` attribute with the specified value.
+  /// Encodes the `as` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup as(String value) {
-    return attr0(AttributeNamePojo.AS, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute as(String value) {
+    return AttributePojo.of0(AttributeNamePojo.AS, value);
   }
 
-  /// Renders the `autocomplete` attribute with the specified value.
+  /// Encodes the `autocomplete` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup autocomplete(String value) {
-    return attr0(AttributeNamePojo.AUTOCOMPLETE, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute autocomplete(String value) {
+    return AttributePojo.of0(AttributeNamePojo.AUTOCOMPLETE, value);
   }
 
-  /// Renders the `baseline-shift` attribute with the specified value.
+  /// Encodes the `baseline-shift` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup baselineShift(String value) {
-    return attr0(AttributeNamePojo.BASELINE_SHIFT, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute baselineShift(String value) {
+    return AttributePojo.of0(AttributeNamePojo.BASELINE_SHIFT, value);
   }
 
-  /// Renders the `border` attribute with the specified value.
+  /// Encodes the `border` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup border(String value) {
-    return attr0(AttributeNamePojo.BORDER, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute border(String value) {
+    return AttributePojo.of0(AttributeNamePojo.BORDER, value);
   }
 
-  /// Renders the `cellpadding` attribute with the specified value.
+  /// Encodes the `cellpadding` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup cellpadding(String value) {
-    return attr0(AttributeNamePojo.CELLPADDING, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute cellpadding(String value) {
+    return AttributePojo.of0(AttributeNamePojo.CELLPADDING, value);
   }
 
-  /// Renders the `cellspacing` attribute with the specified value.
+  /// Encodes the `cellspacing` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup cellspacing(String value) {
-    return attr0(AttributeNamePojo.CELLSPACING, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute cellspacing(String value) {
+    return AttributePojo.of0(AttributeNamePojo.CELLSPACING, value);
   }
 
-  /// Renders the `charset` attribute with the specified value.
+  /// Encodes the `charset` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup charset(String value) {
-    return attr0(AttributeNamePojo.CHARSET, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute charset(String value) {
+    return AttributePojo.of0(AttributeNamePojo.CHARSET, value);
   }
 
-  /// Renders the `cite` attribute with the specified value.
+  /// Encodes the `cite` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup cite(String value) {
-    return attr0(AttributeNamePojo.CITE, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute cite(String value) {
+    return AttributePojo.of0(AttributeNamePojo.CITE, value);
   }
 
-  /// Renders the `class` attribute with the specified value.
+  /// Encodes the `class` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup className(String value) {
-    return attr0(AttributeNamePojo.CLASS, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute className(String value) {
+    return AttributePojo.of0(AttributeNamePojo.CLASS, value);
   }
 
-  /// Renders the `clip-rule` attribute with the specified value.
+  /// Encodes the `clip-rule` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup clipRule(String value) {
-    return attr0(AttributeNamePojo.CLIP_RULE, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute clipRule(String value) {
+    return AttributePojo.of0(AttributeNamePojo.CLIP_RULE, value);
   }
 
-  /// Renders the `closedby` attribute with the specified value.
+  /// Encodes the `closedby` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup closedby(String value) {
-    return attr0(AttributeNamePojo.CLOSEDBY, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute closedby(String value) {
+    return AttributePojo.of0(AttributeNamePojo.CLOSEDBY, value);
   }
 
-  /// Renders the `color` attribute with the specified value.
+  /// Encodes the `color` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup color(String value) {
-    return attr0(AttributeNamePojo.COLOR, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute color(String value) {
+    return AttributePojo.of0(AttributeNamePojo.COLOR, value);
   }
 
-  /// Renders the `color-interpolation` attribute with the specified value.
+  /// Encodes the `color-interpolation` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup colorInterpolation(String value) {
-    return attr0(AttributeNamePojo.COLOR_INTERPOLATION, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute colorInterpolation(String value) {
+    return AttributePojo.of0(AttributeNamePojo.COLOR_INTERPOLATION, value);
   }
 
-  /// Renders the `color-interpolation-filters` attribute with the specified
+  /// Encodes the `color-interpolation-filters` attribute with the specified
   /// value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup colorInterpolationFilters(String value) {
-    return attr0(AttributeNamePojo.COLOR_INTERPOLATION_FILTERS, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute colorInterpolationFilters(String value) {
+    return AttributePojo.of0(AttributeNamePojo.COLOR_INTERPOLATION_FILTERS, value);
   }
 
-  /// Renders the `cols` attribute with the specified value.
+  /// Encodes the `cols` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup cols(String value) {
-    return attr0(AttributeNamePojo.COLS, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute cols(String value) {
+    return AttributePojo.of0(AttributeNamePojo.COLS, value);
   }
 
-  /// Renders the `content` attribute with the specified value.
+  /// Encodes the `content` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup content(String value) {
-    return attr0(AttributeNamePojo.CONTENT, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute content(String value) {
+    return AttributePojo.of0(AttributeNamePojo.CONTENT, value);
   }
 
-  /// Renders the `contenteditable` attribute with the specified value.
+  /// Encodes the `contenteditable` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup contenteditable(String value) {
-    return attr0(AttributeNamePojo.CONTENTEDITABLE, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute contenteditable(String value) {
+    return AttributePojo.of0(AttributeNamePojo.CONTENTEDITABLE, value);
   }
 
-  /// Renders the `crossorigin` attribute with the specified value.
+  /// Encodes the `crossorigin` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup crossorigin(String value) {
-    return attr0(AttributeNamePojo.CROSSORIGIN, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute crossorigin(String value) {
+    return AttributePojo.of0(AttributeNamePojo.CROSSORIGIN, value);
   }
 
-  /// Renders the `cursor` attribute with the specified value.
+  /// Encodes the `cursor` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup cursor(String value) {
-    return attr0(AttributeNamePojo.CURSOR, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute cursor(String value) {
+    return AttributePojo.of0(AttributeNamePojo.CURSOR, value);
   }
 
-  /// Renders the `d` attribute with the specified value.
+  /// Encodes the `d` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup d(String value) {
-    return attr0(AttributeNamePojo.D, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute d(String value) {
+    return AttributePojo.of0(AttributeNamePojo.D, value);
   }
 
-  /// Renders the `dir` attribute with the specified value.
+  /// Encodes the `dir` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup dir(String value) {
-    return attr0(AttributeNamePojo.DIR, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute dir(String value) {
+    return AttributePojo.of0(AttributeNamePojo.DIR, value);
   }
 
-  /// Renders the `direction` attribute with the specified value.
+  /// Encodes the `direction` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup direction(String value) {
-    return attr0(AttributeNamePojo.DIRECTION, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute direction(String value) {
+    return AttributePojo.of0(AttributeNamePojo.DIRECTION, value);
   }
 
-  /// Renders the `dirname` attribute with the specified value.
+  /// Encodes the `dirname` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup dirname(String value) {
-    return attr0(AttributeNamePojo.DIRNAME, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute dirname(String value) {
+    return AttributePojo.of0(AttributeNamePojo.DIRNAME, value);
   }
 
-  /// Renders the `display` attribute with the specified value.
+  /// Encodes the `display` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup display(String value) {
-    return attr0(AttributeNamePojo.DISPLAY, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute display(String value) {
+    return AttributePojo.of0(AttributeNamePojo.DISPLAY, value);
   }
 
-  /// Renders the `dominant-baseline` attribute with the specified value.
+  /// Encodes the `dominant-baseline` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup dominantBaseline(String value) {
-    return attr0(AttributeNamePojo.DOMINANT_BASELINE, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute dominantBaseline(String value) {
+    return AttributePojo.of0(AttributeNamePojo.DOMINANT_BASELINE, value);
   }
 
-  /// Renders the `download` attribute with the specified value.
+  /// Encodes the `download` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup download(String value) {
-    return attr0(AttributeNamePojo.DOWNLOAD, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute download(String value) {
+    return AttributePojo.of0(AttributeNamePojo.DOWNLOAD, value);
   }
 
-  /// Renders the `draggable` attribute with the specified value.
+  /// Encodes the `draggable` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup draggable(String value) {
-    return attr0(AttributeNamePojo.DRAGGABLE, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute draggable(String value) {
+    return AttributePojo.of0(AttributeNamePojo.DRAGGABLE, value);
   }
 
-  /// Renders the `enctype` attribute with the specified value.
+  /// Encodes the `enctype` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup enctype(String value) {
-    return attr0(AttributeNamePojo.ENCTYPE, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute enctype(String value) {
+    return AttributePojo.of0(AttributeNamePojo.ENCTYPE, value);
   }
 
-  /// Renders the `fill` attribute with the specified value.
+  /// Encodes the `fill` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup fill(String value) {
-    return attr0(AttributeNamePojo.FILL, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute fill(String value) {
+    return AttributePojo.of0(AttributeNamePojo.FILL, value);
   }
 
-  /// Renders the `fill-opacity` attribute with the specified value.
+  /// Encodes the `fill-opacity` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup fillOpacity(String value) {
-    return attr0(AttributeNamePojo.FILL_OPACITY, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute fillOpacity(String value) {
+    return AttributePojo.of0(AttributeNamePojo.FILL_OPACITY, value);
   }
 
-  /// Renders the `fill-rule` attribute with the specified value.
+  /// Encodes the `fill-rule` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup fillRule(String value) {
-    return attr0(AttributeNamePojo.FILL_RULE, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute fillRule(String value) {
+    return AttributePojo.of0(AttributeNamePojo.FILL_RULE, value);
   }
 
-  /// Renders the `filter` attribute with the specified value.
+  /// Encodes the `filter` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup filter(String value) {
-    return attr0(AttributeNamePojo.FILTER, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute filter(String value) {
+    return AttributePojo.of0(AttributeNamePojo.FILTER, value);
   }
 
-  /// Renders the `flood-color` attribute with the specified value.
+  /// Encodes the `flood-color` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup floodColor(String value) {
-    return attr0(AttributeNamePojo.FLOOD_COLOR, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute floodColor(String value) {
+    return AttributePojo.of0(AttributeNamePojo.FLOOD_COLOR, value);
   }
 
-  /// Renders the `flood-opacity` attribute with the specified value.
+  /// Encodes the `flood-opacity` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup floodOpacity(String value) {
-    return attr0(AttributeNamePojo.FLOOD_OPACITY, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute floodOpacity(String value) {
+    return AttributePojo.of0(AttributeNamePojo.FLOOD_OPACITY, value);
   }
 
-  /// Renders the `for` attribute with the specified value.
+  /// Encodes the `for` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup forId(String value) {
-    return attr0(AttributeNamePojo.FOR, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute forId(String value) {
+    return AttributePojo.of0(AttributeNamePojo.FOR, value);
   }
 
-  /// Renders the `glyph-orientation-horizontal` attribute with the specified
+  /// Encodes the `glyph-orientation-horizontal` attribute with the specified
   /// value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup glyphOrientationHorizontal(String value) {
-    return attr0(AttributeNamePojo.GLYPH_ORIENTATION_HORIZONTAL, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute glyphOrientationHorizontal(String value) {
+    return AttributePojo.of0(AttributeNamePojo.GLYPH_ORIENTATION_HORIZONTAL, value);
   }
 
-  /// Renders the `glyph-orientation-vertical` attribute with the specified
+  /// Encodes the `glyph-orientation-vertical` attribute with the specified
   /// value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup glyphOrientationVertical(String value) {
-    return attr0(AttributeNamePojo.GLYPH_ORIENTATION_VERTICAL, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute glyphOrientationVertical(String value) {
+    return AttributePojo.of0(AttributeNamePojo.GLYPH_ORIENTATION_VERTICAL, value);
   }
 
-  /// Renders the `height` attribute with the specified value.
+  /// Encodes the `height` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup height(String value) {
-    return attr0(AttributeNamePojo.HEIGHT, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute height(String value) {
+    return AttributePojo.of0(AttributeNamePojo.HEIGHT, value);
   }
 
-  /// Renders the `href` attribute with the specified value.
+  /// Encodes the `href` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup href(String value) {
-    return attr0(AttributeNamePojo.HREF, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute href(String value) {
+    return AttributePojo.of0(AttributeNamePojo.HREF, value);
   }
 
-  /// Renders the `http-equiv` attribute with the specified value.
+  /// Encodes the `http-equiv` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup httpEquiv(String value) {
-    return attr0(AttributeNamePojo.HTTP_EQUIV, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute httpEquiv(String value) {
+    return AttributePojo.of0(AttributeNamePojo.HTTP_EQUIV, value);
   }
 
-  /// Renders the `id` attribute with the specified value.
+  /// Encodes the `id` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup id(String value) {
-    return attr0(AttributeNamePojo.ID, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute id(String value) {
+    return AttributePojo.of0(AttributeNamePojo.ID, value);
   }
 
-  /// Renders the `image-rendering` attribute with the specified value.
+  /// Encodes the `image-rendering` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup imageRendering(String value) {
-    return attr0(AttributeNamePojo.IMAGE_RENDERING, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute imageRendering(String value) {
+    return AttributePojo.of0(AttributeNamePojo.IMAGE_RENDERING, value);
   }
 
-  /// Renders the `integrity` attribute with the specified value.
+  /// Encodes the `integrity` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup integrity(String value) {
-    return attr0(AttributeNamePojo.INTEGRITY, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute integrity(String value) {
+    return AttributePojo.of0(AttributeNamePojo.INTEGRITY, value);
   }
 
-  /// Renders the `lang` attribute with the specified value.
+  /// Encodes the `lang` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup lang(String value) {
-    return attr0(AttributeNamePojo.LANG, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute lang(String value) {
+    return AttributePojo.of0(AttributeNamePojo.LANG, value);
   }
 
-  /// Renders the `letter-spacing` attribute with the specified value.
+  /// Encodes the `letter-spacing` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup letterSpacing(String value) {
-    return attr0(AttributeNamePojo.LETTER_SPACING, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute letterSpacing(String value) {
+    return AttributePojo.of0(AttributeNamePojo.LETTER_SPACING, value);
   }
 
-  /// Renders the `lighting-color` attribute with the specified value.
+  /// Encodes the `lighting-color` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup lightingColor(String value) {
-    return attr0(AttributeNamePojo.LIGHTING_COLOR, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute lightingColor(String value) {
+    return AttributePojo.of0(AttributeNamePojo.LIGHTING_COLOR, value);
   }
 
-  /// Renders the `marker-end` attribute with the specified value.
+  /// Encodes the `marker-end` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup markerEnd(String value) {
-    return attr0(AttributeNamePojo.MARKER_END, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute markerEnd(String value) {
+    return AttributePojo.of0(AttributeNamePojo.MARKER_END, value);
   }
 
-  /// Renders the `marker-mid` attribute with the specified value.
+  /// Encodes the `marker-mid` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup markerMid(String value) {
-    return attr0(AttributeNamePojo.MARKER_MID, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute markerMid(String value) {
+    return AttributePojo.of0(AttributeNamePojo.MARKER_MID, value);
   }
 
-  /// Renders the `marker-start` attribute with the specified value.
+  /// Encodes the `marker-start` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup markerStart(String value) {
-    return attr0(AttributeNamePojo.MARKER_START, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute markerStart(String value) {
+    return AttributePojo.of0(AttributeNamePojo.MARKER_START, value);
   }
 
-  /// Renders the `mask` attribute with the specified value.
+  /// Encodes the `mask` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup mask(String value) {
-    return attr0(AttributeNamePojo.MASK, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute mask(String value) {
+    return AttributePojo.of0(AttributeNamePojo.MASK, value);
   }
 
-  /// Renders the `mask-type` attribute with the specified value.
+  /// Encodes the `mask-type` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup maskType(String value) {
-    return attr0(AttributeNamePojo.MASK_TYPE, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute maskType(String value) {
+    return AttributePojo.of0(AttributeNamePojo.MASK_TYPE, value);
   }
 
-  /// Renders the `maxlength` attribute with the specified value.
+  /// Encodes the `maxlength` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup maxlength(String value) {
-    return attr0(AttributeNamePojo.MAXLENGTH, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute maxlength(String value) {
+    return AttributePojo.of0(AttributeNamePojo.MAXLENGTH, value);
   }
 
-  /// Renders the `media` attribute with the specified value.
+  /// Encodes the `media` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup media(String value) {
-    return attr0(AttributeNamePojo.MEDIA, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute media(String value) {
+    return AttributePojo.of0(AttributeNamePojo.MEDIA, value);
   }
 
-  /// Renders the `method` attribute with the specified value.
+  /// Encodes the `method` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup method(String value) {
-    return attr0(AttributeNamePojo.METHOD, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute method(String value) {
+    return AttributePojo.of0(AttributeNamePojo.METHOD, value);
   }
 
-  /// Renders the `minlength` attribute with the specified value.
+  /// Encodes the `minlength` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup minlength(String value) {
-    return attr0(AttributeNamePojo.MINLENGTH, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute minlength(String value) {
+    return AttributePojo.of0(AttributeNamePojo.MINLENGTH, value);
   }
 
-  /// Renders the `name` attribute with the specified value.
+  /// Encodes the `name` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup name(String value) {
-    return attr0(AttributeNamePojo.NAME, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute name(String value) {
+    return AttributePojo.of0(AttributeNamePojo.NAME, value);
   }
 
-  /// Renders the `onclick` attribute with the specified value.
+  /// Encodes the `onclick` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup onclick(String value) {
-    return attr0(AttributeNamePojo.ONCLICK, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute onclick(String value) {
+    return AttributePojo.of0(AttributeNamePojo.ONCLICK, value);
   }
 
-  /// Renders the `onclick` attribute with the specified action.
-  ///
-  /// @param value the action to be executed
-  ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup onclick(JsAction value) {
-    return attr0(AttributeNamePojo.ONCLICK, value);
-  }
-
-  /// Renders the `onload` attribute with the specified value.
-  ///
-  /// @param value the attribute value
-  ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup onload(String value) {
-    return attr0(AttributeNamePojo.ONLOAD, value);
-  }
-
-  /// Renders the `onload` attribute with the specified action.
+  /// Encodes the `onclick` attribute with the specified action.
   ///
   /// @param value the action to be executed
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup onload(JsAction value) {
-    return attr0(AttributeNamePojo.ONLOAD, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute onclick(JsAction value) {
+    return AttributeJsAction.of0(AttributeNamePojo.ONCLICK, value);
   }
 
-  /// Renders the `onpopstate` attribute with the specified value.
+  /// Encodes the `onload` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup onpopstate(String value) {
-    return attr0(AttributeNamePojo.ONPOPSTATE, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute onload(String value) {
+    return AttributePojo.of0(AttributeNamePojo.ONLOAD, value);
   }
 
-  /// Renders the `onpopstate` attribute with the specified action.
+  /// Encodes the `onload` attribute with the specified action.
   ///
   /// @param value the action to be executed
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup onpopstate(JsAction value) {
-    return attr0(AttributeNamePojo.ONPOPSTATE, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute onload(JsAction value) {
+    return AttributeJsAction.of0(AttributeNamePojo.ONLOAD, value);
   }
 
-  /// Renders the `onsubmit` attribute with the specified value.
+  /// Encodes the `onpopstate` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup onsubmit(String value) {
-    return attr0(AttributeNamePojo.ONSUBMIT, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute onpopstate(String value) {
+    return AttributePojo.of0(AttributeNamePojo.ONPOPSTATE, value);
   }
 
-  /// Renders the `onsubmit` attribute with the specified action.
+  /// Encodes the `onpopstate` attribute with the specified action.
   ///
   /// @param value the action to be executed
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup onsubmit(JsAction value) {
-    return attr0(AttributeNamePojo.ONSUBMIT, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute onpopstate(JsAction value) {
+    return AttributeJsAction.of0(AttributeNamePojo.ONPOPSTATE, value);
   }
 
-  /// Renders the `opacity` attribute with the specified value.
+  /// Encodes the `onsubmit` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup opacity(String value) {
-    return attr0(AttributeNamePojo.OPACITY, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute onsubmit(String value) {
+    return AttributePojo.of0(AttributeNamePojo.ONSUBMIT, value);
   }
 
-  /// Renders the `overflow` attribute with the specified value.
+  /// Encodes the `onsubmit` attribute with the specified action.
+  ///
+  /// @param value the action to be executed
+  ///
+  /// @return an object representing the encoded attribute
+  public final Attribute onsubmit(JsAction value) {
+    return AttributeJsAction.of0(AttributeNamePojo.ONSUBMIT, value);
+  }
+
+  /// Encodes the `opacity` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup overflow(String value) {
-    return attr0(AttributeNamePojo.OVERFLOW, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute opacity(String value) {
+    return AttributePojo.of0(AttributeNamePojo.OPACITY, value);
   }
 
-  /// Renders the `paint-order` attribute with the specified value.
+  /// Encodes the `overflow` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup paintOrder(String value) {
-    return attr0(AttributeNamePojo.PAINT_ORDER, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute overflow(String value) {
+    return AttributePojo.of0(AttributeNamePojo.OVERFLOW, value);
   }
 
-  /// Renders the `placeholder` attribute with the specified value.
+  /// Encodes the `paint-order` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup placeholder(String value) {
-    return attr0(AttributeNamePojo.PLACEHOLDER, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute paintOrder(String value) {
+    return AttributePojo.of0(AttributeNamePojo.PAINT_ORDER, value);
   }
 
-  /// Renders the `pointer-events` attribute with the specified value.
+  /// Encodes the `placeholder` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup pointerEvents(String value) {
-    return attr0(AttributeNamePojo.POINTER_EVENTS, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute placeholder(String value) {
+    return AttributePojo.of0(AttributeNamePojo.PLACEHOLDER, value);
   }
 
-  /// Renders the `property` attribute with the specified value.
+  /// Encodes the `pointer-events` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup property(String value) {
-    return attr0(AttributeNamePojo.PROPERTY, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute pointerEvents(String value) {
+    return AttributePojo.of0(AttributeNamePojo.POINTER_EVENTS, value);
   }
 
-  /// Renders the `referrerpolicy` attribute with the specified value.
+  /// Encodes the `property` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup referrerpolicy(String value) {
-    return attr0(AttributeNamePojo.REFERRERPOLICY, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute property(String value) {
+    return AttributePojo.of0(AttributeNamePojo.PROPERTY, value);
   }
 
-  /// Renders the `rel` attribute with the specified value.
+  /// Encodes the `referrerpolicy` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup rel(String value) {
-    return attr0(AttributeNamePojo.REL, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute referrerpolicy(String value) {
+    return AttributePojo.of0(AttributeNamePojo.REFERRERPOLICY, value);
   }
 
-  /// Renders the `rev` attribute with the specified value.
+  /// Encodes the `rel` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup rev(String value) {
-    return attr0(AttributeNamePojo.REV, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute rel(String value) {
+    return AttributePojo.of0(AttributeNamePojo.REL, value);
   }
 
-  /// Renders the `role` attribute with the specified value.
+  /// Encodes the `rev` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup role(String value) {
-    return attr0(AttributeNamePojo.ROLE, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute rev(String value) {
+    return AttributePojo.of0(AttributeNamePojo.REV, value);
   }
 
-  /// Renders the `rows` attribute with the specified value.
+  /// Encodes the `role` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup rows(String value) {
-    return attr0(AttributeNamePojo.ROWS, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute role(String value) {
+    return AttributePojo.of0(AttributeNamePojo.ROLE, value);
   }
 
-  /// Renders the `shape-rendering` attribute with the specified value.
+  /// Encodes the `rows` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup shapeRendering(String value) {
-    return attr0(AttributeNamePojo.SHAPE_RENDERING, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute rows(String value) {
+    return AttributePojo.of0(AttributeNamePojo.ROWS, value);
   }
 
-  /// Renders the `size` attribute with the specified value.
+  /// Encodes the `shape-rendering` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup size(String value) {
-    return attr0(AttributeNamePojo.SIZE, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute shapeRendering(String value) {
+    return AttributePojo.of0(AttributeNamePojo.SHAPE_RENDERING, value);
   }
 
-  /// Renders the `sizes` attribute with the specified value.
+  /// Encodes the `size` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup sizes(String value) {
-    return attr0(AttributeNamePojo.SIZES, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute size(String value) {
+    return AttributePojo.of0(AttributeNamePojo.SIZE, value);
   }
 
-  /// Renders the `spellcheck` attribute with the specified value.
+  /// Encodes the `sizes` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup spellcheck(String value) {
-    return attr0(AttributeNamePojo.SPELLCHECK, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute sizes(String value) {
+    return AttributePojo.of0(AttributeNamePojo.SIZES, value);
   }
 
-  /// Renders the `src` attribute with the specified value.
+  /// Encodes the `spellcheck` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup src(String value) {
-    return attr0(AttributeNamePojo.SRC, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute spellcheck(String value) {
+    return AttributePojo.of0(AttributeNamePojo.SPELLCHECK, value);
   }
 
-  /// Renders the `srcset` attribute with the specified value.
+  /// Encodes the `src` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup srcset(String value) {
-    return attr0(AttributeNamePojo.SRCSET, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute src(String value) {
+    return AttributePojo.of0(AttributeNamePojo.SRC, value);
   }
 
-  /// Renders the `start` attribute with the specified value.
+  /// Encodes the `srcset` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup start(String value) {
-    return attr0(AttributeNamePojo.START, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute srcset(String value) {
+    return AttributePojo.of0(AttributeNamePojo.SRCSET, value);
   }
 
-  /// Renders the `stop-color` attribute with the specified value.
+  /// Encodes the `start` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup stopColor(String value) {
-    return attr0(AttributeNamePojo.STOP_COLOR, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute start(String value) {
+    return AttributePojo.of0(AttributeNamePojo.START, value);
   }
 
-  /// Renders the `stop-opacity` attribute with the specified value.
+  /// Encodes the `stop-color` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup stopOpacity(String value) {
-    return attr0(AttributeNamePojo.STOP_OPACITY, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute stopColor(String value) {
+    return AttributePojo.of0(AttributeNamePojo.STOP_COLOR, value);
   }
 
-  /// Renders the `stroke` attribute with the specified value.
+  /// Encodes the `stop-opacity` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup stroke(String value) {
-    return attr0(AttributeNamePojo.STROKE, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute stopOpacity(String value) {
+    return AttributePojo.of0(AttributeNamePojo.STOP_OPACITY, value);
   }
 
-  /// Renders the `stroke-dasharray` attribute with the specified value.
+  /// Encodes the `stroke` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup strokeDasharray(String value) {
-    return attr0(AttributeNamePojo.STROKE_DASHARRAY, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute stroke(String value) {
+    return AttributePojo.of0(AttributeNamePojo.STROKE, value);
   }
 
-  /// Renders the `stroke-dashoffset` attribute with the specified value.
+  /// Encodes the `stroke-dasharray` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup strokeDashoffset(String value) {
-    return attr0(AttributeNamePojo.STROKE_DASHOFFSET, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute strokeDasharray(String value) {
+    return AttributePojo.of0(AttributeNamePojo.STROKE_DASHARRAY, value);
   }
 
-  /// Renders the `stroke-linecap` attribute with the specified value.
+  /// Encodes the `stroke-dashoffset` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup strokeLinecap(String value) {
-    return attr0(AttributeNamePojo.STROKE_LINECAP, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute strokeDashoffset(String value) {
+    return AttributePojo.of0(AttributeNamePojo.STROKE_DASHOFFSET, value);
   }
 
-  /// Renders the `stroke-linejoin` attribute with the specified value.
+  /// Encodes the `stroke-linecap` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup strokeLinejoin(String value) {
-    return attr0(AttributeNamePojo.STROKE_LINEJOIN, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute strokeLinecap(String value) {
+    return AttributePojo.of0(AttributeNamePojo.STROKE_LINECAP, value);
   }
 
-  /// Renders the `stroke-miterlimit` attribute with the specified value.
+  /// Encodes the `stroke-linejoin` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup strokeMiterlimit(String value) {
-    return attr0(AttributeNamePojo.STROKE_MITERLIMIT, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute strokeLinejoin(String value) {
+    return AttributePojo.of0(AttributeNamePojo.STROKE_LINEJOIN, value);
   }
 
-  /// Renders the `stroke-opacity` attribute with the specified value.
+  /// Encodes the `stroke-miterlimit` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup strokeOpacity(String value) {
-    return attr0(AttributeNamePojo.STROKE_OPACITY, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute strokeMiterlimit(String value) {
+    return AttributePojo.of0(AttributeNamePojo.STROKE_MITERLIMIT, value);
   }
 
-  /// Renders the `stroke-width` attribute with the specified value.
+  /// Encodes the `stroke-opacity` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup strokeWidth(String value) {
-    return attr0(AttributeNamePojo.STROKE_WIDTH, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute strokeOpacity(String value) {
+    return AttributePojo.of0(AttributeNamePojo.STROKE_OPACITY, value);
   }
 
-  /// Renders the `tabindex` attribute with the specified value.
+  /// Encodes the `stroke-width` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup tabindex(String value) {
-    return attr0(AttributeNamePojo.TABINDEX, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute strokeWidth(String value) {
+    return AttributePojo.of0(AttributeNamePojo.STROKE_WIDTH, value);
   }
 
-  /// Renders the `target` attribute with the specified value.
+  /// Encodes the `tabindex` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup target(String value) {
-    return attr0(AttributeNamePojo.TARGET, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute tabindex(String value) {
+    return AttributePojo.of0(AttributeNamePojo.TABINDEX, value);
   }
 
-  /// Renders the `text-anchor` attribute with the specified value.
+  /// Encodes the `target` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup textAnchor(String value) {
-    return attr0(AttributeNamePojo.TEXT_ANCHOR, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute target(String value) {
+    return AttributePojo.of0(AttributeNamePojo.TARGET, value);
   }
 
-  /// Renders the `text-decoration` attribute with the specified value.
+  /// Encodes the `text-anchor` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup textDecoration(String value) {
-    return attr0(AttributeNamePojo.TEXT_DECORATION, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute textAnchor(String value) {
+    return AttributePojo.of0(AttributeNamePojo.TEXT_ANCHOR, value);
   }
 
-  /// Renders the `text-overflow` attribute with the specified value.
+  /// Encodes the `text-decoration` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup textOverflow(String value) {
-    return attr0(AttributeNamePojo.TEXT_OVERFLOW, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute textDecoration(String value) {
+    return AttributePojo.of0(AttributeNamePojo.TEXT_DECORATION, value);
   }
 
-  /// Renders the `text-rendering` attribute with the specified value.
+  /// Encodes the `text-overflow` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup textRendering(String value) {
-    return attr0(AttributeNamePojo.TEXT_RENDERING, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute textOverflow(String value) {
+    return AttributePojo.of0(AttributeNamePojo.TEXT_OVERFLOW, value);
   }
 
-  /// Renders the `transform` attribute with the specified value.
+  /// Encodes the `text-rendering` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup transform(String value) {
-    return attr0(AttributeNamePojo.TRANSFORM, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute textRendering(String value) {
+    return AttributePojo.of0(AttributeNamePojo.TEXT_RENDERING, value);
   }
 
-  /// Renders the `transform-origin` attribute with the specified value.
+  /// Encodes the `transform` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup transformOrigin(String value) {
-    return attr0(AttributeNamePojo.TRANSFORM_ORIGIN, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute transform(String value) {
+    return AttributePojo.of0(AttributeNamePojo.TRANSFORM, value);
   }
 
-  /// Renders the `translate` attribute with the specified value.
+  /// Encodes the `transform-origin` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup translate(String value) {
-    return attr0(AttributeNamePojo.TRANSLATE, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute transformOrigin(String value) {
+    return AttributePojo.of0(AttributeNamePojo.TRANSFORM_ORIGIN, value);
   }
 
-  /// Renders the `type` attribute with the specified value.
+  /// Encodes the `translate` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup type(String value) {
-    return attr0(AttributeNamePojo.TYPE, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute translate(String value) {
+    return AttributePojo.of0(AttributeNamePojo.TRANSLATE, value);
   }
 
-  /// Renders the `unicode-bidi` attribute with the specified value.
+  /// Encodes the `type` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup unicodeBidi(String value) {
-    return attr0(AttributeNamePojo.UNICODE_BIDI, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute type(String value) {
+    return AttributePojo.of0(AttributeNamePojo.TYPE, value);
   }
 
-  /// Renders the `value` attribute with the specified value.
+  /// Encodes the `unicode-bidi` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup value(String value) {
-    return attr0(AttributeNamePojo.VALUE, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute unicodeBidi(String value) {
+    return AttributePojo.of0(AttributeNamePojo.UNICODE_BIDI, value);
   }
 
-  /// Renders the `vector-effect` attribute with the specified value.
+  /// Encodes the `value` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup vectorEffect(String value) {
-    return attr0(AttributeNamePojo.VECTOR_EFFECT, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute value(String value) {
+    return AttributePojo.of0(AttributeNamePojo.VALUE, value);
   }
 
-  /// Renders the `viewBox` attribute with the specified value.
+  /// Encodes the `vector-effect` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup viewBox(String value) {
-    return attr0(AttributeNamePojo.VIEWBOX, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute vectorEffect(String value) {
+    return AttributePojo.of0(AttributeNamePojo.VECTOR_EFFECT, value);
   }
 
-  /// Renders the `visibility` attribute with the specified value.
+  /// Encodes the `viewBox` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup visibility(String value) {
-    return attr0(AttributeNamePojo.VISIBILITY, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute viewBox(String value) {
+    return AttributePojo.of0(AttributeNamePojo.VIEWBOX, value);
   }
 
-  /// Renders the `white-space` attribute with the specified value.
+  /// Encodes the `visibility` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup whiteSpace(String value) {
-    return attr0(AttributeNamePojo.WHITE_SPACE, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute visibility(String value) {
+    return AttributePojo.of0(AttributeNamePojo.VISIBILITY, value);
   }
 
-  /// Renders the `width` attribute with the specified value.
+  /// Encodes the `white-space` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup width(String value) {
-    return attr0(AttributeNamePojo.WIDTH, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute whiteSpace(String value) {
+    return AttributePojo.of0(AttributeNamePojo.WHITE_SPACE, value);
   }
 
-  /// Renders the `word-spacing` attribute with the specified value.
+  /// Encodes the `width` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup wordSpacing(String value) {
-    return attr0(AttributeNamePojo.WORD_SPACING, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute width(String value) {
+    return AttributePojo.of0(AttributeNamePojo.WIDTH, value);
   }
 
-  /// Renders the `wrap` attribute with the specified value.
+  /// Encodes the `word-spacing` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup wrap(String value) {
-    return attr0(AttributeNamePojo.WRAP, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute wordSpacing(String value) {
+    return AttributePojo.of0(AttributeNamePojo.WORD_SPACING, value);
   }
 
-  /// Renders the `writing-mode` attribute with the specified value.
+  /// Encodes the `wrap` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup writingMode(String value) {
-    return attr0(AttributeNamePojo.WRITING_MODE, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute wrap(String value) {
+    return AttributePojo.of0(AttributeNamePojo.WRAP, value);
   }
 
-  /// Renders the `xmlns` attribute with the specified value.
+  /// Encodes the `writing-mode` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
-  /// @return an instruction representing the attribute
-  public final AttributeMarkup xmlns(String value) {
-    return attr0(AttributeNamePojo.XMLNS, value);
+  /// @return an object representing the encoded attribute
+  public final Attribute writingMode(String value) {
+    return AttributePojo.of0(AttributeNamePojo.WRITING_MODE, value);
+  }
+
+  /// Encodes the `xmlns` attribute with the specified value.
+  ///
+  /// @param value the attribute value
+  ///
+  /// @return an object representing the encoded attribute
+  public final Attribute xmlns(String value) {
+    return AttributePojo.of0(AttributeNamePojo.XMLNS, value);
   }
 
   //
   // AMBIGUOUS
   //
 
-  abstract AmbiguousMarkup ambiguous(Ambiguous name, String text);
-
-  /// Renders the `clip-path` attribute or the `clipPath` element with the
+  /// Encodes the `clip-path` attribute or the `clipPath` element with the
   /// specified text.
   ///
-  /// @param text the attribute value or the text content of the element
+  /// @param value the attribute value or the text content of the element
   ///
-  /// @return an instruction representing the attribute or the element
-  public final AmbiguousMarkup clipPath(String text) {
-    return ambiguous(Ambiguous.CLIPPATH, text);
+  /// @return an object representing the encoded attribute or element
+  public final AmbiguousMarkup clipPath(String value) {
+    return AmbiguousPojo.of0(AmbiguousName.CLIPPATH, value);
   }
 
-  /// Renders the `form` attribute or the `form` element with the specified
+  /// Encodes the `form` attribute or the `form` element with the specified
   /// text.
   ///
-  /// @param text the attribute value or the text content of the element
+  /// @param value the attribute value or the text content of the element
   ///
-  /// @return an instruction representing the attribute or the element
-  public final AmbiguousMarkup form(String text) {
-    return ambiguous(Ambiguous.FORM, text);
+  /// @return an object representing the encoded attribute or element
+  public final AmbiguousMarkup form(String value) {
+    return AmbiguousPojo.of0(AmbiguousName.FORM, value);
   }
 
-  /// Renders the `label` attribute or the `label` element with the specified
+  /// Encodes the `label` attribute or the `label` element with the specified
   /// text.
   ///
-  /// @param text the attribute value or the text content of the element
+  /// @param value the attribute value or the text content of the element
   ///
-  /// @return an instruction representing the attribute or the element
-  public final AmbiguousMarkup label(String text) {
-    return ambiguous(Ambiguous.LABEL, text);
+  /// @return an object representing the encoded attribute or element
+  public final AmbiguousMarkup label(String value) {
+    return AmbiguousPojo.of0(AmbiguousName.LABEL, value);
   }
 
-  /// Renders the `style` attribute or the `style` element with the specified
+  /// Encodes the `style` attribute or the `style` element with the specified
   /// text.
   ///
-  /// @param text the attribute value or the text content of the element
+  /// @param value the attribute value or the text content of the element
   ///
-  /// @return an instruction representing the attribute or the element
-  public final AmbiguousMarkup style(String text) {
-    return ambiguous(Ambiguous.STYLE, text);
+  /// @return an object representing the encoded attribute or element
+  public final AmbiguousMarkup style(String value) {
+    return AmbiguousPojo.of0(AmbiguousName.STYLE, value);
   }
 
-  /// Renders the `title` attribute or the `title` element with the specified
+  /// Encodes the `title` attribute or the `title` element with the specified
   /// text.
   ///
-  /// @param text the attribute value or the text content of the element
+  /// @param value the attribute value or the text content of the element
   ///
-  /// @return an instruction representing the attribute or the element
-  public final AmbiguousMarkup title(String text) {
-    return ambiguous(Ambiguous.TITLE, text);
+  /// @return an object representing the encoded attribute or element
+  public final AmbiguousMarkup title(String value) {
+    return AmbiguousPojo.of0(AmbiguousName.TITLE, value);
   }
 
   //
@@ -2859,5 +2834,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an instruction representing the text node
   public abstract TextInstruction text(String value);
+
+  // END generated code
 
 }

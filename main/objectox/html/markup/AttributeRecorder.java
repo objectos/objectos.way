@@ -17,6 +17,7 @@ package objectox.html.markup;
 
 import objectos.html.Attribute;
 import objectos.html.AttributeName;
+import objectos.script.JsAction;
 import objectox.html.IntSize;
 
 final class AttributeRecorder {
@@ -48,9 +49,24 @@ final class AttributeRecorder {
       throw new NullPointerException(msg);
     }
 
-    final Object escaped;
-    escaped = escapeIfNecessary(value);
+    record(name, value);
+  }
 
+  public final void record(AttributeName name, String value) {
+    final AttributeValueEscaper escaper;
+    escaper = new AttributeValueEscaper(value);
+
+    final String escaped;
+    escaped = escaper.escape();
+
+    record0(name, escaped);
+  }
+
+  public final void record(AttributeName name, JsAction value) {
+    record0(name, value);
+  }
+
+  private void record0(AttributeName name, Object value) {
     final int nameIndex;
     nameIndex = name.index();
 
@@ -58,24 +74,13 @@ final class AttributeRecorder {
     nameSize = IntSize.of(nameIndex);
 
     final int valueIndex;
-    valueIndex = sink.addObject(escaped);
+    valueIndex = sink.addObject(value);
 
     switch (nameSize) {
       case BIT8 -> record8(nameIndex, valueIndex);
 
       case BIT16, BIT24 -> throw new UnsupportedOperationException();
     }
-  }
-
-  private Object escapeIfNecessary(Object v) {
-    if (!(v instanceof String s)) {
-      return v;
-    }
-
-    final AttributeValueEscaper escaper;
-    escaper = new AttributeValueEscaper(s);
-
-    return escaper.escape();
   }
 
   private void record8(final int nameIndex, final int valueIndex) {

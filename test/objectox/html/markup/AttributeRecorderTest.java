@@ -18,7 +18,6 @@ package objectox.html.markup;
 import static org.testng.Assert.assertEquals;
 
 import java.util.stream.IntStream;
-import objectos.html.Attribute;
 import objectos.html.AttributeName;
 import objectos.internal.Util;
 import org.testng.annotations.Test;
@@ -38,10 +37,7 @@ public class AttributeRecorderTest {
     final AttributeRecorder subject;
     subject = new AttributeRecorder(sink);
 
-    final Attribute attribute;
-    attribute = new AttributePojo(name, value);
-
-    subject.record(attribute);
+    subject.record(name, value);
   }
 
   @Test(

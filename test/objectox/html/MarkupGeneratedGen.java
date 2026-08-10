@@ -92,19 +92,19 @@ public class MarkupGeneratedGen {
 
     abstract ElementMarkup elem0(ElementName name, String text);
 
-    /// Encodes an HTML element with the specified name and contents.
+    /// Encodes an HTML element with the specified name and values.
     /// @param name the element name
-    /// @param contents the attributes and children of the element
-    /// @return an object representing the encoded attribute
-    public final ElementMarkup elem(ElementName name, Instruction... contents) {
+    /// @param values the encoded attributes and encoded child nodes of the element
+    /// @return an object representing the encoded element
+    public final ElementMarkup elem(ElementName name, ElementValue... values) {
       Objects.requireNonNull(name, "name == null");
-      return elem0(name, contents);
+      return elem0(name, values);
     }
 
     /// Encodes an HTML element with the specified name and text.
     /// @param name the element name
     /// @param text the text value of this element
-    /// @return an instruction representing the element
+    /// @return an object representing the encoded element
     public final ElementMarkup elem(ElementName name, String text) {
       Objects.requireNonNull(name, "name == null");
       return elem0(name, text);
@@ -124,11 +124,11 @@ public class MarkupGeneratedGen {
       if (ambiguousNames.contains(htmlName)) {
         methods.append("""
 
-        /// Encodes the `%s` element with the specified content.
-        /// @param contents the attributes and children of the element
-        /// @return an instruction representing the element.
-        public final ElementMarkup %s(Instruction... contents) {
-          return elem0(ElementNamePojo.%s, contents);
+        /// Encodes the `%s` element with the specified values.
+        /// @param values the encoded attributes and encoded child nodes of the element
+        /// @return an object representing the encoded element
+        public final ElementMarkup %s(RegularElementValue... values) {
+          return elem0(ElementNamePojo.%s, values);
         }
         """.formatted(elem.htmlName(), elem.htmlName(), elem.javaName()));
       }
@@ -136,32 +136,29 @@ public class MarkupGeneratedGen {
       else if (elem.endTag()) {
         methods.append("""
 
-        /// Encodes the `%s` element with the specified content.
-        /// @param contents the attributes and children of the element
-        /// @return an instruction representing the element.
-        public final ElementMarkup %s(Instruction... contents) {
-          return elem0(ElementNamePojo.%s, contents);
+        /// Encodes the `%1$s` element with the specified values.
+        /// @param values the encoded attributes and encoded child nodes of the element
+        /// @return an object representing the encoded element
+        public final ElementMarkup %2$s(RegularElementValue... values) {
+          return elem0(ElementNamePojo.%3$s, values);
         }
 
-        /// Encodes the `%s` element with the specified text.
+        /// Encodes the `%1$s` element with the specified text.
         /// @param text the text value of the element
-        /// @return an instruction representing the element.
-        public final ElementMarkup %s(String text) {
-          return elem0(ElementNamePojo.%s, text);
+        /// @return an object representing the encoded element
+        public final ElementMarkup %2$s(String text) {
+          return elem0(ElementNamePojo.%3$s, text);
         }
-        """.formatted(
-            elem.htmlName(), elem.htmlName(), elem.javaName(),
-            elem.htmlName(), elem.htmlName(), elem.javaName()
-        ));
+        """.formatted(elem.htmlName(), elem.htmlName(), elem.javaName()));
       }
 
       else {
         methods.append("""
 
         /// Encodes the `%s` element with the specified content.
-        /// @param contents the attributes of the element
-        /// @return an instruction representing the element.
-        public final ElementMarkup %s(Instruction.OfVoid... contents) {
+        /// @param contents the encoded attributes of the element
+        /// @return an object representing the encoded element
+        public final ElementMarkup %s(VoidElementValue... contents) {
           return elem0(ElementNamePojo.%s, contents);
         }
         """.formatted(elem.htmlName(), elem.htmlName(), elem.javaName()));
@@ -176,27 +173,6 @@ public class MarkupGeneratedGen {
     //
     // ATTRIBUTES
     //
-
-    abstract AttributeInstruction attr0(AttributeName name);
-
-    abstract AttributeInstruction attr0(AttributeName name, Object value);
-
-    /// Encodes a boolean attribute with the specified name.
-    /// @param name the attribute name
-    /// @return an instruction representing the attribute
-    public final BooleanAttribute attr(AttributeName name) {
-      Objects.requireNonNull(name, "name == null");
-      return attr0(name);
-    }
-
-    /// Encodes an attribute with the specified name and value.
-    /// @param name the attribute name
-    /// @param value the attribute value
-    /// @return an instruction representing the attribute
-    public final AttributeInstruction attr(AttributeName name, String value) {
-      Objects.requireNonNull(name, "name == null");
-      return attr0(name, value);
-    }
     """);
 
     final Set<String> ambiguous;
@@ -211,9 +187,9 @@ public class MarkupGeneratedGen {
 
       /// Encodes the `%s` attribute with the specified value.
       /// @param value the attribute value
-      /// @return an instruction representing the attribute
-      public final AttributeInstruction %s(String value) {
-        return attr0(AttributeNamePojo.%s, value);
+      /// @return an object representing the encoded attribute
+      public final Attribute %s(String value) {
+        return AttributePojo.of0(AttributeNamePojo.%s, value);
       }
       """.formatted(attr.htmlName(), attr.methodName(), attr.constantName()));
 
@@ -225,9 +201,9 @@ public class MarkupGeneratedGen {
 
       /// Encodes the `%s` attribute with the specified action.
       /// @param value the action to be executed
-      /// @return an instruction representing the attribute
-      public final AttributeInstruction %s(JsAction value) {
-        return attr0(AttributeNamePojo.%s, value);
+      /// @return an object representing the encoded attribute
+      public final Attribute %s(JsAction value) {
+        return AttributeJsAction.of0(AttributeNamePojo.%s, value);
       }
       """.formatted(attr.htmlName(), attr.methodName(), attr.constantName()));
     }
@@ -239,18 +215,16 @@ public class MarkupGeneratedGen {
     //
     // AMBIGUOUS
     //
-
-    abstract AmbiguousInstruction ambiguous(Ambiguous name, String text);
     """);
 
     for (AmbiguousSpec spec : HtmlSpec.ambiguous()) {
       methods.append("""
 
       /// Encodes the `%s` attribute or the `%s` element with the specified text.
-      /// @param text the attribute value or the text content of the element
-      /// @return an instruction representing the attribute or the element
-      public final AmbiguousInstruction %s(String text) {
-        return ambiguous(Ambiguous.%s, text);
+      /// @param value the attribute value or the text content of the element
+      /// @return an object representing the encoded attribute or element
+      public final AmbiguousMarkup %s(String value) {
+        return AmbiguousPojo.of0(AmbiguousName.%s, value);
       }
       """.formatted(spec.attributeName(), spec.elementName(), spec.methodName(), spec.constantName()));
     }
