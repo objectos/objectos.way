@@ -24,69 +24,6 @@ import org.testng.annotations.Test;
 
 public class AttributeRecorderTest {
 
-  private HtmlSink record(AttributeName name, String value) {
-    final HtmlSink sink;
-    sink = new HtmlSink();
-
-    record(sink, name, value);
-
-    return sink;
-  }
-
-  private void record(HtmlSink sink, AttributeName name, String value) {
-    final AttributeRecorder subject;
-    subject = new AttributeRecorder(sink);
-
-    subject.record(name, value);
-  }
-
-  @Test(
-      description = "reject null name",
-      expectedExceptions = NullPointerException.class,
-      expectedExceptionsMessageRegExp = "Attribute provided a null name")
-  public void reject01() {
-    final AttributeNamePojo name;
-    name = null;
-
-    final String value;
-    value = "foo";
-
-    record(name, value);
-  }
-
-  @Test(
-      description = "reject null value",
-      expectedExceptions = NullPointerException.class,
-      expectedExceptionsMessageRegExp = "Attribute provided a null value")
-  public void reject02() {
-    final AttributeNamePojo name;
-    name = AttributeNamePojo.ID;
-
-    final String value;
-    value = null;
-
-    record(name, value);
-  }
-
-  @Test(description = "ATTRIBUTE88")
-  public void attribute88() {
-    final AttributeNamePojo name;
-    name = AttributeNamePojo.ID;
-
-    final String value;
-    value = "foo";
-
-    assertEquals(
-        record(name, value),
-
-        HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.ATTRIBUTE88);
-          opts.addInt8(name.index());
-          opts.addInt8(opts.addObject(value));
-        })
-    );
-  }
-
   @Test(description = "ATTRIBUTE816")
   public void attribute816() {
     final HtmlSink sink;
@@ -137,8 +74,89 @@ public class AttributeRecorderTest {
     );
   }
 
+  @Test(description = "ATTRIBUTE88")
+  public void attribute88() {
+    final AttributeNamePojo name;
+    name = AttributeNamePojo.ID;
+
+    final String value;
+    value = "foo";
+
+    assertEquals(
+        record(name, value),
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.ATTRIBUTE88);
+          opts.addInt8(name.index());
+          opts.addInt8(opts.addObject(value));
+        })
+    );
+  }
+
+  @Test(description = "returned markup")
+  public void markup01() {
+    final HtmlSink sink;
+    sink = HtmlSinkY.create(opts -> {
+      opts.addInt24(0);
+    });
+
+    final AttributeRecorder subject;
+    subject = new AttributeRecorder(sink);
+
+    final AttributeNamePojo name;
+    name = AttributeNamePojo.ALT;
+
+    final String value;
+    value = "foo";
+
+    final AttributePointer res;
+    res = subject.record(name, value);
+
+    assertEquals(res.value(), 3);
+  }
+
+  @Test(
+      description = "reject null name",
+      expectedExceptions = NullPointerException.class,
+      expectedExceptionsMessageRegExp = "Attribute provided a null name")
+  public void reject01() {
+    final AttributeNamePojo name;
+    name = null;
+
+    final String value;
+    value = "foo";
+
+    final AttributeRecorder subject;
+    subject = new AttributeRecorder(null);
+
+    final AttributePojo pojo;
+    pojo = new AttributePojo(name, value);
+
+    subject.record(pojo);
+  }
+
+  @Test(
+      description = "reject null value",
+      expectedExceptions = NullPointerException.class,
+      expectedExceptionsMessageRegExp = "Attribute provided a null value")
+  public void reject02() {
+    final AttributeNamePojo name;
+    name = AttributeNamePojo.ID;
+
+    final String value;
+    value = null;
+
+    final AttributeRecorder subject;
+    subject = new AttributeRecorder(null);
+
+    final AttributePojo pojo;
+    pojo = new AttributePojo(name, value);
+
+    subject.record(pojo);
+  }
+
   @Test(description = "value should be escaped")
-  public void valueEscaper() {
+  public void value01() {
     final AttributeNamePojo name;
     name = AttributeNamePojo.ID;
 
@@ -157,6 +175,22 @@ public class AttributeRecorderTest {
           opts.addInt8(opts.addObject(escaped));
         })
     );
+  }
+
+  private HtmlSink record(AttributeName name, String value) {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    record(sink, name, value);
+
+    return sink;
+  }
+
+  private void record(HtmlSink sink, AttributeName name, String value) {
+    final AttributeRecorder subject;
+    subject = new AttributeRecorder(sink);
+
+    subject.record(name, value);
   }
 
 }

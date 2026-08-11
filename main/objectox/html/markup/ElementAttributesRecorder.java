@@ -20,6 +20,7 @@ import objectos.html.AttributeName;
 import objectos.html.BooleanAttribute;
 import objectos.html.ElementName;
 import objectos.html.markup.ElementValue;
+import objectos.html.markup.FragmentMarkup;
 import objectos.html.markup.ElementMarkup;
 import objectos.html.markup.NoOpMarkup;
 import objectos.html.markup.RawMarkup;
@@ -67,6 +68,8 @@ final class ElementAttributesRecorder {
       case BooleanAttribute attr -> booleanAttributeRecorder.record(attr);
 
       case ElementMarkup _ -> {}
+
+      case FragmentMarkup _ -> {}
 
       case NoOpMarkup _ -> {}
 

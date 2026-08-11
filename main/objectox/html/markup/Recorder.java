@@ -15,11 +15,15 @@
  */
 package objectox.html.markup;
 
+import objectos.html.AttributeName;
 import objectos.html.ElementName;
 import objectos.html.markup.ElementValue;
+import objectos.script.JsAction;
 import objectox.html.HtmlPojo;
 
 public final class Recorder {
+
+  private final AttributeRecorder attributeRecorder;
 
   private final DoctypeRecorder doctypeRecorder;
 
@@ -28,12 +32,16 @@ public final class Recorder {
   private final ElementRecorder elementRecorder;
 
   Recorder(
+      AttributeRecorder attributeRecorder,
+
       DoctypeRecorder doctypeRecorder,
 
       DocumentCompiler documentCompiler,
 
       ElementRecorder elementRecorder
   ) {
+    this.attributeRecorder = attributeRecorder;
+
     this.doctypeRecorder = doctypeRecorder;
 
     this.documentCompiler = documentCompiler;
@@ -53,6 +61,8 @@ public final class Recorder {
     booleanAttributeRecorder = new BooleanAttributeRecorder(sink);
 
     return new Recorder(
+        attributeRecorder,
+
         new DoctypeRecorder(sink),
 
         new DocumentCompiler(sink),
@@ -81,6 +91,14 @@ public final class Recorder {
             )
         )
     );
+  }
+
+  public final AttributePointer attr(AttributeName name, JsAction value) {
+    return attributeRecorder.record(name, value);
+  }
+
+  public final AttributePointer attr(AttributeName name, String value) {
+    return attributeRecorder.record(name, value);
   }
 
   public final HtmlPojo compile() {

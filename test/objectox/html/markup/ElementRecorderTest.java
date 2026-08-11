@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import objectos.html.Attribute;
 import objectox.html.AmbiguousName;
+import objectox.html.HtmlPojo;
 import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 
@@ -267,6 +268,40 @@ public class ElementRecorderTest {
   }
 
   @Test(description = """
+  <html><fragment></html>
+  """)
+  public void children05() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final ElementRecorder subject;
+    subject = create(sink);
+
+    final HtmlPojo frag;
+    frag = new HtmlPojo(new HtmlSink());
+
+    final ElementPointer res;
+    res = subject.record(ElementNamePojo.HTML, frag);
+
+    assertEquals(res.value(), 0);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.STARTTAG8);
+          opts.addInt8(ElementNamePojo.HTML.index());
+          opts.addByte(HtmlBytes.JMP24);
+          opts.addInt24(10);
+          opts.addByte(HtmlBytes.FRAG8);
+          opts.addInt8(opts.addObject(frag));
+          opts.addByte(HtmlBytes.ENDTAG8);
+          opts.addInt8(ElementNamePojo.HTML.index());
+        })
+    );
+  }
+
+  @Test(description = """
   STARTAG8, jump, ENDTAG8
   """)
   public void tags01() {
@@ -342,6 +377,9 @@ public class ElementRecorderTest {
     final ChildElementRecorder childElementRecorder;
     childElementRecorder = new ChildElementRecorder(sink);
 
+    final ChildFragmentRecorder childFragmentRecorder;
+    childFragmentRecorder = new ChildFragmentRecorder(sink);
+
     final ChildRawRecorder childRawRecorder;
     childRawRecorder = new ChildRawRecorder(sink);
 
@@ -349,7 +387,7 @@ public class ElementRecorderTest {
     childTextRecorder = new ChildTextRecorder(sink);
 
     final ElementChildrenRecorder childrenRecorder;
-    childrenRecorder = new ElementChildrenRecorder(childAmbiguousRecorder, childElementMarker, childElementRecorder, childRawRecorder, childTextRecorder);
+    childrenRecorder = new ElementChildrenRecorder(childAmbiguousRecorder, childElementMarker, childElementRecorder, childFragmentRecorder, childRawRecorder, childTextRecorder);
 
     return new ElementRecorder(sink, attributesRecorder, childrenRecorder);
   }

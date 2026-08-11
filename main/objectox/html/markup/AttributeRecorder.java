@@ -28,7 +28,7 @@ final class AttributeRecorder {
     this.sink = sink;
   }
 
-  public final void record(Attribute attribute) {
+  public final AttributePointer record(Attribute attribute) {
     final AttributeName name;
     name = attribute.name();
 
@@ -49,24 +49,24 @@ final class AttributeRecorder {
       throw new NullPointerException(msg);
     }
 
-    record(name, value);
+    return record(name, value);
   }
 
-  public final void record(AttributeName name, String value) {
+  public final AttributePointer record(AttributeName name, String value) {
     final AttributeValueEscaper escaper;
     escaper = new AttributeValueEscaper(value);
 
     final String escaped;
     escaped = escaper.escape();
 
-    record0(name, escaped);
+    return record0(name, escaped);
   }
 
-  public final void record(AttributeName name, JsAction value) {
-    record0(name, value);
+  public final AttributePointer record(AttributeName name, JsAction value) {
+    return record0(name, value);
   }
 
-  private void record0(AttributeName name, Object value) {
+  private AttributePointer record0(AttributeName name, Object value) {
     final int nameIndex;
     nameIndex = name.index();
 
@@ -76,24 +76,27 @@ final class AttributeRecorder {
     final int valueIndex;
     valueIndex = sink.addObject(value);
 
-    switch (nameSize) {
+    final int startIndex;
+    startIndex = switch (nameSize) {
       case BIT8 -> record8(nameIndex, valueIndex);
 
       case BIT16, BIT24 -> throw new UnsupportedOperationException();
-    }
+    };
+
+    return new AttributePointer(startIndex);
   }
 
-  private void record8(final int nameIndex, final int valueIndex) {
+  private int record8(final int nameIndex, final int valueIndex) {
     final IntSize valueSize;
     valueSize = IntSize.of(valueIndex);
 
-    switch (valueSize) {
+    return switch (valueSize) {
       case BIT8 -> record88(nameIndex, valueIndex);
 
       case BIT16 -> record816(nameIndex, valueIndex);
 
       case BIT24 -> record824(nameIndex, valueIndex);
-    }
+    };
   }
 
   private int record88(int nameIndex, int valueIndex) {

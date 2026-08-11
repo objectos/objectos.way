@@ -17,9 +17,12 @@ package objectox.html.markup;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.html.Attribute;
+import objectos.html.BooleanAttribute;
 import objectos.html.ElementName;
 import objectos.html.markup.ElementValue;
 import objectox.html.AmbiguousName;
+import objectox.html.HtmlPojo;
 import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 
@@ -62,6 +65,36 @@ public class ElementChildrenRecorderTest {
     );
   }
 
+  @Test(description = "attribute is not a child; sink unchanged")
+  public void attribute01() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final Attribute attr;
+    attr = Attribute.of(AttributeNamePojo.CHARSET, "UTF-8");
+
+    assertEquals(
+        record(sink, ElementNamePojo.HEAD, attr),
+
+        HtmlSinkY.create(_ -> {})
+    );
+  }
+
+  @Test(description = "boolean attribute is not a child; sink unchanged")
+  public void booleanAttribute01() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final BooleanAttribute attr;
+    attr = BooleanAttribute.of(AttributeNamePojo.AUTOFOCUS);
+
+    assertEquals(
+        record(sink, ElementNamePojo.HEAD, attr),
+
+        HtmlSinkY.create(_ -> {})
+    );
+  }
+
   @Test
   public void element01() {
     final HtmlSink sink;
@@ -93,6 +126,36 @@ public class ElementChildrenRecorderTest {
           opts.addByte(HtmlBytes.ELEM8);
           opts.addInt8(childStart);
         })
+    );
+  }
+
+  @Test(description = "fragment child")
+  public void fragment01() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final HtmlPojo frag;
+    frag = new HtmlPojo(new HtmlSink());
+
+    assertEquals(
+        record(sink, ElementNamePojo.HEAD, frag),
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.FRAG8);
+          opts.addInt8(opts.addObject(frag));
+        })
+    );
+  }
+
+  @Test(description = "no-op is not a child; sink unchanged")
+  public void noop01() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    assertEquals(
+        record(sink, ElementNamePojo.HEAD, NoOpInstructionPojo.INSTANCE),
+
+        HtmlSinkY.create(_ -> {})
     );
   }
 
@@ -148,6 +211,9 @@ public class ElementChildrenRecorderTest {
     final ChildElementRecorder childElementRecorder;
     childElementRecorder = new ChildElementRecorder(sink);
 
+    final ChildFragmentRecorder childFragmentRecorder;
+    childFragmentRecorder = new ChildFragmentRecorder(sink);
+
     final ChildRawRecorder childRawRecorder;
     childRawRecorder = new ChildRawRecorder(sink);
 
@@ -155,7 +221,7 @@ public class ElementChildrenRecorderTest {
     childTextRecorder = new ChildTextRecorder(sink);
 
     final ElementChildrenRecorder subject;
-    subject = new ElementChildrenRecorder(childAmbiguousRecorder, childElementMarker, childElementRecorder, childRawRecorder, childTextRecorder);
+    subject = new ElementChildrenRecorder(childAmbiguousRecorder, childElementMarker, childElementRecorder, childFragmentRecorder, childRawRecorder, childTextRecorder);
 
     subject.record(elementName, contents);
 
