@@ -51,6 +51,12 @@ public class HtmlBytesGen {
     value("ELTXT816");
     value("ELTXT824");
 
+    comment("fragment");
+
+    value("FRAG8");
+    value("FRAG16");
+    value("FRAG24");
+
     comment("text");
 
     value("TEXT8");

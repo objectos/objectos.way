@@ -29,12 +29,16 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import objectos.html.Html;
 import objectos.html.format.Formatter;
+import objectos.html.markup.FragmentMarkup;
 import objectos.html.stream.Event;
 import objectox.html.format.FormatterPojo;
 import objectox.html.markup.HtmlSink;
 import objectox.html.stream.Player;
 
-public final class HtmlPojo implements Html {
+public final class HtmlPojo
+    implements
+    Html,
+    FragmentMarkup {
 
   private final byte[] code;
 

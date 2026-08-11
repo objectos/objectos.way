@@ -26,5 +26,4 @@ public sealed interface Fragment
     Fragment1,
     Fragment2,
     Fragment3,
-    Fragment4 {
-}
+    Fragment4 {}

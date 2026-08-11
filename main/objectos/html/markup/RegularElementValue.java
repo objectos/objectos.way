@@ -28,6 +28,7 @@ public sealed interface RegularElementValue
     Attribute,
     BooleanAttribute,
     ElementMarkup,
+    FragmentMarkup,
     NoOpMarkup,
     RawMarkup,
     TextMarkup {}

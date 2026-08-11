@@ -96,25 +96,25 @@ public class TemplateGen {
     // ELEMENTS
     //
 
-    /// Renders an HTML element with the specified name and contents.
+    /// Encodes an HTML element with the specified name and values.
     /// @param name the element name
-    /// @param contents the attributes and children of the element
-    /// @return an instruction representing the element
-    protected final ElementInstruction elem(ElementName name, Instruction... contents) {
-      return $html().elem(name, contents);
+    /// @param values the encoded attributes and encoded child nodes of the element
+    /// @return an object representing the encoded element
+    protected final ElementMarkup elem(ElementName name, ElementValue... values) {
+      return markup().elem(name, values);
     }
 
-    /// Renders an HTML element with the specified name and text.
+    /// Encodes an HTML element with the specified name and text.
     /// @param name the element name
     /// @param text the text value of this element
-    /// @return an instruction representing the element
-    protected final ElementInstruction elem(ElementName name, String text) {
-      return $html().elem(name, text);
+    /// @return an object representing the encoded element
+    protected final ElementMarkup elem(ElementName name, String text) {
+      return markup().elem(name, text);
     }
 
-    /// Renders the `<!DOCTYPE html>` doctype.
+    /// Encodes the `<!DOCTYPE html>` doctype.
     protected final void doctype() {
-      $html().doctype();
+      markup().doctype();
     }
     """);
 
@@ -127,31 +127,31 @@ public class TemplateGen {
 
       if (ambiguousNames.contains(htmlName)) {
         methods.append("""
-
-        /// Renders the `%1$s` element with the specified content.
-        /// @param contents the attributes and children of the element
-        /// @return an instruction representing the element.
-        protected final ElementInstruction %2$s(Instruction... contents) {
-          return $html().%2$s(contents);
+        /// Encodes the `%1$s` element with the specified values.
+        /// @param values the encoded attributes and encoded child nodes of the element
+        /// @return an object representing the encoded element
+        protected final ElementMarkup %2$s(RegularElementValue... values) {
+          return markup().%2$s(values);
         }
         """.formatted(elem.htmlName(), elem.htmlName()));
+
       }
 
       else if (elem.endTag()) {
         methods.append("""
 
-        /// Renders the `%1$s` element with the specified content.
-        /// @param contents the attributes and children of the element
-        /// @return an instruction representing the element.
-        protected final ElementInstruction %2$s(Instruction... contents) {
-          return $html().%2$s(contents);
+        /// Encodes the `%1$s` element with the specified values.
+        /// @param values the encoded attributes and encoded child nodes of the element
+        /// @return an object representing the encoded element
+        protected final ElementMarkup %2$s(RegularElementValue... values) {
+          return markup().%2$s(values);
         }
 
-        /// Renders the `%1$s` element with the specified text.
+        /// Encodes the `%1$s` element with the specified text.
         /// @param text the text value of the element
-        /// @return an instruction representing the element.
-        protected final ElementInstruction %2$s(String text) {
-          return $html().%2$s(text);
+        /// @return an object representing the encoded element
+        protected final ElementMarkup %2$s(String text) {
+          return markup().%2$s(text);
         }
         """.formatted(elem.htmlName(), elem.htmlName()));
       }
@@ -159,11 +159,11 @@ public class TemplateGen {
       else {
         methods.append("""
 
-        /// Renders the `%1$s` element with the specified content.
-        /// @param contents the attributes of the element
-        /// @return an instruction representing the element.
-        protected final ElementInstruction %2$s(Instruction.OfVoid... contents) {
-          return $html().%2$s(contents);
+        /// Encodes the `%1$s` element with the specified content.
+        /// @param values the encoded attributes of the element
+        /// @return an object representing the encoded element
+        protected final ElementMarkup %2$s(VoidElementValue... values) {
+          return markup().%2$s(values);
         }
         """.formatted(elem.htmlName(), elem.htmlName()));
       }
@@ -177,21 +177,6 @@ public class TemplateGen {
     //
     // ATTRIBUTES
     //
-
-    /// Renders an attribute with the specified name.
-    /// @param name the attribute name
-    /// @return an instruction representing the attribute
-    protected final AttributeInstruction attr(AttributeName name) {
-      return $html().attr(name);
-    }
-
-    /// Renders an attribute with the specified name and value.
-    /// @param name the attribute name
-    /// @param value the attribute value
-    /// @return an instruction representing the attribute
-    protected final AttributeInstruction attr(AttributeName name, String value) {
-      return $html().attr(name, value);
-    }
     """);
 
     final Set<String> ambiguous;
@@ -206,29 +191,29 @@ public class TemplateGen {
         fields.append("""
 
         /// The `%s` boolean attribute.
-        protected static final AttributeObject %s = Markup.%s;
+        protected static final BooleanAttribute %s = Markup.%s;
         """.formatted(attr.htmlName(), attr.methodName(), attr.methodName()));
       }
 
       else {
         methods.append("""
 
-        /// Renders the `%s` attribute with the specified value.
+        /// Encodes the `%s` attribute with the specified value.
         /// @param value the attribute value
-        /// @return an instruction representing the attribute
-        protected final AttributeInstruction %s(String value) {
-          return $html().%s(value);
+        /// @return an object representing the encoded attribute
+        protected final Attribute %s(String value) {
+          return markup().%s(value);
         }
         """.formatted(attr.htmlName(), attr.methodName(), attr.methodName()));
 
         if (attr.eventAttribute()) {
           methods.append("""
 
-        /// Renders the `%s` attribute with the specified action.
-        /// @param value the action to execute
-        /// @return an instruction representing the attribute
-        protected final AttributeInstruction %s(JsAction value) {
-          return $html().%s(value);
+        /// Encodes the `%s` attribute with the specified action.
+        /// @param value the action to be executed
+        /// @return an object representing the encoded attribute
+        protected final Attribute %s(JsAction value) {
+          return markup().%s(value);
         }
         """.formatted(attr.htmlName(), attr.methodName(), attr.methodName()));
         }
@@ -247,11 +232,11 @@ public class TemplateGen {
     for (AmbiguousSpec spec : HtmlSpec.ambiguous()) {
       methods.append("""
 
-      /// Renders the `%s` attribute or the `%s` element with the specified text.
+      /// Encodes the `%s` attribute or the `%s` element with the specified text.
       /// @param text the attribute value or the text content of the element
-      /// @return an instruction representing the attribute or the element
-      protected final AmbiguousInstruction %s(String text) {
-        return $html().%s(text);
+      /// @return an object representing the encoded attribute or element
+      protected final AmbiguousMarkup %s(String text) {
+        return markup().%s(text);
       }
       """.formatted(spec.attributeName(), spec.elementName(), spec.methodName(), spec.methodName()));
     }
@@ -289,7 +274,7 @@ public class TemplateGen {
 
     methods.append("""
     protected final %s {
-      return $html().%s;
+      return markup().%s;
     }
     """.formatted(spec.sig(), spec.invocation()));
   }

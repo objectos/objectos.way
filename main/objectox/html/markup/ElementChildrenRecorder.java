@@ -21,6 +21,7 @@ import objectos.html.ElementName;
 import objectos.html.markup.ElementValue;
 import objectos.html.markup.NoOpMarkup;
 import objectox.html.AmbiguousName;
+import objectox.html.HtmlPojo;
 import objectox.html.elem.ElementNamePojo;
 
 final class ElementChildrenRecorder {
@@ -30,6 +31,8 @@ final class ElementChildrenRecorder {
   private final ChildElementMarker childElementMarker;
 
   private final ChildElementRecorder childElementRecorder;
+
+  private final ChildFragmentRecorder childFragmentRecorder;
 
   private final ChildRawRecorder childRawRecorder;
 
@@ -42,6 +45,8 @@ final class ElementChildrenRecorder {
 
       ChildElementRecorder childElementRecorder,
 
+      ChildFragmentRecorder childFragmentRecorder,
+
       ChildRawRecorder childRawRecorder,
 
       ChildTextRecorder childTextRecorder
@@ -51,6 +56,8 @@ final class ElementChildrenRecorder {
     this.childElementMarker = childElementMarker;
 
     this.childElementRecorder = childElementRecorder;
+
+    this.childFragmentRecorder = childFragmentRecorder;
 
     this.childRawRecorder = childRawRecorder;
 
@@ -85,6 +92,8 @@ final class ElementChildrenRecorder {
 
         childElementRecorder.record(child);
       }
+
+      case HtmlPojo frag -> childFragmentRecorder.record(frag);
 
       case NoOpMarkup _ -> {}
 

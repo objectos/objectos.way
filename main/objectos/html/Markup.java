@@ -15,22 +15,18 @@
  */
 package objectos.html;
 
-import java.util.Collection;
 import objectos.html.markup.AmbiguousMarkup;
-import objectos.html.markup.AttributeMarkup;
 import objectos.html.markup.ElementMarkup;
-import objectos.html.markup.FlattenInstruction;
+import objectos.html.markup.ElementValue;
 import objectos.html.markup.Fragment0;
 import objectos.html.markup.Fragment1;
 import objectos.html.markup.Fragment2;
 import objectos.html.markup.Fragment3;
 import objectos.html.markup.Fragment4;
-import objectos.html.markup.RegularElementValue;
-import objectos.html.markup.ElementValue;
-import objectos.html.markup.FragmentInstruction;
-import objectos.html.markup.Instruction;
+import objectos.html.markup.FragmentMarkup;
 import objectos.html.markup.NoOpMarkup;
 import objectos.html.markup.RawMarkup;
+import objectos.html.markup.RegularElementValue;
 import objectos.html.markup.TextMarkup;
 import objectos.html.markup.VoidElementValue;
 import objectos.script.JsAction;
@@ -51,13 +47,6 @@ public sealed interface Markup permits MarkupPojo {
   ///
   /// @return a compiled HTML artifact
   Html compile();
-
-  /// Renders the specified attribute at the root of a document or fragment.
-  ///
-  /// @param object the attribute
-  ///
-  /// @return an instruction representing the attribute
-  AttributeMarkup attr(Attribute object);
 
   // START generated code
 
@@ -149,7 +138,7 @@ public sealed interface Markup permits MarkupPojo {
   ///
   /// @param fragment the fragment to include
   /// @return an instruction representing the fragment
-  FragmentInstruction f(Fragment0 fragment);
+  FragmentMarkup f(Fragment0 fragment);
 
   /// Renders the specified fragment as part of this document.
   ///
@@ -171,7 +160,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param fragment the fragment to include
   /// @param arg1 the first argument
   /// @return an instruction representing the fragment
-  <T1> FragmentInstruction f(Fragment1<T1> fragment, T1 arg1);
+  <T1> FragmentMarkup f(Fragment1<T1> fragment, T1 arg1);
 
   /// Renders the specified fragment as part of this document.
   ///
@@ -191,7 +180,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param arg1 the first argument
   /// @param arg2 the second argument
   /// @return an instruction representing the fragment
-  <T1, T2> FragmentInstruction f(Fragment2<T1, T2> fragment, T1 arg1, T2 arg2);
+  <T1, T2> FragmentMarkup f(Fragment2<T1, T2> fragment, T1 arg1, T2 arg2);
 
   /// Renders the specified fragment as part of this document.
   ///
@@ -216,7 +205,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param arg2 the second argument
   /// @param arg3 the third argument
   /// @return an instruction representing the fragment
-  <T1, T2, T3> FragmentInstruction f(Fragment3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3);
+  <T1, T2, T3> FragmentMarkup f(Fragment3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3);
 
   /// Renders the specified fragment as part of this document.
   ///
@@ -230,19 +219,8 @@ public sealed interface Markup permits MarkupPojo {
   /// @param arg3 the third argument
   /// @param arg4 the fourth argument
   /// @return an instruction representing the fragment
-  <T1, T2, T3, T4> FragmentInstruction f(Fragment4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
+  <T1, T2, T3, T4> FragmentMarkup f(Fragment4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
 
-  /// Flattens the specified instructions so that each of the specified
-  /// instructions is individually added, in order, to a receiving element.
-  /// @param contents the instructions to be flattened
-  /// @return an instruction representing this flatten operation
-  FlattenInstruction flatten(Instruction... contents);
-
-  /// Flattens the specified instructions so that each of the specified
-  /// instructions is individually added, in order, to a receiving element.
-  /// @param contents the instructions to be flattened
-  /// @return an instruction representing this flatten operation
-  FlattenInstruction flatten(Collection<? extends Instruction> contents);
 
   /// The no-op markup.
   /// @return the no-op markup.

@@ -451,7 +451,7 @@ public class RecorderTest {
       sink.addInt8(sink.addObject("foo"));
     };
 
-    final FragmentPointer res;
+    final FragmentHtml res;
     res = subject.fragment(fragment);
 
     assertEquals(res.value(), 0);
@@ -484,7 +484,7 @@ public class RecorderTest {
       sink.addInt8(sink.addObject(value));
     };
 
-    final FragmentPointer res;
+    final FragmentHtml res;
     res = subject.fragment(fragment, "foo");
 
     assertEquals(res.value(), 0);
@@ -521,7 +521,7 @@ public class RecorderTest {
       sink.addInt8(sink.addObject(value2));
     };
 
-    final FragmentPointer res;
+    final FragmentHtml res;
     res = subject.fragment(fragment, "foo", "bar");
 
     assertEquals(res.value(), 0);
@@ -568,7 +568,7 @@ public class RecorderTest {
       sink.addInt8(sink.addObject(value3));
     };
 
-    final FragmentPointer res;
+    final FragmentHtml res;
     res = subject.fragment(fragment, "foo", "bar", "baz");
 
     assertEquals(res.value(), 0);
@@ -623,7 +623,7 @@ public class RecorderTest {
       sink.addInt8(sink.addObject(value4));
     };
 
-    final FragmentPointer res;
+    final FragmentHtml res;
     res = subject.fragment(fragment, "foo", "bar", "baz", "qux");
 
     assertEquals(res.value(), 0);

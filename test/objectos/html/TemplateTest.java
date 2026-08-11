@@ -20,9 +20,7 @@ import static org.testng.Assert.assertEquals;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import objectos.html.markup.ElementMarkup;
-import objectos.html.markup.Instruction;
 import objectos.http.Content;
 import org.testng.annotations.Test;
 
@@ -972,9 +970,10 @@ public class TemplateTest {
     );
   }
 
+  /*
   @Test(description = """
   HtmlTemplate TC46 (A)
-
+  
   - flatten instruction
   """)
   public void testCase46a() {
@@ -991,16 +990,16 @@ public class TemplateTest {
             );
           }
         },
-
+  
         """
         <form disabled><label></label><input></form>
         """
     );
   }
-
+  
   @Test(description = """
   HtmlTemplate TC46 (B)
-
+  
   - flatten instruction
   """)
   public void testCase46b() {
@@ -1010,7 +1009,7 @@ public class TemplateTest {
               ClassName.of("cn1"),
               ClassName.of("cn2")
           );
-
+  
           @Override
           protected final void render() {
             div(
@@ -1018,12 +1017,13 @@ public class TemplateTest {
             );
           }
         },
-
+  
         """
         <div class="cn1 cn2"></div>
         """
     );
   }
+  */
 
   @Test(description = """
   HtmlTemplate TC47
@@ -1070,8 +1070,8 @@ public class TemplateTest {
         new Template() {
           @Override
           protected final void render() {
-            Instruction[] children;
-            children = new Instruction[COUNT];
+            ElementMarkup[] children;
+            children = new ElementMarkup[COUNT];
 
             for (int i = 0; i < COUNT; i++) {
               children[i] = hr();

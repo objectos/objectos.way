@@ -15,27 +15,19 @@
  */
 package objectox.html;
 
-import java.util.Collection;
-import objectos.html.AttributeName;
 import objectos.html.Attribute;
 import objectos.html.ElementName;
 import objectos.html.Html;
 import objectos.html.Markup;
-import objectos.html.markup.AmbiguousMarkup;
-import objectos.html.markup.AttributeMarkup;
-import objectos.html.markup.ElementValue;
 import objectos.html.markup.ElementMarkup;
-import objectos.html.markup.FlattenInstruction;
+import objectos.html.markup.ElementValue;
 import objectos.html.markup.Fragment0;
 import objectos.html.markup.Fragment1;
 import objectos.html.markup.Fragment2;
 import objectos.html.markup.Fragment3;
 import objectos.html.markup.Fragment4;
-import objectos.html.markup.FragmentInstruction;
-import objectos.html.markup.Instruction;
+import objectos.html.markup.FragmentMarkup;
 import objectos.html.markup.NoOpMarkup;
-import objectos.html.markup.RawMarkup;
-import objectos.html.markup.TextMarkup;
 import objectox.html.markup.AttributeNamePojo;
 import objectox.html.markup.AttributePojo;
 import objectox.html.markup.NoOpInstructionPojo;
@@ -46,7 +38,7 @@ public sealed abstract class MarkupPojo
     implements Markup
     permits Markup.OfHtml {
 
-  private final Recorder recorder;
+  private Recorder recorder;
 
   public MarkupPojo() {
     recorder = Recorder.create();
@@ -66,28 +58,103 @@ public sealed abstract class MarkupPojo
   // ##################################################################
 
   @Override
-  public final FragmentInstruction f(Fragment0 fragment) {
-    return recorder.fragment(fragment);
+  public final FragmentMarkup f(Fragment0 fragment) {
+    final Recorder previous;
+    previous = recorder;
+
+    final Recorder current;
+    current = Recorder.create();
+
+    recorder = current;
+
+    fragment.invoke();
+
+    final HtmlPojo html;
+    html = current.compile();
+
+    recorder = previous;
+
+    return html;
   }
 
   @Override
-  public final <T1> FragmentInstruction f(Fragment1<T1> fragment, T1 arg1) {
-    return recorder.fragment(fragment, arg1);
+  public final <T1> FragmentMarkup f(Fragment1<T1> fragment, T1 arg1) {
+    final Recorder previous;
+    previous = recorder;
+
+    final Recorder current;
+    current = Recorder.create();
+
+    recorder = current;
+
+    fragment.invoke(arg1);
+
+    final HtmlPojo html;
+    html = current.compile();
+
+    recorder = previous;
+
+    return html;
   }
 
   @Override
-  public final <T1, T2> FragmentInstruction f(Fragment2<T1, T2> fragment, T1 arg1, T2 arg2) {
-    return recorder.fragment(fragment, arg1, arg2);
+  public final <T1, T2> FragmentMarkup f(Fragment2<T1, T2> fragment, T1 arg1, T2 arg2) {
+    final Recorder previous;
+    previous = recorder;
+
+    final Recorder current;
+    current = Recorder.create();
+
+    recorder = current;
+
+    fragment.invoke(arg1, arg2);
+
+    final HtmlPojo html;
+    html = current.compile();
+
+    recorder = previous;
+
+    return html;
   }
 
   @Override
-  public final <T1, T2, T3> FragmentInstruction f(Fragment3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
-    return recorder.fragment(fragment, arg1, arg2, arg3);
+  public final <T1, T2, T3> FragmentMarkup f(Fragment3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
+    final Recorder previous;
+    previous = recorder;
+
+    final Recorder current;
+    current = Recorder.create();
+
+    recorder = current;
+
+    fragment.invoke(arg1, arg2, arg3);
+
+    final HtmlPojo html;
+    html = current.compile();
+
+    recorder = previous;
+
+    return html;
   }
 
   @Override
-  public final <T1, T2, T3, T4> FragmentInstruction f(Fragment4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
-    return recorder.fragment(fragment, arg1, arg2, arg3, arg4);
+  public final <T1, T2, T3, T4> FragmentMarkup f(Fragment4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
+    final Recorder previous;
+    previous = recorder;
+
+    final Recorder current;
+    current = Recorder.create();
+
+    recorder = current;
+
+    fragment.invoke(arg1, arg2, arg3, arg4);
+
+    final HtmlPojo html;
+    html = current.compile();
+
+    recorder = previous;
+
+    return html;
   }
 
   @Override
@@ -99,19 +166,6 @@ public sealed abstract class MarkupPojo
     formatted = AttributeNamePojo.formatAttrValue(value, sb);
 
     return AttributePojo.of0(AttributeNamePojo.CLASS, formatted);
-  }
-
-  @Override
-  public final FlattenInstruction flatten(Instruction... contents) {
-    return recorder.flatten(contents);
-  }
-
-  @Override
-  public final FlattenInstruction flatten(Collection<? extends Instruction> contents) {
-    final Instruction[] array;
-    array = contents.toArray(Instruction[]::new);
-
-    return recorder.flatten(array);
   }
 
   @Override
@@ -134,29 +188,6 @@ public sealed abstract class MarkupPojo
 
   // ##################################################################
   // # END: Elements
-  // ##################################################################
-
-  // ##################################################################
-  // # BEGIN: Attributes
-  // ##################################################################
-
-  @Override
-  public final AttributeMarkup attr(Attribute object) {
-    final AttributeName name;
-    name = object.name();
-
-    final String value;
-    value = object.value();
-
-    if (value == null) {
-      return attr0(name);
-    } else {
-      return attr0(name, value);
-    }
-  }
-
-  // ##################################################################
-  // # END: Attributes
   // ##################################################################
 
   // ##################################################################

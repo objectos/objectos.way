@@ -378,20 +378,19 @@ public final class HtmlSpec {
 
   public static List<MethodSpec> textNodes() {
     return List.of(
-        new MethodSpec("RawInstruction nbsp()", "nbsp()", """
-        Renders the non-breaking space `&nbsp;` HTML character entity.
-        @return an instruction representing the non-breaking space character entity.
+        new MethodSpec("RawMarkup nbsp()", "nbsp()", """
+        Encodes the non-breaking space `&nbsp;` HTML character entity.
+        @return an object representing the encoded character entity.
         """),
-        new MethodSpec("RawInstruction raw(String value)", "raw(value)", """
-        Renders the specified value as raw HTML.
+        new MethodSpec("RawMarkup raw(String value)", "raw(value)", """
+        Encodes the specified value as raw HTML.
         @param value the raw HTML value
-        @return a raw HTML instruction
+        @return an object representing the encoded raw HTML
         """),
-        new MethodSpec("TextInstruction text(String value)", "text(value)", """
-        Renders a text node with the specified value.
-        The text value is escaped before being emitted to the output.
+        new MethodSpec("TextMarkup text(String value)", "text(value)", """
+        Encodes a text node with the specified value.
         @param value the text value
-        @return an instruction representing the text node
+        @return an object representing the encoded text node
         """)
     );
   }
@@ -414,7 +413,7 @@ public final class HtmlSpec {
   public static List<MethodSpec> wayNodes() {
     return List.of(
         new MethodSpec("Attribute css(String value)", "css(value)", """
-        Renders the `class` attribute by processing the specified value.
+        Encodes the `class` attribute by processing the specified value.
 
         This method is designed to work with Java text blocks. It first removes
         any leading and trailing whitespace. Additionally, any sequence of
@@ -436,10 +435,10 @@ public final class HtmlSpec {
         `className("display:inline-flex justify-content:center background-color:blue-500")`.
 
         @param value the text block containing class names, possibly spread across multiple lines
-        @return an instruction representing this attribute.
+        @return an object representing the encoded attribute.
         """),
-        new MethodSpec("FragmentInstruction f(Fragment0 fragment)", "f(fragment)", """
-        Renders the specified fragment as part of this document.
+        new MethodSpec("FragmentMarkup f(Fragment0 fragment)", "f(fragment)", """
+        Encodes the specified fragment as part of this document.
 
         The following Objectos HTML component:
 
@@ -458,8 +457,8 @@ public final class HtmlSpec {
         @param fragment the fragment to include
         @return an instruction representing the fragment
         """),
-        new MethodSpec("<T1> FragmentInstruction f(Fragment1<T1> fragment, T1 arg1)", "f(fragment, arg1)", """
-        Renders the specified fragment as part of this document.
+        new MethodSpec("<T1> FragmentMarkup f(Fragment1<T1> fragment, T1 arg1)", "f(fragment, arg1)", """
+        Encodes the specified fragment as part of this document.
 
         The following Objectos HTML component:
 
@@ -478,10 +477,10 @@ public final class HtmlSpec {
         @param <T1> the type of the first argument
         @param fragment the fragment to include
         @param arg1 the first argument
-        @return an instruction representing the fragment
+        @return an object representing the encoded fragment
         """),
-        new MethodSpec("<T1, T2> FragmentInstruction f(Fragment2<T1, T2> fragment, T1 arg1, T2 arg2)", "f(fragment, arg1, arg2)", """
-        Renders the specified fragment as part of this document.
+        new MethodSpec("<T1, T2> FragmentMarkup f(Fragment2<T1, T2> fragment, T1 arg1, T2 arg2)", "f(fragment, arg1, arg2)", """
+        Encodes the specified fragment as part of this document.
 
         The following Objectos HTML component:
 
@@ -498,10 +497,10 @@ public final class HtmlSpec {
         @param fragment the fragment to include
         @param arg1 the first argument
         @param arg2 the second argument
-        @return an instruction representing the fragment
+        @return an object representing the encoded fragment
         """),
-        new MethodSpec("<T1, T2, T3> FragmentInstruction f(Fragment3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3)", "f(fragment, arg1, arg2, arg3)", """
-        Renders the specified fragment as part of this document.
+        new MethodSpec("<T1, T2, T3> FragmentMarkup f(Fragment3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3)", "f(fragment, arg1, arg2, arg3)", """
+        Encodes the specified fragment as part of this document.
 
         The following Objectos HTML component:
 
@@ -523,10 +522,10 @@ public final class HtmlSpec {
         @param arg1 the first argument
         @param arg2 the second argument
         @param arg3 the third argument
-        @return an instruction representing the fragment
+        @return an object representing the encoded fragment
         """),
-        new MethodSpec("<T1, T2, T3, T4> FragmentInstruction f(Fragment4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4)", "f(fragment, arg1, arg2, arg3, arg4)", """
-        Renders the specified fragment as part of this document.
+        new MethodSpec("<T1, T2, T3, T4> FragmentMarkup f(Fragment4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4)", "f(fragment, arg1, arg2, arg3, arg4)", """
+        Encodes the specified fragment as part of this document.
 
         @param <T1> the type of the first argument
         @param <T2> the type of the second argument
@@ -537,7 +536,7 @@ public final class HtmlSpec {
         @param arg2 the second argument
         @param arg3 the third argument
         @param arg4 the fourth argument
-        @return an instruction representing the fragment
+        @return an object representing the encoded fragment
         """),
         new MethodSpec("FlattenInstruction flatten(Instruction... contents)", "flatten(contents)", """
         Flattens the specified instructions so that each of the specified

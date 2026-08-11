@@ -43,25 +43,31 @@ public final class HtmlBytes {
   public static final byte ELTXT816 = -116;
   public static final byte ELTXT824 = -115;
 
+  // fragment
+
+  public static final byte FRAG8 = -114;
+  public static final byte FRAG16 = -113;
+  public static final byte FRAG24 = -112;
+
   // text
 
-  public static final byte TEXT8 = -114;
-  public static final byte TEXT16 = -113;
-  public static final byte TEXT24 = -112;
+  public static final byte TEXT8 = -111;
+  public static final byte TEXT16 = -110;
+  public static final byte TEXT24 = -109;
 
   // raw
 
-  public static final byte RAW8 = -111;
-  public static final byte RAW16 = -110;
-  public static final byte RAW24 = -109;
+  public static final byte RAW8 = -108;
+  public static final byte RAW16 = -107;
+  public static final byte RAW24 = -106;
 
   // xelement
 
-  public static final byte xSTARTTAG8 = -108;
+  public static final byte xSTARTTAG8 = -105;
 
   // control flow
 
-  public static final byte JMP24 = -107;
+  public static final byte JMP24 = -104;
 
   private HtmlBytes() {}
 

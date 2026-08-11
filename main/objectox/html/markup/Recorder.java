@@ -16,14 +16,8 @@
 package objectox.html.markup;
 
 import objectos.html.ElementName;
-import objectos.html.Html;
 import objectos.html.markup.ElementValue;
-import objectos.html.markup.Fragment0;
-import objectos.html.markup.Fragment1;
-import objectos.html.markup.Fragment2;
-import objectos.html.markup.Fragment3;
-import objectos.html.markup.Fragment4;
-import objectos.html.markup.Instruction;
+import objectox.html.HtmlPojo;
 
 public final class Recorder {
 
@@ -33,30 +27,18 @@ public final class Recorder {
 
   private final ElementRecorder elementRecorder;
 
-  private final FlattenRecorder flattenRecorder;
-
-  private final FragmentRecorder fragmentRecorder;
-
   Recorder(
       DoctypeRecorder doctypeRecorder,
 
       DocumentCompiler documentCompiler,
 
-      ElementRecorder elementRecorder,
-
-      FlattenRecorder flattenRecorder,
-
-      FragmentRecorder fragmentRecorder
+      ElementRecorder elementRecorder
   ) {
     this.doctypeRecorder = doctypeRecorder;
 
     this.documentCompiler = documentCompiler;
 
     this.elementRecorder = elementRecorder;
-
-    this.flattenRecorder = flattenRecorder;
-
-    this.fragmentRecorder = fragmentRecorder;
   }
 
   public static Recorder create() {
@@ -91,19 +73,17 @@ public final class Recorder {
 
                 new ChildElementRecorder(sink),
 
+                new ChildFragmentRecorder(sink),
+
                 new ChildRawRecorder(sink),
 
                 new ChildTextRecorder(sink)
             )
-        ),
-
-        null,
-
-        new FragmentRecorder(sink)
+        )
     );
   }
 
-  public final Html compile() {
+  public final HtmlPojo compile() {
     return documentCompiler.compile();
   }
 
@@ -113,30 +93,6 @@ public final class Recorder {
 
   public final ElementPointer element(ElementName name, ElementValue... contents) {
     return elementRecorder.record(name, contents);
-  }
-
-  public final FlattenPointer flatten(Instruction... contents) {
-    return flattenRecorder.record(contents);
-  }
-
-  public final FragmentPointer fragment(Fragment0 fragment) {
-    return fragmentRecorder.record(fragment);
-  }
-
-  public final <T1> FragmentPointer fragment(Fragment1<T1> fragment, T1 arg1) {
-    return fragmentRecorder.record(fragment, arg1);
-  }
-
-  public final <T1, T2> FragmentPointer fragment(Fragment2<T1, T2> fragment, T1 arg1, T2 arg2) {
-    return fragmentRecorder.record(fragment, arg1, arg2);
-  }
-
-  public final <T1, T2, T3> FragmentPointer fragment(Fragment3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3) {
-    return fragmentRecorder.record(fragment, arg1, arg2, arg3);
-  }
-
-  public final <T1, T2, T3, T4> FragmentPointer fragment(Fragment4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
-    return fragmentRecorder.record(fragment, arg1, arg2, arg3, arg4);
   }
 
 }

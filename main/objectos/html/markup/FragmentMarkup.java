@@ -15,8 +15,12 @@
  */
 package objectos.html.markup;
 
-import objectox.html.markup.AttributePointer;
+import objectox.html.HtmlPojo;
 
-/// Represents the encoded markup of an Objectos HTML attribute.
-public sealed interface AttributeMarkup
-    permits AttributePointer {}
+/// Represents the encoded markup of an Objectos HTML fragment.
+public sealed interface FragmentMarkup
+    extends
+    RegularElementValue,
+    VoidElementValue
+    permits
+    HtmlPojo {}

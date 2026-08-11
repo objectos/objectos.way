@@ -15,22 +15,18 @@
  */
 package objectox.html;
 
-import java.util.Collection;
 import java.util.Objects;
 import objectos.html.Attribute;
 import objectos.html.ElementName;
 import objectos.html.markup.AmbiguousMarkup;
-import objectos.html.markup.AttributeMarkup;
 import objectos.html.markup.ElementMarkup;
 import objectos.html.markup.ElementValue;
-import objectos.html.markup.FlattenInstruction;
 import objectos.html.markup.Fragment0;
 import objectos.html.markup.Fragment1;
 import objectos.html.markup.Fragment2;
 import objectos.html.markup.Fragment3;
 import objectos.html.markup.Fragment4;
-import objectos.html.markup.FragmentInstruction;
-import objectos.html.markup.Instruction;
+import objectos.html.markup.FragmentMarkup;
 import objectos.html.markup.NoOpMarkup;
 import objectos.html.markup.RawMarkup;
 import objectos.html.markup.RegularElementValue;
@@ -46,13 +42,6 @@ import objectox.html.markup.RawNode;
 import objectox.html.markup.TextNode;
 
 sealed abstract class MarkupGenerated permits MarkupPojo {
-
-  /// Renders the specified attribute at the root of a document or fragment.
-  ///
-  /// @param object the attribute
-  ///
-  /// @return an instruction representing the attribute
-  public abstract AttributeMarkup attr(Attribute object);
 
   // START generated code
 
@@ -105,7 +94,7 @@ public abstract Attribute css(String value);
 ///
 /// @param fragment the fragment to include
 /// @return an instruction representing the fragment
-public abstract FragmentInstruction f(Fragment0 fragment);
+public abstract FragmentMarkup f(Fragment0 fragment);
 
 /// Renders the specified fragment as part of this document.
 ///
@@ -127,7 +116,7 @@ public abstract FragmentInstruction f(Fragment0 fragment);
 /// @param fragment the fragment to include
 /// @param arg1 the first argument
 /// @return an instruction representing the fragment
-public abstract <T1> FragmentInstruction f(Fragment1<T1> fragment, T1 arg1);
+public abstract <T1> FragmentMarkup f(Fragment1<T1> fragment, T1 arg1);
 
 /// Renders the specified fragment as part of this document.
 ///
@@ -147,7 +136,7 @@ public abstract <T1> FragmentInstruction f(Fragment1<T1> fragment, T1 arg1);
 /// @param arg1 the first argument
 /// @param arg2 the second argument
 /// @return an instruction representing the fragment
-public abstract <T1, T2> FragmentInstruction f(Fragment2<T1, T2> fragment, T1 arg1, T2 arg2);
+public abstract <T1, T2> FragmentMarkup f(Fragment2<T1, T2> fragment, T1 arg1, T2 arg2);
 
 /// Renders the specified fragment as part of this document.
 ///
@@ -172,7 +161,7 @@ public abstract <T1, T2> FragmentInstruction f(Fragment2<T1, T2> fragment, T1 ar
 /// @param arg2 the second argument
 /// @param arg3 the third argument
 /// @return an instruction representing the fragment
-public abstract <T1, T2, T3> FragmentInstruction f(Fragment3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3);
+public abstract <T1, T2, T3> FragmentMarkup f(Fragment3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3);
 
 /// Renders the specified fragment as part of this document.
 ///
@@ -186,19 +175,7 @@ public abstract <T1, T2, T3> FragmentInstruction f(Fragment3<T1, T2, T3> fragmen
 /// @param arg3 the third argument
 /// @param arg4 the fourth argument
 /// @return an instruction representing the fragment
-public abstract <T1, T2, T3, T4> FragmentInstruction f(Fragment4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
-
-/// Flattens the specified instructions so that each of the specified
-/// instructions is individually added, in order, to a receiving element.
-/// @param contents the instructions to be flattened
-/// @return an instruction representing this flatten operation
-public abstract FlattenInstruction flatten(Instruction... contents);
-
-/// Flattens the specified instructions so that each of the specified
-/// instructions is individually added, in order, to a receiving element.
-/// @param contents the instructions to be flattened
-/// @return an instruction representing this flatten operation
-public abstract FlattenInstruction flatten(Collection<? extends Instruction> contents);
+public abstract <T1, T2, T3, T4> FragmentMarkup f(Fragment4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
 
 /// The no-op markup.
 /// @return the no-op markup.

@@ -64,7 +64,7 @@ final class YTab implements Y.Tab {
   @Override
   public final Y.TabElem byId(Id id) {
     final String selector;
-    selector = "#" + id.attrValue();
+    selector = "#" + id.value();
 
     return bySelector(selector);
   }

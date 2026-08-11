@@ -26,4 +26,5 @@ public sealed interface VoidElementValue
     permits
     Attribute,
     BooleanAttribute,
+    FragmentMarkup,
     NoOpMarkup {}

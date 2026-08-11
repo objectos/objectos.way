@@ -15,7 +15,6 @@
  */
 package objectox.html.markup;
 
-import objectos.html.Html;
 import objectox.html.HtmlPojo;
 
 final class DocumentCompiler {
@@ -26,7 +25,7 @@ final class DocumentCompiler {
     this.sink = sink;
   }
 
-  public final Html compile() {
+  public final HtmlPojo compile() {
     return new HtmlPojo(sink);
   }
 
