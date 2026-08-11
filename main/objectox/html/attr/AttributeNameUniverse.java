@@ -21,49 +21,49 @@ import objectos.internal.Util;
 
 public final class AttributeNameUniverse {
 
-  private AttributeNamePojo[] array;
+  private AttributeName[] array;
 
-  private Map<String, AttributeNamePojo> table;
+  private Map<String, AttributeName> byName;
 
   private int size;
 
   public AttributeNameUniverse() {
-    array = new AttributeNamePojo[16];
+    array = new AttributeName[16];
   }
 
-  public final AttributeNamePojo get(int index) {
+  public final AttributeName get(int index) {
     return array[index];
   }
 
-  public final AttributeNamePojo getOrCreate(String name) {
-    final Map<String, AttributeNamePojo> t;
-    t = table();
+  public final AttributeName getOrCreate(String name) {
+    final Map<String, AttributeName> byName;
+    byName = byName();
 
-    final AttributeNamePojo found;
-    found = t.get(name);
+    final AttributeName found;
+    found = byName.get(name);
 
     if (found != null) {
       return found;
     }
 
     synchronized (this) {
-      final AttributeNamePojo again;
-      again = t.get(name);
+      final AttributeName again;
+      again = byName.get(name);
 
       if (again != null) {
         return again;
       }
 
-      final AttributeNamePojo created;
+      final AttributeName created;
       created = create(name);
 
-      t.put(name, created);
+      byName.put(created.name(), created);
 
       return created;
     }
   }
 
-  public final AttributeNamePojo create(String name) {
+  public final AttributeName create(String name) {
     final AttributeNameValidator validator;
     validator = new AttributeNameValidator(name);
 
@@ -75,31 +75,31 @@ public final class AttributeNameUniverse {
 
     array = Util.growIfNecessary(array, index);
 
-    final AttributeNamePojo created;
-    created = new AttributeNamePojo(false, index, validated);
+    final AttributeName created;
+    created = new AttributeName(index, validated);
 
     array[index] = created;
 
     return created;
   }
 
-  private Map<String, AttributeNamePojo> table() {
+  private Map<String, AttributeName> byName() {
     synchronized (this) {
-      if (table == null) {
-        final Map<String, AttributeNamePojo> created;
+      if (byName == null) {
+        final Map<String, AttributeName> created;
         created = new HashMap<>();
 
         for (int idx = 0; idx < size; idx++) {
-          final AttributeNamePojo existing;
+          final AttributeName existing;
           existing = array[idx];
 
           created.put(existing.name(), existing);
         }
 
-        table = created;
+        byName = created;
       }
 
-      return table;
+      return byName;
     }
   }
 

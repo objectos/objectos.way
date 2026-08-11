@@ -28,7 +28,7 @@ public class AttributeNameUniverseTest {
     final AttributeNameUniverse subject;
     subject = new AttributeNameUniverse();
 
-    final AttributeNamePojo id;
+    final AttributeName id;
     id = subject.getOrCreate("id");
 
     assertEquals(id.index(), 0);
@@ -40,10 +40,10 @@ public class AttributeNameUniverseTest {
     final AttributeNameUniverse subject;
     subject = new AttributeNameUniverse();
 
-    final AttributeNamePojo id;
+    final AttributeName id;
     id = subject.getOrCreate("id");
 
-    final AttributeNamePojo class_;
+    final AttributeName class_;
     class_ = subject.getOrCreate("class");
 
     assertEquals(id.index(), 0);
@@ -55,10 +55,10 @@ public class AttributeNameUniverseTest {
     final AttributeNameUniverse subject;
     subject = new AttributeNameUniverse();
 
-    final AttributeNamePojo id;
+    final AttributeName id;
     id = subject.getOrCreate("id");
 
-    final AttributeNamePojo again;
+    final AttributeName again;
     again = subject.getOrCreate("id");
 
     assertSame(again, id);
@@ -69,13 +69,13 @@ public class AttributeNameUniverseTest {
     final AttributeNameUniverse subject;
     subject = new AttributeNameUniverse();
 
-    final AttributeNamePojo id;
+    final AttributeName id;
     id = subject.getOrCreate("id");
 
-    final AttributeNamePojo class_;
+    final AttributeName class_;
     class_ = subject.getOrCreate("class");
 
-    final AttributeNamePojo onclick;
+    final AttributeName onclick;
     onclick = subject.getOrCreate("onclick");
 
     assertSame(subject.get(0), id);

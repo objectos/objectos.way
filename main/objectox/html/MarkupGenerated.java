@@ -33,9 +33,9 @@ import objectos.html.markup.RegularElementValue;
 import objectos.html.markup.TextMarkup;
 import objectos.html.markup.VoidElementValue;
 import objectos.script.JsAction;
-import objectox.html.attr.AttributeJsAction;
-import objectox.html.attr.AttributeNamePojo;
-import objectox.html.attr.AttributePojo;
+import objectox.html.attr.JsActionAttribute;
+import objectox.html.attr.AttributeName;
+import objectox.html.attr.RegularAttribute;
 import objectox.html.elem.ElementNamePojo;
 import objectox.html.markup.AmbiguousPojo;
 import objectox.html.markup.RawNode;
@@ -1577,7 +1577,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute accesskey(String value) {
-    return AttributePojo.of0(AttributeNamePojo.ACCESSKEY, value);
+    return RegularAttribute.of0(AttributeName.ACCESSKEY, value);
   }
 
   /// Encodes the `action` attribute with the specified value.
@@ -1586,7 +1586,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute action(String value) {
-    return AttributePojo.of0(AttributeNamePojo.ACTION, value);
+    return RegularAttribute.of0(AttributeName.ACTION, value);
   }
 
   /// Encodes the `align` attribute with the specified value.
@@ -1595,7 +1595,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute align(String value) {
-    return AttributePojo.of0(AttributeNamePojo.ALIGN, value);
+    return RegularAttribute.of0(AttributeName.ALIGN, value);
   }
 
   /// Encodes the `alignment-baseline` attribute with the specified value.
@@ -1604,7 +1604,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute alignmentBaseline(String value) {
-    return AttributePojo.of0(AttributeNamePojo.ALIGNMENT_BASELINE, value);
+    return RegularAttribute.of0(AttributeName.ALIGNMENT_BASELINE, value);
   }
 
   /// Encodes the `alt` attribute with the specified value.
@@ -1613,7 +1613,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute alt(String value) {
-    return AttributePojo.of0(AttributeNamePojo.ALT, value);
+    return RegularAttribute.of0(AttributeName.ALT, value);
   }
 
   /// Encodes the `aria-current` attribute with the specified value.
@@ -1622,7 +1622,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute ariaCurrent(String value) {
-    return AttributePojo.of0(AttributeNamePojo.ARIA_CURRENT, value);
+    return RegularAttribute.of0(AttributeName.ARIA_CURRENT, value);
   }
 
   /// Encodes the `aria-disabled` attribute with the specified value.
@@ -1631,7 +1631,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute ariaDisabled(String value) {
-    return AttributePojo.of0(AttributeNamePojo.ARIA_DISABLED, value);
+    return RegularAttribute.of0(AttributeName.ARIA_DISABLED, value);
   }
 
   /// Encodes the `aria-hidden` attribute with the specified value.
@@ -1640,7 +1640,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute ariaHidden(String value) {
-    return AttributePojo.of0(AttributeNamePojo.ARIA_HIDDEN, value);
+    return RegularAttribute.of0(AttributeName.ARIA_HIDDEN, value);
   }
 
   /// Encodes the `aria-invalid` attribute with the specified value.
@@ -1649,7 +1649,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute ariaInvalid(String value) {
-    return AttributePojo.of0(AttributeNamePojo.ARIA_INVALID, value);
+    return RegularAttribute.of0(AttributeName.ARIA_INVALID, value);
   }
 
   /// Encodes the `aria-label` attribute with the specified value.
@@ -1658,7 +1658,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute ariaLabel(String value) {
-    return AttributePojo.of0(AttributeNamePojo.ARIA_LABEL, value);
+    return RegularAttribute.of0(AttributeName.ARIA_LABEL, value);
   }
 
   /// Encodes the `aria-labelledby` attribute with the specified value.
@@ -1667,7 +1667,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute ariaLabelledBy(String value) {
-    return AttributePojo.of0(AttributeNamePojo.ARIA_LABELLED_BY, value);
+    return RegularAttribute.of0(AttributeName.ARIA_LABELLED_BY, value);
   }
 
   /// Encodes the `aria-modal` attribute with the specified value.
@@ -1676,7 +1676,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute ariaModal(String value) {
-    return AttributePojo.of0(AttributeNamePojo.ARIA_MODAL, value);
+    return RegularAttribute.of0(AttributeName.ARIA_MODAL, value);
   }
 
   /// Encodes the `aria-placeholder` attribute with the specified value.
@@ -1685,7 +1685,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute ariaPlaceholder(String value) {
-    return AttributePojo.of0(AttributeNamePojo.ARIA_PLACEHOLDER, value);
+    return RegularAttribute.of0(AttributeName.ARIA_PLACEHOLDER, value);
   }
 
   /// Encodes the `aria-readonly` attribute with the specified value.
@@ -1694,7 +1694,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute ariaReadonly(String value) {
-    return AttributePojo.of0(AttributeNamePojo.ARIA_READONLY, value);
+    return RegularAttribute.of0(AttributeName.ARIA_READONLY, value);
   }
 
   /// Encodes the `aria-required` attribute with the specified value.
@@ -1703,7 +1703,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute ariaRequired(String value) {
-    return AttributePojo.of0(AttributeNamePojo.ARIA_REQUIRED, value);
+    return RegularAttribute.of0(AttributeName.ARIA_REQUIRED, value);
   }
 
   /// Encodes the `aria-selected` attribute with the specified value.
@@ -1712,7 +1712,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute ariaSelected(String value) {
-    return AttributePojo.of0(AttributeNamePojo.ARIA_SELECTED, value);
+    return RegularAttribute.of0(AttributeName.ARIA_SELECTED, value);
   }
 
   /// Encodes the `as` attribute with the specified value.
@@ -1721,7 +1721,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute as(String value) {
-    return AttributePojo.of0(AttributeNamePojo.AS, value);
+    return RegularAttribute.of0(AttributeName.AS, value);
   }
 
   /// Encodes the `autocomplete` attribute with the specified value.
@@ -1730,7 +1730,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute autocomplete(String value) {
-    return AttributePojo.of0(AttributeNamePojo.AUTOCOMPLETE, value);
+    return RegularAttribute.of0(AttributeName.AUTOCOMPLETE, value);
   }
 
   /// Encodes the `baseline-shift` attribute with the specified value.
@@ -1739,7 +1739,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute baselineShift(String value) {
-    return AttributePojo.of0(AttributeNamePojo.BASELINE_SHIFT, value);
+    return RegularAttribute.of0(AttributeName.BASELINE_SHIFT, value);
   }
 
   /// Encodes the `border` attribute with the specified value.
@@ -1748,7 +1748,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute border(String value) {
-    return AttributePojo.of0(AttributeNamePojo.BORDER, value);
+    return RegularAttribute.of0(AttributeName.BORDER, value);
   }
 
   /// Encodes the `cellpadding` attribute with the specified value.
@@ -1757,7 +1757,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute cellpadding(String value) {
-    return AttributePojo.of0(AttributeNamePojo.CELLPADDING, value);
+    return RegularAttribute.of0(AttributeName.CELLPADDING, value);
   }
 
   /// Encodes the `cellspacing` attribute with the specified value.
@@ -1766,7 +1766,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute cellspacing(String value) {
-    return AttributePojo.of0(AttributeNamePojo.CELLSPACING, value);
+    return RegularAttribute.of0(AttributeName.CELLSPACING, value);
   }
 
   /// Encodes the `charset` attribute with the specified value.
@@ -1775,7 +1775,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute charset(String value) {
-    return AttributePojo.of0(AttributeNamePojo.CHARSET, value);
+    return RegularAttribute.of0(AttributeName.CHARSET, value);
   }
 
   /// Encodes the `cite` attribute with the specified value.
@@ -1784,7 +1784,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute cite(String value) {
-    return AttributePojo.of0(AttributeNamePojo.CITE, value);
+    return RegularAttribute.of0(AttributeName.CITE, value);
   }
 
   /// Encodes the `class` attribute with the specified value.
@@ -1793,7 +1793,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute className(String value) {
-    return AttributePojo.of0(AttributeNamePojo.CLASS, value);
+    return RegularAttribute.of0(AttributeName.CLASS, value);
   }
 
   /// Encodes the `clip-rule` attribute with the specified value.
@@ -1802,7 +1802,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute clipRule(String value) {
-    return AttributePojo.of0(AttributeNamePojo.CLIP_RULE, value);
+    return RegularAttribute.of0(AttributeName.CLIP_RULE, value);
   }
 
   /// Encodes the `closedby` attribute with the specified value.
@@ -1811,7 +1811,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute closedby(String value) {
-    return AttributePojo.of0(AttributeNamePojo.CLOSEDBY, value);
+    return RegularAttribute.of0(AttributeName.CLOSEDBY, value);
   }
 
   /// Encodes the `color` attribute with the specified value.
@@ -1820,7 +1820,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute color(String value) {
-    return AttributePojo.of0(AttributeNamePojo.COLOR, value);
+    return RegularAttribute.of0(AttributeName.COLOR, value);
   }
 
   /// Encodes the `color-interpolation` attribute with the specified value.
@@ -1829,7 +1829,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute colorInterpolation(String value) {
-    return AttributePojo.of0(AttributeNamePojo.COLOR_INTERPOLATION, value);
+    return RegularAttribute.of0(AttributeName.COLOR_INTERPOLATION, value);
   }
 
   /// Encodes the `color-interpolation-filters` attribute with the specified
@@ -1839,7 +1839,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute colorInterpolationFilters(String value) {
-    return AttributePojo.of0(AttributeNamePojo.COLOR_INTERPOLATION_FILTERS, value);
+    return RegularAttribute.of0(AttributeName.COLOR_INTERPOLATION_FILTERS, value);
   }
 
   /// Encodes the `cols` attribute with the specified value.
@@ -1848,7 +1848,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute cols(String value) {
-    return AttributePojo.of0(AttributeNamePojo.COLS, value);
+    return RegularAttribute.of0(AttributeName.COLS, value);
   }
 
   /// Encodes the `content` attribute with the specified value.
@@ -1857,7 +1857,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute content(String value) {
-    return AttributePojo.of0(AttributeNamePojo.CONTENT, value);
+    return RegularAttribute.of0(AttributeName.CONTENT, value);
   }
 
   /// Encodes the `contenteditable` attribute with the specified value.
@@ -1866,7 +1866,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute contenteditable(String value) {
-    return AttributePojo.of0(AttributeNamePojo.CONTENTEDITABLE, value);
+    return RegularAttribute.of0(AttributeName.CONTENTEDITABLE, value);
   }
 
   /// Encodes the `crossorigin` attribute with the specified value.
@@ -1875,7 +1875,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute crossorigin(String value) {
-    return AttributePojo.of0(AttributeNamePojo.CROSSORIGIN, value);
+    return RegularAttribute.of0(AttributeName.CROSSORIGIN, value);
   }
 
   /// Encodes the `cursor` attribute with the specified value.
@@ -1884,7 +1884,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute cursor(String value) {
-    return AttributePojo.of0(AttributeNamePojo.CURSOR, value);
+    return RegularAttribute.of0(AttributeName.CURSOR, value);
   }
 
   /// Encodes the `d` attribute with the specified value.
@@ -1893,7 +1893,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute d(String value) {
-    return AttributePojo.of0(AttributeNamePojo.D, value);
+    return RegularAttribute.of0(AttributeName.D, value);
   }
 
   /// Encodes the `dir` attribute with the specified value.
@@ -1902,7 +1902,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute dir(String value) {
-    return AttributePojo.of0(AttributeNamePojo.DIR, value);
+    return RegularAttribute.of0(AttributeName.DIR, value);
   }
 
   /// Encodes the `direction` attribute with the specified value.
@@ -1911,7 +1911,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute direction(String value) {
-    return AttributePojo.of0(AttributeNamePojo.DIRECTION, value);
+    return RegularAttribute.of0(AttributeName.DIRECTION, value);
   }
 
   /// Encodes the `dirname` attribute with the specified value.
@@ -1920,7 +1920,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute dirname(String value) {
-    return AttributePojo.of0(AttributeNamePojo.DIRNAME, value);
+    return RegularAttribute.of0(AttributeName.DIRNAME, value);
   }
 
   /// Encodes the `display` attribute with the specified value.
@@ -1929,7 +1929,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute display(String value) {
-    return AttributePojo.of0(AttributeNamePojo.DISPLAY, value);
+    return RegularAttribute.of0(AttributeName.DISPLAY, value);
   }
 
   /// Encodes the `dominant-baseline` attribute with the specified value.
@@ -1938,7 +1938,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute dominantBaseline(String value) {
-    return AttributePojo.of0(AttributeNamePojo.DOMINANT_BASELINE, value);
+    return RegularAttribute.of0(AttributeName.DOMINANT_BASELINE, value);
   }
 
   /// Encodes the `download` attribute with the specified value.
@@ -1947,7 +1947,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute download(String value) {
-    return AttributePojo.of0(AttributeNamePojo.DOWNLOAD, value);
+    return RegularAttribute.of0(AttributeName.DOWNLOAD, value);
   }
 
   /// Encodes the `draggable` attribute with the specified value.
@@ -1956,7 +1956,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute draggable(String value) {
-    return AttributePojo.of0(AttributeNamePojo.DRAGGABLE, value);
+    return RegularAttribute.of0(AttributeName.DRAGGABLE, value);
   }
 
   /// Encodes the `enctype` attribute with the specified value.
@@ -1965,7 +1965,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute enctype(String value) {
-    return AttributePojo.of0(AttributeNamePojo.ENCTYPE, value);
+    return RegularAttribute.of0(AttributeName.ENCTYPE, value);
   }
 
   /// Encodes the `fill` attribute with the specified value.
@@ -1974,7 +1974,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute fill(String value) {
-    return AttributePojo.of0(AttributeNamePojo.FILL, value);
+    return RegularAttribute.of0(AttributeName.FILL, value);
   }
 
   /// Encodes the `fill-opacity` attribute with the specified value.
@@ -1983,7 +1983,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute fillOpacity(String value) {
-    return AttributePojo.of0(AttributeNamePojo.FILL_OPACITY, value);
+    return RegularAttribute.of0(AttributeName.FILL_OPACITY, value);
   }
 
   /// Encodes the `fill-rule` attribute with the specified value.
@@ -1992,7 +1992,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute fillRule(String value) {
-    return AttributePojo.of0(AttributeNamePojo.FILL_RULE, value);
+    return RegularAttribute.of0(AttributeName.FILL_RULE, value);
   }
 
   /// Encodes the `filter` attribute with the specified value.
@@ -2001,7 +2001,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute filter(String value) {
-    return AttributePojo.of0(AttributeNamePojo.FILTER, value);
+    return RegularAttribute.of0(AttributeName.FILTER, value);
   }
 
   /// Encodes the `flood-color` attribute with the specified value.
@@ -2010,7 +2010,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute floodColor(String value) {
-    return AttributePojo.of0(AttributeNamePojo.FLOOD_COLOR, value);
+    return RegularAttribute.of0(AttributeName.FLOOD_COLOR, value);
   }
 
   /// Encodes the `flood-opacity` attribute with the specified value.
@@ -2019,7 +2019,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute floodOpacity(String value) {
-    return AttributePojo.of0(AttributeNamePojo.FLOOD_OPACITY, value);
+    return RegularAttribute.of0(AttributeName.FLOOD_OPACITY, value);
   }
 
   /// Encodes the `for` attribute with the specified value.
@@ -2028,7 +2028,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute forId(String value) {
-    return AttributePojo.of0(AttributeNamePojo.FOR, value);
+    return RegularAttribute.of0(AttributeName.FOR, value);
   }
 
   /// Encodes the `glyph-orientation-horizontal` attribute with the specified
@@ -2038,7 +2038,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute glyphOrientationHorizontal(String value) {
-    return AttributePojo.of0(AttributeNamePojo.GLYPH_ORIENTATION_HORIZONTAL, value);
+    return RegularAttribute.of0(AttributeName.GLYPH_ORIENTATION_HORIZONTAL, value);
   }
 
   /// Encodes the `glyph-orientation-vertical` attribute with the specified
@@ -2048,7 +2048,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute glyphOrientationVertical(String value) {
-    return AttributePojo.of0(AttributeNamePojo.GLYPH_ORIENTATION_VERTICAL, value);
+    return RegularAttribute.of0(AttributeName.GLYPH_ORIENTATION_VERTICAL, value);
   }
 
   /// Encodes the `height` attribute with the specified value.
@@ -2057,7 +2057,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute height(String value) {
-    return AttributePojo.of0(AttributeNamePojo.HEIGHT, value);
+    return RegularAttribute.of0(AttributeName.HEIGHT, value);
   }
 
   /// Encodes the `href` attribute with the specified value.
@@ -2066,7 +2066,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute href(String value) {
-    return AttributePojo.of0(AttributeNamePojo.HREF, value);
+    return RegularAttribute.of0(AttributeName.HREF, value);
   }
 
   /// Encodes the `http-equiv` attribute with the specified value.
@@ -2075,7 +2075,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute httpEquiv(String value) {
-    return AttributePojo.of0(AttributeNamePojo.HTTP_EQUIV, value);
+    return RegularAttribute.of0(AttributeName.HTTP_EQUIV, value);
   }
 
   /// Encodes the `id` attribute with the specified value.
@@ -2084,7 +2084,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute id(String value) {
-    return AttributePojo.of0(AttributeNamePojo.ID, value);
+    return RegularAttribute.of0(AttributeName.ID, value);
   }
 
   /// Encodes the `image-rendering` attribute with the specified value.
@@ -2093,7 +2093,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute imageRendering(String value) {
-    return AttributePojo.of0(AttributeNamePojo.IMAGE_RENDERING, value);
+    return RegularAttribute.of0(AttributeName.IMAGE_RENDERING, value);
   }
 
   /// Encodes the `integrity` attribute with the specified value.
@@ -2102,7 +2102,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute integrity(String value) {
-    return AttributePojo.of0(AttributeNamePojo.INTEGRITY, value);
+    return RegularAttribute.of0(AttributeName.INTEGRITY, value);
   }
 
   /// Encodes the `lang` attribute with the specified value.
@@ -2111,7 +2111,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute lang(String value) {
-    return AttributePojo.of0(AttributeNamePojo.LANG, value);
+    return RegularAttribute.of0(AttributeName.LANG, value);
   }
 
   /// Encodes the `letter-spacing` attribute with the specified value.
@@ -2120,7 +2120,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute letterSpacing(String value) {
-    return AttributePojo.of0(AttributeNamePojo.LETTER_SPACING, value);
+    return RegularAttribute.of0(AttributeName.LETTER_SPACING, value);
   }
 
   /// Encodes the `lighting-color` attribute with the specified value.
@@ -2129,7 +2129,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute lightingColor(String value) {
-    return AttributePojo.of0(AttributeNamePojo.LIGHTING_COLOR, value);
+    return RegularAttribute.of0(AttributeName.LIGHTING_COLOR, value);
   }
 
   /// Encodes the `marker-end` attribute with the specified value.
@@ -2138,7 +2138,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute markerEnd(String value) {
-    return AttributePojo.of0(AttributeNamePojo.MARKER_END, value);
+    return RegularAttribute.of0(AttributeName.MARKER_END, value);
   }
 
   /// Encodes the `marker-mid` attribute with the specified value.
@@ -2147,7 +2147,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute markerMid(String value) {
-    return AttributePojo.of0(AttributeNamePojo.MARKER_MID, value);
+    return RegularAttribute.of0(AttributeName.MARKER_MID, value);
   }
 
   /// Encodes the `marker-start` attribute with the specified value.
@@ -2156,7 +2156,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute markerStart(String value) {
-    return AttributePojo.of0(AttributeNamePojo.MARKER_START, value);
+    return RegularAttribute.of0(AttributeName.MARKER_START, value);
   }
 
   /// Encodes the `mask` attribute with the specified value.
@@ -2165,7 +2165,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute mask(String value) {
-    return AttributePojo.of0(AttributeNamePojo.MASK, value);
+    return RegularAttribute.of0(AttributeName.MASK, value);
   }
 
   /// Encodes the `mask-type` attribute with the specified value.
@@ -2174,7 +2174,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute maskType(String value) {
-    return AttributePojo.of0(AttributeNamePojo.MASK_TYPE, value);
+    return RegularAttribute.of0(AttributeName.MASK_TYPE, value);
   }
 
   /// Encodes the `maxlength` attribute with the specified value.
@@ -2183,7 +2183,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute maxlength(String value) {
-    return AttributePojo.of0(AttributeNamePojo.MAXLENGTH, value);
+    return RegularAttribute.of0(AttributeName.MAXLENGTH, value);
   }
 
   /// Encodes the `media` attribute with the specified value.
@@ -2192,7 +2192,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute media(String value) {
-    return AttributePojo.of0(AttributeNamePojo.MEDIA, value);
+    return RegularAttribute.of0(AttributeName.MEDIA, value);
   }
 
   /// Encodes the `method` attribute with the specified value.
@@ -2201,7 +2201,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute method(String value) {
-    return AttributePojo.of0(AttributeNamePojo.METHOD, value);
+    return RegularAttribute.of0(AttributeName.METHOD, value);
   }
 
   /// Encodes the `minlength` attribute with the specified value.
@@ -2210,7 +2210,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute minlength(String value) {
-    return AttributePojo.of0(AttributeNamePojo.MINLENGTH, value);
+    return RegularAttribute.of0(AttributeName.MINLENGTH, value);
   }
 
   /// Encodes the `name` attribute with the specified value.
@@ -2219,7 +2219,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute name(String value) {
-    return AttributePojo.of0(AttributeNamePojo.NAME, value);
+    return RegularAttribute.of0(AttributeName.NAME, value);
   }
 
   /// Encodes the `onclick` attribute with the specified value.
@@ -2228,7 +2228,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute onclick(String value) {
-    return AttributePojo.of0(AttributeNamePojo.ONCLICK, value);
+    return RegularAttribute.of0(AttributeName.ONCLICK, value);
   }
 
   /// Encodes the `onclick` attribute with the specified action.
@@ -2237,7 +2237,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute onclick(JsAction value) {
-    return AttributeJsAction.of0(AttributeNamePojo.ONCLICK, value);
+    return JsActionAttribute.of0(AttributeName.ONCLICK, value);
   }
 
   /// Encodes the `onload` attribute with the specified value.
@@ -2246,7 +2246,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute onload(String value) {
-    return AttributePojo.of0(AttributeNamePojo.ONLOAD, value);
+    return RegularAttribute.of0(AttributeName.ONLOAD, value);
   }
 
   /// Encodes the `onload` attribute with the specified action.
@@ -2255,7 +2255,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute onload(JsAction value) {
-    return AttributeJsAction.of0(AttributeNamePojo.ONLOAD, value);
+    return JsActionAttribute.of0(AttributeName.ONLOAD, value);
   }
 
   /// Encodes the `onpopstate` attribute with the specified value.
@@ -2264,7 +2264,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute onpopstate(String value) {
-    return AttributePojo.of0(AttributeNamePojo.ONPOPSTATE, value);
+    return RegularAttribute.of0(AttributeName.ONPOPSTATE, value);
   }
 
   /// Encodes the `onpopstate` attribute with the specified action.
@@ -2273,7 +2273,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute onpopstate(JsAction value) {
-    return AttributeJsAction.of0(AttributeNamePojo.ONPOPSTATE, value);
+    return JsActionAttribute.of0(AttributeName.ONPOPSTATE, value);
   }
 
   /// Encodes the `onsubmit` attribute with the specified value.
@@ -2282,7 +2282,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute onsubmit(String value) {
-    return AttributePojo.of0(AttributeNamePojo.ONSUBMIT, value);
+    return RegularAttribute.of0(AttributeName.ONSUBMIT, value);
   }
 
   /// Encodes the `onsubmit` attribute with the specified action.
@@ -2291,7 +2291,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute onsubmit(JsAction value) {
-    return AttributeJsAction.of0(AttributeNamePojo.ONSUBMIT, value);
+    return JsActionAttribute.of0(AttributeName.ONSUBMIT, value);
   }
 
   /// Encodes the `opacity` attribute with the specified value.
@@ -2300,7 +2300,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute opacity(String value) {
-    return AttributePojo.of0(AttributeNamePojo.OPACITY, value);
+    return RegularAttribute.of0(AttributeName.OPACITY, value);
   }
 
   /// Encodes the `overflow` attribute with the specified value.
@@ -2309,7 +2309,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute overflow(String value) {
-    return AttributePojo.of0(AttributeNamePojo.OVERFLOW, value);
+    return RegularAttribute.of0(AttributeName.OVERFLOW, value);
   }
 
   /// Encodes the `paint-order` attribute with the specified value.
@@ -2318,7 +2318,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute paintOrder(String value) {
-    return AttributePojo.of0(AttributeNamePojo.PAINT_ORDER, value);
+    return RegularAttribute.of0(AttributeName.PAINT_ORDER, value);
   }
 
   /// Encodes the `placeholder` attribute with the specified value.
@@ -2327,7 +2327,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute placeholder(String value) {
-    return AttributePojo.of0(AttributeNamePojo.PLACEHOLDER, value);
+    return RegularAttribute.of0(AttributeName.PLACEHOLDER, value);
   }
 
   /// Encodes the `pointer-events` attribute with the specified value.
@@ -2336,7 +2336,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute pointerEvents(String value) {
-    return AttributePojo.of0(AttributeNamePojo.POINTER_EVENTS, value);
+    return RegularAttribute.of0(AttributeName.POINTER_EVENTS, value);
   }
 
   /// Encodes the `property` attribute with the specified value.
@@ -2345,7 +2345,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute property(String value) {
-    return AttributePojo.of0(AttributeNamePojo.PROPERTY, value);
+    return RegularAttribute.of0(AttributeName.PROPERTY, value);
   }
 
   /// Encodes the `referrerpolicy` attribute with the specified value.
@@ -2354,7 +2354,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute referrerpolicy(String value) {
-    return AttributePojo.of0(AttributeNamePojo.REFERRERPOLICY, value);
+    return RegularAttribute.of0(AttributeName.REFERRERPOLICY, value);
   }
 
   /// Encodes the `rel` attribute with the specified value.
@@ -2363,7 +2363,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute rel(String value) {
-    return AttributePojo.of0(AttributeNamePojo.REL, value);
+    return RegularAttribute.of0(AttributeName.REL, value);
   }
 
   /// Encodes the `rev` attribute with the specified value.
@@ -2372,7 +2372,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute rev(String value) {
-    return AttributePojo.of0(AttributeNamePojo.REV, value);
+    return RegularAttribute.of0(AttributeName.REV, value);
   }
 
   /// Encodes the `role` attribute with the specified value.
@@ -2381,7 +2381,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute role(String value) {
-    return AttributePojo.of0(AttributeNamePojo.ROLE, value);
+    return RegularAttribute.of0(AttributeName.ROLE, value);
   }
 
   /// Encodes the `rows` attribute with the specified value.
@@ -2390,7 +2390,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute rows(String value) {
-    return AttributePojo.of0(AttributeNamePojo.ROWS, value);
+    return RegularAttribute.of0(AttributeName.ROWS, value);
   }
 
   /// Encodes the `shape-rendering` attribute with the specified value.
@@ -2399,7 +2399,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute shapeRendering(String value) {
-    return AttributePojo.of0(AttributeNamePojo.SHAPE_RENDERING, value);
+    return RegularAttribute.of0(AttributeName.SHAPE_RENDERING, value);
   }
 
   /// Encodes the `size` attribute with the specified value.
@@ -2408,7 +2408,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute size(String value) {
-    return AttributePojo.of0(AttributeNamePojo.SIZE, value);
+    return RegularAttribute.of0(AttributeName.SIZE, value);
   }
 
   /// Encodes the `sizes` attribute with the specified value.
@@ -2417,7 +2417,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute sizes(String value) {
-    return AttributePojo.of0(AttributeNamePojo.SIZES, value);
+    return RegularAttribute.of0(AttributeName.SIZES, value);
   }
 
   /// Encodes the `spellcheck` attribute with the specified value.
@@ -2426,7 +2426,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute spellcheck(String value) {
-    return AttributePojo.of0(AttributeNamePojo.SPELLCHECK, value);
+    return RegularAttribute.of0(AttributeName.SPELLCHECK, value);
   }
 
   /// Encodes the `src` attribute with the specified value.
@@ -2435,7 +2435,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute src(String value) {
-    return AttributePojo.of0(AttributeNamePojo.SRC, value);
+    return RegularAttribute.of0(AttributeName.SRC, value);
   }
 
   /// Encodes the `srcset` attribute with the specified value.
@@ -2444,7 +2444,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute srcset(String value) {
-    return AttributePojo.of0(AttributeNamePojo.SRCSET, value);
+    return RegularAttribute.of0(AttributeName.SRCSET, value);
   }
 
   /// Encodes the `start` attribute with the specified value.
@@ -2453,7 +2453,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute start(String value) {
-    return AttributePojo.of0(AttributeNamePojo.START, value);
+    return RegularAttribute.of0(AttributeName.START, value);
   }
 
   /// Encodes the `stop-color` attribute with the specified value.
@@ -2462,7 +2462,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute stopColor(String value) {
-    return AttributePojo.of0(AttributeNamePojo.STOP_COLOR, value);
+    return RegularAttribute.of0(AttributeName.STOP_COLOR, value);
   }
 
   /// Encodes the `stop-opacity` attribute with the specified value.
@@ -2471,7 +2471,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute stopOpacity(String value) {
-    return AttributePojo.of0(AttributeNamePojo.STOP_OPACITY, value);
+    return RegularAttribute.of0(AttributeName.STOP_OPACITY, value);
   }
 
   /// Encodes the `stroke` attribute with the specified value.
@@ -2480,7 +2480,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute stroke(String value) {
-    return AttributePojo.of0(AttributeNamePojo.STROKE, value);
+    return RegularAttribute.of0(AttributeName.STROKE, value);
   }
 
   /// Encodes the `stroke-dasharray` attribute with the specified value.
@@ -2489,7 +2489,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute strokeDasharray(String value) {
-    return AttributePojo.of0(AttributeNamePojo.STROKE_DASHARRAY, value);
+    return RegularAttribute.of0(AttributeName.STROKE_DASHARRAY, value);
   }
 
   /// Encodes the `stroke-dashoffset` attribute with the specified value.
@@ -2498,7 +2498,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute strokeDashoffset(String value) {
-    return AttributePojo.of0(AttributeNamePojo.STROKE_DASHOFFSET, value);
+    return RegularAttribute.of0(AttributeName.STROKE_DASHOFFSET, value);
   }
 
   /// Encodes the `stroke-linecap` attribute with the specified value.
@@ -2507,7 +2507,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute strokeLinecap(String value) {
-    return AttributePojo.of0(AttributeNamePojo.STROKE_LINECAP, value);
+    return RegularAttribute.of0(AttributeName.STROKE_LINECAP, value);
   }
 
   /// Encodes the `stroke-linejoin` attribute with the specified value.
@@ -2516,7 +2516,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute strokeLinejoin(String value) {
-    return AttributePojo.of0(AttributeNamePojo.STROKE_LINEJOIN, value);
+    return RegularAttribute.of0(AttributeName.STROKE_LINEJOIN, value);
   }
 
   /// Encodes the `stroke-miterlimit` attribute with the specified value.
@@ -2525,7 +2525,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute strokeMiterlimit(String value) {
-    return AttributePojo.of0(AttributeNamePojo.STROKE_MITERLIMIT, value);
+    return RegularAttribute.of0(AttributeName.STROKE_MITERLIMIT, value);
   }
 
   /// Encodes the `stroke-opacity` attribute with the specified value.
@@ -2534,7 +2534,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute strokeOpacity(String value) {
-    return AttributePojo.of0(AttributeNamePojo.STROKE_OPACITY, value);
+    return RegularAttribute.of0(AttributeName.STROKE_OPACITY, value);
   }
 
   /// Encodes the `stroke-width` attribute with the specified value.
@@ -2543,7 +2543,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute strokeWidth(String value) {
-    return AttributePojo.of0(AttributeNamePojo.STROKE_WIDTH, value);
+    return RegularAttribute.of0(AttributeName.STROKE_WIDTH, value);
   }
 
   /// Encodes the `tabindex` attribute with the specified value.
@@ -2552,7 +2552,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute tabindex(String value) {
-    return AttributePojo.of0(AttributeNamePojo.TABINDEX, value);
+    return RegularAttribute.of0(AttributeName.TABINDEX, value);
   }
 
   /// Encodes the `target` attribute with the specified value.
@@ -2561,7 +2561,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute target(String value) {
-    return AttributePojo.of0(AttributeNamePojo.TARGET, value);
+    return RegularAttribute.of0(AttributeName.TARGET, value);
   }
 
   /// Encodes the `text-anchor` attribute with the specified value.
@@ -2570,7 +2570,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute textAnchor(String value) {
-    return AttributePojo.of0(AttributeNamePojo.TEXT_ANCHOR, value);
+    return RegularAttribute.of0(AttributeName.TEXT_ANCHOR, value);
   }
 
   /// Encodes the `text-decoration` attribute with the specified value.
@@ -2579,7 +2579,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute textDecoration(String value) {
-    return AttributePojo.of0(AttributeNamePojo.TEXT_DECORATION, value);
+    return RegularAttribute.of0(AttributeName.TEXT_DECORATION, value);
   }
 
   /// Encodes the `text-overflow` attribute with the specified value.
@@ -2588,7 +2588,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute textOverflow(String value) {
-    return AttributePojo.of0(AttributeNamePojo.TEXT_OVERFLOW, value);
+    return RegularAttribute.of0(AttributeName.TEXT_OVERFLOW, value);
   }
 
   /// Encodes the `text-rendering` attribute with the specified value.
@@ -2597,7 +2597,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute textRendering(String value) {
-    return AttributePojo.of0(AttributeNamePojo.TEXT_RENDERING, value);
+    return RegularAttribute.of0(AttributeName.TEXT_RENDERING, value);
   }
 
   /// Encodes the `transform` attribute with the specified value.
@@ -2606,7 +2606,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute transform(String value) {
-    return AttributePojo.of0(AttributeNamePojo.TRANSFORM, value);
+    return RegularAttribute.of0(AttributeName.TRANSFORM, value);
   }
 
   /// Encodes the `transform-origin` attribute with the specified value.
@@ -2615,7 +2615,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute transformOrigin(String value) {
-    return AttributePojo.of0(AttributeNamePojo.TRANSFORM_ORIGIN, value);
+    return RegularAttribute.of0(AttributeName.TRANSFORM_ORIGIN, value);
   }
 
   /// Encodes the `translate` attribute with the specified value.
@@ -2624,7 +2624,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute translate(String value) {
-    return AttributePojo.of0(AttributeNamePojo.TRANSLATE, value);
+    return RegularAttribute.of0(AttributeName.TRANSLATE, value);
   }
 
   /// Encodes the `type` attribute with the specified value.
@@ -2633,7 +2633,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute type(String value) {
-    return AttributePojo.of0(AttributeNamePojo.TYPE, value);
+    return RegularAttribute.of0(AttributeName.TYPE, value);
   }
 
   /// Encodes the `unicode-bidi` attribute with the specified value.
@@ -2642,7 +2642,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute unicodeBidi(String value) {
-    return AttributePojo.of0(AttributeNamePojo.UNICODE_BIDI, value);
+    return RegularAttribute.of0(AttributeName.UNICODE_BIDI, value);
   }
 
   /// Encodes the `value` attribute with the specified value.
@@ -2651,7 +2651,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute value(String value) {
-    return AttributePojo.of0(AttributeNamePojo.VALUE, value);
+    return RegularAttribute.of0(AttributeName.VALUE, value);
   }
 
   /// Encodes the `vector-effect` attribute with the specified value.
@@ -2660,7 +2660,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute vectorEffect(String value) {
-    return AttributePojo.of0(AttributeNamePojo.VECTOR_EFFECT, value);
+    return RegularAttribute.of0(AttributeName.VECTOR_EFFECT, value);
   }
 
   /// Encodes the `viewBox` attribute with the specified value.
@@ -2669,7 +2669,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute viewBox(String value) {
-    return AttributePojo.of0(AttributeNamePojo.VIEWBOX, value);
+    return RegularAttribute.of0(AttributeName.VIEWBOX, value);
   }
 
   /// Encodes the `visibility` attribute with the specified value.
@@ -2678,7 +2678,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute visibility(String value) {
-    return AttributePojo.of0(AttributeNamePojo.VISIBILITY, value);
+    return RegularAttribute.of0(AttributeName.VISIBILITY, value);
   }
 
   /// Encodes the `white-space` attribute with the specified value.
@@ -2687,7 +2687,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute whiteSpace(String value) {
-    return AttributePojo.of0(AttributeNamePojo.WHITE_SPACE, value);
+    return RegularAttribute.of0(AttributeName.WHITE_SPACE, value);
   }
 
   /// Encodes the `width` attribute with the specified value.
@@ -2696,7 +2696,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute width(String value) {
-    return AttributePojo.of0(AttributeNamePojo.WIDTH, value);
+    return RegularAttribute.of0(AttributeName.WIDTH, value);
   }
 
   /// Encodes the `word-spacing` attribute with the specified value.
@@ -2705,7 +2705,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute wordSpacing(String value) {
-    return AttributePojo.of0(AttributeNamePojo.WORD_SPACING, value);
+    return RegularAttribute.of0(AttributeName.WORD_SPACING, value);
   }
 
   /// Encodes the `wrap` attribute with the specified value.
@@ -2714,7 +2714,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute wrap(String value) {
-    return AttributePojo.of0(AttributeNamePojo.WRAP, value);
+    return RegularAttribute.of0(AttributeName.WRAP, value);
   }
 
   /// Encodes the `writing-mode` attribute with the specified value.
@@ -2723,7 +2723,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute writingMode(String value) {
-    return AttributePojo.of0(AttributeNamePojo.WRITING_MODE, value);
+    return RegularAttribute.of0(AttributeName.WRITING_MODE, value);
   }
 
   /// Encodes the `xmlns` attribute with the specified value.
@@ -2732,7 +2732,7 @@ public abstract NoOpMarkup noop();
   ///
   /// @return an object representing the encoded attribute
   public final Attribute xmlns(String value) {
-    return AttributePojo.of0(AttributeNamePojo.XMLNS, value);
+    return RegularAttribute.of0(AttributeName.XMLNS, value);
   }
 
   //

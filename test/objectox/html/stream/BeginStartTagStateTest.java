@@ -18,7 +18,7 @@ package objectox.html.stream;
 import static org.testng.Assert.assertEquals;
 
 import objectox.html.IntSize;
-import objectox.html.attr.AttributeNamePojo;
+import objectox.html.attr.AttributeName;
 import objectox.html.elem.ElementNamePojo;
 import objectox.html.markup.HtmlBytes;
 import org.testng.annotations.Test;
@@ -57,10 +57,10 @@ public class BeginStartTagStateTest {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeNamePojo.CLASS.index());
+      opts.addInt8(AttributeName.CLASS.index());
       opts.addInt8(opts.addObject("c1"));
       opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeNamePojo.CLASS.index());
+      opts.addInt8(AttributeName.CLASS.index());
       opts.addInt8(opts.addObject("c2"));
       opts.addByte(HtmlBytes.STARTTAG8);
       opts.addInt8(ElementNamePojo.DIV.index());

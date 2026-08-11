@@ -23,7 +23,7 @@ import objectos.html.format.Formatter;
 import objectos.html.stream.Event;
 import objectos.lang.BinaryObject;
 import objectox.html.HtmlPojo;
-import objectox.html.attr.AttributeNamePojo;
+import objectox.html.attr.AttributeName;
 
 /// Represents a compiled HTML document.
 public sealed interface Html extends BinaryObject, Testable permits HtmlPojo {
@@ -44,7 +44,7 @@ public sealed interface Html extends BinaryObject, Testable permits HtmlPojo {
   static String formatAttrValue(String value) {
     Objects.requireNonNull(value, "value == null");
 
-    return AttributeNamePojo.formatAttrValue(value, new StringBuilder());
+    return AttributeName.formatAttrValue(value, new StringBuilder());
   }
 
   /// Returns the contents of this Objectos HTML document as a stream of events.

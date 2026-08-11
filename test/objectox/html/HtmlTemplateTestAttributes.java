@@ -21,14 +21,14 @@ import objectos.html.Id;
 import objectos.html.Template;
 import objectos.script.Js;
 import objectox.html.attr.AttributeName;
-import objectox.html.attr.AttributeNamePojo;
+import objectox.html.attr.AttributeName;
 import org.testng.annotations.Test;
 
 public class HtmlTemplateTestAttributes {
 
   private final Id foo = Id.of("foo");
 
-  private final AttributeName dataActive = AttributeNamePojo.custom("data-active");
+  private final AttributeName dataActive = AttributeName.custom("data-active");
 
   @Test
   public void aria() {

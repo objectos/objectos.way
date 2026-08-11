@@ -17,6 +17,13 @@ package objectox.html.attr;
 
 import objectos.html.BooleanAttribute;
 
-public record BooleanAttributePojo(AttributeName name)
+public record BooleanAttributePojo(AttributeName attributeName)
     implements
-    BooleanAttribute {}
+    BooleanAttribute {
+
+  @Override
+  public final String name() {
+    return attributeName.name();
+  }
+
+}

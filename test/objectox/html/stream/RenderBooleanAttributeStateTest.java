@@ -18,7 +18,7 @@ package objectox.html.stream;
 import static org.testng.Assert.assertEquals;
 
 import objectox.html.IntSize;
-import objectox.html.attr.AttributeNamePojo;
+import objectox.html.attr.AttributeName;
 import objectox.html.elem.ElementNamePojo;
 import objectox.html.markup.HtmlBytes;
 import org.testng.annotations.Test;
@@ -32,7 +32,7 @@ public class RenderBooleanAttributeStateTest {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.xBOOLEAN8);
-      opts.addInt8(AttributeNamePojo.AUTOFOCUS.index());
+      opts.addInt8(AttributeName.AUTOFOCUS.index());
       opts.addByte(HtmlBytes.STARTTAG8);
       opts.addInt8(ElementNamePojo.HTML.index());
       opts.addByte(HtmlBytes.VALUES8);
@@ -54,7 +54,7 @@ public class RenderBooleanAttributeStateTest {
 
     assertEquals(res.getClass(), ScanElementAttributeState.class);
     assertEquals(ctx.hasEvent(), true);
-    assertEquals(ctx.nextEvent(), RenderBooleanAttributeEvent.of(AttributeNamePojo.AUTOFOCUS));
+    assertEquals(ctx.nextEvent(), RenderBooleanAttributeEvent.of(AttributeName.AUTOFOCUS));
   }
 
 }

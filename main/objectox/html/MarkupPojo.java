@@ -28,8 +28,8 @@ import objectos.html.markup.Fragment3;
 import objectos.html.markup.Fragment4;
 import objectos.html.markup.FragmentMarkup;
 import objectos.html.markup.NoOpMarkup;
-import objectox.html.attr.AttributeNamePojo;
-import objectox.html.attr.AttributePojo;
+import objectox.html.attr.AttributeName;
+import objectox.html.attr.RegularAttribute;
 import objectox.html.markup.NoOpInstructionPojo;
 import objectox.html.markup.Recorder;
 
@@ -163,9 +163,9 @@ public sealed abstract class MarkupPojo
     sb = new StringBuilder();
 
     final String formatted;
-    formatted = AttributeNamePojo.formatAttrValue(value, sb);
+    formatted = AttributeName.formatAttrValue(value, sb);
 
-    return AttributePojo.of0(AttributeNamePojo.CLASS, formatted);
+    return RegularAttribute.of0(AttributeName.CLASS, formatted);
   }
 
   @Override

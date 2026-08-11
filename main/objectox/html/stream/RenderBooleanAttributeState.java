@@ -16,7 +16,7 @@
 package objectox.html.stream;
 
 import objectox.html.IntSize;
-import objectox.html.attr.AttributeNamePojo;
+import objectox.html.attr.AttributeName;
 
 final class RenderBooleanAttributeState implements State {
 
@@ -35,8 +35,8 @@ final class RenderBooleanAttributeState implements State {
     final int nameCode;
     nameCode = ctx.nextInt(nameSize);
 
-    final AttributeNamePojo attributeName;
-    attributeName = AttributeNamePojo.get(nameCode);
+    final AttributeName attributeName;
+    attributeName = AttributeName.get(nameCode);
 
     final RenderBooleanAttributeEvent event;
     event = new RenderBooleanAttributeEvent(attributeName);

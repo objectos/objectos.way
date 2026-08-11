@@ -26,7 +26,7 @@ import objectos.html.markup.RawMarkup;
 import objectos.html.markup.TextMarkup;
 import objectos.script.JsAction;
 import objectox.html.AmbiguousName;
-import objectox.html.attr.AttributeJsAction;
+import objectox.html.attr.JsActionAttribute;
 import objectox.html.attr.AttributeName;
 
 final class ElementAttributesRecorder {
@@ -62,7 +62,7 @@ final class ElementAttributesRecorder {
         }
       }
 
-      case AttributeJsAction(AttributeName name, JsAction action) -> attributeRecorder.record(name, action);
+      case JsActionAttribute(AttributeName name, JsAction action) -> attributeRecorder.record(name, action);
 
       case Attribute attr -> attributeRecorder.record(attr);
 

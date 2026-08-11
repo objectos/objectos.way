@@ -16,12 +16,19 @@
 package objectos.html;
 
 import java.util.Objects;
+import objectox.html.attr.AbstractAttribute;
 import objectox.html.attr.AttributeName;
-import objectox.html.attr.AttributeNamePojo;
-import objectox.html.markup.IdPojo;
 
 /// Represents an HTML `id` attribute and its value.
-public sealed interface Id extends Attribute permits IdPojo {
+public final class Id extends AbstractAttribute {
+
+  private final String value;
+
+  private Id(String value) {
+    super(AttributeName.ID);
+
+    this.value = value;
+  }
 
   /**
    * Creates a new {@code Id} instance with the specified value.
@@ -31,28 +38,20 @@ public sealed interface Id extends Attribute permits IdPojo {
    *
    * @return a newly constructed {@code Id} instance
    */
-  static Id of(String value) {
+  public static Id of(String value) {
     Objects.requireNonNull(value, "value == null");
 
-    return new IdPojo(value);
+    return new Id(value);
   }
 
   /**
-   * The {@code id} attribute name.
-   *
-   * @return the {@code id} attribute name
-   */
-  @Override
-  default AttributeName name() {
-    return AttributeNamePojo.ID;
-  }
-
-  /**
-   * The {@code id} value.
+   * Returns the {@code id} value.
    *
    * @return the {@code id} value
    */
   @Override
-  String value();
+  public final String value() {
+    return value;
+  }
 
 }

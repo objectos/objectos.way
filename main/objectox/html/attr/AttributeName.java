@@ -15,459 +15,223 @@
  */
 package objectox.html.attr;
 
-/// Represents the name of an HTML attribute.
-public sealed interface AttributeName permits AttributeNamePojo {
+public record AttributeName(int index, String name) {
+
+  private static final AttributeNameUniverse U = new AttributeNameUniverse();
 
   // BEGIN generated code
 
-  /// The `accesskey` HTML attribute.
-  AttributeName ACCESSKEY = AttributeNamePojo.ACCESSKEY;
-
-  /// The `action` HTML attribute.
-  AttributeName ACTION = AttributeNamePojo.ACTION;
-
-  /// The `align` HTML attribute.
-  AttributeName ALIGN = AttributeNamePojo.ALIGN;
-
-  /// The `alignment-baseline` HTML attribute.
-  AttributeName ALIGNMENT_BASELINE = AttributeNamePojo.ALIGNMENT_BASELINE;
-
-  /// The `alt` HTML attribute.
-  AttributeName ALT = AttributeNamePojo.ALT;
-
-  /// The `aria-current` HTML attribute.
-  AttributeName ARIA_CURRENT = AttributeNamePojo.ARIA_CURRENT;
-
-  /// The `aria-disabled` HTML attribute.
-  AttributeName ARIA_DISABLED = AttributeNamePojo.ARIA_DISABLED;
-
-  /// The `aria-hidden` HTML attribute.
-  AttributeName ARIA_HIDDEN = AttributeNamePojo.ARIA_HIDDEN;
-
-  /// The `aria-invalid` HTML attribute.
-  AttributeName ARIA_INVALID = AttributeNamePojo.ARIA_INVALID;
-
-  /// The `aria-label` HTML attribute.
-  AttributeName ARIA_LABEL = AttributeNamePojo.ARIA_LABEL;
-
-  /// The `aria-labelledby` HTML attribute.
-  AttributeName ARIA_LABELLED_BY = AttributeNamePojo.ARIA_LABELLED_BY;
-
-  /// The `aria-modal` HTML attribute.
-  AttributeName ARIA_MODAL = AttributeNamePojo.ARIA_MODAL;
-
-  /// The `aria-placeholder` HTML attribute.
-  AttributeName ARIA_PLACEHOLDER = AttributeNamePojo.ARIA_PLACEHOLDER;
-
-  /// The `aria-readonly` HTML attribute.
-  AttributeName ARIA_READONLY = AttributeNamePojo.ARIA_READONLY;
-
-  /// The `aria-required` HTML attribute.
-  AttributeName ARIA_REQUIRED = AttributeNamePojo.ARIA_REQUIRED;
-
-  /// The `aria-selected` HTML attribute.
-  AttributeName ARIA_SELECTED = AttributeNamePojo.ARIA_SELECTED;
-
-  /// The `as` HTML attribute.
-  AttributeName AS = AttributeNamePojo.AS;
-
-  /// The `async` HTML attribute.
-  AttributeName ASYNC = AttributeNamePojo.ASYNC;
-
-  /// The `autocomplete` HTML attribute.
-  AttributeName AUTOCOMPLETE = AttributeNamePojo.AUTOCOMPLETE;
-
-  /// The `autofocus` HTML attribute.
-  AttributeName AUTOFOCUS = AttributeNamePojo.AUTOFOCUS;
-
-  /// The `baseline-shift` HTML attribute.
-  AttributeName BASELINE_SHIFT = AttributeNamePojo.BASELINE_SHIFT;
-
-  /// The `border` HTML attribute.
-  AttributeName BORDER = AttributeNamePojo.BORDER;
-
-  /// The `cellpadding` HTML attribute.
-  AttributeName CELLPADDING = AttributeNamePojo.CELLPADDING;
-
-  /// The `cellspacing` HTML attribute.
-  AttributeName CELLSPACING = AttributeNamePojo.CELLSPACING;
-
-  /// The `charset` HTML attribute.
-  AttributeName CHARSET = AttributeNamePojo.CHARSET;
-
-  /// The `checked` HTML attribute.
-  AttributeName CHECKED = AttributeNamePojo.CHECKED;
-
-  /// The `cite` HTML attribute.
-  AttributeName CITE = AttributeNamePojo.CITE;
-
-  /// The `class` HTML attribute.
-  AttributeName CLASS = AttributeNamePojo.CLASS;
-
-  /// The `clip-path` HTML attribute.
-  AttributeName CLIP_PATH = AttributeNamePojo.CLIP_PATH;
-
-  /// The `clip-rule` HTML attribute.
-  AttributeName CLIP_RULE = AttributeNamePojo.CLIP_RULE;
-
-  /// The `closedby` HTML attribute.
-  AttributeName CLOSEDBY = AttributeNamePojo.CLOSEDBY;
-
-  /// The `color` HTML attribute.
-  AttributeName COLOR = AttributeNamePojo.COLOR;
-
-  /// The `color-interpolation` HTML attribute.
-  AttributeName COLOR_INTERPOLATION = AttributeNamePojo.COLOR_INTERPOLATION;
-
-  /// The `color-interpolation-filters` HTML attribute.
-  AttributeName COLOR_INTERPOLATION_FILTERS = AttributeNamePojo.COLOR_INTERPOLATION_FILTERS;
-
-  /// The `cols` HTML attribute.
-  AttributeName COLS = AttributeNamePojo.COLS;
-
-  /// The `content` HTML attribute.
-  AttributeName CONTENT = AttributeNamePojo.CONTENT;
-
-  /// The `contenteditable` HTML attribute.
-  AttributeName CONTENTEDITABLE = AttributeNamePojo.CONTENTEDITABLE;
-
-  /// The `crossorigin` HTML attribute.
-  AttributeName CROSSORIGIN = AttributeNamePojo.CROSSORIGIN;
-
-  /// The `cursor` HTML attribute.
-  AttributeName CURSOR = AttributeNamePojo.CURSOR;
-
-  /// The `d` HTML attribute.
-  AttributeName D = AttributeNamePojo.D;
-
-  /// The `defer` HTML attribute.
-  AttributeName DEFER = AttributeNamePojo.DEFER;
-
-  /// The `dir` HTML attribute.
-  AttributeName DIR = AttributeNamePojo.DIR;
-
-  /// The `direction` HTML attribute.
-  AttributeName DIRECTION = AttributeNamePojo.DIRECTION;
-
-  /// The `dirname` HTML attribute.
-  AttributeName DIRNAME = AttributeNamePojo.DIRNAME;
-
-  /// The `disabled` HTML attribute.
-  AttributeName DISABLED = AttributeNamePojo.DISABLED;
-
-  /// The `display` HTML attribute.
-  AttributeName DISPLAY = AttributeNamePojo.DISPLAY;
-
-  /// The `dominant-baseline` HTML attribute.
-  AttributeName DOMINANT_BASELINE = AttributeNamePojo.DOMINANT_BASELINE;
-
-  /// The `download` HTML attribute.
-  AttributeName DOWNLOAD = AttributeNamePojo.DOWNLOAD;
-
-  /// The `draggable` HTML attribute.
-  AttributeName DRAGGABLE = AttributeNamePojo.DRAGGABLE;
-
-  /// The `enctype` HTML attribute.
-  AttributeName ENCTYPE = AttributeNamePojo.ENCTYPE;
-
-  /// The `fill` HTML attribute.
-  AttributeName FILL = AttributeNamePojo.FILL;
-
-  /// The `fill-opacity` HTML attribute.
-  AttributeName FILL_OPACITY = AttributeNamePojo.FILL_OPACITY;
-
-  /// The `fill-rule` HTML attribute.
-  AttributeName FILL_RULE = AttributeNamePojo.FILL_RULE;
-
-  /// The `filter` HTML attribute.
-  AttributeName FILTER = AttributeNamePojo.FILTER;
-
-  /// The `flood-color` HTML attribute.
-  AttributeName FLOOD_COLOR = AttributeNamePojo.FLOOD_COLOR;
-
-  /// The `flood-opacity` HTML attribute.
-  AttributeName FLOOD_OPACITY = AttributeNamePojo.FLOOD_OPACITY;
-
-  /// The `for` HTML attribute.
-  AttributeName FOR = AttributeNamePojo.FOR;
-
-  /// The `form` HTML attribute.
-  AttributeName FORM = AttributeNamePojo.FORM;
-
-  /// The `glyph-orientation-horizontal` HTML attribute.
-  AttributeName GLYPH_ORIENTATION_HORIZONTAL = AttributeNamePojo.GLYPH_ORIENTATION_HORIZONTAL;
-
-  /// The `glyph-orientation-vertical` HTML attribute.
-  AttributeName GLYPH_ORIENTATION_VERTICAL = AttributeNamePojo.GLYPH_ORIENTATION_VERTICAL;
-
-  /// The `height` HTML attribute.
-  AttributeName HEIGHT = AttributeNamePojo.HEIGHT;
-
-  /// The `hidden` HTML attribute.
-  AttributeName HIDDEN = AttributeNamePojo.HIDDEN;
-
-  /// The `href` HTML attribute.
-  AttributeName HREF = AttributeNamePojo.HREF;
-
-  /// The `http-equiv` HTML attribute.
-  AttributeName HTTP_EQUIV = AttributeNamePojo.HTTP_EQUIV;
-
-  /// The `id` HTML attribute.
-  AttributeName ID = AttributeNamePojo.ID;
-
-  /// The `image-rendering` HTML attribute.
-  AttributeName IMAGE_RENDERING = AttributeNamePojo.IMAGE_RENDERING;
-
-  /// The `integrity` HTML attribute.
-  AttributeName INTEGRITY = AttributeNamePojo.INTEGRITY;
-
-  /// The `label` HTML attribute.
-  AttributeName LABEL = AttributeNamePojo.LABEL;
-
-  /// The `lang` HTML attribute.
-  AttributeName LANG = AttributeNamePojo.LANG;
-
-  /// The `letter-spacing` HTML attribute.
-  AttributeName LETTER_SPACING = AttributeNamePojo.LETTER_SPACING;
-
-  /// The `lighting-color` HTML attribute.
-  AttributeName LIGHTING_COLOR = AttributeNamePojo.LIGHTING_COLOR;
-
-  /// The `marker-end` HTML attribute.
-  AttributeName MARKER_END = AttributeNamePojo.MARKER_END;
-
-  /// The `marker-mid` HTML attribute.
-  AttributeName MARKER_MID = AttributeNamePojo.MARKER_MID;
-
-  /// The `marker-start` HTML attribute.
-  AttributeName MARKER_START = AttributeNamePojo.MARKER_START;
-
-  /// The `mask` HTML attribute.
-  AttributeName MASK = AttributeNamePojo.MASK;
-
-  /// The `mask-type` HTML attribute.
-  AttributeName MASK_TYPE = AttributeNamePojo.MASK_TYPE;
-
-  /// The `maxlength` HTML attribute.
-  AttributeName MAXLENGTH = AttributeNamePojo.MAXLENGTH;
-
-  /// The `media` HTML attribute.
-  AttributeName MEDIA = AttributeNamePojo.MEDIA;
-
-  /// The `method` HTML attribute.
-  AttributeName METHOD = AttributeNamePojo.METHOD;
-
-  /// The `minlength` HTML attribute.
-  AttributeName MINLENGTH = AttributeNamePojo.MINLENGTH;
-
-  /// The `multiple` HTML attribute.
-  AttributeName MULTIPLE = AttributeNamePojo.MULTIPLE;
-
-  /// The `name` HTML attribute.
-  AttributeName NAME = AttributeNamePojo.NAME;
-
-  /// The `nomodule` HTML attribute.
-  AttributeName NOMODULE = AttributeNamePojo.NOMODULE;
-
-  /// The `onclick` HTML attribute.
-  AttributeName ONCLICK = AttributeNamePojo.ONCLICK;
-
-  /// The `onload` HTML attribute.
-  AttributeName ONLOAD = AttributeNamePojo.ONLOAD;
-
-  /// The `onpopstate` HTML attribute.
-  AttributeName ONPOPSTATE = AttributeNamePojo.ONPOPSTATE;
-
-  /// The `onsubmit` HTML attribute.
-  AttributeName ONSUBMIT = AttributeNamePojo.ONSUBMIT;
-
-  /// The `opacity` HTML attribute.
-  AttributeName OPACITY = AttributeNamePojo.OPACITY;
-
-  /// The `open` HTML attribute.
-  AttributeName OPEN = AttributeNamePojo.OPEN;
-
-  /// The `overflow` HTML attribute.
-  AttributeName OVERFLOW = AttributeNamePojo.OVERFLOW;
-
-  /// The `paint-order` HTML attribute.
-  AttributeName PAINT_ORDER = AttributeNamePojo.PAINT_ORDER;
-
-  /// The `placeholder` HTML attribute.
-  AttributeName PLACEHOLDER = AttributeNamePojo.PLACEHOLDER;
-
-  /// The `pointer-events` HTML attribute.
-  AttributeName POINTER_EVENTS = AttributeNamePojo.POINTER_EVENTS;
-
-  /// The `property` HTML attribute.
-  AttributeName PROPERTY = AttributeNamePojo.PROPERTY;
-
-  /// The `readonly` HTML attribute.
-  AttributeName READONLY = AttributeNamePojo.READONLY;
-
-  /// The `referrerpolicy` HTML attribute.
-  AttributeName REFERRERPOLICY = AttributeNamePojo.REFERRERPOLICY;
-
-  /// The `rel` HTML attribute.
-  AttributeName REL = AttributeNamePojo.REL;
-
-  /// The `required` HTML attribute.
-  AttributeName REQUIRED = AttributeNamePojo.REQUIRED;
-
-  /// The `rev` HTML attribute.
-  AttributeName REV = AttributeNamePojo.REV;
-
-  /// The `reversed` HTML attribute.
-  AttributeName REVERSED = AttributeNamePojo.REVERSED;
-
-  /// The `role` HTML attribute.
-  AttributeName ROLE = AttributeNamePojo.ROLE;
-
-  /// The `rows` HTML attribute.
-  AttributeName ROWS = AttributeNamePojo.ROWS;
-
-  /// The `selected` HTML attribute.
-  AttributeName SELECTED = AttributeNamePojo.SELECTED;
-
-  /// The `shape-rendering` HTML attribute.
-  AttributeName SHAPE_RENDERING = AttributeNamePojo.SHAPE_RENDERING;
-
-  /// The `size` HTML attribute.
-  AttributeName SIZE = AttributeNamePojo.SIZE;
-
-  /// The `sizes` HTML attribute.
-  AttributeName SIZES = AttributeNamePojo.SIZES;
-
-  /// The `spellcheck` HTML attribute.
-  AttributeName SPELLCHECK = AttributeNamePojo.SPELLCHECK;
-
-  /// The `src` HTML attribute.
-  AttributeName SRC = AttributeNamePojo.SRC;
-
-  /// The `srcset` HTML attribute.
-  AttributeName SRCSET = AttributeNamePojo.SRCSET;
-
-  /// The `start` HTML attribute.
-  AttributeName START = AttributeNamePojo.START;
-
-  /// The `stop-color` HTML attribute.
-  AttributeName STOP_COLOR = AttributeNamePojo.STOP_COLOR;
-
-  /// The `stop-opacity` HTML attribute.
-  AttributeName STOP_OPACITY = AttributeNamePojo.STOP_OPACITY;
-
-  /// The `stroke` HTML attribute.
-  AttributeName STROKE = AttributeNamePojo.STROKE;
-
-  /// The `stroke-dasharray` HTML attribute.
-  AttributeName STROKE_DASHARRAY = AttributeNamePojo.STROKE_DASHARRAY;
-
-  /// The `stroke-dashoffset` HTML attribute.
-  AttributeName STROKE_DASHOFFSET = AttributeNamePojo.STROKE_DASHOFFSET;
-
-  /// The `stroke-linecap` HTML attribute.
-  AttributeName STROKE_LINECAP = AttributeNamePojo.STROKE_LINECAP;
-
-  /// The `stroke-linejoin` HTML attribute.
-  AttributeName STROKE_LINEJOIN = AttributeNamePojo.STROKE_LINEJOIN;
-
-  /// The `stroke-miterlimit` HTML attribute.
-  AttributeName STROKE_MITERLIMIT = AttributeNamePojo.STROKE_MITERLIMIT;
-
-  /// The `stroke-opacity` HTML attribute.
-  AttributeName STROKE_OPACITY = AttributeNamePojo.STROKE_OPACITY;
-
-  /// The `stroke-width` HTML attribute.
-  AttributeName STROKE_WIDTH = AttributeNamePojo.STROKE_WIDTH;
-
-  /// The `style` HTML attribute.
-  AttributeName STYLE = AttributeNamePojo.STYLE;
-
-  /// The `tabindex` HTML attribute.
-  AttributeName TABINDEX = AttributeNamePojo.TABINDEX;
-
-  /// The `target` HTML attribute.
-  AttributeName TARGET = AttributeNamePojo.TARGET;
-
-  /// The `text-anchor` HTML attribute.
-  AttributeName TEXT_ANCHOR = AttributeNamePojo.TEXT_ANCHOR;
-
-  /// The `text-decoration` HTML attribute.
-  AttributeName TEXT_DECORATION = AttributeNamePojo.TEXT_DECORATION;
-
-  /// The `text-overflow` HTML attribute.
-  AttributeName TEXT_OVERFLOW = AttributeNamePojo.TEXT_OVERFLOW;
-
-  /// The `text-rendering` HTML attribute.
-  AttributeName TEXT_RENDERING = AttributeNamePojo.TEXT_RENDERING;
-
-  /// The `title` HTML attribute.
-  AttributeName TITLE = AttributeNamePojo.TITLE;
-
-  /// The `transform` HTML attribute.
-  AttributeName TRANSFORM = AttributeNamePojo.TRANSFORM;
-
-  /// The `transform-origin` HTML attribute.
-  AttributeName TRANSFORM_ORIGIN = AttributeNamePojo.TRANSFORM_ORIGIN;
-
-  /// The `translate` HTML attribute.
-  AttributeName TRANSLATE = AttributeNamePojo.TRANSLATE;
-
-  /// The `type` HTML attribute.
-  AttributeName TYPE = AttributeNamePojo.TYPE;
-
-  /// The `unicode-bidi` HTML attribute.
-  AttributeName UNICODE_BIDI = AttributeNamePojo.UNICODE_BIDI;
-
-  /// The `value` HTML attribute.
-  AttributeName VALUE = AttributeNamePojo.VALUE;
-
-  /// The `vector-effect` HTML attribute.
-  AttributeName VECTOR_EFFECT = AttributeNamePojo.VECTOR_EFFECT;
-
-  /// The `viewBox` HTML attribute.
-  AttributeName VIEWBOX = AttributeNamePojo.VIEWBOX;
-
-  /// The `visibility` HTML attribute.
-  AttributeName VISIBILITY = AttributeNamePojo.VISIBILITY;
-
-  /// The `white-space` HTML attribute.
-  AttributeName WHITE_SPACE = AttributeNamePojo.WHITE_SPACE;
-
-  /// The `width` HTML attribute.
-  AttributeName WIDTH = AttributeNamePojo.WIDTH;
-
-  /// The `word-spacing` HTML attribute.
-  AttributeName WORD_SPACING = AttributeNamePojo.WORD_SPACING;
-
-  /// The `wrap` HTML attribute.
-  AttributeName WRAP = AttributeNamePojo.WRAP;
-
-  /// The `writing-mode` HTML attribute.
-  AttributeName WRITING_MODE = AttributeNamePojo.WRITING_MODE;
-
-  /// The `xmlns` HTML attribute.
-  AttributeName XMLNS = AttributeNamePojo.XMLNS;
+  public static final AttributeName ACCESSKEY = U.create("accesskey");
+  public static final AttributeName ACTION = U.create("action");
+  public static final AttributeName ALIGN = U.create("align");
+  public static final AttributeName ALIGNMENT_BASELINE = U.create("alignment-baseline");
+  public static final AttributeName ALT = U.create("alt");
+  public static final AttributeName ARIA_CURRENT = U.create("aria-current");
+  public static final AttributeName ARIA_DISABLED = U.create("aria-disabled");
+  public static final AttributeName ARIA_HIDDEN = U.create("aria-hidden");
+  public static final AttributeName ARIA_INVALID = U.create("aria-invalid");
+  public static final AttributeName ARIA_LABEL = U.create("aria-label");
+  public static final AttributeName ARIA_LABELLED_BY = U.create("aria-labelledby");
+  public static final AttributeName ARIA_MODAL = U.create("aria-modal");
+  public static final AttributeName ARIA_PLACEHOLDER = U.create("aria-placeholder");
+  public static final AttributeName ARIA_READONLY = U.create("aria-readonly");
+  public static final AttributeName ARIA_REQUIRED = U.create("aria-required");
+  public static final AttributeName ARIA_SELECTED = U.create("aria-selected");
+  public static final AttributeName AS = U.create("as");
+  public static final AttributeName ASYNC = U.create("async");
+  public static final AttributeName AUTOCOMPLETE = U.create("autocomplete");
+  public static final AttributeName AUTOFOCUS = U.create("autofocus");
+  public static final AttributeName BASELINE_SHIFT = U.create("baseline-shift");
+  public static final AttributeName BORDER = U.create("border");
+  public static final AttributeName CELLPADDING = U.create("cellpadding");
+  public static final AttributeName CELLSPACING = U.create("cellspacing");
+  public static final AttributeName CHARSET = U.create("charset");
+  public static final AttributeName CHECKED = U.create("checked");
+  public static final AttributeName CITE = U.create("cite");
+  public static final AttributeName CLASS = U.create("class");
+  public static final AttributeName CLIP_PATH = U.create("clip-path");
+  public static final AttributeName CLIP_RULE = U.create("clip-rule");
+  public static final AttributeName CLOSEDBY = U.create("closedby");
+  public static final AttributeName COLOR = U.create("color");
+  public static final AttributeName COLOR_INTERPOLATION = U.create("color-interpolation");
+  public static final AttributeName COLOR_INTERPOLATION_FILTERS = U.create("color-interpolation-filters");
+  public static final AttributeName COLS = U.create("cols");
+  public static final AttributeName CONTENT = U.create("content");
+  public static final AttributeName CONTENTEDITABLE = U.create("contenteditable");
+  public static final AttributeName CROSSORIGIN = U.create("crossorigin");
+  public static final AttributeName CURSOR = U.create("cursor");
+  public static final AttributeName D = U.create("d");
+  public static final AttributeName DEFER = U.create("defer");
+  public static final AttributeName DIR = U.create("dir");
+  public static final AttributeName DIRECTION = U.create("direction");
+  public static final AttributeName DIRNAME = U.create("dirname");
+  public static final AttributeName DISABLED = U.create("disabled");
+  public static final AttributeName DISPLAY = U.create("display");
+  public static final AttributeName DOMINANT_BASELINE = U.create("dominant-baseline");
+  public static final AttributeName DOWNLOAD = U.create("download");
+  public static final AttributeName DRAGGABLE = U.create("draggable");
+  public static final AttributeName ENCTYPE = U.create("enctype");
+  public static final AttributeName FILL = U.create("fill");
+  public static final AttributeName FILL_OPACITY = U.create("fill-opacity");
+  public static final AttributeName FILL_RULE = U.create("fill-rule");
+  public static final AttributeName FILTER = U.create("filter");
+  public static final AttributeName FLOOD_COLOR = U.create("flood-color");
+  public static final AttributeName FLOOD_OPACITY = U.create("flood-opacity");
+  public static final AttributeName FOR = U.create("for");
+  public static final AttributeName FORM = U.create("form");
+  public static final AttributeName GLYPH_ORIENTATION_HORIZONTAL = U.create("glyph-orientation-horizontal");
+  public static final AttributeName GLYPH_ORIENTATION_VERTICAL = U.create("glyph-orientation-vertical");
+  public static final AttributeName HEIGHT = U.create("height");
+  public static final AttributeName HIDDEN = U.create("hidden");
+  public static final AttributeName HREF = U.create("href");
+  public static final AttributeName HTTP_EQUIV = U.create("http-equiv");
+  public static final AttributeName ID = U.create("id");
+  public static final AttributeName IMAGE_RENDERING = U.create("image-rendering");
+  public static final AttributeName INTEGRITY = U.create("integrity");
+  public static final AttributeName LABEL = U.create("label");
+  public static final AttributeName LANG = U.create("lang");
+  public static final AttributeName LETTER_SPACING = U.create("letter-spacing");
+  public static final AttributeName LIGHTING_COLOR = U.create("lighting-color");
+  public static final AttributeName MARKER_END = U.create("marker-end");
+  public static final AttributeName MARKER_MID = U.create("marker-mid");
+  public static final AttributeName MARKER_START = U.create("marker-start");
+  public static final AttributeName MASK = U.create("mask");
+  public static final AttributeName MASK_TYPE = U.create("mask-type");
+  public static final AttributeName MAXLENGTH = U.create("maxlength");
+  public static final AttributeName MEDIA = U.create("media");
+  public static final AttributeName METHOD = U.create("method");
+  public static final AttributeName MINLENGTH = U.create("minlength");
+  public static final AttributeName MULTIPLE = U.create("multiple");
+  public static final AttributeName NAME = U.create("name");
+  public static final AttributeName NOMODULE = U.create("nomodule");
+  public static final AttributeName ONCLICK = U.create("onclick");
+  public static final AttributeName ONLOAD = U.create("onload");
+  public static final AttributeName ONPOPSTATE = U.create("onpopstate");
+  public static final AttributeName ONSUBMIT = U.create("onsubmit");
+  public static final AttributeName OPACITY = U.create("opacity");
+  public static final AttributeName OPEN = U.create("open");
+  public static final AttributeName OVERFLOW = U.create("overflow");
+  public static final AttributeName PAINT_ORDER = U.create("paint-order");
+  public static final AttributeName PLACEHOLDER = U.create("placeholder");
+  public static final AttributeName POINTER_EVENTS = U.create("pointer-events");
+  public static final AttributeName PROPERTY = U.create("property");
+  public static final AttributeName READONLY = U.create("readonly");
+  public static final AttributeName REFERRERPOLICY = U.create("referrerpolicy");
+  public static final AttributeName REL = U.create("rel");
+  public static final AttributeName REQUIRED = U.create("required");
+  public static final AttributeName REV = U.create("rev");
+  public static final AttributeName REVERSED = U.create("reversed");
+  public static final AttributeName ROLE = U.create("role");
+  public static final AttributeName ROWS = U.create("rows");
+  public static final AttributeName SELECTED = U.create("selected");
+  public static final AttributeName SHAPE_RENDERING = U.create("shape-rendering");
+  public static final AttributeName SIZE = U.create("size");
+  public static final AttributeName SIZES = U.create("sizes");
+  public static final AttributeName SPELLCHECK = U.create("spellcheck");
+  public static final AttributeName SRC = U.create("src");
+  public static final AttributeName SRCSET = U.create("srcset");
+  public static final AttributeName START = U.create("start");
+  public static final AttributeName STOP_COLOR = U.create("stop-color");
+  public static final AttributeName STOP_OPACITY = U.create("stop-opacity");
+  public static final AttributeName STROKE = U.create("stroke");
+  public static final AttributeName STROKE_DASHARRAY = U.create("stroke-dasharray");
+  public static final AttributeName STROKE_DASHOFFSET = U.create("stroke-dashoffset");
+  public static final AttributeName STROKE_LINECAP = U.create("stroke-linecap");
+  public static final AttributeName STROKE_LINEJOIN = U.create("stroke-linejoin");
+  public static final AttributeName STROKE_MITERLIMIT = U.create("stroke-miterlimit");
+  public static final AttributeName STROKE_OPACITY = U.create("stroke-opacity");
+  public static final AttributeName STROKE_WIDTH = U.create("stroke-width");
+  public static final AttributeName STYLE = U.create("style");
+  public static final AttributeName TABINDEX = U.create("tabindex");
+  public static final AttributeName TARGET = U.create("target");
+  public static final AttributeName TEXT_ANCHOR = U.create("text-anchor");
+  public static final AttributeName TEXT_DECORATION = U.create("text-decoration");
+  public static final AttributeName TEXT_OVERFLOW = U.create("text-overflow");
+  public static final AttributeName TEXT_RENDERING = U.create("text-rendering");
+  public static final AttributeName TITLE = U.create("title");
+  public static final AttributeName TRANSFORM = U.create("transform");
+  public static final AttributeName TRANSFORM_ORIGIN = U.create("transform-origin");
+  public static final AttributeName TRANSLATE = U.create("translate");
+  public static final AttributeName TYPE = U.create("type");
+  public static final AttributeName UNICODE_BIDI = U.create("unicode-bidi");
+  public static final AttributeName VALUE = U.create("value");
+  public static final AttributeName VECTOR_EFFECT = U.create("vector-effect");
+  public static final AttributeName VIEWBOX = U.create("viewBox");
+  public static final AttributeName VISIBILITY = U.create("visibility");
+  public static final AttributeName WHITE_SPACE = U.create("white-space");
+  public static final AttributeName WIDTH = U.create("width");
+  public static final AttributeName WORD_SPACING = U.create("word-spacing");
+  public static final AttributeName WRAP = U.create("wrap");
+  public static final AttributeName WRITING_MODE = U.create("writing-mode");
+  public static final AttributeName XMLNS = U.create("xmlns");
+
+  public static final AttributeName DATA_HIGH = U.create("data-high");
+  public static final AttributeName DATA_LINE = U.create("data-line");
 
   // END generated code
 
-  /// Creates a new HTML attribute name.
-  ///
-  /// @param name the name of the attribute
-  ///
-  /// @return the HTML attribute name instance
-  static AttributeName of(String name) {
-    return AttributeNamePojo.custom(name);
+  public static String formatAttrValue(String value, StringBuilder sb) {
+    enum Parser {
+      START,
+
+      TEXT,
+
+      WS;
+    }
+
+    Parser parser;
+    parser = Parser.START;
+
+    sb.setLength(0);
+
+    for (int idx = 0, len = value.length(); idx < len; idx++) {
+      final char c;
+      c = value.charAt(idx);
+
+      switch (parser) {
+        case START -> {
+          if (Character.isWhitespace(c)) {
+            parser = Parser.START;
+          } else {
+            parser = Parser.TEXT;
+
+            sb.append(c);
+          }
+        }
+
+        case TEXT -> {
+          if (Character.isWhitespace(c)) {
+            parser = Parser.WS;
+          } else {
+            parser = Parser.TEXT;
+
+            sb.append(c);
+          }
+        }
+
+        case WS -> {
+          if (Character.isWhitespace(c)) {
+            parser = Parser.WS;
+          } else {
+            parser = Parser.TEXT;
+
+            sb.append(' ');
+
+            sb.append(c);
+          }
+        }
+      }
+    }
+
+    return sb.toString();
   }
 
-  /// Index of this attribute.
-  ///
-  /// @return index of this attribute.
-  int index();
+  public static AttributeName get(int index) {
+    return U.get(index);
+  }
 
-  /// Name of the attribute.
-  ///
-  /// @return name of the attribute
-  String name();
+  public static AttributeName getOrCreate(String name) {
+    return U.getOrCreate(name);
+  }
 
 }

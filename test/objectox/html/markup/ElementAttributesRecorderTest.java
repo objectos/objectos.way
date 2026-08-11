@@ -24,9 +24,9 @@ import objectos.html.markup.ElementValue;
 import objectos.script.Js;
 import objectos.script.JsAction;
 import objectox.html.AmbiguousName;
-import objectox.html.attr.AttributeJsAction;
+import objectox.html.attr.JsActionAttribute;
 import objectox.html.attr.AttributeName;
-import objectox.html.attr.AttributeNamePojo;
+import objectox.html.attr.AttributeName;
 import org.testng.annotations.Test;
 
 public class ElementAttributesRecorderTest {
@@ -90,13 +90,13 @@ public class ElementAttributesRecorderTest {
   @Test
   public void attributeJsAction01() {
     final AttributeName name;
-    name = AttributeNamePojo.ONCLICK;
+    name = AttributeName.ONCLICK;
 
     final JsAction action;
     action = Js.submit();
 
-    final AttributeJsAction value;
-    value = AttributeJsAction.of0(name, action);
+    final JsActionAttribute value;
+    value = JsActionAttribute.of0(name, action);
 
     assertEquals(
         record(value),

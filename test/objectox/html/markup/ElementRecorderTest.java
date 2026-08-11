@@ -20,7 +20,7 @@ import static org.testng.Assert.assertEquals;
 import objectos.html.Attribute;
 import objectox.html.AmbiguousName;
 import objectox.html.HtmlPojo;
-import objectox.html.attr.AttributeNamePojo;
+import objectox.html.attr.AttributeName;
 import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 
@@ -40,7 +40,7 @@ public class ElementRecorderTest {
     res = subject.record(
         ElementNamePojo.HTML,
 
-        Attribute.of(AttributeNamePojo.CHARSET, "UTF-8")
+        Attribute.of(AttributeName.CHARSET, "UTF-8")
     );
 
     assertEquals(res.value(), 0);
@@ -54,7 +54,7 @@ public class ElementRecorderTest {
           opts.addByte(HtmlBytes.JMP24);
           opts.addInt24(11);
           opts.addByte(HtmlBytes.ATTRIBUTE88);
-          opts.addInt8(AttributeNamePojo.CHARSET.index());
+          opts.addInt8(AttributeName.CHARSET.index());
           opts.addInt8(opts.addObject("UTF-8"));
           opts.addByte(HtmlBytes.ENDTAG8);
           opts.addInt8(ElementNamePojo.HTML.index());
@@ -83,7 +83,7 @@ public class ElementRecorderTest {
     res = subject.record(
         ElementNamePojo.DIV,
 
-        Attribute.of(AttributeNamePojo.ID, "x"),
+        Attribute.of(AttributeName.ID, "x"),
         new ElementPointer(0)
     );
 
@@ -104,7 +104,7 @@ public class ElementRecorderTest {
           opts.addByte(HtmlBytes.JMP24);
           opts.addInt24(21);
           opts.addByte(HtmlBytes.ATTRIBUTE88);
-          opts.addInt8(AttributeNamePojo.ID.index());
+          opts.addInt8(AttributeName.ID.index());
           opts.addInt8(opts.addObject("x"));
           opts.addByte(HtmlBytes.ELEM8);
           opts.addInt8(0);

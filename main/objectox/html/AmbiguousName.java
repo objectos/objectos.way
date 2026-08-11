@@ -17,20 +17,19 @@ package objectox.html;
 
 import objectos.html.ElementName;
 import objectox.html.attr.AttributeName;
-import objectox.html.attr.AttributeNamePojo;
 import objectox.html.elem.ElementNamePojo;
 
 public enum AmbiguousName {
 
-  CLIPPATH(AttributeNamePojo.CLIP_PATH, ElementNamePojo.CLIPPATH),
+  CLIPPATH(AttributeName.CLIP_PATH, ElementNamePojo.CLIPPATH),
 
-  FORM(AttributeNamePojo.FORM, ElementNamePojo.FORM),
+  FORM(AttributeName.FORM, ElementNamePojo.FORM),
 
-  LABEL(AttributeNamePojo.LABEL, ElementNamePojo.LABEL),
+  LABEL(AttributeName.LABEL, ElementNamePojo.LABEL),
 
-  STYLE(AttributeNamePojo.STYLE, ElementNamePojo.STYLE),
+  STYLE(AttributeName.STYLE, ElementNamePojo.STYLE),
 
-  TITLE(AttributeNamePojo.TITLE, ElementNamePojo.TITLE);
+  TITLE(AttributeName.TITLE, ElementNamePojo.TITLE);
 
   public final AttributeName attribute;
 

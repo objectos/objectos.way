@@ -15,7 +15,6 @@
  */
 package objectos.html;
 
-import java.util.Objects;
 import objectos.html.markup.RegularElementValue;
 import objectos.html.markup.VoidElementValue;
 import objectox.html.attr.AttributeName;
@@ -35,15 +34,16 @@ public sealed interface BooleanAttribute
   /// @param name the boolean attribute name
   ///
   /// @return a newly created object representing a boolean HTML attribute
-  static BooleanAttribute of(AttributeName name) {
-    return new BooleanAttributePojo(
-        Objects.requireNonNull(name, "name == null")
-    );
+  static BooleanAttribute of(String name) {
+    final AttributeName attributeName;
+    attributeName = AttributeName.getOrCreate(name);
+
+    return new BooleanAttributePojo(attributeName);
   }
 
   /// Returns the attribute name.
   ///
   /// @return the attribute name
-  AttributeName name();
+  String name();
 
 }

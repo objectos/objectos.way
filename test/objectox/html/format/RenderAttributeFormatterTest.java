@@ -19,7 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import objectos.html.format.QuotationMarkStyle;
 import objectos.html.stream.RenderAttribute;
-import objectox.html.attr.AttributeNamePojo;
+import objectox.html.attr.AttributeName;
 import objectox.html.stream.RenderAttributeEvent;
 import org.testng.annotations.Test;
 
@@ -27,7 +27,7 @@ public class RenderAttributeFormatterTest {
 
   private String format(RenderAttributeFormatter subject) {
     final RenderAttribute attr;
-    attr = RenderAttributeEvent.of(AttributeNamePojo.ID, "value");
+    attr = RenderAttributeEvent.of(AttributeName.ID, "value");
 
     final Output out;
     out = OutputY.create();
@@ -39,7 +39,7 @@ public class RenderAttributeFormatterTest {
 
   private String format(RenderAttributeFormatter subject, String text) {
     final RenderAttribute attr;
-    attr = RenderAttributeEvent.of(AttributeNamePojo.ID, "value");
+    attr = RenderAttributeEvent.of(AttributeName.ID, "value");
 
     final Output out;
     out = OutputY.create(opts -> {

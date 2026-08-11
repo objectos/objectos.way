@@ -20,8 +20,8 @@ import static org.testng.Assert.assertEquals;
 import java.util.stream.IntStream;
 import objectos.internal.Util;
 import objectox.html.attr.AttributeName;
-import objectox.html.attr.AttributeNamePojo;
-import objectox.html.attr.AttributePojo;
+import objectox.html.attr.AttributeName;
+import objectox.html.attr.RegularAttribute;
 import org.testng.annotations.Test;
 
 public class AttributeRecorderTest {
@@ -31,8 +31,8 @@ public class AttributeRecorderTest {
     final HtmlSink sink;
     sink = new HtmlSink(Util.EMPTY_BYTE_ARRAY, new Object[256]);
 
-    final AttributeNamePojo name;
-    name = AttributeNamePojo.ID;
+    final AttributeName name;
+    name = AttributeName.ID;
 
     final String value;
     value = "foo";
@@ -56,8 +56,8 @@ public class AttributeRecorderTest {
     final HtmlSink sink;
     sink = new HtmlSink(Util.EMPTY_BYTE_ARRAY, new Object[1 << 16]);
 
-    final AttributeNamePojo name;
-    name = AttributeNamePojo.ID;
+    final AttributeName name;
+    name = AttributeName.ID;
 
     final String value;
     value = "foo";
@@ -78,8 +78,8 @@ public class AttributeRecorderTest {
 
   @Test(description = "ATTRIBUTE88")
   public void attribute88() {
-    final AttributeNamePojo name;
-    name = AttributeNamePojo.ID;
+    final AttributeName name;
+    name = AttributeName.ID;
 
     final String value;
     value = "foo";
@@ -105,8 +105,8 @@ public class AttributeRecorderTest {
     final AttributeRecorder subject;
     subject = new AttributeRecorder(sink);
 
-    final AttributeNamePojo name;
-    name = AttributeNamePojo.ALT;
+    final AttributeName name;
+    name = AttributeName.ALT;
 
     final String value;
     value = "foo";
@@ -122,7 +122,7 @@ public class AttributeRecorderTest {
       expectedExceptions = NullPointerException.class,
       expectedExceptionsMessageRegExp = "Attribute provided a null name")
   public void reject01() {
-    final AttributeNamePojo name;
+    final AttributeName name;
     name = null;
 
     final String value;
@@ -131,8 +131,8 @@ public class AttributeRecorderTest {
     final AttributeRecorder subject;
     subject = new AttributeRecorder(null);
 
-    final AttributePojo pojo;
-    pojo = new AttributePojo(name, value);
+    final RegularAttribute pojo;
+    pojo = new RegularAttribute(name, value);
 
     subject.record(pojo);
   }
@@ -142,8 +142,8 @@ public class AttributeRecorderTest {
       expectedExceptions = NullPointerException.class,
       expectedExceptionsMessageRegExp = "Attribute provided a null value")
   public void reject02() {
-    final AttributeNamePojo name;
-    name = AttributeNamePojo.ID;
+    final AttributeName name;
+    name = AttributeName.ID;
 
     final String value;
     value = null;
@@ -151,16 +151,16 @@ public class AttributeRecorderTest {
     final AttributeRecorder subject;
     subject = new AttributeRecorder(null);
 
-    final AttributePojo pojo;
-    pojo = new AttributePojo(name, value);
+    final RegularAttribute pojo;
+    pojo = new RegularAttribute(name, value);
 
     subject.record(pojo);
   }
 
   @Test(description = "value should be escaped")
   public void value01() {
-    final AttributeNamePojo name;
-    name = AttributeNamePojo.ID;
+    final AttributeName name;
+    name = AttributeName.ID;
 
     final String value;
     value = "A&B";

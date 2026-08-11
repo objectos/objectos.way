@@ -15,17 +15,24 @@
  */
 package objectox.html.attr;
 
-import objectos.script.JsAction;
 import java.util.Objects;
-import objectos.html.Attribute;
+import objectos.script.JsAction;
 
-public record AttributeJsAction(AttributeName name, JsAction action) implements Attribute {
+public final class JsActionAttribute extends AbstractAttribute {
 
-  public static AttributeJsAction of0(AttributeName name, JsAction value) {
+  public final JsAction action;
+
+  public JsActionAttribute(AttributeName attributeName, JsAction action) {
+    super(attributeName);
+
+    this.action = action;
+  }
+
+  public static JsActionAttribute of0(AttributeName name, JsAction value) {
     final JsAction v;
     v = Objects.requireNonNull(value, "value == null");
 
-    return new AttributeJsAction(name, v);
+    return new JsActionAttribute(name, v);
   }
 
   @Override

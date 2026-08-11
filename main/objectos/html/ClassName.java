@@ -16,12 +16,21 @@
 package objectos.html;
 
 import java.util.Objects;
+import objectox.html.attr.AbstractAttribute;
 import objectox.html.attr.AttributeName;
-import objectox.html.attr.AttributeNamePojo;
-import objectox.html.markup.ClassNamePojo;
 
 /// Represents an HTML `class` attribute and its value.
-public sealed interface ClassName extends Attribute permits ClassNamePojo {
+public final class ClassName
+    extends
+    AbstractAttribute {
+
+  private final String value;
+
+  private ClassName(String value) {
+    super(AttributeName.CLASS);
+
+    this.value = value;
+  }
 
   /**
    * Creates a new {@code ClassName} instance whose value is the result of
@@ -33,7 +42,7 @@ public sealed interface ClassName extends Attribute permits ClassNamePojo {
    *
    * @return a newly constructed {@code ClassName} instance
    */
-  static ClassName of(ClassName... values) {
+  public static ClassName of(ClassName... values) {
     StringBuilder sb;
     sb = new StringBuilder();
 
@@ -54,7 +63,7 @@ public sealed interface ClassName extends Attribute permits ClassNamePojo {
     String value;
     value = sb.toString();
 
-    return new ClassNamePojo(value);
+    return new ClassName(value);
   }
 
   /**
@@ -65,10 +74,10 @@ public sealed interface ClassName extends Attribute permits ClassNamePojo {
    *
    * @return a newly constructed {@code ClassName} instance
    */
-  static ClassName of(String value) {
+  public static ClassName of(String value) {
     Objects.requireNonNull(value, "value == null");
 
-    return new ClassNamePojo(value);
+    return new ClassName(value);
   }
 
   /**
@@ -103,29 +112,21 @@ public sealed interface ClassName extends Attribute permits ClassNamePojo {
    *
    * @return a newly constructed {@code ClassName} instance
    */
-  static ClassName ofText(String value) {
+  public static ClassName ofText(String value) {
     String result;
     result = Html.formatAttrValue(value);
 
-    return new ClassNamePojo(result);
+    return new ClassName(result);
   }
 
   /**
-   * The {@code class} attribute name.
-   *
-   * @return the {@code class} attribute name
-   */
-  @Override
-  default AttributeName name() {
-    return AttributeNamePojo.CLASS;
-  }
-
-  /**
-   * The {@code class} value.
+   * Returns the {@code class} value.
    *
    * @return the {@code class} value
    */
   @Override
-  String value();
+  public final String value() {
+    return value;
+  }
 
 }

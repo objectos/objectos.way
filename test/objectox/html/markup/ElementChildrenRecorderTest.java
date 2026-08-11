@@ -23,7 +23,7 @@ import objectos.html.ElementName;
 import objectos.html.markup.ElementValue;
 import objectox.html.AmbiguousName;
 import objectox.html.HtmlPojo;
-import objectox.html.attr.AttributeNamePojo;
+import objectox.html.attr.AttributeName;
 import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 
@@ -72,7 +72,7 @@ public class ElementChildrenRecorderTest {
     sink = new HtmlSink();
 
     final Attribute attr;
-    attr = Attribute.of(AttributeNamePojo.CHARSET, "UTF-8");
+    attr = Attribute.of(AttributeName.CHARSET, "UTF-8");
 
     assertEquals(
         record(sink, ElementNamePojo.HEAD, attr),
@@ -87,7 +87,7 @@ public class ElementChildrenRecorderTest {
     sink = new HtmlSink();
 
     final BooleanAttribute attr;
-    attr = BooleanAttribute.of(AttributeNamePojo.AUTOFOCUS);
+    attr = BooleanAttribute.of(AttributeName.AUTOFOCUS);
 
     assertEquals(
         record(sink, ElementNamePojo.HEAD, attr),

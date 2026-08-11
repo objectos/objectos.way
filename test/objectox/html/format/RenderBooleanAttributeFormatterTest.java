@@ -20,7 +20,7 @@ import static org.testng.Assert.assertEquals;
 import objectos.html.format.BooleanAttributeValueStyle;
 import objectos.html.format.QuotationMarkStyle;
 import objectos.html.stream.RenderBooleanAttribute;
-import objectox.html.attr.AttributeNamePojo;
+import objectox.html.attr.AttributeName;
 import objectox.html.stream.RenderBooleanAttributeEvent;
 import org.testng.annotations.Test;
 
@@ -28,7 +28,7 @@ public class RenderBooleanAttributeFormatterTest {
 
   private String format(RenderBooleanAttributeFormatter subject) {
     final RenderBooleanAttribute attr;
-    attr = new RenderBooleanAttributeEvent(AttributeNamePojo.CHECKED);
+    attr = new RenderBooleanAttributeEvent(AttributeName.CHECKED);
 
     final Output out;
     out = OutputY.create();
@@ -40,7 +40,7 @@ public class RenderBooleanAttributeFormatterTest {
 
   private String format(RenderBooleanAttributeFormatter subject, String text) {
     final RenderBooleanAttribute attr;
-    attr = new RenderBooleanAttributeEvent(AttributeNamePojo.CHECKED);
+    attr = new RenderBooleanAttributeEvent(AttributeName.CHECKED);
 
     final Output out;
     out = OutputY.create(opts -> {

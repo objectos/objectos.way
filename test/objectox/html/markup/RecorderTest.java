@@ -23,7 +23,7 @@ import objectos.html.markup.Fragment1;
 import objectos.html.markup.Fragment2;
 import objectos.html.markup.Fragment3;
 import objectos.html.markup.Fragment4;
-import objectox.html.attr.AttributeNamePojo;
+import objectox.html.attr.AttributeName;
 import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 
@@ -105,7 +105,7 @@ public class RecorderTest {
 
     subject.element(
         ElementName.HTML,
-        subject.attribute(AttributeNamePojo.LANG, "pt-BR")
+        subject.attribute(AttributeName.LANG, "pt-BR")
     );
 
     assertEquals(
@@ -113,7 +113,7 @@ public class RecorderTest {
 
         HtmlSinkY.create(opts -> {
           opts.addByte(HtmlBytes.xATTRIBUTE88);
-          opts.addInt8(AttributeNamePojo.LANG.index());
+          opts.addInt8(AttributeName.LANG.index());
           opts.addInt8(opts.addObject("pt-BR"));
           opts.addByte(HtmlBytes.STARTTAG8);
           opts.addInt8(ElementNamePojo.HTML.index());
@@ -138,7 +138,7 @@ public class RecorderTest {
 
     subject.element(
         ElementName.HTML,
-        subject.attribute(AttributeNamePojo.AUTOFOCUS)
+        subject.attribute(AttributeName.AUTOFOCUS)
     );
 
     assertEquals(
@@ -146,7 +146,7 @@ public class RecorderTest {
 
         HtmlSinkY.create(opts -> {
           opts.addByte(HtmlBytes.xBOOLEAN8);
-          opts.addInt8(AttributeNamePojo.AUTOFOCUS.index());
+          opts.addInt8(AttributeName.AUTOFOCUS.index());
           opts.addByte(HtmlBytes.STARTTAG8);
           opts.addInt8(ElementNamePojo.HTML.index());
           opts.addByte(HtmlBytes.VALUES8);
@@ -208,7 +208,7 @@ public class RecorderTest {
         ElementNamePojo.HEAD,
         subject.element(
             ElementNamePojo.META,
-            subject.attribute(AttributeNamePojo.CHARSET, "UTF-8")
+            subject.attribute(AttributeName.CHARSET, "UTF-8")
         )
     );
 
@@ -217,7 +217,7 @@ public class RecorderTest {
 
         HtmlSinkY.create(opts -> {
           opts.addByte(HtmlBytes.xATTRIBUTE88);
-          opts.addInt8(AttributeNamePojo.CHARSET.index());
+          opts.addInt8(AttributeName.CHARSET.index());
           opts.addInt8(opts.addObject("UTF-8"));
           opts.addByte(HtmlBytes.xSTARTTAG8);
           opts.addInt8(ElementNamePojo.META.index());
@@ -251,7 +251,7 @@ public class RecorderTest {
     subject.element(
         ElementNamePojo.HTML,
         subject.element(ElementNamePojo.HEAD),
-        subject.attribute(AttributeNamePojo.LANG, "pt-BR")
+        subject.attribute(AttributeName.LANG, "pt-BR")
     );
 
     assertEquals(
@@ -265,7 +265,7 @@ public class RecorderTest {
           opts.addByte(HtmlBytes.ENDTAG8);
           opts.addInt8(ElementNamePojo.HEAD.index());
           opts.addByte(HtmlBytes.xATTRIBUTE88);
-          opts.addInt8(AttributeNamePojo.LANG.index());
+          opts.addInt8(AttributeName.LANG.index());
           opts.addInt8(opts.addObject("pt-BR"));
           opts.addByte(HtmlBytes.STARTTAG8);
           opts.addInt8(ElementNamePojo.HTML.index());
@@ -355,8 +355,8 @@ public class RecorderTest {
 
     subject.element(
         ElementName.DIV,
-        subject.attribute(AttributeNamePojo.CLASS, "c1"),
-        subject.attribute(AttributeNamePojo.CLASS, "c2")
+        subject.attribute(AttributeName.CLASS, "c1"),
+        subject.attribute(AttributeName.CLASS, "c2")
     );
 
     assertEquals(
@@ -364,10 +364,10 @@ public class RecorderTest {
 
         HtmlSinkY.create(opts -> {
           opts.addByte(HtmlBytes.xATTRIBUTE88);
-          opts.addInt8(AttributeNamePojo.CLASS.index());
+          opts.addInt8(AttributeName.CLASS.index());
           opts.addInt8(opts.addObject("c1"));
           opts.addByte(HtmlBytes.xATTRIBUTE88);
-          opts.addInt8(AttributeNamePojo.CLASS.index());
+          opts.addInt8(AttributeName.CLASS.index());
           opts.addInt8(opts.addObject("c2"));
           opts.addByte(HtmlBytes.STARTTAG8);
           opts.addInt8(ElementNamePojo.DIV.index());
@@ -448,7 +448,7 @@ public class RecorderTest {
     final Fragment0 fragment;
     fragment = () -> {
       sink.addByte(HtmlBytes.ATTRIBUTE88);
-      sink.addInt8(AttributeNamePojo.ID.index());
+      sink.addInt8(AttributeName.ID.index());
       sink.addInt8(sink.addObject("foo"));
     };
 
@@ -463,7 +463,7 @@ public class RecorderTest {
         HtmlSinkY.create(opts -> {
           opts.addByte(HtmlBytes.STARTFRAG);
           opts.addByte(HtmlBytes.ATTRIBUTE88);
-          opts.addInt8(AttributeNamePojo.ID.index());
+          opts.addInt8(AttributeName.ID.index());
           opts.addInt8(opts.addObject("foo"));
           opts.addByte(HtmlBytes.ENDFRAG);
         })
@@ -481,7 +481,7 @@ public class RecorderTest {
     final Fragment1<String> fragment;
     fragment = value -> {
       sink.addByte(HtmlBytes.ATTRIBUTE88);
-      sink.addInt8(AttributeNamePojo.ID.index());
+      sink.addInt8(AttributeName.ID.index());
       sink.addInt8(sink.addObject(value));
     };
 
@@ -496,7 +496,7 @@ public class RecorderTest {
         HtmlSinkY.create(opts -> {
           opts.addByte(HtmlBytes.STARTFRAG);
           opts.addByte(HtmlBytes.ATTRIBUTE88);
-          opts.addInt8(AttributeNamePojo.ID.index());
+          opts.addInt8(AttributeName.ID.index());
           opts.addInt8(opts.addObject("foo"));
           opts.addByte(HtmlBytes.ENDFRAG);
         })
@@ -514,11 +514,11 @@ public class RecorderTest {
     final Fragment2<String, String> fragment;
     fragment = (value1, value2) -> {
       sink.addByte(HtmlBytes.ATTRIBUTE88);
-      sink.addInt8(AttributeNamePojo.ID.index());
+      sink.addInt8(AttributeName.ID.index());
       sink.addInt8(sink.addObject(value1));
 
       sink.addByte(HtmlBytes.ATTRIBUTE88);
-      sink.addInt8(AttributeNamePojo.ID.index());
+      sink.addInt8(AttributeName.ID.index());
       sink.addInt8(sink.addObject(value2));
     };
 
@@ -534,11 +534,11 @@ public class RecorderTest {
           opts.addByte(HtmlBytes.STARTFRAG);
 
           opts.addByte(HtmlBytes.ATTRIBUTE88);
-          opts.addInt8(AttributeNamePojo.ID.index());
+          opts.addInt8(AttributeName.ID.index());
           opts.addInt8(opts.addObject("foo"));
 
           opts.addByte(HtmlBytes.ATTRIBUTE88);
-          opts.addInt8(AttributeNamePojo.ID.index());
+          opts.addInt8(AttributeName.ID.index());
           opts.addInt8(opts.addObject("bar"));
 
           opts.addByte(HtmlBytes.ENDFRAG);
@@ -557,15 +557,15 @@ public class RecorderTest {
     final Fragment3<String, String, String> fragment;
     fragment = (value1, value2, value3) -> {
       sink.addByte(HtmlBytes.ATTRIBUTE88);
-      sink.addInt8(AttributeNamePojo.ID.index());
+      sink.addInt8(AttributeName.ID.index());
       sink.addInt8(sink.addObject(value1));
 
       sink.addByte(HtmlBytes.ATTRIBUTE88);
-      sink.addInt8(AttributeNamePojo.ID.index());
+      sink.addInt8(AttributeName.ID.index());
       sink.addInt8(sink.addObject(value2));
 
       sink.addByte(HtmlBytes.ATTRIBUTE88);
-      sink.addInt8(AttributeNamePojo.ID.index());
+      sink.addInt8(AttributeName.ID.index());
       sink.addInt8(sink.addObject(value3));
     };
 
@@ -581,15 +581,15 @@ public class RecorderTest {
           opts.addByte(HtmlBytes.STARTFRAG);
 
           opts.addByte(HtmlBytes.ATTRIBUTE88);
-          opts.addInt8(AttributeNamePojo.ID.index());
+          opts.addInt8(AttributeName.ID.index());
           opts.addInt8(opts.addObject("foo"));
 
           opts.addByte(HtmlBytes.ATTRIBUTE88);
-          opts.addInt8(AttributeNamePojo.ID.index());
+          opts.addInt8(AttributeName.ID.index());
           opts.addInt8(opts.addObject("bar"));
 
           opts.addByte(HtmlBytes.ATTRIBUTE88);
-          opts.addInt8(AttributeNamePojo.ID.index());
+          opts.addInt8(AttributeName.ID.index());
           opts.addInt8(opts.addObject("baz"));
 
           opts.addByte(HtmlBytes.ENDFRAG);
@@ -608,19 +608,19 @@ public class RecorderTest {
     final Fragment4<String, String, String, String> fragment;
     fragment = (value1, value2, value3, value4) -> {
       sink.addByte(HtmlBytes.ATTRIBUTE88);
-      sink.addInt8(AttributeNamePojo.ID.index());
+      sink.addInt8(AttributeName.ID.index());
       sink.addInt8(sink.addObject(value1));
 
       sink.addByte(HtmlBytes.ATTRIBUTE88);
-      sink.addInt8(AttributeNamePojo.ID.index());
+      sink.addInt8(AttributeName.ID.index());
       sink.addInt8(sink.addObject(value2));
 
       sink.addByte(HtmlBytes.ATTRIBUTE88);
-      sink.addInt8(AttributeNamePojo.ID.index());
+      sink.addInt8(AttributeName.ID.index());
       sink.addInt8(sink.addObject(value3));
 
       sink.addByte(HtmlBytes.ATTRIBUTE88);
-      sink.addInt8(AttributeNamePojo.ID.index());
+      sink.addInt8(AttributeName.ID.index());
       sink.addInt8(sink.addObject(value4));
     };
 
@@ -636,19 +636,19 @@ public class RecorderTest {
           opts.addByte(HtmlBytes.STARTFRAG);
 
           opts.addByte(HtmlBytes.ATTRIBUTE88);
-          opts.addInt8(AttributeNamePojo.ID.index());
+          opts.addInt8(AttributeName.ID.index());
           opts.addInt8(opts.addObject("foo"));
 
           opts.addByte(HtmlBytes.ATTRIBUTE88);
-          opts.addInt8(AttributeNamePojo.ID.index());
+          opts.addInt8(AttributeName.ID.index());
           opts.addInt8(opts.addObject("bar"));
 
           opts.addByte(HtmlBytes.ATTRIBUTE88);
-          opts.addInt8(AttributeNamePojo.ID.index());
+          opts.addInt8(AttributeName.ID.index());
           opts.addInt8(opts.addObject("baz"));
 
           opts.addByte(HtmlBytes.ATTRIBUTE88);
-          opts.addInt8(AttributeNamePojo.ID.index());
+          opts.addInt8(AttributeName.ID.index());
           opts.addInt8(opts.addObject("qux"));
 
           opts.addByte(HtmlBytes.ENDFRAG);

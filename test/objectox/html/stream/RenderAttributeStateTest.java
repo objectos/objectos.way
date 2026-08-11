@@ -18,7 +18,7 @@ package objectox.html.stream;
 import static org.testng.Assert.assertEquals;
 
 import objectox.html.IntSize;
-import objectox.html.attr.AttributeNamePojo;
+import objectox.html.attr.AttributeName;
 import objectox.html.elem.ElementNamePojo;
 import objectox.html.markup.HtmlBytes;
 import org.testng.annotations.Test;
@@ -32,7 +32,7 @@ public class RenderAttributeStateTest {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeNamePojo.LANG.index());
+      opts.addInt8(AttributeName.LANG.index());
       opts.addInt8(opts.addObject("pt-BR"));
       opts.addByte(HtmlBytes.STARTTAG8);
       opts.addInt8(ElementNamePojo.HTML.index());
@@ -55,7 +55,7 @@ public class RenderAttributeStateTest {
 
     assertEquals(res.getClass(), ScanElementAttributeState.class);
     assertEquals(ctx.hasEvent(), true);
-    assertEquals(ctx.nextEvent(), RenderAttributeEvent.of(AttributeNamePojo.LANG, "pt-BR"));
+    assertEquals(ctx.nextEvent(), RenderAttributeEvent.of(AttributeName.LANG, "pt-BR"));
   }
 
 }

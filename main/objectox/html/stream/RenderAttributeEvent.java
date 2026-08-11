@@ -17,11 +17,11 @@ package objectox.html.stream;
 
 import objectos.html.stream.RenderAttribute;
 import objectox.html.attr.AttributeName;
-import objectox.html.attr.AttributeNamePojo;
+import objectox.html.attr.AttributeName;
 
 public record RenderAttributeEvent(AttributeName attributeName, String value) implements RenderAttribute {
 
-  public static RenderAttributeEvent of(AttributeNamePojo attributeName, String value) {
+  public static RenderAttributeEvent of(AttributeName attributeName, String value) {
     return new RenderAttributeEvent(attributeName, value);
   }
 

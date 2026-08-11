@@ -17,7 +17,7 @@ package objectox.html.markup;
 
 import static org.testng.Assert.assertEquals;
 
-import objectox.html.attr.AttributeNamePojo;
+import objectox.html.attr.AttributeName;
 import objectox.html.attr.BooleanAttributePojo;
 import org.testng.annotations.Test;
 
@@ -48,8 +48,8 @@ public class BooleanAttributeRecorderTest {
     final BooleanAttributeRecorder subject;
     subject = new BooleanAttributeRecorder(sink);
 
-    final AttributeNamePojo name;
-    name = AttributeNamePojo.AUTOFOCUS;
+    final AttributeName name;
+    name = AttributeName.AUTOFOCUS;
 
     final BooleanAttributePojo attribute;
     attribute = new BooleanAttributePojo(name);

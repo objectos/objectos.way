@@ -17,14 +17,17 @@ package objectos.html;
 
 import objectos.html.markup.RegularElementValue;
 import objectos.html.markup.VoidElementValue;
+import objectox.html.attr.AbstractAttribute;
 import objectox.html.attr.AttributeName;
-import objectox.html.attr.AttributePojo;
+import objectox.html.attr.RegularAttribute;
 
 /// Represents a non-boolean HTML attribute.
-public non-sealed interface Attribute
+public sealed interface Attribute
     extends
     RegularElementValue,
-    VoidElementValue {
+    VoidElementValue
+    permits
+    AbstractAttribute {
 
   /// Returns a new attribute object with the specified name and value.
   ///
@@ -32,14 +35,17 @@ public non-sealed interface Attribute
   /// @param value the attribute value
   ///
   /// @return a newly created object representing a non-boolean HTML attribute
-  static Attribute of(AttributeName name, String value) {
-    return AttributePojo.of(name, value);
+  static Attribute of(String name, String value) {
+    final AttributeName attributeName;
+    attributeName = AttributeName.getOrCreate(name);
+
+    return RegularAttribute.of(attributeName, value);
   }
 
   /// Returns the attribute name.
   ///
   /// @return the attribute name
-  AttributeName name();
+  String name();
 
   /// Returns the attribute value.
   ///

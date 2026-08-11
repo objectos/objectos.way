@@ -15,23 +15,28 @@
  */
 package objectox.html.attr;
 
-import java.util.Objects;
 import objectos.html.Attribute;
+import objectos.html.ClassName;
+import objectos.html.Id;
 
-public record AttributePojo(AttributeName name, String value) implements Attribute {
+public sealed abstract class AbstractAttribute
+    implements
+    Attribute
+    permits
+    ClassName,
+    Id,
+    JsActionAttribute,
+    RegularAttribute {
 
-  public static AttributePojo of(AttributeName name, String value) {
-    final AttributeName n;
-    n = Objects.requireNonNull(name, "name == null");
+  public final AttributeName attributeName;
 
-    return of0(n, value);
+  protected AbstractAttribute(AttributeName attributeName) {
+    this.attributeName = attributeName;
   }
 
-  public static AttributePojo of0(AttributeName name, String value) {
-    final String v;
-    v = Objects.requireNonNull(value, "value == null");
-
-    return new AttributePojo(name, v);
+  @Override
+  public final String name() {
+    return attributeName.name();
   }
 
 }

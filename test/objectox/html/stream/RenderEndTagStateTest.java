@@ -19,7 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import objectos.html.ElementName;
 import objectox.html.IntSize;
-import objectox.html.attr.AttributeNamePojo;
+import objectox.html.attr.AttributeName;
 import objectox.html.elem.ElementNamePojo;
 import objectox.html.markup.HtmlBytes;
 import org.testng.annotations.Test;
@@ -59,7 +59,7 @@ public class RenderEndTagStateTest {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeNamePojo.LANG.index());
+      opts.addInt8(AttributeName.LANG.index());
       opts.addInt8(opts.addObject("pt-BR"));
       opts.addByte(HtmlBytes.STARTTAG8);
       opts.addInt8(ElementNamePojo.HTML.index());
@@ -91,7 +91,7 @@ public class RenderEndTagStateTest {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeNamePojo.CHARSET.index());
+      opts.addInt8(AttributeName.CHARSET.index());
       opts.addInt8(opts.addObject("UTF-8"));
       opts.addByte(HtmlBytes.xSTARTTAG8);
       opts.addInt8(ElementNamePojo.META.index());
@@ -130,7 +130,7 @@ public class RenderEndTagStateTest {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeNamePojo.CHARSET.index());
+      opts.addInt8(AttributeName.CHARSET.index());
       opts.addInt8(opts.addObject("UTF-8"));
       opts.addByte(HtmlBytes.xSTARTTAG8);
       opts.addInt8(ElementNamePojo.META.index());

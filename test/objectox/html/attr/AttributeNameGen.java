@@ -30,20 +30,32 @@ public class AttributeNameGen {
   public final String toString() {
     prepare();
 
-    return fields.toString();
+    return """
+      // BEGIN generated code
+
+    %s
+
+      // END generated code
+    """.formatted(fields);
   }
 
   private void prepare() {
     for (AttributeSpec spec : HtmlSpec.attributes()) {
       spec(spec);
     }
+
+    fields.append("""
+
+    """);
+
+    for (AttributeSpec spec : HtmlSpec.dataAttrs()) {
+      spec(spec);
+    }
   }
 
   private void spec(AttributeSpec spec) {
     fields.append("""
-
-      /// The `%2$s` HTML attribute.
-      Html.AttributeName %1$s = HtmlAttributeName.%1$s;
+      public static final AttributeName %s = U.create("%s");
     """.formatted(spec.constantName(), spec.htmlName()));
   }
 

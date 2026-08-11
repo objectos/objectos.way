@@ -16,7 +16,7 @@
 package objectox.html.stream;
 
 import objectox.html.IntSize;
-import objectox.html.attr.AttributeNamePojo;
+import objectox.html.attr.AttributeName;
 
 final class RenderAttributeState implements State {
 
@@ -39,8 +39,8 @@ final class RenderAttributeState implements State {
     final int nameCode;
     nameCode = ctx.nextInt(nameSize);
 
-    final AttributeNamePojo attributeName;
-    attributeName = AttributeNamePojo.get(nameCode);
+    final AttributeName attributeName;
+    attributeName = AttributeName.get(nameCode);
 
     final int valueIndex;
     valueIndex = ctx.nextInt(valueSize);
