@@ -17,7 +17,7 @@ package objectos.way.dev;
 
 import objectos.http.Request;
 import objectos.http.Result;
-import objectos.html.AttributeName;
+import objectox.html.attr.AttributeName;
 import objectos.html.Id;
 import objectos.html.Template;
 import objectos.http.Handler;

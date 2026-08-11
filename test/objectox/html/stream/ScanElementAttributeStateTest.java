@@ -19,8 +19,8 @@ import static org.testng.Assert.assertEquals;
 
 import objectos.html.stream.EndStartTagKind;
 import objectox.html.IntSize;
+import objectox.html.attr.AttributeNamePojo;
 import objectox.html.elem.ElementNamePojo;
-import objectox.html.markup.AttributeNamePojo;
 import objectox.html.markup.HtmlBytes;
 import org.testng.annotations.Test;
 

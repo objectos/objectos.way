@@ -13,76 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html.markup;
+package objectox.html.attr;
 
 import objectox.html.AttributeSpec;
 import objectox.html.HtmlSpec;
 
-public class AttributeNameGenImpl {
+public class AttributeNameGen {
 
   private final StringBuilder fields = new StringBuilder();
 
-  private final StringBuilder values = new StringBuilder();
-
-  private int counter;
-
   public static void main(String[] args) {
-    System.out.println(new AttributeNameGenImpl());
+    System.out.println(new AttributeNameGen());
   }
 
   @Override
   public final String toString() {
     prepare();
 
-    return """
-    %s
-
-      private static final HtmlAttributeName[] VALUES = {
-    %s
-      };
-    """.formatted(fields, values);
+    return fields.toString();
   }
 
   private void prepare() {
-    fields.append("""
-
-      //
-      // DATA ATTRS
-      //
-    """);
-
-    for (AttributeSpec spec : HtmlSpec.dataAttrs()) {
-      spec(spec);
-    }
-
-    fields.append("""
-
-      //
-      // HTML
-      //
-    """);
-
     for (AttributeSpec spec : HtmlSpec.attributes()) {
       spec(spec);
     }
   }
 
   private void spec(AttributeSpec spec) {
-    final int index;
-    index = counter++;
-
     fields.append("""
-      static final HtmlAttributeName %s = new HtmlAttributeName(%s, %d, "%s");
-    """.formatted(spec.constantName(), spec.booleanAttribute(), index, spec.htmlName()));
 
-    if (index != 0) {
-      values.append(',');
-      values.append('\n');
-    }
-
-    values.append("    ");
-
-    values.append(spec.constantName());
+      /// The `%2$s` HTML attribute.
+      Html.AttributeName %1$s = HtmlAttributeName.%1$s;
+    """.formatted(spec.constantName(), spec.htmlName()));
   }
 
 }

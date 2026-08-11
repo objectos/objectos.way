@@ -28,8 +28,8 @@ import objectos.html.markup.Fragment3;
 import objectos.html.markup.Fragment4;
 import objectos.html.markup.FragmentMarkup;
 import objectos.html.markup.NoOpMarkup;
-import objectox.html.markup.AttributeNamePojo;
-import objectox.html.markup.AttributePojo;
+import objectox.html.attr.AttributeNamePojo;
+import objectox.html.attr.AttributePojo;
 import objectox.html.markup.NoOpInstructionPojo;
 import objectox.html.markup.Recorder;
 

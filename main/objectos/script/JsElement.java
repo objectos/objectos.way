@@ -17,7 +17,7 @@ package objectos.script;
 
 import java.util.Objects;
 import java.util.function.Consumer;
-import objectos.html.AttributeName;
+import objectox.html.attr.AttributeName;
 
 /// A JS runtime `Element` instance.
 public final class JsElement extends JsNode {

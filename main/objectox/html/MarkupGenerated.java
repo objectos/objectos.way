@@ -33,11 +33,11 @@ import objectos.html.markup.RegularElementValue;
 import objectos.html.markup.TextMarkup;
 import objectos.html.markup.VoidElementValue;
 import objectos.script.JsAction;
+import objectox.html.attr.AttributeJsAction;
+import objectox.html.attr.AttributeNamePojo;
+import objectox.html.attr.AttributePojo;
 import objectox.html.elem.ElementNamePojo;
 import objectox.html.markup.AmbiguousPojo;
-import objectox.html.markup.AttributeJsAction;
-import objectox.html.markup.AttributeNamePojo;
-import objectox.html.markup.AttributePojo;
 import objectox.html.markup.RawNode;
 import objectox.html.markup.TextNode;
 

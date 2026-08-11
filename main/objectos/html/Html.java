@@ -23,7 +23,7 @@ import objectos.html.format.Formatter;
 import objectos.html.stream.Event;
 import objectos.lang.BinaryObject;
 import objectox.html.HtmlPojo;
-import objectox.html.markup.AttributeNamePojo;
+import objectox.html.attr.AttributeNamePojo;
 
 /// Represents a compiled HTML document.
 public sealed interface Html extends BinaryObject, Testable permits HtmlPojo {

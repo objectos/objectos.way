@@ -18,13 +18,15 @@ package objectox.html.markup;
 import static org.testng.Assert.assertEquals;
 
 import objectos.html.Attribute;
-import objectos.html.AttributeName;
 import objectos.html.BooleanAttribute;
 import objectos.html.ElementName;
 import objectos.html.markup.ElementValue;
 import objectos.script.Js;
 import objectos.script.JsAction;
 import objectox.html.AmbiguousName;
+import objectox.html.attr.AttributeJsAction;
+import objectox.html.attr.AttributeName;
+import objectox.html.attr.AttributeNamePojo;
 import org.testng.annotations.Test;
 
 public class ElementAttributesRecorderTest {

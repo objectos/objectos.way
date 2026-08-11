@@ -18,7 +18,8 @@ package objectos.html;
 import java.util.Objects;
 import objectos.html.markup.RegularElementValue;
 import objectos.html.markup.VoidElementValue;
-import objectox.html.markup.BooleanAttributePojo;
+import objectox.html.attr.AttributeName;
+import objectox.html.attr.BooleanAttributePojo;
 
 /// Represents a boolean HTML attribute.
 public sealed interface BooleanAttribute

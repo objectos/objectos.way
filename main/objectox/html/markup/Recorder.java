@@ -15,11 +15,11 @@
  */
 package objectox.html.markup;
 
-import objectos.html.AttributeName;
 import objectos.html.ElementName;
 import objectos.html.markup.ElementValue;
 import objectos.script.JsAction;
 import objectox.html.HtmlPojo;
+import objectox.html.attr.AttributeName;
 
 public final class Recorder {
 

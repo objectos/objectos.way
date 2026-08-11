@@ -20,7 +20,7 @@ import static org.testng.Assert.assertEquals;
 import objectos.html.format.BooleanAttributeValueStyle;
 import objectos.html.format.QuotationMarkStyle;
 import objectos.html.stream.RenderBooleanAttribute;
-import objectox.html.markup.AttributeNamePojo;
+import objectox.html.attr.AttributeNamePojo;
 import objectox.html.stream.RenderBooleanAttributeEvent;
 import org.testng.annotations.Test;
 

@@ -17,11 +17,11 @@ package objectox.html;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.html.AttributeName;
 import objectos.html.Id;
 import objectos.html.Template;
 import objectos.script.Js;
-import objectox.html.markup.AttributeNamePojo;
+import objectox.html.attr.AttributeName;
+import objectox.html.attr.AttributeNamePojo;
 import org.testng.annotations.Test;
 
 public class HtmlTemplateTestAttributes {

@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html.markup;
+package objectox.html.attr;
 
-import objectos.html.AttributeName;
 import objectos.script.JsAction;
 import java.util.Objects;
 import objectos.html.Attribute;

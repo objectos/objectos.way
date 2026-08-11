@@ -13,26 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html.markup;
+package objectox.html.attr;
 
-import objectos.html.AttributeName;
-import java.util.Objects;
-import objectos.html.Attribute;
+import objectox.html.markup.CommonEscaper;
 
-public record AttributePojo(AttributeName name, String value) implements Attribute {
+public final class AttributeValueEscaper {
 
-  public static AttributePojo of(AttributeName name, String value) {
-    final AttributeName n;
-    n = Objects.requireNonNull(name, "name == null");
+  private static final CommonEscaper ESCAPER = CommonEscaper.create(opts -> {
+    opts.add('&', "&amp;");
+    opts.add('<', "&lt;");
+    opts.add('>', "&gt;");
+    opts.add('"', "&quot;");
+    opts.add('\'', "&#39;");
+  });
 
-    return of0(n, value);
+  private final String value;
+
+  public AttributeValueEscaper(String value) {
+    this.value = value;
   }
 
-  public static AttributePojo of0(AttributeName name, String value) {
-    final String v;
-    v = Objects.requireNonNull(value, "value == null");
-
-    return new AttributePojo(name, v);
+  public final String escape() {
+    return ESCAPER.escape(value);
   }
 
 }

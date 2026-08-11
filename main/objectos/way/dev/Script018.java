@@ -16,7 +16,6 @@
 package objectos.way.dev;
 
 import objectos.css.CssSource;
-import objectos.html.AttributeName;
 import objectos.http.Content;
 import objectos.http.MediaType;
 import objectos.http.Request;
@@ -25,6 +24,7 @@ import objectos.script.Js;
 import objectos.script.JsAction;
 import objectos.script.JsResponse;
 import objectos.script.JsString;
+import objectox.html.attr.AttributeName;
 
 /*
 

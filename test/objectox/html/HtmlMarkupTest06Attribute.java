@@ -17,9 +17,9 @@ package objectox.html;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.html.AttributeName;
 import objectos.html.Component;
 import objectos.script.Js;
+import objectox.html.attr.AttributeName;
 import org.testng.annotations.Test;
 
 public class HtmlMarkupTest06Attribute {

@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-final class CommonEscaper {
+public final class CommonEscaper {
 
-  static final class Options {
+  public static final class Options {
 
     private final StringBuilder chars = new StringBuilder();
 
@@ -29,7 +29,7 @@ final class CommonEscaper {
 
     private char max;
 
-    void add(char c, String replacement) {
+    public void add(char c, String replacement) {
       chars.append(c);
 
       replacements.add(replacement);
@@ -64,7 +64,7 @@ final class CommonEscaper {
     this.table = table;
   }
 
-  static CommonEscaper create(Consumer<? super Options> opts) {
+  public static CommonEscaper create(Consumer<? super Options> opts) {
     final Options o;
     o = new Options();
 

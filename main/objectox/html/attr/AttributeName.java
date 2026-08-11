@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html;
+package objectox.html.attr;
 
-import objectox.html.markup.AttributeNamePojo;
-
-/// The name of an HTML attribute.
+/// Represents the name of an HTML attribute.
 public sealed interface AttributeName permits AttributeNamePojo {
 
   // BEGIN generated code

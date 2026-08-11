@@ -18,8 +18,10 @@ package objectox.html.markup;
 import static org.testng.Assert.assertEquals;
 
 import java.util.stream.IntStream;
-import objectos.html.AttributeName;
 import objectos.internal.Util;
+import objectox.html.attr.AttributeName;
+import objectox.html.attr.AttributeNamePojo;
+import objectox.html.attr.AttributePojo;
 import org.testng.annotations.Test;
 
 public class AttributeRecorderTest {

@@ -31,6 +31,7 @@ import objectos.html.markup.TextMarkup;
 import objectos.html.markup.VoidElementValue;
 import objectos.script.JsAction;
 import objectox.html.MarkupPojo;
+import objectox.html.attr.AttributeName;
 
 /// Declares the structure of an HTML document using pure Java.
 public sealed interface Markup permits MarkupPojo {

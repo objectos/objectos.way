@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html.markup;
+package objectox.html.attr;
 
 import static org.testng.Assert.assertEquals;
 

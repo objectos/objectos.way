@@ -16,9 +16,10 @@
 package objectox.html.markup;
 
 import objectos.html.Attribute;
-import objectos.html.AttributeName;
 import objectos.script.JsAction;
 import objectox.html.IntSize;
+import objectox.html.attr.AttributeName;
+import objectox.html.attr.AttributeValueEscaper;
 
 final class AttributeRecorder {
 

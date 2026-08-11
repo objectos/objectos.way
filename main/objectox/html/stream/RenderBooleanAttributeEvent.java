@@ -15,8 +15,8 @@
  */
 package objectox.html.stream;
 
-import objectos.html.AttributeName;
 import objectos.html.stream.RenderBooleanAttribute;
+import objectox.html.attr.AttributeName;
 
 public record RenderBooleanAttributeEvent(AttributeName attributeName) implements RenderBooleanAttribute {
 

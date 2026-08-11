@@ -23,6 +23,7 @@ import objectos.html.ElementName;
 import objectos.html.markup.ElementValue;
 import objectox.html.AmbiguousName;
 import objectox.html.HtmlPojo;
+import objectox.html.attr.AttributeNamePojo;
 import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 

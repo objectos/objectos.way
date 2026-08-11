@@ -17,8 +17,8 @@ package objectox.html.stream;
 
 import static org.testng.Assert.assertEquals;
 
+import objectox.html.attr.AttributeNamePojo;
 import objectox.html.elem.ElementNamePojo;
-import objectox.html.markup.AttributeNamePojo;
 import objectox.html.markup.HtmlBytes;
 import org.testng.annotations.Test;
 

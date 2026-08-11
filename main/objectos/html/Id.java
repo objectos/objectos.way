@@ -16,7 +16,8 @@
 package objectos.html;
 
 import java.util.Objects;
-import objectox.html.markup.AttributeNamePojo;
+import objectox.html.attr.AttributeName;
+import objectox.html.attr.AttributeNamePojo;
 import objectox.html.markup.IdPojo;
 
 /// Represents an HTML `id` attribute and its value.

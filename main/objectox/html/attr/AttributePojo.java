@@ -13,11 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html.markup;
+package objectox.html.attr;
 
-import objectos.html.AttributeName;
-import objectos.html.BooleanAttribute;
+import java.util.Objects;
+import objectos.html.Attribute;
 
-public record BooleanAttributePojo(AttributeName name)
-    implements
-    BooleanAttribute {}
+public record AttributePojo(AttributeName name, String value) implements Attribute {
+
+  public static AttributePojo of(AttributeName name, String value) {
+    final AttributeName n;
+    n = Objects.requireNonNull(name, "name == null");
+
+    return of0(n, value);
+  }
+
+  public static AttributePojo of0(AttributeName name, String value) {
+    final String v;
+    v = Objects.requireNonNull(value, "value == null");
+
+    return new AttributePojo(name, v);
+  }
+
+}

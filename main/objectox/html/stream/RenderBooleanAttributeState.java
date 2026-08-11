@@ -16,7 +16,7 @@
 package objectox.html.stream;
 
 import objectox.html.IntSize;
-import objectox.html.markup.AttributeNamePojo;
+import objectox.html.attr.AttributeNamePojo;
 
 final class RenderBooleanAttributeState implements State {
 

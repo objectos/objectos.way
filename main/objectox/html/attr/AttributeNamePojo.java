@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html.markup;
-
-import objectos.html.AttributeName;
+package objectox.html.attr;
 
 public final class AttributeNamePojo implements AttributeName {
 
@@ -324,16 +322,20 @@ public final class AttributeNamePojo implements AttributeName {
 
   private final String name;
 
-  private AttributeNamePojo(boolean booleanAttribute, int index, String name) {
+  public AttributeNamePojo(boolean booleanAttribute, int index, String name) {
     this.index = index;
 
     this.name = name;
   }
 
   public static AttributeNamePojo custom(String name) {
-    checkName(name);
+    final AttributeNameValidator validator;
+    validator = new AttributeNameValidator(name);
 
-    return new AttributeNamePojo(false, -1, name);
+    final String validated;
+    validated = validator.validate();
+
+    return new AttributeNamePojo(false, -1, validated);
   }
 
   public static String formatAttrValue(String value, StringBuilder sb) {
@@ -390,41 +392,6 @@ public final class AttributeNamePojo implements AttributeName {
     }
 
     return sb.toString();
-  }
-
-  /**
-   * We start with a very strict validation. If, with time, the validation
-   * proves to be too strict, we'll relax it as needed.
-   */
-  static void checkName(String name) {
-    final int length; // implicit null-check
-    length = name.length();
-
-    if (length == 0) {
-      throw new IllegalArgumentException("Attribute name must not be empty");
-    }
-
-    final char first;
-    first = name.charAt(0);
-
-    if (!Character.isLetter(first)) {
-      throw new IllegalArgumentException("Attribute name must start with a letter");
-    }
-
-    for (int idx = 1; idx < length; idx++) {
-      final char c;
-      c = name.charAt(idx);
-
-      if (Character.isLetterOrDigit(c)) {
-        continue;
-      }
-
-      if (c == '-') {
-        continue;
-      }
-
-      throw new IllegalArgumentException("Attribute name must not contain the character '" + c + "'");
-    }
   }
 
   static int size() {

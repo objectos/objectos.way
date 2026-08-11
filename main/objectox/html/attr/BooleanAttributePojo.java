@@ -13,26 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html.markup;
+package objectox.html.attr;
 
-final class AttributeValueEscaper {
+import objectos.html.BooleanAttribute;
 
-  private static final CommonEscaper ESCAPER = CommonEscaper.create(opts -> {
-    opts.add('&', "&amp;");
-    opts.add('<', "&lt;");
-    opts.add('>', "&gt;");
-    opts.add('"', "&quot;");
-    opts.add('\'', "&#39;");
-  });
-
-  private final String value;
-
-  AttributeValueEscaper(String value) {
-    this.value = value;
-  }
-
-  public final String escape() {
-    return ESCAPER.escape(value);
-  }
-
-}
+public record BooleanAttributePojo(AttributeName name)
+    implements
+    BooleanAttribute {}

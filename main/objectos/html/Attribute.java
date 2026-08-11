@@ -17,7 +17,8 @@ package objectos.html;
 
 import objectos.html.markup.RegularElementValue;
 import objectos.html.markup.VoidElementValue;
-import objectox.html.markup.AttributePojo;
+import objectox.html.attr.AttributeName;
+import objectox.html.attr.AttributePojo;
 
 /// Represents a non-boolean HTML attribute.
 public non-sealed interface Attribute

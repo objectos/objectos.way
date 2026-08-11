@@ -13,38 +13,76 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html.markup;
+package objectox.html.attr;
 
 import objectox.html.AttributeSpec;
 import objectox.html.HtmlSpec;
 
-public class AttributeNameGen {
+public class AttributeNameGenImpl {
 
   private final StringBuilder fields = new StringBuilder();
 
+  private final StringBuilder values = new StringBuilder();
+
+  private int counter;
+
   public static void main(String[] args) {
-    System.out.println(new AttributeNameGen());
+    System.out.println(new AttributeNameGenImpl());
   }
 
   @Override
   public final String toString() {
     prepare();
 
-    return fields.toString();
+    return """
+    %s
+
+      private static final HtmlAttributeName[] VALUES = {
+    %s
+      };
+    """.formatted(fields, values);
   }
 
   private void prepare() {
+    fields.append("""
+
+      //
+      // DATA ATTRS
+      //
+    """);
+
+    for (AttributeSpec spec : HtmlSpec.dataAttrs()) {
+      spec(spec);
+    }
+
+    fields.append("""
+
+      //
+      // HTML
+      //
+    """);
+
     for (AttributeSpec spec : HtmlSpec.attributes()) {
       spec(spec);
     }
   }
 
   private void spec(AttributeSpec spec) {
-    fields.append("""
+    final int index;
+    index = counter++;
 
-      /// The `%2$s` HTML attribute.
-      Html.AttributeName %1$s = HtmlAttributeName.%1$s;
-    """.formatted(spec.constantName(), spec.htmlName()));
+    fields.append("""
+      static final HtmlAttributeName %s = new HtmlAttributeName(%s, %d, "%s");
+    """.formatted(spec.constantName(), spec.booleanAttribute(), index, spec.htmlName()));
+
+    if (index != 0) {
+      values.append(',');
+      values.append('\n');
+    }
+
+    values.append("    ");
+
+    values.append(spec.constantName());
   }
 
 }

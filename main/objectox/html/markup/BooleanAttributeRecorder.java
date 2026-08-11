@@ -15,8 +15,8 @@
  */
 package objectox.html.markup;
 
-import objectos.html.AttributeName;
 import objectos.html.BooleanAttribute;
+import objectox.html.attr.AttributeName;
 
 final class BooleanAttributeRecorder {
 
@@ -26,7 +26,7 @@ final class BooleanAttributeRecorder {
     this.sink = sink;
   }
 
-  public final void record(BooleanAttribute attribute) {
+  public final AttributePointer record(BooleanAttribute attribute) {
     final AttributeName name;
     name = attribute.name();
 
