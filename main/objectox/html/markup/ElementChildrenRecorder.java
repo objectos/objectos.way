@@ -36,7 +36,7 @@ final class ElementChildrenRecorder {
 
   private final ChildRawRecorder childRawRecorder;
 
-  private final ChildTextRecorder childTextRecorder;
+  private final TextRecorder childTextRecorder;
 
   ElementChildrenRecorder(
       AmbiguousRecorder childAmbiguousRecorder,
@@ -49,7 +49,7 @@ final class ElementChildrenRecorder {
 
       ChildRawRecorder childRawRecorder,
 
-      ChildTextRecorder childTextRecorder
+      TextRecorder childTextRecorder
   ) {
     this.childAmbiguousRecorder = childAmbiguousRecorder;
 
@@ -99,7 +99,7 @@ final class ElementChildrenRecorder {
 
       case RawNode(String v) -> childRawRecorder.record(v);
 
-      case TextNode(String v) -> childTextRecorder.record(v);
+      case TextPointer(String v) -> childTextRecorder.record(v);
     }
   }
 

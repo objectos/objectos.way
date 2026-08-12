@@ -15,11 +15,11 @@
  */
 package objectos.html.markup;
 
-import objectox.html.markup.TextNode;
+import objectox.html.markup.TextPointer;
 
 /// Represents the encoded markup of an Objectos HTML text node.
 public sealed interface TextMarkup
     extends
     RegularElementValue
     permits
-    TextNode {}
+    TextPointer {}

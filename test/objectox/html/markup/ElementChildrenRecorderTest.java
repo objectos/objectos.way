@@ -189,8 +189,8 @@ public class ElementChildrenRecorderTest {
     final String value;
     value = "Ipsum";
 
-    final TextNode text;
-    text = new TextNode(value);
+    final TextPointer text;
+    text = new TextPointer(value);
 
     assertEquals(
         record(sink, ElementNamePojo.HEAD, text),
@@ -218,8 +218,8 @@ public class ElementChildrenRecorderTest {
     final ChildRawRecorder childRawRecorder;
     childRawRecorder = new ChildRawRecorder(sink);
 
-    final ChildTextRecorder childTextRecorder;
-    childTextRecorder = new ChildTextRecorder(sink);
+    final TextRecorder childTextRecorder;
+    childTextRecorder = new TextRecorder(sink);
 
     final ElementChildrenRecorder subject;
     subject = new ElementChildrenRecorder(childAmbiguousRecorder, childElementMarker, childElementRecorder, childFragmentRecorder, childRawRecorder, childTextRecorder);

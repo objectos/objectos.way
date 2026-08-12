@@ -21,29 +21,48 @@ import java.util.stream.IntStream;
 import objectos.internal.Util;
 import org.testng.annotations.Test;
 
-public class ChildTextRecorderTest {
+public class TextRecorderTest {
+
+  @Test(description = "returned markup")
+  public void markup01() {
+    final HtmlSink sink;
+    sink = HtmlSinkY.create(opts -> {
+      opts.addInt24(0);
+    });
+
+    final TextRecorder subject;
+    subject = new TextRecorder(sink);
+
+    final String value;
+    value = "Ipsum";
+
+    final TextPointer res;
+    res = subject.record(value);
+
+    assertEquals(res.value(), 3);
+  }
 
   @Test(
       description = "reject null value",
       expectedExceptions = NullPointerException.class,
       expectedExceptionsMessageRegExp = "value == null")
-  public void record01() {
+  public void reject01() {
     final HtmlSink sink;
     sink = new HtmlSink();
 
-    final ChildTextRecorder subject;
-    subject = new ChildTextRecorder(sink);
+    final TextRecorder subject;
+    subject = new TextRecorder(sink);
 
     subject.record(null);
   }
 
   @Test(description = "TEXT8")
-  public void record02() {
+  public void text8() {
     final HtmlSink sink;
     sink = new HtmlSink();
 
-    final ChildTextRecorder subject;
-    subject = new ChildTextRecorder(sink);
+    final TextRecorder subject;
+    subject = new TextRecorder(sink);
 
     final String value;
     value = "Ipsum";
@@ -61,12 +80,12 @@ public class ChildTextRecorderTest {
   }
 
   @Test(description = "TEXT16")
-  public void record03() {
+  public void text16() {
     final HtmlSink sink;
     sink = new HtmlSink(Util.EMPTY_BYTE_ARRAY, new Object[256]);
 
-    final ChildTextRecorder subject;
-    subject = new ChildTextRecorder(sink);
+    final TextRecorder subject;
+    subject = new TextRecorder(sink);
 
     final String value;
     value = "Ipsum";
@@ -85,12 +104,12 @@ public class ChildTextRecorderTest {
   }
 
   @Test(description = "TEXT24")
-  public void record04() {
+  public void text24() {
     final HtmlSink sink;
     sink = new HtmlSink(Util.EMPTY_BYTE_ARRAY, new Object[1 << 16]);
 
-    final ChildTextRecorder subject;
-    subject = new ChildTextRecorder(sink);
+    final TextRecorder subject;
+    subject = new TextRecorder(sink);
 
     final String value;
     value = "Ipsum";
@@ -109,12 +128,12 @@ public class ChildTextRecorderTest {
   }
 
   @Test(description = "TEXT8 escaped")
-  public void record05() {
+  public void textEscaper() {
     final HtmlSink sink;
     sink = new HtmlSink();
 
-    final ChildTextRecorder subject;
-    subject = new ChildTextRecorder(sink);
+    final TextRecorder subject;
+    subject = new TextRecorder(sink);
 
     final String value;
     value = "A&B";

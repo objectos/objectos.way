@@ -87,7 +87,7 @@ public final class Recorder {
 
                 new ChildRawRecorder(sink),
 
-                new ChildTextRecorder(sink)
+                new TextRecorder(sink)
             )
         )
     );

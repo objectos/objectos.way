@@ -15,17 +15,8 @@
  */
 package objectox.html.markup;
 
-import java.util.Objects;
 import objectos.html.markup.TextMarkup;
 
-public record TextNode(String value)
+public record TextPointer(int value)
     implements
-    TextMarkup {
-
-  public static TextMarkup of(String value) {
-    return new TextNode(
-        Objects.requireNonNull(value, "value == null")
-    );
-  }
-
-}
+    TextMarkup {}
