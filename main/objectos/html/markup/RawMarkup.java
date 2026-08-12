@@ -15,12 +15,12 @@
  */
 package objectos.html.markup;
 
-import objectox.html.markup.RawNode;
+import objectox.html.markup.RawPointer;
 
 /// Represents the encoded markup of an Objectos HTML raw node.
 public sealed interface RawMarkup
     extends
     RegularElementValue
     permits
-    RawNode {
+    RawPointer {
 }

@@ -168,8 +168,8 @@ public class ElementChildrenRecorderTest {
     final String value;
     value = "Ipsum";
 
-    final RawNode raw;
-    raw = new RawNode(value);
+    final RawPointer raw;
+    raw = new RawPointer(value);
 
     assertEquals(
         record(sink, ElementNamePojo.HEAD, raw),
@@ -215,8 +215,8 @@ public class ElementChildrenRecorderTest {
     final ChildFragmentRecorder childFragmentRecorder;
     childFragmentRecorder = new ChildFragmentRecorder(sink);
 
-    final ChildRawRecorder childRawRecorder;
-    childRawRecorder = new ChildRawRecorder(sink);
+    final RawRecorder childRawRecorder;
+    childRawRecorder = new RawRecorder(sink);
 
     final TextRecorder childTextRecorder;
     childTextRecorder = new TextRecorder(sink);

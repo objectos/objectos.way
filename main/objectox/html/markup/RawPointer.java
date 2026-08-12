@@ -15,17 +15,8 @@
  */
 package objectox.html.markup;
 
-import java.util.Objects;
 import objectos.html.markup.RawMarkup;
 
-public record RawNode(String value)
+public record RawPointer(int value)
     implements
-    RawMarkup {
-
-  public static RawMarkup of(String value) {
-    return new RawNode(
-        Objects.requireNonNull(value, "value == null")
-    );
-  }
-
-}
+    RawMarkup {}

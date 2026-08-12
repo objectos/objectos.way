@@ -34,7 +34,7 @@ final class ElementChildrenRecorder {
 
   private final ChildFragmentRecorder childFragmentRecorder;
 
-  private final ChildRawRecorder childRawRecorder;
+  private final RawRecorder childRawRecorder;
 
   private final TextRecorder childTextRecorder;
 
@@ -47,7 +47,7 @@ final class ElementChildrenRecorder {
 
       ChildFragmentRecorder childFragmentRecorder,
 
-      ChildRawRecorder childRawRecorder,
+      RawRecorder childRawRecorder,
 
       TextRecorder childTextRecorder
   ) {
@@ -97,7 +97,7 @@ final class ElementChildrenRecorder {
 
       case NoOpMarkup _ -> {}
 
-      case RawNode(String v) -> childRawRecorder.record(v);
+      case RawPointer(String v) -> childRawRecorder.record(v);
 
       case TextPointer(String v) -> childTextRecorder.record(v);
     }

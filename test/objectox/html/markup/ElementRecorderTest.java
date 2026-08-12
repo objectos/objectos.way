@@ -176,7 +176,7 @@ public class ElementRecorderTest {
     value = "Ipsum";
 
     final ElementPointer res;
-    res = subject.record(ElementNamePojo.HTML, new RawNode(value));
+    res = subject.record(ElementNamePojo.HTML, new RawPointer(value));
 
     assertEquals(res.value(), 0);
 
@@ -381,8 +381,8 @@ public class ElementRecorderTest {
     final ChildFragmentRecorder childFragmentRecorder;
     childFragmentRecorder = new ChildFragmentRecorder(sink);
 
-    final ChildRawRecorder childRawRecorder;
-    childRawRecorder = new ChildRawRecorder(sink);
+    final RawRecorder childRawRecorder;
+    childRawRecorder = new RawRecorder(sink);
 
     final TextRecorder childTextRecorder;
     childTextRecorder = new TextRecorder(sink);

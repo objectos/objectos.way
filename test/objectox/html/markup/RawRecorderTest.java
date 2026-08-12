@@ -21,29 +21,48 @@ import java.util.stream.IntStream;
 import objectos.internal.Util;
 import org.testng.annotations.Test;
 
-public class ChildRawRecorderTest {
+public class RawRecorderTest {
+
+  @Test(description = "returned markup")
+  public void markup01() {
+    final HtmlSink sink;
+    sink = HtmlSinkY.create(opts -> {
+      opts.addInt24(0);
+    });
+
+    final RawRecorder subject;
+    subject = new RawRecorder(sink);
+
+    final String value;
+    value = "Ipsum";
+
+    final RawPointer res;
+    res = subject.record(value);
+
+    assertEquals(res.value(), 3);
+  }
 
   @Test(
       description = "reject null value",
       expectedExceptions = NullPointerException.class,
       expectedExceptionsMessageRegExp = "value == null")
-  public void record01() {
+  public void reject01() {
     final HtmlSink sink;
     sink = new HtmlSink();
 
-    final ChildRawRecorder subject;
-    subject = new ChildRawRecorder(sink);
+    final RawRecorder subject;
+    subject = new RawRecorder(sink);
 
     subject.record(null);
   }
 
   @Test(description = "RAW8")
-  public void record02() {
+  public void raw8() {
     final HtmlSink sink;
     sink = new HtmlSink();
 
-    final ChildRawRecorder subject;
-    subject = new ChildRawRecorder(sink);
+    final RawRecorder subject;
+    subject = new RawRecorder(sink);
 
     final String value;
     value = "Ipsum";
@@ -61,12 +80,12 @@ public class ChildRawRecorderTest {
   }
 
   @Test(description = "RAW16")
-  public void record03() {
+  public void raw16() {
     final HtmlSink sink;
     sink = new HtmlSink(Util.EMPTY_BYTE_ARRAY, new Object[256]);
 
-    final ChildRawRecorder subject;
-    subject = new ChildRawRecorder(sink);
+    final RawRecorder subject;
+    subject = new RawRecorder(sink);
 
     final String value;
     value = "Ipsum";
@@ -85,12 +104,12 @@ public class ChildRawRecorderTest {
   }
 
   @Test(description = "RAW24")
-  public void record04() {
+  public void raw24() {
     final HtmlSink sink;
     sink = new HtmlSink(Util.EMPTY_BYTE_ARRAY, new Object[1 << 16]);
 
-    final ChildRawRecorder subject;
-    subject = new ChildRawRecorder(sink);
+    final RawRecorder subject;
+    subject = new RawRecorder(sink);
 
     final String value;
     value = "Ipsum";

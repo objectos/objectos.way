@@ -85,7 +85,7 @@ public final class Recorder {
 
                 new ChildFragmentRecorder(sink),
 
-                new ChildRawRecorder(sink),
+                new RawRecorder(sink),
 
                 new TextRecorder(sink)
             )
