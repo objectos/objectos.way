@@ -15,6 +15,7 @@
  */
 package objectox.html.attr;
 
+import java.util.Objects;
 import objectos.html.Attribute;
 import objectos.html.ClassName;
 import objectos.html.Id;
@@ -31,7 +32,7 @@ public sealed abstract class AbstractAttribute
   public final AttributeName attributeName;
 
   protected AbstractAttribute(AttributeName attributeName) {
-    this.attributeName = attributeName;
+    this.attributeName = Objects.requireNonNull(attributeName, "attributeName == null");
   }
 
   @Override

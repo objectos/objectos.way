@@ -18,8 +18,8 @@ package objectox.html.markup;
 import static org.testng.Assert.assertEquals;
 
 import java.util.stream.IntStream;
-import objectos.html.ElementName;
 import objectos.internal.Util;
+import objectox.html.elem.ElementName;
 import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 

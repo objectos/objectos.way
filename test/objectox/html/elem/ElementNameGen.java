@@ -17,16 +17,12 @@ package objectox.html.elem;
 
 import objectox.html.HtmlSpec;
 
-public class ElementNameGenImpl {
+public class ElementNameGen {
 
   private final StringBuilder fields = new StringBuilder();
 
-  private final StringBuilder values = new StringBuilder();
-
-  private int counter;
-
   public static void main(String[] args) {
-    System.out.println(new ElementNameGenImpl());
+    System.out.println(new ElementNameGen());
   }
 
   @Override
@@ -34,12 +30,12 @@ public class ElementNameGenImpl {
     prepare();
 
     return """
+      // BEGIN generated code
+
     %s
 
-      private static final HtmlElementName[] VALUES = {
-    %s
-      };
-    """.formatted(fields, values);
+      // END generated code
+    """.formatted(fields);
   }
 
   private void prepare() {
@@ -49,21 +45,9 @@ public class ElementNameGenImpl {
   }
 
   private void spec(ElementSpec spec) {
-    final int index;
-    index = counter++;
-
     fields.append("""
-      static final HtmlElementName %s = new HtmlElementName(%s, %d, "%s");
-    """.formatted(spec.javaName(), spec.endTag(), index, spec.htmlName()));
-
-    if (index != 0) {
-      values.append(',');
-      values.append('\n');
-    }
-
-    values.append("    ");
-
-    values.append(spec.javaName());
+      public static final ElementName %s = U.create("%s");
+    """.formatted(spec.javaName(), spec.htmlName()));
   }
 
 }

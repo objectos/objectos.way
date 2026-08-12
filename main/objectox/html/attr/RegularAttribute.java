@@ -21,17 +21,14 @@ public final class RegularAttribute extends AbstractAttribute {
 
   public final String value;
 
-  RegularAttribute(AttributeName attributeName, String value) {
+  public RegularAttribute(AttributeName attributeName, String value) {
     super(attributeName);
 
-    this.value = value;
+    this.value = Objects.requireNonNull(value, "value == null");
   }
 
   public static RegularAttribute of(AttributeName name, String value) {
-    final String v;
-    v = Objects.requireNonNull(value, "value == null");
-
-    return new RegularAttribute(name, v);
+    return new RegularAttribute(name, value);
   }
 
   @Override

@@ -17,7 +17,6 @@ package objectox.html.markup;
 
 import objectos.html.Attribute;
 import objectos.html.BooleanAttribute;
-import objectos.html.ElementName;
 import objectos.html.markup.ElementValue;
 import objectos.html.markup.FragmentMarkup;
 import objectos.html.markup.ElementMarkup;
@@ -27,6 +26,7 @@ import objectos.html.markup.TextMarkup;
 import objectos.script.JsAction;
 import objectox.html.AmbiguousName;
 import objectox.html.attr.JsActionAttribute;
+import objectox.html.elem.ElementName;
 import objectox.html.attr.AttributeName;
 
 final class ElementAttributesRecorder {

@@ -33,41 +33,43 @@ public final class HtmlBytes {
   public static final byte ATTRIBUTE816 = -123;
   public static final byte ATTRIBUTE824 = -122;
   public static final byte BOOLEAN8 = -121;
+  public static final byte BOOLEAN16 = -120;
+  public static final byte BOOLEAN24 = -119;
 
   // child
 
-  public static final byte ELEM8 = -120;
-  public static final byte ELEM16 = -119;
-  public static final byte ELEM24 = -118;
-  public static final byte ELTXT88 = -117;
-  public static final byte ELTXT816 = -116;
-  public static final byte ELTXT824 = -115;
+  public static final byte ELEM8 = -118;
+  public static final byte ELEM16 = -117;
+  public static final byte ELEM24 = -116;
+  public static final byte ELTXT88 = -115;
+  public static final byte ELTXT816 = -114;
+  public static final byte ELTXT824 = -113;
 
   // fragment
 
-  public static final byte FRAG8 = -114;
-  public static final byte FRAG16 = -113;
-  public static final byte FRAG24 = -112;
+  public static final byte FRAG8 = -112;
+  public static final byte FRAG16 = -111;
+  public static final byte FRAG24 = -110;
 
   // text
 
-  public static final byte TEXT8 = -111;
-  public static final byte TEXT16 = -110;
-  public static final byte TEXT24 = -109;
+  public static final byte TEXT8 = -109;
+  public static final byte TEXT16 = -108;
+  public static final byte TEXT24 = -107;
 
   // raw
 
-  public static final byte RAW8 = -108;
-  public static final byte RAW16 = -107;
-  public static final byte RAW24 = -106;
+  public static final byte RAW8 = -106;
+  public static final byte RAW16 = -105;
+  public static final byte RAW24 = -104;
 
   // xelement
 
-  public static final byte xSTARTTAG8 = -105;
+  public static final byte xSTARTTAG8 = -103;
 
   // control flow
 
-  public static final byte JMP24 = -104;
+  public static final byte JMP24 = -102;
 
   private HtmlBytes() {}
 

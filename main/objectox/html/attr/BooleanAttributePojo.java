@@ -15,11 +15,16 @@
  */
 package objectox.html.attr;
 
+import java.util.Objects;
 import objectos.html.BooleanAttribute;
 
 public record BooleanAttributePojo(AttributeName attributeName)
     implements
     BooleanAttribute {
+
+  public BooleanAttributePojo {
+    Objects.requireNonNull(attributeName, "attributeName == null");
+  }
 
   @Override
   public final String name() {

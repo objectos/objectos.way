@@ -15,6 +15,8 @@
  */
 package objectox.html.attr;
 
+import objectos.html.BooleanAttribute;
+
 public record AttributeName(int index, String name) {
 
   private static final AttributeNameUniverse U = new AttributeNameUniverse();
@@ -232,6 +234,10 @@ public record AttributeName(int index, String name) {
 
   public static AttributeName getOrCreate(String name) {
     return U.getOrCreate(name);
+  }
+
+  public final BooleanAttribute toBooleanAttribute() {
+    return new BooleanAttributePojo(this);
   }
 
 }

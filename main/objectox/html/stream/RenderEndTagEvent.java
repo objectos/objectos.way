@@ -15,8 +15,8 @@
  */
 package objectox.html.stream;
 
-import objectos.html.ElementName;
 import objectos.html.stream.RenderEndTag;
+import objectox.html.elem.ElementName;
 
 public record RenderEndTagEvent(ElementName elementName) implements RenderEndTag {
 

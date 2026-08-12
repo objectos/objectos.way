@@ -37,8 +37,12 @@ public class MarkupGen {
     prepare();
 
     return """
+    // BEGIN generated code
+
     %s
     %s
+
+    // END generated code
     """.formatted(fields, methods).indent(2);
   }
 
@@ -131,13 +135,19 @@ public class MarkupGen {
     /// @param name the element name
     /// @param values the encoded attributes and encoded child nodes of the element
     /// @return an object representing the encoded element
-    ElementMarkup elem(ElementName name, ElementValue... values);
+    ElementMarkup elem(String name, RegularElementValue... values);
 
     /// Encodes an HTML element with the specified name and text.
     /// @param name the element name
     /// @param text the text value of this element
     /// @return an object representing the encoded element
-    ElementMarkup elem(ElementName name, String text);
+    ElementMarkup elem(String name, String text);
+
+    /// Encodes an HTML void element with the specified name and values.
+    /// @param name the element name
+    /// @param values the encoded attributes
+    /// @return an object representing the encoded element
+    ElementMarkup voidElem(String name, VoidElementValue... values);
 
     /// Encodes the `<!DOCTYPE html>` doctype.
     void doctype();
@@ -194,6 +204,17 @@ public class MarkupGen {
     //
     // ATTRIBUTES
     //
+
+    /// Encodes a boolean attribute with the specified name.
+    /// @param name the boolean attribute name
+    /// @return an object representing the encoded boolean attribute
+    AttributeMarkup attr(String name);
+
+    /// Encodes an attribute with the specified name and value.
+    /// @param name the attribute name
+    /// @param value the attribute value
+    /// @return an object representing the encoded attribute
+    AttributeMarkup attr(String name, String value);
     """);
 
     final Set<String> ambiguous;
@@ -208,7 +229,7 @@ public class MarkupGen {
         fields.append("""
 
         /// The `%s` boolean attribute.
-        BooleanAttribute %s = BooleanAttribute.of(AttributeName.%s);
+        BooleanAttribute %s = AttributeName.%s.toBooleanAttribute();
         """.formatted(attr.htmlName(), attr.methodName(), attr.constantName()));
       }
 
@@ -218,17 +239,17 @@ public class MarkupGen {
         /// Encodes the `%s` attribute with the specified value.
         /// @param value the attribute value
         /// @return an object representing the encoded attribute
-        Attribute %s(String value);
+        AttributeMarkup %s(String value);
         """.formatted(attr.htmlName(), attr.methodName()));
 
         if (attr.eventAttribute()) {
           methods.append("""
 
-        /// Encodes the `%s` attribute with the specified action.
-        /// @param value the action to be executed
-        /// @return an object representing the encoded attribute
-        Attribute %s(JsAction value);
-        """.formatted(attr.htmlName(), attr.methodName()));
+          /// Encodes the `%s` attribute with the specified action.
+          /// @param value the action to be executed
+          /// @return an object representing the encoded attribute
+          AttributeMarkup %s(JsAction value);
+          """.formatted(attr.htmlName(), attr.methodName()));
         }
       }
     }

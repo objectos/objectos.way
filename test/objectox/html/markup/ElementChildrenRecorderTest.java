@@ -19,11 +19,11 @@ import static org.testng.Assert.assertEquals;
 
 import objectos.html.Attribute;
 import objectos.html.BooleanAttribute;
-import objectos.html.ElementName;
 import objectos.html.markup.ElementValue;
 import objectox.html.AmbiguousName;
 import objectox.html.HtmlPojo;
 import objectox.html.attr.AttributeName;
+import objectox.html.elem.ElementName;
 import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 

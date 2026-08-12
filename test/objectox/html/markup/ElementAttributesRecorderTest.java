@@ -19,12 +19,12 @@ import static org.testng.Assert.assertEquals;
 
 import objectos.html.Attribute;
 import objectos.html.BooleanAttribute;
-import objectos.html.ElementName;
 import objectos.html.markup.ElementValue;
 import objectos.script.Js;
 import objectos.script.JsAction;
 import objectox.html.AmbiguousName;
 import objectox.html.attr.JsActionAttribute;
+import objectox.html.elem.ElementName;
 import objectox.html.attr.AttributeName;
 import objectox.html.attr.AttributeName;
 import org.testng.annotations.Test;

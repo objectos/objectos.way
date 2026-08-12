@@ -17,9 +17,9 @@ package objectox.html.stream;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.html.ElementName;
 import objectox.html.IntSize;
 import objectox.html.attr.AttributeName;
+import objectox.html.elem.ElementName;
 import objectox.html.elem.ElementNamePojo;
 import objectox.html.markup.HtmlBytes;
 import org.testng.annotations.Test;

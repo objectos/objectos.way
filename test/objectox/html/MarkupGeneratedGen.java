@@ -35,6 +35,10 @@ public class MarkupGeneratedGen {
   }
 
   private void prepare() {
+    methods.append("""
+    // BEGIN generated code
+    """);
+
     way();
 
     testable();
@@ -46,6 +50,10 @@ public class MarkupGeneratedGen {
     ambiguous();
 
     text();
+
+    methods.append("""
+    // END generated code
+    """);
   }
 
   private void way() {
@@ -88,26 +96,43 @@ public class MarkupGeneratedGen {
     // ELEMENTS
     //
 
-    abstract ElementMarkup elem0(ElementName name, ElementValue... values);
+    abstract ElementMarkup elemImpl(ElementName name, RegularElementValue... values);
 
-    abstract ElementMarkup elem0(ElementName name, String text);
+    abstract ElementMarkup elemImpl(ElementName name, String text);
+
+    abstract ElementMarkup voidElemImpl(ElementName name, VoidElementValue... values);
 
     /// Encodes an HTML element with the specified name and values.
     /// @param name the element name
     /// @param values the encoded attributes and encoded child nodes of the element
     /// @return an object representing the encoded element
-    public final ElementMarkup elem(ElementName name, ElementValue... values) {
-      Objects.requireNonNull(name, "name == null");
-      return elem0(name, values);
+    public final ElementMarkup elem(String name, RegularElementValue... values) {
+      final ElementName elementName;
+      elementName = ElementName.getOrCreate(name);
+
+      return elemImpl(elementName, values);
     }
 
     /// Encodes an HTML element with the specified name and text.
     /// @param name the element name
     /// @param text the text value of this element
     /// @return an object representing the encoded element
-    public final ElementMarkup elem(ElementName name, String text) {
-      Objects.requireNonNull(name, "name == null");
-      return elem0(name, text);
+    public final ElementMarkup elem(String name, String text) {
+      final ElementName elementName;
+      elementName = ElementName.getOrCreate(name);
+
+      return elemImpl(elementName, text);
+    }
+
+    /// Encodes an HTML void element with the specified name and values.
+    /// @param name the element name
+    /// @param values the encoded attributes
+    /// @return an object representing the encoded element
+    public final ElementMarkup voidElem(String name, VoidElementValue... values) {
+      final ElementName elementName;
+      elementName = ElementName.getOrCreate(name);
+
+      return voidElemImpl(elementName, values);
     }
 
     /// Encodes the `<!DOCTYPE html>` doctype.
@@ -128,7 +153,7 @@ public class MarkupGeneratedGen {
         /// @param values the encoded attributes and encoded child nodes of the element
         /// @return an object representing the encoded element
         public final ElementMarkup %s(RegularElementValue... values) {
-          return elem0(ElementNamePojo.%s, values);
+          return elemImpl(ElementName.%s, values);
         }
         """.formatted(elem.htmlName(), elem.htmlName(), elem.javaName()));
       }
@@ -140,14 +165,14 @@ public class MarkupGeneratedGen {
         /// @param values the encoded attributes and encoded child nodes of the element
         /// @return an object representing the encoded element
         public final ElementMarkup %2$s(RegularElementValue... values) {
-          return elem0(ElementNamePojo.%3$s, values);
+          return elemImpl(ElementName.%3$s, values);
         }
 
         /// Encodes the `%1$s` element with the specified text.
         /// @param text the text value of the element
         /// @return an object representing the encoded element
         public final ElementMarkup %2$s(String text) {
-          return elem0(ElementNamePojo.%3$s, text);
+          return elemImpl(ElementName.%3$s, text);
         }
         """.formatted(elem.htmlName(), elem.htmlName(), elem.javaName()));
       }
@@ -156,10 +181,10 @@ public class MarkupGeneratedGen {
         methods.append("""
 
         /// Encodes the `%s` element with the specified content.
-        /// @param contents the encoded attributes of the element
+        /// @param values the encoded attributes of the element
         /// @return an object representing the encoded element
-        public final ElementMarkup %s(VoidElementValue... contents) {
-          return elem0(ElementNamePojo.%s, contents);
+        public final ElementMarkup %s(VoidElementValue... values) {
+          return voidElemImpl(ElementName.%s, values);
         }
         """.formatted(elem.htmlName(), elem.htmlName(), elem.javaName()));
       }
@@ -173,6 +198,44 @@ public class MarkupGeneratedGen {
     //
     // ATTRIBUTES
     //
+
+    abstract AttributeMarkup boolAttr(AttributeName name);
+
+    abstract AttributeMarkup attrImpl(AttributeName name, JsAction action);
+
+    abstract AttributeMarkup attrImpl(AttributeName name, String value);
+
+    /// Encodes a boolean attribute with the specified name.
+    /// @param name the attribute name
+    /// @return an object representing the encoded attribute
+    public final AttributeMarkup attr(String name) {
+      final AttributeName attributeName;
+      attributeName = AttributeName.getOrCreate(name);
+
+      return boolAttr(attributeName);
+    }
+
+    /// Encodes an attribute with the specified name and action.
+    /// @param name the attribute name
+    /// @param action the script action
+    /// @return an object representing the encoded attribute
+    public final AttributeMarkup attr(String name, JsAction action) {
+      final AttributeName attributeName;
+      attributeName = AttributeName.getOrCreate(name);
+
+      return attrImpl(attributeName, action);
+    }
+
+    /// Encodes an attribute with the specified name and value.
+    /// @param name the attribute name
+    /// @param value the attribute value
+    /// @return an object representing the encoded attribute
+    public final AttributeMarkup attr(String name, String value) {
+      final AttributeName attributeName;
+      attributeName = AttributeName.getOrCreate(name);
+
+      return attrImpl(attributeName, value);
+    }
     """);
 
     final Set<String> ambiguous;
@@ -188,8 +251,8 @@ public class MarkupGeneratedGen {
       /// Encodes the `%s` attribute with the specified value.
       /// @param value the attribute value
       /// @return an object representing the encoded attribute
-      public final Attribute %s(String value) {
-        return AttributePojo.of0(AttributeNamePojo.%s, value);
+      public final AttributeMarkup %s(String value) {
+        return attrImpl(AttributeName.%s, value);
       }
       """.formatted(attr.htmlName(), attr.methodName(), attr.constantName()));
 
@@ -200,10 +263,10 @@ public class MarkupGeneratedGen {
       methods.append("""
 
       /// Encodes the `%s` attribute with the specified action.
-      /// @param value the action to be executed
+      /// @param action the action to be executed
       /// @return an object representing the encoded attribute
-      public final Attribute %s(JsAction value) {
-        return AttributeJsAction.of0(AttributeNamePojo.%s, value);
+      public final AttributeMarkup %s(JsAction action) {
+        return attrImpl(AttributeName.%s, action);
       }
       """.formatted(attr.htmlName(), attr.methodName(), attr.constantName()));
     }
@@ -215,6 +278,8 @@ public class MarkupGeneratedGen {
     //
     // AMBIGUOUS
     //
+
+    abstract AmbiguousMarkup ambiguous(AmbiguousName name, String text);
     """);
 
     for (AmbiguousSpec spec : HtmlSpec.ambiguous()) {
@@ -224,7 +289,7 @@ public class MarkupGeneratedGen {
       /// @param value the attribute value or the text content of the element
       /// @return an object representing the encoded attribute or element
       public final AmbiguousMarkup %s(String value) {
-        return AmbiguousPojo.of0(AmbiguousName.%s, value);
+        return ambiguous(AmbiguousName.%s, value);
       }
       """.formatted(spec.attributeName(), spec.elementName(), spec.methodName(), spec.constantName()));
     }

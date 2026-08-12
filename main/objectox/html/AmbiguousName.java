@@ -15,27 +15,26 @@
  */
 package objectox.html;
 
-import objectos.html.ElementName;
 import objectox.html.attr.AttributeName;
-import objectox.html.elem.ElementNamePojo;
+import objectox.html.elem.ElementName;
 
 public enum AmbiguousName {
 
-  CLIPPATH(AttributeName.CLIP_PATH, ElementNamePojo.CLIPPATH),
+  CLIPPATH(AttributeName.CLIP_PATH, ElementName.CLIPPATH),
 
-  FORM(AttributeName.FORM, ElementNamePojo.FORM),
+  FORM(AttributeName.FORM, ElementName.FORM),
 
-  LABEL(AttributeName.LABEL, ElementNamePojo.LABEL),
+  LABEL(AttributeName.LABEL, ElementName.LABEL),
 
-  STYLE(AttributeName.STYLE, ElementNamePojo.STYLE),
+  STYLE(AttributeName.STYLE, ElementName.STYLE),
 
-  TITLE(AttributeName.TITLE, ElementNamePojo.TITLE);
+  TITLE(AttributeName.TITLE, ElementName.TITLE);
 
   public final AttributeName attribute;
 
-  public final ElementNamePojo element;
+  public final ElementName element;
 
-  private AmbiguousName(AttributeName attribute, ElementNamePojo element) {
+  private AmbiguousName(AttributeName attribute, ElementName element) {
     this.attribute = attribute;
 
     this.element = element;

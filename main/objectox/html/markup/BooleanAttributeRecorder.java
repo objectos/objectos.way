@@ -15,8 +15,9 @@
  */
 package objectox.html.markup;
 
-import objectos.html.BooleanAttribute;
+import objectox.html.IntSize;
 import objectox.html.attr.AttributeName;
+import objectox.html.attr.BooleanAttributePojo;
 
 final class BooleanAttributeRecorder {
 
@@ -26,27 +27,53 @@ final class BooleanAttributeRecorder {
     this.sink = sink;
   }
 
-  public final AttributePointer record(BooleanAttribute attribute) {
+  public final AttributePointer record(BooleanAttributePojo attribute) {
     final AttributeName name;
-    name = attribute.name();
-
-    if (name == null) {
-      final String msg;
-      msg = "Attribute provided a null name";
-
-      throw new NullPointerException(msg);
-    }
+    name = attribute.attributeName();
 
     final int nameIndex;
     nameIndex = name.index();
 
-    if (nameIndex <= HtmlSink.MAX_INT8) {
-      sink.addByte(HtmlBytes.BOOLEAN8);
+    final IntSize nameSize;
+    nameSize = IntSize.of(nameIndex);
 
-      sink.addInt8(nameIndex);
-    } else {
-      throw new UnsupportedOperationException("Implement me");
-    }
+    final int startIndex;
+    startIndex = switch (nameSize) {
+      case BIT8 -> boolean8(nameIndex);
+
+      case BIT16 -> boolean16(nameIndex);
+
+      case BIT24 -> boolean24(nameIndex);
+    };
+
+    return new AttributePointer(startIndex);
+  }
+
+  private int boolean8(int nameIndex) {
+    final int startIndex;
+    startIndex = sink.addByte(HtmlBytes.BOOLEAN8);
+
+    sink.addInt8(nameIndex);
+
+    return startIndex;
+  }
+
+  private int boolean16(int nameIndex) {
+    final int startIndex;
+    startIndex = sink.addByte(HtmlBytes.BOOLEAN16);
+
+    sink.addInt16(nameIndex);
+
+    return startIndex;
+  }
+
+  private int boolean24(int nameIndex) {
+    final int startIndex;
+    startIndex = sink.addByte(HtmlBytes.BOOLEAN24);
+
+    sink.addInt24(nameIndex);
+
+    return startIndex;
   }
 
 }

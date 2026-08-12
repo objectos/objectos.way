@@ -41,6 +41,8 @@ public class HtmlBytesGen {
     value("ATTRIBUTE816");
     value("ATTRIBUTE824");
     value("BOOLEAN8");
+    value("BOOLEAN16");
+    value("BOOLEAN24");
 
     comment("child");
 

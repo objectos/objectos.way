@@ -15,8 +15,8 @@
  */
 package objectox.html.stream;
 
-import objectos.html.ElementName;
 import objectox.html.IntSize;
+import objectox.html.elem.ElementName;
 import objectox.html.elem.ElementNamePojo;
 import objectox.html.markup.HtmlBytes;
 

@@ -15,9 +15,9 @@
  */
 package objectox.html.markup;
 
-import objectos.html.ElementName;
 import objectos.html.markup.ElementValue;
 import objectox.html.IntSize;
+import objectox.html.elem.ElementName;
 import objectox.html.elem.ElementNamePojo;
 
 final class ElementRecorder {

@@ -25,14 +25,11 @@ public final class JsActionAttribute extends AbstractAttribute {
   public JsActionAttribute(AttributeName attributeName, JsAction action) {
     super(attributeName);
 
-    this.action = action;
+    this.action = Objects.requireNonNull(action, "action == null");
   }
 
-  public static JsActionAttribute of0(AttributeName name, JsAction value) {
-    final JsAction v;
-    v = Objects.requireNonNull(value, "value == null");
-
-    return new JsActionAttribute(name, v);
+  public static JsActionAttribute of0(AttributeName name, JsAction action) {
+    return new JsActionAttribute(name, action);
   }
 
   @Override

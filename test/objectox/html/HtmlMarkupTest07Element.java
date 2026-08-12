@@ -20,9 +20,9 @@ import static org.testng.Assert.assertEquals;
 import objectos.html.Attribute;
 import objectos.html.ClassName;
 import objectos.html.Component;
-import objectos.html.ElementName;
 import objectos.html.Id;
 import objectox.html.attr.AttributeName;
+import objectox.html.elem.ElementName;
 import org.testng.annotations.Test;
 
 public class HtmlMarkupTest07Element {

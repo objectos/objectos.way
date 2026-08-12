@@ -23,23 +23,6 @@ import org.testng.annotations.Test;
 
 public class BooleanAttributeRecorderTest {
 
-  @Test(
-      description = "reject null name",
-      expectedExceptions = NullPointerException.class,
-      expectedExceptionsMessageRegExp = "Attribute provided a null name")
-  public void reject01() {
-    final HtmlSink sink;
-    sink = new HtmlSink();
-
-    final BooleanAttributeRecorder subject;
-    subject = new BooleanAttributeRecorder(sink);
-
-    final BooleanAttributePojo attribute;
-    attribute = new BooleanAttributePojo(null);
-
-    subject.record(attribute);
-  }
-
   @Test(description = "BOOLEAN8")
   public void boolean8() {
     final HtmlSink sink;
@@ -49,7 +32,7 @@ public class BooleanAttributeRecorderTest {
     subject = new BooleanAttributeRecorder(sink);
 
     final AttributeName name;
-    name = AttributeName.AUTOFOCUS;
+    name = new AttributeName(HtmlSink.MAX_INT8, "foo");
 
     final BooleanAttributePojo attribute;
     attribute = new BooleanAttributePojo(name);
@@ -64,6 +47,80 @@ public class BooleanAttributeRecorderTest {
           opts.addInt8(name.index());
         })
     );
+  }
+
+  @Test(description = "BOOLEAN16")
+  public void boolean16() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final BooleanAttributeRecorder subject;
+    subject = new BooleanAttributeRecorder(sink);
+
+    final AttributeName name;
+    name = new AttributeName(HtmlSink.MAX_INT16, "foo");
+
+    final BooleanAttributePojo attribute;
+    attribute = new BooleanAttributePojo(name);
+
+    subject.record(attribute);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.BOOLEAN16);
+          opts.addInt16(name.index());
+        })
+    );
+  }
+
+  @Test(description = "BOOLEAN24")
+  public void boolean24() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final BooleanAttributeRecorder subject;
+    subject = new BooleanAttributeRecorder(sink);
+
+    final AttributeName name;
+    name = new AttributeName(HtmlSink.MAX_INT24, "foo");
+
+    final BooleanAttributePojo attribute;
+    attribute = new BooleanAttributePojo(name);
+
+    subject.record(attribute);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.BOOLEAN24);
+          opts.addInt24(name.index());
+        })
+    );
+  }
+
+  @Test(description = "returned markup")
+  public void markup01() {
+    final HtmlSink sink;
+    sink = HtmlSinkY.create(opts -> {
+      opts.addInt24(0);
+    });
+
+    final BooleanAttributeRecorder subject;
+    subject = new BooleanAttributeRecorder(sink);
+
+    final AttributeName name;
+    name = new AttributeName(HtmlSink.MAX_INT24, "foo");
+
+    final BooleanAttributePojo attribute;
+    attribute = new BooleanAttributePojo(name);
+
+    final AttributePointer res;
+    res = subject.record(attribute);
+
+    assertEquals(res.value(), 3);
   }
 
 }

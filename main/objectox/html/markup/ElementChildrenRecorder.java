@@ -17,11 +17,11 @@ package objectox.html.markup;
 
 import objectos.html.Attribute;
 import objectos.html.BooleanAttribute;
-import objectos.html.ElementName;
 import objectos.html.markup.ElementValue;
 import objectos.html.markup.NoOpMarkup;
 import objectox.html.AmbiguousName;
 import objectox.html.HtmlPojo;
+import objectox.html.elem.ElementName;
 import objectox.html.elem.ElementNamePojo;
 
 final class ElementChildrenRecorder {

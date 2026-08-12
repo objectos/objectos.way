@@ -15,9 +15,9 @@
  */
 package objectox.html.markup;
 
-import objectos.html.Attribute;
 import objectos.script.JsAction;
 import objectox.html.IntSize;
+import objectox.html.attr.AbstractAttribute;
 import objectox.html.attr.AttributeName;
 import objectox.html.attr.AttributeValueEscaper;
 
@@ -29,47 +29,33 @@ final class AttributeRecorder {
     this.sink = sink;
   }
 
-  public final AttributePointer record(Attribute attribute) {
-    final AttributeName name;
-    name = attribute.name();
-
-    if (name == null) {
-      final String msg;
-      msg = "Attribute provided a null name";
-
-      throw new NullPointerException(msg);
-    }
+  public final AttributePointer record(AbstractAttribute attribute) {
+    final AttributeName attributeName;
+    attributeName = attribute.attributeName;
 
     final String value;
     value = attribute.value();
 
-    if (value == null) {
-      final String msg;
-      msg = "Attribute provided a null value";
-
-      throw new NullPointerException(msg);
-    }
-
-    return record(name, value);
+    return record(attributeName, value);
   }
 
-  public final AttributePointer record(AttributeName name, String value) {
+  public final AttributePointer record(AttributeName attributeName, String value) {
     final AttributeValueEscaper escaper;
     escaper = new AttributeValueEscaper(value);
 
     final String escaped;
     escaped = escaper.escape();
 
-    return record0(name, escaped);
+    return record0(attributeName, escaped);
   }
 
-  public final AttributePointer record(AttributeName name, JsAction value) {
-    return record0(name, value);
+  public final AttributePointer record(AttributeName attributeName, JsAction value) {
+    return record0(attributeName, value);
   }
 
-  private AttributePointer record0(AttributeName name, Object value) {
+  private AttributePointer record0(AttributeName attributeName, Object value) {
     final int nameIndex;
-    nameIndex = name.index();
+    nameIndex = attributeName.index();
 
     final IntSize nameSize;
     nameSize = IntSize.of(nameIndex);

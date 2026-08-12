@@ -15,12 +15,11 @@
  */
 package objectox.html;
 
-import objectos.html.Attribute;
-import objectos.html.ElementName;
 import objectos.html.Html;
 import objectos.html.Markup;
+import objectos.html.markup.AmbiguousMarkup;
+import objectos.html.markup.AttributeMarkup;
 import objectos.html.markup.ElementMarkup;
-import objectos.html.markup.ElementValue;
 import objectos.html.markup.Fragment0;
 import objectos.html.markup.Fragment1;
 import objectos.html.markup.Fragment2;
@@ -28,15 +27,23 @@ import objectos.html.markup.Fragment3;
 import objectos.html.markup.Fragment4;
 import objectos.html.markup.FragmentMarkup;
 import objectos.html.markup.NoOpMarkup;
+import objectos.html.markup.RawMarkup;
+import objectos.html.markup.RegularElementValue;
+import objectos.html.markup.TextMarkup;
+import objectos.html.markup.VoidElementValue;
+import objectos.script.JsAction;
 import objectox.html.attr.AttributeName;
-import objectox.html.attr.RegularAttribute;
+import objectox.html.elem.ElementName;
 import objectox.html.markup.NoOpInstructionPojo;
 import objectox.html.markup.Recorder;
 
 public sealed abstract class MarkupPojo
-    extends MarkupGenerated
-    implements Markup
-    permits Markup.OfHtml {
+    extends
+    MarkupGenerated
+    implements
+    Markup
+    permits
+    Markup.OfHtml {
 
   private Recorder recorder;
 
@@ -47,6 +54,61 @@ public sealed abstract class MarkupPojo
   @Override
   public final Html compile() {
     return recorder.compile();
+  }
+
+  @Override
+  final AttributeMarkup boolAttr(AttributeName name) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  @Override
+  final AttributeMarkup attrImpl(AttributeName name, JsAction action) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  @Override
+  final AttributeMarkup attrImpl(AttributeName name, String value) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  @Override
+  final AmbiguousMarkup ambiguous(AmbiguousName name, String text) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  @Override
+  public final void doctype() {
+    recorder.doctype();
+  }
+
+  @Override
+  final ElementMarkup elemImpl(ElementName name, RegularElementValue... values) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  @Override
+  final ElementMarkup elemImpl(ElementName name, String text) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  @Override
+  final ElementMarkup voidElemImpl(ElementName name, VoidElementValue... values) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  @Override
+  public final RawMarkup nbsp() {
+    return raw("&nbsp;");
+  }
+
+  @Override
+  public final RawMarkup raw(String value) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  @Override
+  public final TextMarkup text(String value) {
+    throw new UnsupportedOperationException("Implement me");
   }
 
   // ##################################################################
@@ -158,14 +220,14 @@ public sealed abstract class MarkupPojo
   }
 
   @Override
-  public final Attribute css(String value) {
+  public final AttributeMarkup css(String value) {
     final StringBuilder sb;
     sb = new StringBuilder();
 
     final String formatted;
     formatted = AttributeName.formatAttrValue(value, sb);
 
-    return RegularAttribute.of0(AttributeName.CLASS, formatted);
+    return attrImpl(AttributeName.CLASS, formatted);
   }
 
   @Override
@@ -175,19 +237,6 @@ public sealed abstract class MarkupPojo
 
   // ##################################################################
   // # END: Way Support
-  // ##################################################################
-
-  // ##################################################################
-  // # BEGIN: Elements
-  // ##################################################################
-
-  @Override
-  public final void doctype() {
-    recorder.doctype();
-  }
-
-  // ##################################################################
-  // # END: Elements
   // ##################################################################
 
   // ##################################################################
@@ -252,15 +301,5 @@ public sealed abstract class MarkupPojo
   // ##################################################################
   // # END: Testable
   // ##################################################################
-
-  @Override
-  final ElementMarkup elem0(ElementName name, ElementValue... contents) {
-    return recorder.element(name, contents);
-  }
-
-  @Override
-  final ElementMarkup elem0(ElementName name, String text) {
-    return recorder.element(name, text(text));
-  }
 
 }

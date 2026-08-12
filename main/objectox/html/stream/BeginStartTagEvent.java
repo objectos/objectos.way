@@ -15,8 +15,8 @@
  */
 package objectox.html.stream;
 
-import objectos.html.ElementName;
 import objectos.html.stream.BeginStartTag;
+import objectox.html.elem.ElementName;
 import objectox.html.elem.ElementNamePojo;
 
 public record BeginStartTagEvent(ElementName elementName) implements BeginStartTag {

@@ -20,11 +20,28 @@ import static org.testng.Assert.assertEquals;
 import java.util.stream.IntStream;
 import objectos.internal.Util;
 import objectox.html.attr.AttributeName;
-import objectox.html.attr.AttributeName;
-import objectox.html.attr.RegularAttribute;
 import org.testng.annotations.Test;
 
 public class AttributeRecorderTest {
+
+  @Test(description = "ATTRIBUTE88")
+  public void attribute88() {
+    final AttributeName name;
+    name = AttributeName.ID;
+
+    final String value;
+    value = "foo";
+
+    assertEquals(
+        record(name, value),
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.ATTRIBUTE88);
+          opts.addInt8(name.index());
+          opts.addInt8(opts.addObject(value));
+        })
+    );
+  }
 
   @Test(description = "ATTRIBUTE816")
   public void attribute816() {
@@ -76,25 +93,6 @@ public class AttributeRecorderTest {
     );
   }
 
-  @Test(description = "ATTRIBUTE88")
-  public void attribute88() {
-    final AttributeName name;
-    name = AttributeName.ID;
-
-    final String value;
-    value = "foo";
-
-    assertEquals(
-        record(name, value),
-
-        HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.ATTRIBUTE88);
-          opts.addInt8(name.index());
-          opts.addInt8(opts.addObject(value));
-        })
-    );
-  }
-
   @Test(description = "returned markup")
   public void markup01() {
     final HtmlSink sink;
@@ -115,46 +113,6 @@ public class AttributeRecorderTest {
     res = subject.record(name, value);
 
     assertEquals(res.value(), 3);
-  }
-
-  @Test(
-      description = "reject null name",
-      expectedExceptions = NullPointerException.class,
-      expectedExceptionsMessageRegExp = "Attribute provided a null name")
-  public void reject01() {
-    final AttributeName name;
-    name = null;
-
-    final String value;
-    value = "foo";
-
-    final AttributeRecorder subject;
-    subject = new AttributeRecorder(null);
-
-    final RegularAttribute pojo;
-    pojo = new RegularAttribute(name, value);
-
-    subject.record(pojo);
-  }
-
-  @Test(
-      description = "reject null value",
-      expectedExceptions = NullPointerException.class,
-      expectedExceptionsMessageRegExp = "Attribute provided a null value")
-  public void reject02() {
-    final AttributeName name;
-    name = AttributeName.ID;
-
-    final String value;
-    value = null;
-
-    final AttributeRecorder subject;
-    subject = new AttributeRecorder(null);
-
-    final RegularAttribute pojo;
-    pojo = new RegularAttribute(name, value);
-
-    subject.record(pojo);
   }
 
   @Test(description = "value should be escaped")

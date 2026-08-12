@@ -17,13 +17,13 @@ package objectox.html.markup;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.html.ElementName;
 import objectos.html.markup.Fragment0;
 import objectos.html.markup.Fragment1;
 import objectos.html.markup.Fragment2;
 import objectos.html.markup.Fragment3;
 import objectos.html.markup.Fragment4;
 import objectox.html.attr.AttributeName;
+import objectox.html.elem.ElementName;
 import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 

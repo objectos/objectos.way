@@ -412,7 +412,7 @@ public final class HtmlSpec {
 
   public static List<MethodSpec> wayNodes() {
     return List.of(
-        new MethodSpec("Attribute css(String value)", "css(value)", """
+        new MethodSpec("AttributeMarkup css(String value)", "css(value)", """
         Encodes the `class` attribute by processing the specified value.
 
         This method is designed to work with Java text blocks. It first removes
@@ -538,18 +538,18 @@ public final class HtmlSpec {
         @param arg4 the fourth argument
         @return an object representing the encoded fragment
         """),
-        new MethodSpec("FlattenInstruction flatten(Instruction... contents)", "flatten(contents)", """
-        Flattens the specified instructions so that each of the specified
-        instructions is individually added, in order, to a receiving element.
-        @param contents the instructions to be flattened
-        @return an instruction representing this flatten operation
-        """),
-        new MethodSpec("FlattenInstruction flatten(Collection<? extends Instruction> contents)", "flatten(contents)", """
-        Flattens the specified instructions so that each of the specified
-        instructions is individually added, in order, to a receiving element.
-        @param contents the instructions to be flattened
-        @return an instruction representing this flatten operation
-        """),
+        //        new MethodSpec("FlattenMarkup flatten(Instruction... contents)", "flatten(contents)", """
+        //        Flattens the specified instructions so that each of the specified
+        //        instructions is individually added, in order, to a receiving element.
+        //        @param contents the instructions to be flattened
+        //        @return an instruction representing this flatten operation
+        //        """),
+        //        new MethodSpec("FlattenMarkup flatten(Collection<? extends Instruction> contents)", "flatten(contents)", """
+        //        Flattens the specified instructions so that each of the specified
+        //        instructions is individually added, in order, to a receiving element.
+        //        @param contents the instructions to be flattened
+        //        @return an instruction representing this flatten operation
+        //        """),
         new MethodSpec("NoOpMarkup noop()", "noop()", """
         The no-op markup.
         @return the no-op markup.

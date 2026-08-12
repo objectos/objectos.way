@@ -16,8 +16,8 @@
 package objectos.html;
 
 import objectos.html.markup.AmbiguousMarkup;
+import objectos.html.markup.AttributeMarkup;
 import objectos.html.markup.ElementMarkup;
-import objectos.html.markup.ElementValue;
 import objectos.html.markup.Fragment0;
 import objectos.html.markup.Fragment1;
 import objectos.html.markup.Fragment2;
@@ -49,46 +49,46 @@ public sealed interface Markup permits MarkupPojo {
   /// @return a compiled HTML artifact
   Html compile();
 
-  // START generated code
+  // BEGIN generated code
 
   /// The `async` boolean attribute.
-  BooleanAttribute async = BooleanAttribute.of(AttributeName.ASYNC);
+  BooleanAttribute async = AttributeName.ASYNC.toBooleanAttribute();
 
   /// The `autofocus` boolean attribute.
-  BooleanAttribute autofocus = BooleanAttribute.of(AttributeName.AUTOFOCUS);
+  BooleanAttribute autofocus = AttributeName.AUTOFOCUS.toBooleanAttribute();
 
   /// The `checked` boolean attribute.
-  BooleanAttribute checked = BooleanAttribute.of(AttributeName.CHECKED);
+  BooleanAttribute checked = AttributeName.CHECKED.toBooleanAttribute();
 
   /// The `defer` boolean attribute.
-  BooleanAttribute defer = BooleanAttribute.of(AttributeName.DEFER);
+  BooleanAttribute defer = AttributeName.DEFER.toBooleanAttribute();
 
   /// The `disabled` boolean attribute.
-  BooleanAttribute disabled = BooleanAttribute.of(AttributeName.DISABLED);
+  BooleanAttribute disabled = AttributeName.DISABLED.toBooleanAttribute();
 
   /// The `hidden` boolean attribute.
-  BooleanAttribute hidden = BooleanAttribute.of(AttributeName.HIDDEN);
+  BooleanAttribute hidden = AttributeName.HIDDEN.toBooleanAttribute();
 
   /// The `multiple` boolean attribute.
-  BooleanAttribute multiple = BooleanAttribute.of(AttributeName.MULTIPLE);
+  BooleanAttribute multiple = AttributeName.MULTIPLE.toBooleanAttribute();
 
   /// The `nomodule` boolean attribute.
-  BooleanAttribute nomodule = BooleanAttribute.of(AttributeName.NOMODULE);
+  BooleanAttribute nomodule = AttributeName.NOMODULE.toBooleanAttribute();
 
   /// The `open` boolean attribute.
-  BooleanAttribute open = BooleanAttribute.of(AttributeName.OPEN);
+  BooleanAttribute open = AttributeName.OPEN.toBooleanAttribute();
 
   /// The `readonly` boolean attribute.
-  BooleanAttribute readonly = BooleanAttribute.of(AttributeName.READONLY);
+  BooleanAttribute readonly = AttributeName.READONLY.toBooleanAttribute();
 
   /// The `required` boolean attribute.
-  BooleanAttribute required = BooleanAttribute.of(AttributeName.REQUIRED);
+  BooleanAttribute required = AttributeName.REQUIRED.toBooleanAttribute();
 
   /// The `reversed` boolean attribute.
-  BooleanAttribute reversed = BooleanAttribute.of(AttributeName.REVERSED);
+  BooleanAttribute reversed = AttributeName.REVERSED.toBooleanAttribute();
 
   /// The `selected` boolean attribute.
-  BooleanAttribute selected = BooleanAttribute.of(AttributeName.SELECTED);
+  BooleanAttribute selected = AttributeName.SELECTED.toBooleanAttribute();
 
   //
   // WAY
@@ -96,7 +96,7 @@ public sealed interface Markup permits MarkupPojo {
 
   // @formatter:off
 
-  /// Renders the `class` attribute by processing the specified value.
+  /// Encodes the `class` attribute by processing the specified value.
   ///
   /// This method is designed to work with Java text blocks. It first removes
   /// any leading and trailing whitespace. Additionally, any sequence of
@@ -118,10 +118,10 @@ public sealed interface Markup permits MarkupPojo {
   /// `className("display:inline-flex justify-content:center background-color:blue-500")`.
   ///
   /// @param value the text block containing class names, possibly spread across multiple lines
-  /// @return an instruction representing this attribute.
-  Attribute css(String value);
+  /// @return an object representing the encoded attribute.
+  AttributeMarkup css(String value);
 
-  /// Renders the specified fragment as part of this document.
+  /// Encodes the specified fragment as part of this document.
   ///
   /// The following Objectos HTML component:
   ///
@@ -141,7 +141,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @return an instruction representing the fragment
   FragmentMarkup f(Fragment0 fragment);
 
-  /// Renders the specified fragment as part of this document.
+  /// Encodes the specified fragment as part of this document.
   ///
   /// The following Objectos HTML component:
   ///
@@ -160,10 +160,10 @@ public sealed interface Markup permits MarkupPojo {
   /// @param <T1> the type of the first argument
   /// @param fragment the fragment to include
   /// @param arg1 the first argument
-  /// @return an instruction representing the fragment
+  /// @return an object representing the encoded fragment
   <T1> FragmentMarkup f(Fragment1<T1> fragment, T1 arg1);
 
-  /// Renders the specified fragment as part of this document.
+  /// Encodes the specified fragment as part of this document.
   ///
   /// The following Objectos HTML component:
   ///
@@ -180,10 +180,10 @@ public sealed interface Markup permits MarkupPojo {
   /// @param fragment the fragment to include
   /// @param arg1 the first argument
   /// @param arg2 the second argument
-  /// @return an instruction representing the fragment
+  /// @return an object representing the encoded fragment
   <T1, T2> FragmentMarkup f(Fragment2<T1, T2> fragment, T1 arg1, T2 arg2);
 
-  /// Renders the specified fragment as part of this document.
+  /// Encodes the specified fragment as part of this document.
   ///
   /// The following Objectos HTML component:
   ///
@@ -205,10 +205,10 @@ public sealed interface Markup permits MarkupPojo {
   /// @param arg1 the first argument
   /// @param arg2 the second argument
   /// @param arg3 the third argument
-  /// @return an instruction representing the fragment
+  /// @return an object representing the encoded fragment
   <T1, T2, T3> FragmentMarkup f(Fragment3<T1, T2, T3> fragment, T1 arg1, T2 arg2, T3 arg3);
 
-  /// Renders the specified fragment as part of this document.
+  /// Encodes the specified fragment as part of this document.
   ///
   /// @param <T1> the type of the first argument
   /// @param <T2> the type of the second argument
@@ -219,9 +219,8 @@ public sealed interface Markup permits MarkupPojo {
   /// @param arg2 the second argument
   /// @param arg3 the third argument
   /// @param arg4 the fourth argument
-  /// @return an instruction representing the fragment
+  /// @return an object representing the encoded fragment
   <T1, T2, T3, T4> FragmentMarkup f(Fragment4<T1, T2, T3, T4> fragment, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
-
 
   /// The no-op markup.
   /// @return the no-op markup.
@@ -330,7 +329,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param values the encoded attributes and encoded child nodes of the element
   ///
   /// @return an object representing the encoded element
-  ElementMarkup elem(ElementName name, ElementValue... values);
+  ElementMarkup elem(String name, RegularElementValue... values);
 
   /// Encodes an HTML element with the specified name and text.
   ///
@@ -338,7 +337,15 @@ public sealed interface Markup permits MarkupPojo {
   /// @param text the text value of this element
   ///
   /// @return an object representing the encoded element
-  ElementMarkup elem(ElementName name, String text);
+  ElementMarkup elem(String name, String text);
+
+  /// Encodes an HTML void element with the specified name and values.
+  ///
+  /// @param name the element name
+  /// @param values the encoded attributes
+  ///
+  /// @return an object representing the encoded element
+  ElementMarkup voidElem(String name, VoidElementValue... values);
 
   /// Encodes the `<!DOCTYPE html>` doctype.
   void doctype();
@@ -1334,208 +1341,223 @@ public sealed interface Markup permits MarkupPojo {
   // ATTRIBUTES
   //
 
+  /// Encodes a boolean attribute with the specified name.
+  ///
+  /// @param name the boolean attribute name
+  ///
+  /// @return an object representing the encoded boolean attribute
+  AttributeMarkup attr(String name);
+
+  /// Encodes an attribute with the specified name and value.
+  ///
+  /// @param name the attribute name
+  /// @param value the attribute value
+  ///
+  /// @return an object representing the encoded attribute
+  AttributeMarkup attr(String name, String value);
+
   /// Encodes the `accesskey` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute accesskey(String value);
+  AttributeMarkup accesskey(String value);
 
   /// Encodes the `action` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute action(String value);
+  AttributeMarkup action(String value);
 
   /// Encodes the `align` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute align(String value);
+  AttributeMarkup align(String value);
 
   /// Encodes the `alignment-baseline` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute alignmentBaseline(String value);
+  AttributeMarkup alignmentBaseline(String value);
 
   /// Encodes the `alt` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute alt(String value);
+  AttributeMarkup alt(String value);
 
   /// Encodes the `aria-current` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute ariaCurrent(String value);
+  AttributeMarkup ariaCurrent(String value);
 
   /// Encodes the `aria-disabled` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute ariaDisabled(String value);
+  AttributeMarkup ariaDisabled(String value);
 
   /// Encodes the `aria-hidden` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute ariaHidden(String value);
+  AttributeMarkup ariaHidden(String value);
 
   /// Encodes the `aria-invalid` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute ariaInvalid(String value);
+  AttributeMarkup ariaInvalid(String value);
 
   /// Encodes the `aria-label` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute ariaLabel(String value);
+  AttributeMarkup ariaLabel(String value);
 
   /// Encodes the `aria-labelledby` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute ariaLabelledBy(String value);
+  AttributeMarkup ariaLabelledBy(String value);
 
   /// Encodes the `aria-modal` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute ariaModal(String value);
+  AttributeMarkup ariaModal(String value);
 
   /// Encodes the `aria-placeholder` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute ariaPlaceholder(String value);
+  AttributeMarkup ariaPlaceholder(String value);
 
   /// Encodes the `aria-readonly` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute ariaReadonly(String value);
+  AttributeMarkup ariaReadonly(String value);
 
   /// Encodes the `aria-required` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute ariaRequired(String value);
+  AttributeMarkup ariaRequired(String value);
 
   /// Encodes the `aria-selected` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute ariaSelected(String value);
+  AttributeMarkup ariaSelected(String value);
 
   /// Encodes the `as` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute as(String value);
+  AttributeMarkup as(String value);
 
   /// Encodes the `autocomplete` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute autocomplete(String value);
+  AttributeMarkup autocomplete(String value);
 
   /// Encodes the `baseline-shift` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute baselineShift(String value);
+  AttributeMarkup baselineShift(String value);
 
   /// Encodes the `border` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute border(String value);
+  AttributeMarkup border(String value);
 
   /// Encodes the `cellpadding` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute cellpadding(String value);
+  AttributeMarkup cellpadding(String value);
 
   /// Encodes the `cellspacing` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute cellspacing(String value);
+  AttributeMarkup cellspacing(String value);
 
   /// Encodes the `charset` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute charset(String value);
+  AttributeMarkup charset(String value);
 
   /// Encodes the `cite` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute cite(String value);
+  AttributeMarkup cite(String value);
 
   /// Encodes the `class` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute className(String value);
+  AttributeMarkup className(String value);
 
   /// Encodes the `clip-rule` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute clipRule(String value);
+  AttributeMarkup clipRule(String value);
 
   /// Encodes the `closedby` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute closedby(String value);
+  AttributeMarkup closedby(String value);
 
   /// Encodes the `color` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute color(String value);
+  AttributeMarkup color(String value);
 
   /// Encodes the `color-interpolation` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute colorInterpolation(String value);
+  AttributeMarkup colorInterpolation(String value);
 
   /// Encodes the `color-interpolation-filters` attribute with the specified
   /// value.
@@ -1543,154 +1565,154 @@ public sealed interface Markup permits MarkupPojo {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute colorInterpolationFilters(String value);
+  AttributeMarkup colorInterpolationFilters(String value);
 
   /// Encodes the `cols` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute cols(String value);
+  AttributeMarkup cols(String value);
 
   /// Encodes the `content` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute content(String value);
+  AttributeMarkup content(String value);
 
   /// Encodes the `contenteditable` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute contenteditable(String value);
+  AttributeMarkup contenteditable(String value);
 
   /// Encodes the `crossorigin` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute crossorigin(String value);
+  AttributeMarkup crossorigin(String value);
 
   /// Encodes the `cursor` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute cursor(String value);
+  AttributeMarkup cursor(String value);
 
   /// Encodes the `d` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute d(String value);
+  AttributeMarkup d(String value);
 
   /// Encodes the `dir` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute dir(String value);
+  AttributeMarkup dir(String value);
 
   /// Encodes the `direction` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute direction(String value);
+  AttributeMarkup direction(String value);
 
   /// Encodes the `dirname` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute dirname(String value);
+  AttributeMarkup dirname(String value);
 
   /// Encodes the `display` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute display(String value);
+  AttributeMarkup display(String value);
 
   /// Encodes the `dominant-baseline` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute dominantBaseline(String value);
+  AttributeMarkup dominantBaseline(String value);
 
   /// Encodes the `download` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute download(String value);
+  AttributeMarkup download(String value);
 
   /// Encodes the `draggable` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute draggable(String value);
+  AttributeMarkup draggable(String value);
 
   /// Encodes the `enctype` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute enctype(String value);
+  AttributeMarkup enctype(String value);
 
   /// Encodes the `fill` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute fill(String value);
+  AttributeMarkup fill(String value);
 
   /// Encodes the `fill-opacity` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute fillOpacity(String value);
+  AttributeMarkup fillOpacity(String value);
 
   /// Encodes the `fill-rule` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute fillRule(String value);
+  AttributeMarkup fillRule(String value);
 
   /// Encodes the `filter` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute filter(String value);
+  AttributeMarkup filter(String value);
 
   /// Encodes the `flood-color` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute floodColor(String value);
+  AttributeMarkup floodColor(String value);
 
   /// Encodes the `flood-opacity` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute floodOpacity(String value);
+  AttributeMarkup floodOpacity(String value);
 
   /// Encodes the `for` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute forId(String value);
+  AttributeMarkup forId(String value);
 
   /// Encodes the `glyph-orientation-horizontal` attribute with the specified
   /// value.
@@ -1698,7 +1720,7 @@ public sealed interface Markup permits MarkupPojo {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute glyphOrientationHorizontal(String value);
+  AttributeMarkup glyphOrientationHorizontal(String value);
 
   /// Encodes the `glyph-orientation-vertical` attribute with the specified
   /// value.
@@ -1706,539 +1728,539 @@ public sealed interface Markup permits MarkupPojo {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute glyphOrientationVertical(String value);
+  AttributeMarkup glyphOrientationVertical(String value);
 
   /// Encodes the `height` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute height(String value);
+  AttributeMarkup height(String value);
 
   /// Encodes the `href` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute href(String value);
+  AttributeMarkup href(String value);
 
   /// Encodes the `http-equiv` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute httpEquiv(String value);
+  AttributeMarkup httpEquiv(String value);
 
   /// Encodes the `id` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute id(String value);
+  AttributeMarkup id(String value);
 
   /// Encodes the `image-rendering` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute imageRendering(String value);
+  AttributeMarkup imageRendering(String value);
 
   /// Encodes the `integrity` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute integrity(String value);
+  AttributeMarkup integrity(String value);
 
   /// Encodes the `lang` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute lang(String value);
+  AttributeMarkup lang(String value);
 
   /// Encodes the `letter-spacing` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute letterSpacing(String value);
+  AttributeMarkup letterSpacing(String value);
 
   /// Encodes the `lighting-color` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute lightingColor(String value);
+  AttributeMarkup lightingColor(String value);
 
   /// Encodes the `marker-end` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute markerEnd(String value);
+  AttributeMarkup markerEnd(String value);
 
   /// Encodes the `marker-mid` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute markerMid(String value);
+  AttributeMarkup markerMid(String value);
 
   /// Encodes the `marker-start` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute markerStart(String value);
+  AttributeMarkup markerStart(String value);
 
   /// Encodes the `mask` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute mask(String value);
+  AttributeMarkup mask(String value);
 
   /// Encodes the `mask-type` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute maskType(String value);
+  AttributeMarkup maskType(String value);
 
   /// Encodes the `maxlength` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute maxlength(String value);
+  AttributeMarkup maxlength(String value);
 
   /// Encodes the `media` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute media(String value);
+  AttributeMarkup media(String value);
 
   /// Encodes the `method` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute method(String value);
+  AttributeMarkup method(String value);
 
   /// Encodes the `minlength` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute minlength(String value);
+  AttributeMarkup minlength(String value);
 
   /// Encodes the `name` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute name(String value);
+  AttributeMarkup name(String value);
 
   /// Encodes the `onclick` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute onclick(String value);
+  AttributeMarkup onclick(String value);
 
   /// Encodes the `onclick` attribute with the specified action.
   ///
   /// @param value the action to be executed
   ///
   /// @return an object representing the encoded attribute
-  Attribute onclick(JsAction value);
+  AttributeMarkup onclick(JsAction value);
 
   /// Encodes the `onload` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute onload(String value);
+  AttributeMarkup onload(String value);
 
   /// Encodes the `onload` attribute with the specified action.
   ///
   /// @param value the action to be executed
   ///
   /// @return an object representing the encoded attribute
-  Attribute onload(JsAction value);
+  AttributeMarkup onload(JsAction value);
 
   /// Encodes the `onpopstate` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute onpopstate(String value);
+  AttributeMarkup onpopstate(String value);
 
   /// Encodes the `onpopstate` attribute with the specified action.
   ///
   /// @param value the action to be executed
   ///
   /// @return an object representing the encoded attribute
-  Attribute onpopstate(JsAction value);
+  AttributeMarkup onpopstate(JsAction value);
 
   /// Encodes the `onsubmit` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute onsubmit(String value);
+  AttributeMarkup onsubmit(String value);
 
   /// Encodes the `onsubmit` attribute with the specified action.
   ///
   /// @param value the action to be executed
   ///
   /// @return an object representing the encoded attribute
-  Attribute onsubmit(JsAction value);
+  AttributeMarkup onsubmit(JsAction value);
 
   /// Encodes the `opacity` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute opacity(String value);
+  AttributeMarkup opacity(String value);
 
   /// Encodes the `overflow` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute overflow(String value);
+  AttributeMarkup overflow(String value);
 
   /// Encodes the `paint-order` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute paintOrder(String value);
+  AttributeMarkup paintOrder(String value);
 
   /// Encodes the `placeholder` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute placeholder(String value);
+  AttributeMarkup placeholder(String value);
 
   /// Encodes the `pointer-events` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute pointerEvents(String value);
+  AttributeMarkup pointerEvents(String value);
 
   /// Encodes the `property` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute property(String value);
+  AttributeMarkup property(String value);
 
   /// Encodes the `referrerpolicy` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute referrerpolicy(String value);
+  AttributeMarkup referrerpolicy(String value);
 
   /// Encodes the `rel` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute rel(String value);
+  AttributeMarkup rel(String value);
 
   /// Encodes the `rev` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute rev(String value);
+  AttributeMarkup rev(String value);
 
   /// Encodes the `role` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute role(String value);
+  AttributeMarkup role(String value);
 
   /// Encodes the `rows` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute rows(String value);
+  AttributeMarkup rows(String value);
 
   /// Encodes the `shape-rendering` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute shapeRendering(String value);
+  AttributeMarkup shapeRendering(String value);
 
   /// Encodes the `size` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute size(String value);
+  AttributeMarkup size(String value);
 
   /// Encodes the `sizes` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute sizes(String value);
+  AttributeMarkup sizes(String value);
 
   /// Encodes the `spellcheck` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute spellcheck(String value);
+  AttributeMarkup spellcheck(String value);
 
   /// Encodes the `src` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute src(String value);
+  AttributeMarkup src(String value);
 
   /// Encodes the `srcset` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute srcset(String value);
+  AttributeMarkup srcset(String value);
 
   /// Encodes the `start` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute start(String value);
+  AttributeMarkup start(String value);
 
   /// Encodes the `stop-color` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute stopColor(String value);
+  AttributeMarkup stopColor(String value);
 
   /// Encodes the `stop-opacity` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute stopOpacity(String value);
+  AttributeMarkup stopOpacity(String value);
 
   /// Encodes the `stroke` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute stroke(String value);
+  AttributeMarkup stroke(String value);
 
   /// Encodes the `stroke-dasharray` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute strokeDasharray(String value);
+  AttributeMarkup strokeDasharray(String value);
 
   /// Encodes the `stroke-dashoffset` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute strokeDashoffset(String value);
+  AttributeMarkup strokeDashoffset(String value);
 
   /// Encodes the `stroke-linecap` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute strokeLinecap(String value);
+  AttributeMarkup strokeLinecap(String value);
 
   /// Encodes the `stroke-linejoin` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute strokeLinejoin(String value);
+  AttributeMarkup strokeLinejoin(String value);
 
   /// Encodes the `stroke-miterlimit` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute strokeMiterlimit(String value);
+  AttributeMarkup strokeMiterlimit(String value);
 
   /// Encodes the `stroke-opacity` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute strokeOpacity(String value);
+  AttributeMarkup strokeOpacity(String value);
 
   /// Encodes the `stroke-width` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute strokeWidth(String value);
+  AttributeMarkup strokeWidth(String value);
 
   /// Encodes the `tabindex` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute tabindex(String value);
+  AttributeMarkup tabindex(String value);
 
   /// Encodes the `target` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute target(String value);
+  AttributeMarkup target(String value);
 
   /// Encodes the `text-anchor` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute textAnchor(String value);
+  AttributeMarkup textAnchor(String value);
 
   /// Encodes the `text-decoration` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute textDecoration(String value);
+  AttributeMarkup textDecoration(String value);
 
   /// Encodes the `text-overflow` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute textOverflow(String value);
+  AttributeMarkup textOverflow(String value);
 
   /// Encodes the `text-rendering` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute textRendering(String value);
+  AttributeMarkup textRendering(String value);
 
   /// Encodes the `transform` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute transform(String value);
+  AttributeMarkup transform(String value);
 
   /// Encodes the `transform-origin` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute transformOrigin(String value);
+  AttributeMarkup transformOrigin(String value);
 
   /// Encodes the `translate` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute translate(String value);
+  AttributeMarkup translate(String value);
 
   /// Encodes the `type` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute type(String value);
+  AttributeMarkup type(String value);
 
   /// Encodes the `unicode-bidi` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute unicodeBidi(String value);
+  AttributeMarkup unicodeBidi(String value);
 
   /// Encodes the `value` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute value(String value);
+  AttributeMarkup value(String value);
 
   /// Encodes the `vector-effect` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute vectorEffect(String value);
+  AttributeMarkup vectorEffect(String value);
 
   /// Encodes the `viewBox` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute viewBox(String value);
+  AttributeMarkup viewBox(String value);
 
   /// Encodes the `visibility` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute visibility(String value);
+  AttributeMarkup visibility(String value);
 
   /// Encodes the `white-space` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute whiteSpace(String value);
+  AttributeMarkup whiteSpace(String value);
 
   /// Encodes the `width` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute width(String value);
+  AttributeMarkup width(String value);
 
   /// Encodes the `word-spacing` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute wordSpacing(String value);
+  AttributeMarkup wordSpacing(String value);
 
   /// Encodes the `wrap` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute wrap(String value);
+  AttributeMarkup wrap(String value);
 
   /// Encodes the `writing-mode` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute writingMode(String value);
+  AttributeMarkup writingMode(String value);
 
   /// Encodes the `xmlns` attribute with the specified value.
   ///
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  Attribute xmlns(String value);
+  AttributeMarkup xmlns(String value);
 
   //
   // AMBIGUOUS
@@ -2288,25 +2310,23 @@ public sealed interface Markup permits MarkupPojo {
   // TEXT
   //
 
-  /// Renders the non-breaking space `&nbsp;` HTML character entity.
+  /// Encodes the non-breaking space `&nbsp;` HTML character entity.
   ///
-  /// @return an instruction representing the non-breaking space
-  ///         character entity.
+  /// @return an object representing the encoded character entity.
   RawMarkup nbsp();
 
-  /// Renders the specified value as raw HTML.
+  /// Encodes the specified value as raw HTML.
   ///
   /// @param value the raw HTML value
   ///
-  /// @return a raw HTML instruction
+  /// @return an object representing the encoded raw HTML
   RawMarkup raw(String value);
 
-  /// Renders a text node with the specified value. The text value is escaped
-  /// before being emitted to the output.
+  /// Encodes a text node with the specified value.
   ///
   /// @param value the text value
   ///
-  /// @return an instruction representing the text node
+  /// @return an object representing the encoded text node
   TextMarkup text(String value);
 
   // END generated code
