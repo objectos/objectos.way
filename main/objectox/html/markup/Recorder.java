@@ -15,7 +15,6 @@
  */
 package objectox.html.markup;
 
-import objectos.html.markup.ElementValue;
 import objectos.script.JsAction;
 import objectox.html.HtmlPojo;
 import objectox.html.attr.AttributeName;
@@ -29,7 +28,7 @@ public final class Recorder {
 
   private final DocumentCompiler documentCompiler;
 
-  private final ElementRecorder elementRecorder;
+  private final RegularElementRecorder elementRecorder;
 
   Recorder(
       AttributeRecorder attributeRecorder,
@@ -38,7 +37,7 @@ public final class Recorder {
 
       DocumentCompiler documentCompiler,
 
-      ElementRecorder elementRecorder
+      RegularElementRecorder elementRecorder
   ) {
     this.attributeRecorder = attributeRecorder;
 
@@ -67,7 +66,7 @@ public final class Recorder {
 
         new DocumentCompiler(sink),
 
-        new ElementRecorder(
+        new RegularElementRecorder(
             sink,
 
             new ElementAttributesRecorder(

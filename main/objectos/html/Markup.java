@@ -1341,6 +1341,20 @@ public sealed interface Markup permits MarkupPojo {
   // ATTRIBUTES
   //
 
+  /// Encodes the specified boolean attribute.
+  /// 
+  /// @param value the boolean attribute to encode
+  /// 
+  /// @return an object representing the encoded boolean attribute
+  AttributeMarkup attr(BooleanAttribute value);
+
+  /// Encodes the specified attribute.
+  /// 
+  /// @param value the attribute to encode
+  /// 
+  /// @return an object representing the encoded attribute
+  AttributeMarkup attr(Attribute value);
+
   /// Encodes a boolean attribute with the specified name.
   ///
   /// @param name the boolean attribute name

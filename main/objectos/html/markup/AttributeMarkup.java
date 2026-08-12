@@ -19,5 +19,8 @@ import objectox.html.markup.AttributePointer;
 
 /// Represents the encoded markup of an Objectos HTML attribute.
 public sealed interface AttributeMarkup
+    extends
+    RegularElementValue,
+    VoidElementValue
     permits
     AttributePointer {}

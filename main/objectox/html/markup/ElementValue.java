@@ -15,19 +15,11 @@
  */
 package objectox.html.markup;
 
-final class ChildElementMarker {
+import objectos.html.markup.RegularElementValue;
+import objectos.html.markup.VoidElementValue;
 
-  private final HtmlSink sink;
-
-  ChildElementMarker(HtmlSink sink) {
-    this.sink = sink;
-  }
-
-  public final void mark(ElementPointer child) {
-    final int value;
-    value = child.value();
-
-    sink.consume(value);
-  }
-
-}
+/// Represents an object that can be used in any element rendering method.
+public sealed interface ElementValue
+    permits
+    RegularElementValue,
+    VoidElementValue {}

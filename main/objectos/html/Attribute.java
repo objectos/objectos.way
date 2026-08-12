@@ -15,17 +15,12 @@
  */
 package objectos.html;
 
-import objectos.html.markup.RegularElementValue;
-import objectos.html.markup.VoidElementValue;
 import objectox.html.attr.AbstractAttribute;
 import objectox.html.attr.AttributeName;
 import objectox.html.attr.RegularAttribute;
 
 /// Represents a non-boolean HTML attribute.
 public sealed interface Attribute
-    extends
-    RegularElementValue,
-    VoidElementValue
     permits
     AbstractAttribute {
 

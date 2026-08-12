@@ -15,92 +15,58 @@
  */
 package objectox.html.markup;
 
-import objectos.html.Attribute;
-import objectos.html.BooleanAttribute;
-import objectos.html.markup.ElementValue;
 import objectos.html.markup.NoOpMarkup;
-import objectox.html.AmbiguousName;
-import objectox.html.HtmlPojo;
+import objectox.html.IntSize;
 import objectox.html.elem.ElementName;
-import objectox.html.elem.ElementNamePojo;
 
 final class ElementChildrenRecorder {
 
-  private final AmbiguousRecorder childAmbiguousRecorder;
+  private final HtmlSink sink;
 
-  private final ChildElementMarker childElementMarker;
-
-  private final ChildElementRecorder childElementRecorder;
-
-  private final ChildFragmentRecorder childFragmentRecorder;
-
-  private final RawRecorder childRawRecorder;
-
-  private final TextRecorder childTextRecorder;
-
-  ElementChildrenRecorder(
-      AmbiguousRecorder childAmbiguousRecorder,
-
-      ChildElementMarker childElementMarker,
-
-      ChildElementRecorder childElementRecorder,
-
-      ChildFragmentRecorder childFragmentRecorder,
-
-      RawRecorder childRawRecorder,
-
-      TextRecorder childTextRecorder
-  ) {
-    this.childAmbiguousRecorder = childAmbiguousRecorder;
-
-    this.childElementMarker = childElementMarker;
-
-    this.childElementRecorder = childElementRecorder;
-
-    this.childFragmentRecorder = childFragmentRecorder;
-
-    this.childRawRecorder = childRawRecorder;
-
-    this.childTextRecorder = childTextRecorder;
+  ElementChildrenRecorder(HtmlSink sink) {
+    this.sink = sink;
   }
 
-  public final void record(ElementName elementName, ElementValue... contents) {
-    for (ElementValue value : contents) {
-      record0(elementName, value);
+  public final int record(ElementName elementName, IntSize size, ElementValue... values) {
+    int sum = 0;
+
+    for (ElementValue value : values) {
+      sum += record0(elementName, size, value);
     }
+
+    return sum;
   }
 
-  private void record0(ElementName elementName, ElementValue value) {
-    switch (value) {
-      case AmbiguousPojo(AmbiguousName name, String text) -> {
-        if (name.isAttributeOf(elementName)) {
-          break;
-        }
+  private int record0(ElementName elementName, IntSize size, ElementValue value) {
+    return switch (value) {
+      case AmbiguousPointer(int v) -> ambiguous(elementName, size, v);
 
-        final ElementNamePojo ambiguousElementName;
-        ambiguousElementName = name.element;
+      case AttributePointer _ -> 0;
 
-        childAmbiguousRecorder.record(ambiguousElementName, text);
-      }
+      case ElementPointer(int v) -> add(size, v);
 
-      case Attribute _ -> {}
+      case FragmentPointer(int v) -> fragment(elementName, size, v);
 
-      case BooleanAttribute _ -> {}
+      case NoOpMarkup _ -> 0;
 
-      case ElementPointer child -> {
-        childElementMarker.mark(child);
+      case RawPointer(int v) -> add(size, v);
 
-        childElementRecorder.record(child);
-      }
+      case TextPointer(int v) -> add(size, v);
+    };
+  }
 
-      case HtmlPojo frag -> childFragmentRecorder.record(frag);
+  private int add(IntSize size, int v) {
+    sink.addInt(size, v);
 
-      case NoOpMarkup _ -> {}
+    return 1;
+  }
 
-      case RawPointer(String v) -> childRawRecorder.record(v);
+  private int ambiguous(ElementName elementName, IntSize size, int v) {
+    throw new UnsupportedOperationException("Implement me");
+  }
 
-      case TextPointer(String v) -> childTextRecorder.record(v);
-    }
+  private int fragment(ElementName name, IntSize size, int v) {
+    throw new UnsupportedOperationException("Implement me");
   }
 
 }

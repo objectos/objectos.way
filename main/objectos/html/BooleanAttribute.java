@@ -15,16 +15,11 @@
  */
 package objectos.html;
 
-import objectos.html.markup.RegularElementValue;
-import objectos.html.markup.VoidElementValue;
 import objectox.html.attr.AttributeName;
 import objectox.html.attr.BooleanAttributePojo;
 
 /// Represents a boolean HTML attribute.
 public sealed interface BooleanAttribute
-    extends
-    RegularElementValue,
-    VoidElementValue
     permits
     BooleanAttributePojo {
 

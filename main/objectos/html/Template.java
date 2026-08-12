@@ -17,7 +17,6 @@ package objectos.html;
 
 import objectos.html.markup.AmbiguousMarkup;
 import objectos.html.markup.ElementMarkup;
-import objectos.html.markup.ElementValue;
 import objectos.html.markup.Fragment0;
 import objectos.html.markup.Fragment1;
 import objectos.html.markup.Fragment2;
@@ -32,6 +31,7 @@ import objectos.html.markup.VoidElementValue;
 import objectos.internal.Check;
 import objectos.script.JsAction;
 import objectox.html.elem.ElementName;
+import objectox.html.markup.ElementValue;
 
 /**
  * A template in pure Java for generating HTML.

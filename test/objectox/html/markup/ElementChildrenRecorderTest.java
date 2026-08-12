@@ -19,7 +19,6 @@ import static org.testng.Assert.assertEquals;
 
 import objectos.html.Attribute;
 import objectos.html.BooleanAttribute;
-import objectos.html.markup.ElementValue;
 import objectox.html.AmbiguousName;
 import objectox.html.HtmlPojo;
 import objectox.html.attr.AttributeName;

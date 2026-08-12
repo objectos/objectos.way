@@ -28,7 +28,7 @@ public class AmbiguousRecorderTest {
       description = "reject null value",
       expectedExceptions = NullPointerException.class,
       expectedExceptionsMessageRegExp = "value == null")
-  public void record01() {
+  public void reject01() {
     final HtmlSink sink;
     sink = new HtmlSink();
 
@@ -45,7 +45,7 @@ public class AmbiguousRecorderTest {
   }
 
   @Test(description = "AMBIGUOUS88")
-  public void record02() {
+  public void ambiguous88() {
     final HtmlSink sink;
     sink = new HtmlSink();
 
@@ -75,7 +75,7 @@ public class AmbiguousRecorderTest {
   }
 
   @Test(description = "AMBIGUOUS816")
-  public void record03() {
+  public void ambiguous816() {
     final HtmlSink sink;
     sink = new HtmlSink(Util.EMPTY_BYTE_ARRAY, new Object[256]);
 
@@ -106,7 +106,7 @@ public class AmbiguousRecorderTest {
   }
 
   @Test(description = "AMBIGUOUS824")
-  public void record04() {
+  public void ambiguous824() {
     final HtmlSink sink;
     sink = new HtmlSink(Util.EMPTY_BYTE_ARRAY, new Object[1 << 16]);
 

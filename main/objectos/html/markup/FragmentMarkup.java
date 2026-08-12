@@ -15,7 +15,7 @@
  */
 package objectos.html.markup;
 
-import objectox.html.HtmlPojo;
+import objectox.html.markup.FragmentPointer;
 
 /// Represents the encoded markup of an Objectos HTML fragment.
 public sealed interface FragmentMarkup
@@ -23,4 +23,4 @@ public sealed interface FragmentMarkup
     RegularElementValue,
     VoidElementValue
     permits
-    HtmlPojo {}
+    FragmentPointer {}

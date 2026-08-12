@@ -112,7 +112,7 @@ public final class HtmlSink {
     final int startIndex;
     startIndex = codeIndex;
 
-    set24(startIndex, value);
+    setInt24(startIndex, value);
 
     codeIndex += 3;
 
@@ -148,6 +148,10 @@ public final class HtmlSink {
     return Arrays.copyOf(code, codeIndex);
   }
 
+  public final IntSize codeSize() {
+    return IntSize.of(codeIndex);
+  }
+
   public final void consume(int value) {
     final byte original;
     original = code[value];
@@ -178,7 +182,7 @@ public final class HtmlSink {
   }
 
   public final void jmp24(int index) {
-    set24(index, codeIndex);
+    setInt24(index, codeIndex);
   }
 
   public final Object[] objects() {
@@ -198,7 +202,25 @@ public final class HtmlSink {
     return new HtmlSink(code, requiredIndex, objects, objectsIndex);
   }
 
-  private void set24(int index, int value) {
+  public final void setInt(IntSize size, int index, int value) {
+    switch (size) {
+      case BIT8 -> setInt8(index, value);
+
+      case BIT16 -> setInt16(index, value);
+
+      case BIT24 -> setInt24(index, value);
+    }
+  }
+
+  public final void setInt8(int index, int value) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  public final void setInt16(int index, int value) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  public final void setInt24(int index, int value) {
     if (value < 0 || value > MAX_INT24) {
       final String msg;
       msg = "Invalid 3-byte int value: %d".formatted(value);

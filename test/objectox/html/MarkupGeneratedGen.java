@@ -205,6 +205,35 @@ public class MarkupGeneratedGen {
 
     abstract AttributeMarkup attrImpl(AttributeName name, String value);
 
+    /// Encodes the specified boolean attribute.
+    /// @param value the boolean attribute to encode
+    /// @return an object representing the encoded boolean attribute
+    public final AttributeMarkup attr(BooleanAttribute value) {
+      final BooleanAttributePojo impl;
+      impl = (BooleanAttributePojo) value;
+
+      final AttributeName attributeName;
+      attributeName = impl.attributeName();
+
+      return boolAttr(attributeName);
+    }
+
+    /// Encodes the specified attribute.
+    /// @param value the attribute to encode
+    /// @return an object representing the encoded attribute
+    public final AttributeMarkup attr(Attribute value) {
+      final AbstractAttribute impl;
+      impl = (AbstractAttribute) value;
+
+      final AttributeName attributeName;
+      attributeName = impl.attributeName;
+
+      final String v;
+      v = impl.value();
+
+      return attrImpl(attributeName, v);
+    }
+
     /// Encodes a boolean attribute with the specified name.
     /// @param name the attribute name
     /// @return an object representing the encoded attribute

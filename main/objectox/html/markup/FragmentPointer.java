@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.markup;
+package objectox.html.markup;
 
-/// Represents an object that can be used in any element rendering method.
-public sealed interface ElementValue
-    permits
-    RegularElementValue,
-    VoidElementValue {}
+import objectos.html.markup.FragmentMarkup;
+
+public record FragmentPointer(int value)
+    implements
+    FragmentMarkup {}

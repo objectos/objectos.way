@@ -33,7 +33,7 @@ public class ElementRecorderTest {
     final HtmlSink sink;
     sink = new HtmlSink();
 
-    final ElementRecorder subject;
+    final RegularElementRecorder subject;
     subject = create(sink);
 
     final ElementPointer res;
@@ -76,7 +76,7 @@ public class ElementRecorderTest {
       opts.addInt8(ElementNamePojo.B.index());
     });
 
-    final ElementRecorder subject;
+    final RegularElementRecorder subject;
     subject = create(sink);
 
     final ElementPointer res;
@@ -128,7 +128,7 @@ public class ElementRecorderTest {
       opts.addInt8(ElementNamePojo.HEAD.index());
     });
 
-    final ElementRecorder subject;
+    final RegularElementRecorder subject;
     subject = create(sink);
 
     final ElementPointer res;
@@ -169,7 +169,7 @@ public class ElementRecorderTest {
     final HtmlSink sink;
     sink = new HtmlSink();
 
-    final ElementRecorder subject;
+    final RegularElementRecorder subject;
     subject = create(sink);
 
     final String value;
@@ -203,7 +203,7 @@ public class ElementRecorderTest {
     final HtmlSink sink;
     sink = new HtmlSink();
 
-    final ElementRecorder subject;
+    final RegularElementRecorder subject;
     subject = create(sink);
 
     final String value;
@@ -237,7 +237,7 @@ public class ElementRecorderTest {
     final HtmlSink sink;
     sink = new HtmlSink();
 
-    final ElementRecorder subject;
+    final RegularElementRecorder subject;
     subject = create(sink);
 
     final String text;
@@ -275,7 +275,7 @@ public class ElementRecorderTest {
     final HtmlSink sink;
     sink = new HtmlSink();
 
-    final ElementRecorder subject;
+    final RegularElementRecorder subject;
     subject = create(sink);
 
     final HtmlPojo frag;
@@ -309,7 +309,7 @@ public class ElementRecorderTest {
     final HtmlSink sink;
     sink = new HtmlSink();
 
-    final ElementRecorder subject;
+    final RegularElementRecorder subject;
     subject = create(sink);
 
     final ElementPointer res;
@@ -338,7 +338,7 @@ public class ElementRecorderTest {
     final HtmlSink sink;
     sink = new HtmlSink();
 
-    final ElementRecorder subject;
+    final RegularElementRecorder subject;
     subject = create(sink);
 
     final ElementPointer res;
@@ -359,7 +359,7 @@ public class ElementRecorderTest {
     );
   }
 
-  private ElementRecorder create(HtmlSink sink) {
+  private RegularElementRecorder create(HtmlSink sink) {
     final AttributeRecorder attributeRecorder;
     attributeRecorder = new AttributeRecorder(sink);
 
@@ -390,7 +390,7 @@ public class ElementRecorderTest {
     final ElementChildrenRecorder childrenRecorder;
     childrenRecorder = new ElementChildrenRecorder(childAmbiguousRecorder, childElementMarker, childElementRecorder, childFragmentRecorder, childRawRecorder, childTextRecorder);
 
-    return new ElementRecorder(sink, attributesRecorder, childrenRecorder);
+    return new RegularElementRecorder(sink, attributesRecorder, childrenRecorder);
   }
 
 }

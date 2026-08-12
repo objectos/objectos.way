@@ -15,12 +15,11 @@
  */
 package objectox.html.markup;
 
-import objectos.html.markup.ElementValue;
+import objectos.html.markup.RegularElementValue;
 import objectox.html.IntSize;
 import objectox.html.elem.ElementName;
-import objectox.html.elem.ElementNamePojo;
 
-final class ElementRecorder {
+final class RegularElementRecorder {
 
   private final HtmlSink sink;
 
@@ -28,7 +27,7 @@ final class ElementRecorder {
 
   private final ElementChildrenRecorder childrenRecorder;
 
-  ElementRecorder(HtmlSink sink, ElementAttributesRecorder attributesRecorder, ElementChildrenRecorder childrenRecorder) {
+  RegularElementRecorder(HtmlSink sink, ElementAttributesRecorder attributesRecorder, ElementChildrenRecorder childrenRecorder) {
     this.sink = sink;
 
     this.attributesRecorder = attributesRecorder;
@@ -36,9 +35,9 @@ final class ElementRecorder {
     this.childrenRecorder = childrenRecorder;
   }
 
-  public final ElementPointer record(ElementName elementName, ElementValue... values) {
-    final ElementNamePojo name;
-    name = (ElementNamePojo) elementName;
+  public final ElementPointer record(ElementName name, RegularElementValue... values) {
+    final IntSize valuesSize;
+    valuesSize = sink.codeSize();
 
     final int nameIndex;
     nameIndex = name.index();
@@ -49,12 +48,21 @@ final class ElementRecorder {
     final int startIndex;
     startIndex = startTag(nameIndex, nameSize);
 
-    final int jmpIndex;
-    jmpIndex = values(name, values);
+    final int valuesIndex;
+    valuesIndex = valuesBytes(valuesSize);
 
-    end(name, nameIndex, nameSize);
+    final int attributes;
+    attributes = attributesRecorder.record(name, valuesSize, values);
 
-    sink.jmp24(jmpIndex);
+    final int children;
+    children = childrenRecorder.record(name, valuesSize, values);
+
+    final int size;
+    size = attributes + children;
+
+    sink.setInt(valuesSize, valuesIndex, size);
+
+    endTag(nameIndex, nameSize);
 
     return new ElementPointer(startIndex);
   }
@@ -69,32 +77,26 @@ final class ElementRecorder {
 
   private int startTag8(int nameIndex) {
     final int startIndex;
-    startIndex = sink.addByte(HtmlBytes.STARTTAG8);
+    startIndex = sink.addByte(HtmlBytes.RELEMSTR8);
 
     sink.addInt8(nameIndex);
 
     return startIndex;
   }
 
-  private int values(ElementNamePojo name, ElementValue[] values) {
-    sink.addByte(HtmlBytes.JMP24);
+  private int valuesBytes(IntSize size) {
+    final byte values;
+    values = switch (size) {
+      case BIT8 -> HtmlBytes.VALUES8;
 
-    final int jmpIndex;
-    jmpIndex = sink.addInt24(0);
+      case BIT16 -> HtmlBytes.VALUES16;
 
-    attributesRecorder.record(name, values);
+      case BIT24 -> HtmlBytes.VALUES24;
+    };
 
-    childrenRecorder.record(name, values);
+    sink.addByte(values);
 
-    return jmpIndex;
-  }
-
-  private void end(ElementNamePojo name, int nameIndex, IntSize nameSize) {
-    if (name.endTag()) {
-      endTag(nameIndex, nameSize);
-    } else {
-      sink.addByte(HtmlBytes.VOIDELEM);
-    }
+    return sink.addInt(size, 0);
   }
 
   private void endTag(int nameIndex, IntSize nameSize) {
@@ -106,7 +108,7 @@ final class ElementRecorder {
   }
 
   private void endTag8(int nameIndex) {
-    sink.addByte(HtmlBytes.ENDTAG8);
+    sink.addByte(HtmlBytes.RELEMEND8);
 
     sink.addInt8(nameIndex);
   }

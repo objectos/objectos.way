@@ -15,69 +15,61 @@
  */
 package objectox.html.markup;
 
-import objectos.html.Attribute;
-import objectos.html.BooleanAttribute;
-import objectos.html.markup.ElementValue;
-import objectos.html.markup.FragmentMarkup;
 import objectos.html.markup.ElementMarkup;
 import objectos.html.markup.NoOpMarkup;
 import objectos.html.markup.RawMarkup;
 import objectos.html.markup.TextMarkup;
-import objectos.script.JsAction;
-import objectox.html.AmbiguousName;
-import objectox.html.attr.JsActionAttribute;
+import objectox.html.IntSize;
 import objectox.html.elem.ElementName;
-import objectox.html.attr.AttributeName;
 
 final class ElementAttributesRecorder {
 
-  private final AttributeRecorder attributeRecorder;
+  private final HtmlSink sink;
 
-  private final BooleanAttributeRecorder booleanAttributeRecorder;
-
-  ElementAttributesRecorder(
-      AttributeRecorder attributeRecorder,
-
-      BooleanAttributeRecorder booleanAttributeRecorder
-  ) {
-    this.attributeRecorder = attributeRecorder;
-
-    this.booleanAttributeRecorder = booleanAttributeRecorder;
+  ElementAttributesRecorder(HtmlSink sink) {
+    this.sink = sink;
   }
 
-  public final void record(ElementName elementName, ElementValue... values) {
+  public final int record(ElementName name, IntSize size, ElementValue... values) {
+    int sum = 0;
+
     for (ElementValue value : values) {
-      record0(elementName, value);
+      sum += record0(name, size, value);
     }
+
+    return sum;
   }
 
-  private void record0(ElementName elementName, ElementValue value) {
-    switch (value) {
-      case AmbiguousPojo(AmbiguousName name, String text) -> {
-        if (name.isAttributeOf(elementName)) {
-          final AttributeName attributeName;
-          attributeName = name.attribute;
+  private int record0(ElementName elementName, IntSize size, ElementValue value) {
+    return switch (value) {
+      case AmbiguousPointer(int v) -> ambiguous(elementName, size, v);
 
-          attributeRecorder.record(attributeName, text);
-        }
-      }
+      case AttributePointer(int v) -> add(size, v);
 
-      case JsActionAttribute(AttributeName name, JsAction action) -> attributeRecorder.record(name, action);
+      case ElementMarkup _ -> 0;
 
-      case Attribute attr -> attributeRecorder.record(attr);
+      case FragmentPointer(int v) -> fragment(elementName, size, v);
 
-      case BooleanAttribute attr -> booleanAttributeRecorder.record(attr);
+      case NoOpMarkup _ -> 0;
 
-      case ElementMarkup _ -> {}
+      case RawMarkup _ -> 0;
 
-      case FragmentMarkup _ -> {}
+      case TextMarkup _ -> 0;
+    };
+  }
 
-      case NoOpMarkup _ -> {}
+  private int add(IntSize size, int v) {
+    sink.addInt(size, v);
 
-      case RawMarkup _ -> {}
+    return 1;
+  }
 
-      case TextMarkup _ -> {}
-    }
+  private int ambiguous(ElementName elementName, IntSize size, int v) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  private int fragment(ElementName elementName, IntSize size, int v) {
+    throw new UnsupportedOperationException("Implement me");
   }
 
 }
