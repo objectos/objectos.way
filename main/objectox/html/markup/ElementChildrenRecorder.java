@@ -26,7 +26,7 @@ import objectox.html.elem.ElementNamePojo;
 
 final class ElementChildrenRecorder {
 
-  private final ChildAmbiguousRecorder childAmbiguousRecorder;
+  private final AmbiguousRecorder childAmbiguousRecorder;
 
   private final ChildElementMarker childElementMarker;
 
@@ -39,7 +39,7 @@ final class ElementChildrenRecorder {
   private final ChildTextRecorder childTextRecorder;
 
   ElementChildrenRecorder(
-      ChildAmbiguousRecorder childAmbiguousRecorder,
+      AmbiguousRecorder childAmbiguousRecorder,
 
       ChildElementMarker childElementMarker,
 

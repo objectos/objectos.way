@@ -40,6 +40,10 @@ public enum AmbiguousName {
     this.element = element;
   }
 
+  public final int index() {
+    return ordinal();
+  }
+
   public final boolean isAttributeOf(ElementName element) {
     return switch (this) {
       case CLIPPATH -> element != ElementName.SVG;

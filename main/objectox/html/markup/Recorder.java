@@ -77,7 +77,7 @@ public final class Recorder {
             ),
 
             new ElementChildrenRecorder(
-                new ChildAmbiguousRecorder(sink),
+                new AmbiguousRecorder(sink),
 
                 new ChildElementMarker(sink),
 

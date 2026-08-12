@@ -369,8 +369,8 @@ public class ElementRecorderTest {
     final ElementAttributesRecorder attributesRecorder;
     attributesRecorder = new ElementAttributesRecorder(attributeRecorder, booleanAttributeRecorder);
 
-    final ChildAmbiguousRecorder childAmbiguousRecorder;
-    childAmbiguousRecorder = new ChildAmbiguousRecorder(sink);
+    final AmbiguousRecorder childAmbiguousRecorder;
+    childAmbiguousRecorder = new AmbiguousRecorder(sink);
 
     final ChildElementMarker childElementMarker;
     childElementMarker = new ChildElementMarker(sink);

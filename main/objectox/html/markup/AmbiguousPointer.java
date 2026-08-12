@@ -15,19 +15,8 @@
  */
 package objectox.html.markup;
 
-import java.util.Objects;
 import objectos.html.markup.AmbiguousMarkup;
-import objectox.html.AmbiguousName;
 
-public final record AmbiguousPojo(AmbiguousName name, String value)
+public final record AmbiguousPointer(int value)
     implements
-    AmbiguousMarkup {
-
-  public static AmbiguousPojo of0(AmbiguousName name, String value) {
-    final String v;
-    v = Objects.requireNonNull(value, "value == null");
-
-    return new AmbiguousPojo(name, v);
-  }
-
-}
+    AmbiguousMarkup {}

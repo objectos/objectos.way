@@ -203,8 +203,8 @@ public class ElementChildrenRecorderTest {
   }
 
   private HtmlSink record(HtmlSink sink, ElementName elementName, ElementValue... contents) {
-    final ChildAmbiguousRecorder childAmbiguousRecorder;
-    childAmbiguousRecorder = new ChildAmbiguousRecorder(sink);
+    final AmbiguousRecorder childAmbiguousRecorder;
+    childAmbiguousRecorder = new AmbiguousRecorder(sink);
 
     final ChildElementMarker childElementMarker;
     childElementMarker = new ChildElementMarker(sink);

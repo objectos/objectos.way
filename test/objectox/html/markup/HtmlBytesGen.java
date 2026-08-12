@@ -44,6 +44,12 @@ public class HtmlBytesGen {
     value("BOOLEAN16");
     value("BOOLEAN24");
 
+    comment("ambiguous");
+
+    value("AMBIGUOUS88");
+    value("AMBIGUOUS816");
+    value("AMBIGUOUS824");
+
     comment("child");
 
     value("ELEM8");
