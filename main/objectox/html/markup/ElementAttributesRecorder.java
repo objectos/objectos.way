@@ -60,6 +60,8 @@ final class ElementAttributesRecorder {
   }
 
   private int add(IntSize size, int v) {
+    sink.consume(v);
+
     sink.addInt(size, v);
 
     return 1;

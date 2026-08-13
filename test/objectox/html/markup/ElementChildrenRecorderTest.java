@@ -152,11 +152,11 @@ public class ElementChildrenRecorderTest {
     final HtmlSink sink;
     sink = HtmlSinkY.create(opts -> {
       opts.addInt24(HtmlSink.MAX_INT24);
-      opts.addByte(HtmlBytes.RELEMSTR8);
+      opts.addByte(HtmlBytes.ELEMSTR8);
       opts.addInt8(ElementName.HEAD.index());
       opts.addByte(HtmlBytes.VALUES8);
       opts.addInt24(0);
-      opts.addByte(HtmlBytes.RELEMEND8);
+      opts.addByte(HtmlBytes.ELEMEND8);
       opts.addInt8(ElementName.HEAD.index());
     });
 
@@ -182,11 +182,11 @@ public class ElementChildrenRecorderTest {
 
         HtmlSinkY.create(opts -> {
           opts.addInt24(HtmlSink.MAX_INT24);
-          opts.addByte(HtmlBytes.xRELEMSTR8);
+          opts.addByte(HtmlBytes.xELEMSTR8);
           opts.addInt8(ElementName.HEAD.index());
           opts.addByte(HtmlBytes.VALUES8);
           opts.addInt24(0);
-          opts.addByte(HtmlBytes.RELEMEND8);
+          opts.addByte(HtmlBytes.ELEMEND8);
           opts.addInt8(ElementName.HEAD.index());
           opts.addInt8(3);
         })

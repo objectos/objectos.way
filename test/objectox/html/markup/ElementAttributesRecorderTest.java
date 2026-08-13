@@ -135,7 +135,7 @@ public class ElementAttributesRecorderTest {
         sink,
 
         HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.ATTRIBUTE88);
+          opts.addByte(HtmlBytes.xATTRIBUTE88);
           opts.addInt8(AttributeName.ID.index());
           opts.addInt8(opts.addObject("foo"));
           opts.addInt8(99);

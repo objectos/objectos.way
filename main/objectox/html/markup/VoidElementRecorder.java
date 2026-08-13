@@ -1,0 +1,92 @@
+/*
+ * Copyright (C) 2023-2026 Objectos Software LTDA.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package objectox.html.markup;
+
+import objectos.html.markup.RegularElementValue;
+import objectox.html.IntSize;
+import objectox.html.elem.ElementName;
+
+final class VoidElementRecorder {
+
+  private final HtmlSink sink;
+
+  private final ElementAttributesRecorder attributesRecorder;
+
+  VoidElementRecorder(HtmlSink sink, ElementAttributesRecorder attributesRecorder) {
+    this.sink = sink;
+
+    this.attributesRecorder = attributesRecorder;
+  }
+
+  public final ElementPointer record(ElementName name, RegularElementValue... values) {
+    final IntSize valuesSize;
+    valuesSize = sink.codeSize();
+
+    final int nameIndex;
+    nameIndex = name.index();
+
+    final IntSize nameSize;
+    nameSize = IntSize.of(nameIndex);
+
+    final int startIndex;
+    startIndex = startTag(nameIndex, nameSize);
+
+    final int valuesIndex;
+    valuesIndex = valuesBytes(valuesSize);
+
+    final int size;
+    size = attributesRecorder.record(name, valuesSize, values);
+
+    sink.setInt(valuesSize, valuesIndex, size);
+
+    sink.addByte(HtmlBytes.ELEMVOID);
+
+    return new ElementPointer(startIndex);
+  }
+
+  private int startTag(int nameIndex, IntSize nameSize) {
+    return switch (nameSize) {
+      case BIT8 -> startTag8(nameIndex);
+
+      case BIT16, BIT24 -> throw new UnsupportedOperationException();
+    };
+  }
+
+  private int startTag8(int nameIndex) {
+    final int startIndex;
+    startIndex = sink.addByte(HtmlBytes.ELEMSTR8);
+
+    sink.addInt8(nameIndex);
+
+    return startIndex;
+  }
+
+  private int valuesBytes(IntSize size) {
+    final byte values;
+    values = switch (size) {
+      case BIT8 -> HtmlBytes.VALUES8;
+
+      case BIT16 -> HtmlBytes.VALUES16;
+
+      case BIT24 -> HtmlBytes.VALUES24;
+    };
+
+    sink.addByte(values);
+
+    return sink.addInt(size, 0);
+  }
+
+}

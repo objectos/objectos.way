@@ -77,7 +77,7 @@ final class RegularElementRecorder {
 
   private int startTag8(int nameIndex) {
     final int startIndex;
-    startIndex = sink.addByte(HtmlBytes.RELEMSTR8);
+    startIndex = sink.addByte(HtmlBytes.ELEMSTR8);
 
     sink.addInt8(nameIndex);
 
@@ -108,7 +108,7 @@ final class RegularElementRecorder {
   }
 
   private void endTag8(int nameIndex) {
-    sink.addByte(HtmlBytes.RELEMEND8);
+    sink.addByte(HtmlBytes.ELEMEND8);
 
     sink.addInt8(nameIndex);
   }

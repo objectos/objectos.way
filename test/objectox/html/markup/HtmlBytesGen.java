@@ -31,12 +31,12 @@ public class HtmlBytesGen {
 
     comment("element");
 
-    value("RELEMSTR8");
-    value("RELEMEND8");
-    value("RELEMTXT88");
-    value("RELEMTXT816");
-    value("RELEMTXT824");
-    value("VELEMSTR8");
+    value("ELEMSTR8");
+    value("ELEMTXT88");
+    value("ELEMTXT816");
+    value("ELEMTXT824");
+    value("ELEMEND8");
+    value("ELEMVOID");
 
     comment("attributes");
 
@@ -79,12 +79,10 @@ public class HtmlBytesGen {
 
     comment("xelement");
 
-    value("xRELEMSTR8");
-    value("xRELEMEND8");
-    value("xRELEMTXT88");
-    value("xRELEMTXT816");
-    value("xRELEMTXT824");
-    value("xVELEMSTR8");
+    value("xELEMSTR8");
+    value("xELEMTXT88");
+    value("xELEMTXT816");
+    value("xELEMTXT824");
 
     comment("xattributes");
 

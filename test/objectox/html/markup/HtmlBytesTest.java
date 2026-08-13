@@ -25,8 +25,9 @@ public class HtmlBytesTest {
   @DataProvider
   public Object[][] consumeProvider() {
     return new Object[][] {
-        {HtmlBytes.STARTTAG8, HtmlBytes.xSTARTTAG8},
-        {HtmlBytes.xSTARTTAG8, HtmlBytes.xSTARTTAG8}
+        {HtmlBytes.ELEMSTR8, HtmlBytes.xELEMSTR8},
+        {HtmlBytes.RAW8, HtmlBytes.xRAW8},
+        {HtmlBytes.TEXT8, HtmlBytes.xTEXT8}
     };
   }
 
