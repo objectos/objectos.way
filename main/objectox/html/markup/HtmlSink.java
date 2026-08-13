@@ -181,6 +181,14 @@ public final class HtmlSink {
         && Arrays.equals(objects, 0, objectsIndex, that.objects, 0, that.objectsIndex);
   }
 
+  public final byte getByte(int index) {
+    return code[index];
+  }
+
+  public final int getInt8(int index) {
+    return toInt(index, 0);
+  }
+
   public final void jmp24(int index) {
     setInt24(index, codeIndex);
   }
@@ -200,6 +208,10 @@ public final class HtmlSink {
     requiredIndex = codeIndex + bytes + offset;
 
     return new HtmlSink(code, requiredIndex, objects, objectsIndex);
+  }
+
+  public final void setByte(int index, byte value) {
+    code[index] = value;
   }
 
   public final void setInt(IntSize size, int index, int value) {
@@ -258,6 +270,16 @@ public final class HtmlSink {
     code    = %s
     objects = %s
     """.formatted(HexFormat.of().formatHex($code), Arrays.toString($objects));
+  }
+
+  private int toInt(int index, int shift) {
+    final byte byteValue;
+    byteValue = code[index];
+
+    final int intValue;
+    intValue = Byte.toUnsignedInt(byteValue);
+
+    return intValue << shift;
   }
 
 }

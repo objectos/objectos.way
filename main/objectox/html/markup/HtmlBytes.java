@@ -89,15 +89,42 @@ public final class HtmlBytes {
 
   // xambiguous
 
-  public static final byte xAMBIGUOUS88 = -88;
-  public static final byte xAMBIGUOUS816 = -87;
-  public static final byte xAMBIGUOUS824 = -86;
+  public static final byte aAMBIGUOUS88 = -88;
+  public static final byte aAMBIGUOUS816 = -87;
+  public static final byte aAMBIGUOUS824 = -86;
+  public static final byte eAMBIGUOUS88 = -85;
+  public static final byte eAMBIGUOUS816 = -84;
+  public static final byte eAMBIGUOUS824 = -83;
 
   private HtmlBytes() {}
+
+  public static byte attr(byte source) {
+    return switch (source) {
+      case AMBIGUOUS88 -> aAMBIGUOUS88;
+
+      case AMBIGUOUS816 -> aAMBIGUOUS816;
+
+      case AMBIGUOUS824 -> aAMBIGUOUS824;
+
+      default -> throw new IllegalArgumentException("source=" + source);
+    };
+  }
 
   public static byte consume(byte source) {
     return switch (source) {
       case RELEMSTR8, xRELEMSTR8 -> xRELEMSTR8;
+
+      default -> throw new IllegalArgumentException("source=" + source);
+    };
+  }
+
+  public static byte elem(byte source) {
+    return switch (source) {
+      case AMBIGUOUS88 -> eAMBIGUOUS88;
+
+      case AMBIGUOUS816 -> eAMBIGUOUS816;
+
+      case AMBIGUOUS824 -> eAMBIGUOUS824;
 
       default -> throw new IllegalArgumentException("source=" + source);
     };

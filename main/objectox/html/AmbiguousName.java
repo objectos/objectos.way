@@ -40,6 +40,12 @@ public enum AmbiguousName {
     this.element = element;
   }
 
+  private static final AmbiguousName[] VALUES = values();
+
+  public static AmbiguousName get(int index) {
+    return VALUES[index];
+  }
+
   public final int index() {
     return ordinal();
   }

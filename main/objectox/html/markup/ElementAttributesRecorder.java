@@ -19,6 +19,7 @@ import objectos.html.markup.ElementMarkup;
 import objectos.html.markup.NoOpMarkup;
 import objectos.html.markup.RawMarkup;
 import objectos.html.markup.TextMarkup;
+import objectox.html.AmbiguousName;
 import objectox.html.IntSize;
 import objectox.html.elem.ElementName;
 
@@ -65,7 +66,35 @@ final class ElementAttributesRecorder {
   }
 
   private int ambiguous(ElementName elementName, IntSize size, int v) {
-    throw new UnsupportedOperationException("Implement me");
+    final byte b;
+    b = sink.getByte(v);
+
+    return switch (b) {
+      case HtmlBytes.AMBIGUOUS88,
+           HtmlBytes.AMBIGUOUS816,
+           HtmlBytes.AMBIGUOUS824 -> {
+        final int index;
+        index = sink.getInt8(v + 1);
+
+        final AmbiguousName ambiguous;
+        ambiguous = AmbiguousName.get(index);
+
+        if (ambiguous.isAttributeOf(elementName)) {
+          final byte marked;
+          marked = HtmlBytes.attr(b);
+
+          sink.setByte(v, marked);
+
+          sink.addInt(size, v);
+
+          yield 1;
+        } else {
+          yield 0;
+        }
+      }
+
+      default -> throw new IllegalStateException();
+    };
   }
 
   private int fragment(ElementName elementName, IntSize size, int v) {
