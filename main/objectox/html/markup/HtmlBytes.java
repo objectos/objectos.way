@@ -47,52 +47,55 @@ public final class HtmlBytes {
 
   // fragment
 
-  public static final byte FRAG8 = -112;
-  public static final byte FRAG16 = -111;
-  public static final byte FRAG24 = -110;
+  public static final byte FRAGSTR = -112;
+  public static final byte FRAGEND = -111;
 
   // text
 
-  public static final byte TEXT8 = -109;
-  public static final byte TEXT16 = -108;
-  public static final byte TEXT24 = -107;
+  public static final byte TEXT8 = -110;
+  public static final byte TEXT16 = -109;
+  public static final byte TEXT24 = -108;
 
   // raw
 
-  public static final byte RAW8 = -106;
-  public static final byte RAW16 = -105;
-  public static final byte RAW24 = -104;
+  public static final byte RAW8 = -107;
+  public static final byte RAW16 = -106;
+  public static final byte RAW24 = -105;
 
   // contents
 
-  public static final byte VALUES8 = -103;
-  public static final byte VALUES16 = -102;
-  public static final byte VALUES24 = -101;
+  public static final byte VALUES8 = -104;
+  public static final byte VALUES16 = -103;
+  public static final byte VALUES24 = -102;
 
   // xelement
 
-  public static final byte xELEMSTR8 = -100;
-  public static final byte xELEMTXT88 = -99;
-  public static final byte xELEMTXT816 = -98;
-  public static final byte xELEMTXT824 = -97;
+  public static final byte xELEMSTR8 = -101;
+  public static final byte xELEMTXT88 = -100;
+  public static final byte xELEMTXT816 = -99;
+  public static final byte xELEMTXT824 = -98;
 
   // xattributes
 
-  public static final byte xATTRIBUTE88 = -96;
-  public static final byte xATTRIBUTE816 = -95;
-  public static final byte xATTRIBUTE824 = -94;
-  public static final byte xBOOLEAN8 = -93;
-  public static final byte xBOOLEAN16 = -92;
-  public static final byte xBOOLEAN24 = -91;
+  public static final byte xATTRIBUTE88 = -97;
+  public static final byte xATTRIBUTE816 = -96;
+  public static final byte xATTRIBUTE824 = -95;
+  public static final byte xBOOLEAN8 = -94;
+  public static final byte xBOOLEAN16 = -93;
+  public static final byte xBOOLEAN24 = -92;
 
   // xambiguous
 
-  public static final byte aAMBIGUOUS88 = -90;
-  public static final byte aAMBIGUOUS816 = -89;
-  public static final byte aAMBIGUOUS824 = -88;
-  public static final byte eAMBIGUOUS88 = -87;
-  public static final byte eAMBIGUOUS816 = -86;
-  public static final byte eAMBIGUOUS824 = -85;
+  public static final byte aAMBIGUOUS88 = -91;
+  public static final byte aAMBIGUOUS816 = -90;
+  public static final byte aAMBIGUOUS824 = -89;
+  public static final byte eAMBIGUOUS88 = -88;
+  public static final byte eAMBIGUOUS816 = -87;
+  public static final byte eAMBIGUOUS824 = -86;
+
+  // xfragment
+
+  public static final byte xFRAGSTR = -85;
 
   // xtext
 

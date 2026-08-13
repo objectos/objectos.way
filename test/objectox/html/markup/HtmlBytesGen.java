@@ -55,9 +55,8 @@ public class HtmlBytesGen {
 
     comment("fragment");
 
-    value("FRAG8");
-    value("FRAG16");
-    value("FRAG24");
+    value("FRAGSTR");
+    value("FRAGEND");
 
     comment("text");
 
@@ -102,6 +101,10 @@ public class HtmlBytesGen {
     value("eAMBIGUOUS88");
     value("eAMBIGUOUS816");
     value("eAMBIGUOUS824");
+
+    comment("xfragment");
+
+    value("xFRAGSTR");
 
     comment("xtext");
 
