@@ -17,13 +17,10 @@ package objectox.html.markup;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.html.Attribute;
-import objectos.html.BooleanAttribute;
 import objectox.html.AmbiguousName;
-import objectox.html.HtmlPojo;
+import objectox.html.IntSize;
 import objectox.html.attr.AttributeName;
 import objectox.html.elem.ElementName;
-import objectox.html.elem.ElementNamePojo;
 import org.testng.annotations.Test;
 
 public class ElementChildrenRecorderTest {
@@ -31,21 +28,41 @@ public class ElementChildrenRecorderTest {
   @Test(description = "ambiguous name that resolves to a child element")
   public void ambiguous01() {
     final HtmlSink sink;
-    sink = new HtmlSink();
+    sink = HtmlSinkY.create(opts -> {
+      opts.addInt24(HtmlSink.MAX_INT24);
+      opts.addByte(HtmlBytes.AMBIGUOUS88);
+      opts.addInt8(AmbiguousName.TITLE.index());
+      opts.addInt8(opts.addObject("foo"));
+      opts.addInt8(99);
+    });
 
-    final String text;
-    text = "foo";
+    final ElementChildrenRecorder subject;
+    subject = new ElementChildrenRecorder(sink);
 
-    final AmbiguousPojo value;
-    value = AmbiguousPojo.of0(AmbiguousName.TITLE, text);
+    final ElementName elementName;
+    elementName = ElementName.HEAD;
+
+    final IntSize size;
+    size = IntSize.BIT8;
+
+    final AmbiguousPointer pointer;
+    pointer = new AmbiguousPointer(3);
+
+    final int res;
+    res = subject.record(elementName, size, pointer);
+
+    assertEquals(res, 1);
 
     assertEquals(
-        record(sink, ElementNamePojo.HEAD, value),
+        sink,
 
         HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.ELTXT88);
-          opts.addInt8(ElementNamePojo.TITLE.index());
-          opts.addInt8(opts.addObject(text));
+          opts.addInt24(HtmlSink.MAX_INT24);
+          opts.addByte(HtmlBytes.eAMBIGUOUS88);
+          opts.addInt8(AmbiguousName.TITLE.index());
+          opts.addInt8(opts.addObject("foo"));
+          opts.addInt8(99);
+          opts.addInt8(3);
         })
     );
   }
@@ -53,45 +70,80 @@ public class ElementChildrenRecorderTest {
   @Test(description = "ambiguous name that resolves to an attribute")
   public void ambiguous02() {
     final HtmlSink sink;
-    sink = new HtmlSink();
+    sink = HtmlSinkY.create(opts -> {
+      opts.addInt24(HtmlSink.MAX_INT24);
+      opts.addByte(HtmlBytes.aAMBIGUOUS88);
+      opts.addInt8(AmbiguousName.TITLE.index());
+      opts.addInt8(opts.addObject("foo"));
+      opts.addInt8(99);
+    });
 
-    final AmbiguousPojo value;
-    value = AmbiguousPojo.of0(AmbiguousName.TITLE, "foo");
+    final ElementChildrenRecorder subject;
+    subject = new ElementChildrenRecorder(sink);
+
+    final ElementName elementName;
+    elementName = ElementName.DIV;
+
+    final IntSize size;
+    size = IntSize.BIT8;
+
+    final AmbiguousPointer pointer;
+    pointer = new AmbiguousPointer(3);
+
+    final int res;
+    res = subject.record(elementName, size, pointer);
+
+    assertEquals(res, 0);
 
     assertEquals(
-        record(sink, ElementName.HTML, value),
+        sink,
 
-        HtmlSinkY.create(_ -> {})
+        HtmlSinkY.create(opts -> {
+          opts.addInt24(HtmlSink.MAX_INT24);
+          opts.addByte(HtmlBytes.aAMBIGUOUS88);
+          opts.addInt8(AmbiguousName.TITLE.index());
+          opts.addInt8(opts.addObject("foo"));
+          opts.addInt8(99);
+        })
     );
   }
 
   @Test(description = "attribute is not a child; sink unchanged")
   public void attribute01() {
     final HtmlSink sink;
-    sink = new HtmlSink();
+    sink = HtmlSinkY.create(opts -> {
+      opts.addInt24(HtmlSink.MAX_INT24);
+      opts.addByte(HtmlBytes.ATTRIBUTE88);
+      opts.addInt8(AttributeName.ID.index());
+      opts.addInt8(opts.addObject("foo"));
+    });
 
-    final Attribute attr;
-    attr = Attribute.of(AttributeName.CHARSET, "UTF-8");
+    final ElementChildrenRecorder subject;
+    subject = new ElementChildrenRecorder(sink);
+
+    final ElementName elementName;
+    elementName = ElementName.DIV;
+
+    final IntSize size;
+    size = IntSize.BIT8;
+
+    final AttributePointer pointer;
+    pointer = new AttributePointer(3);
+
+    final int res;
+    res = subject.record(elementName, size, pointer);
+
+    assertEquals(res, 0);
 
     assertEquals(
-        record(sink, ElementNamePojo.HEAD, attr),
+        sink,
 
-        HtmlSinkY.create(_ -> {})
-    );
-  }
-
-  @Test(description = "boolean attribute is not a child; sink unchanged")
-  public void booleanAttribute01() {
-    final HtmlSink sink;
-    sink = new HtmlSink();
-
-    final BooleanAttribute attr;
-    attr = BooleanAttribute.of(AttributeName.AUTOFOCUS);
-
-    assertEquals(
-        record(sink, ElementNamePojo.HEAD, attr),
-
-        HtmlSinkY.create(_ -> {})
+        HtmlSinkY.create(opts -> {
+          opts.addInt24(HtmlSink.MAX_INT24);
+          opts.addByte(HtmlBytes.ATTRIBUTE88);
+          opts.addInt8(AttributeName.ID.index());
+          opts.addInt8(opts.addObject("foo"));
+        })
     );
   }
 
@@ -99,50 +151,44 @@ public class ElementChildrenRecorderTest {
   public void element01() {
     final HtmlSink sink;
     sink = HtmlSinkY.create(opts -> {
-      opts.addByte(HtmlBytes.STARTTAG8);
-      opts.addInt8(ElementNamePojo.HEAD.index());
-      opts.addByte(HtmlBytes.JMP24);
-      opts.addInt24(8);
-      opts.addByte(HtmlBytes.ENDTAG8);
-      opts.addInt8(ElementNamePojo.HEAD.index());
+      opts.addInt24(HtmlSink.MAX_INT24);
+      opts.addByte(HtmlBytes.RELEMSTR8);
+      opts.addInt8(ElementName.HEAD.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt24(0);
+      opts.addByte(HtmlBytes.RELEMEND8);
+      opts.addInt8(ElementName.HEAD.index());
     });
 
-    final int childStart;
-    childStart = 0;
+    final ElementChildrenRecorder subject;
+    subject = new ElementChildrenRecorder(sink);
 
-    final ElementPointer child;
-    child = new ElementPointer(childStart);
+    final ElementName elementName;
+    elementName = ElementName.DIV;
 
-    assertEquals(
-        record(sink, ElementName.HTML, child),
+    final IntSize size;
+    size = IntSize.BIT8;
 
-        HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.xSTARTTAG8);
-          opts.addInt8(ElementNamePojo.HEAD.index());
-          opts.addByte(HtmlBytes.JMP24);
-          opts.addInt24(8);
-          opts.addByte(HtmlBytes.ENDTAG8);
-          opts.addInt8(ElementNamePojo.HEAD.index());
-          opts.addByte(HtmlBytes.ELEM8);
-          opts.addInt8(childStart);
-        })
-    );
-  }
+    final ElementPointer pointer;
+    pointer = new ElementPointer(3);
 
-  @Test(description = "fragment child")
-  public void fragment01() {
-    final HtmlSink sink;
-    sink = new HtmlSink();
+    final int res;
+    res = subject.record(elementName, size, pointer);
 
-    final HtmlPojo frag;
-    frag = new HtmlPojo(new HtmlSink());
+    assertEquals(res, 1);
 
     assertEquals(
-        record(sink, ElementNamePojo.HEAD, frag),
+        sink,
 
         HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.FRAG8);
-          opts.addInt8(opts.addObject(frag));
+          opts.addInt24(HtmlSink.MAX_INT24);
+          opts.addByte(HtmlBytes.xRELEMSTR8);
+          opts.addInt8(ElementName.HEAD.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt24(0);
+          opts.addByte(HtmlBytes.RELEMEND8);
+          opts.addInt8(ElementName.HEAD.index());
+          opts.addInt8(3);
         })
     );
   }
@@ -150,32 +196,67 @@ public class ElementChildrenRecorderTest {
   @Test(description = "no-op is not a child; sink unchanged")
   public void noop01() {
     final HtmlSink sink;
-    sink = new HtmlSink();
+    sink = HtmlSinkY.create(opts -> {
+      opts.addInt24(HtmlSink.MAX_INT24);
+    });
+
+    final ElementChildrenRecorder subject;
+    subject = new ElementChildrenRecorder(sink);
+
+    final ElementName elementName;
+    elementName = ElementName.DIV;
+
+    final IntSize size;
+    size = IntSize.BIT8;
+
+    final int res;
+    res = subject.record(elementName, size, NoOpInstructionPojo.INSTANCE);
+
+    assertEquals(res, 0);
 
     assertEquals(
-        record(sink, ElementNamePojo.HEAD, NoOpInstructionPojo.INSTANCE),
+        sink,
 
-        HtmlSinkY.create(_ -> {})
+        HtmlSinkY.create(opts -> {
+          opts.addInt24(HtmlSink.MAX_INT24);
+        })
     );
   }
 
   @Test(description = "raw node child")
   public void raw01() {
     final HtmlSink sink;
-    sink = new HtmlSink();
+    sink = HtmlSinkY.create(opts -> {
+      opts.addInt24(HtmlSink.MAX_INT24);
+      opts.addByte(HtmlBytes.RAW8);
+      opts.addInt8(opts.addObject("ipsum"));
+    });
 
-    final String value;
-    value = "Ipsum";
+    final ElementChildrenRecorder subject;
+    subject = new ElementChildrenRecorder(sink);
 
-    final RawPointer raw;
-    raw = new RawPointer(value);
+    final ElementName elementName;
+    elementName = ElementName.DIV;
+
+    final IntSize size;
+    size = IntSize.BIT8;
+
+    final RawPointer pointer;
+    pointer = new RawPointer(3);
+
+    final int res;
+    res = subject.record(elementName, size, pointer);
+
+    assertEquals(res, 1);
 
     assertEquals(
-        record(sink, ElementNamePojo.HEAD, raw),
+        sink,
 
         HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.RAW8);
-          opts.addInt8(opts.addObject(value));
+          opts.addInt24(HtmlSink.MAX_INT24);
+          opts.addByte(HtmlBytes.xRAW8);
+          opts.addInt8(opts.addObject("ipsum"));
+          opts.addInt8(3);
         })
     );
   }
@@ -183,49 +264,39 @@ public class ElementChildrenRecorderTest {
   @Test(description = "text node child")
   public void text01() {
     final HtmlSink sink;
-    sink = new HtmlSink();
-
-    final String value;
-    value = "Ipsum";
-
-    final TextPointer text;
-    text = new TextPointer(value);
-
-    assertEquals(
-        record(sink, ElementNamePojo.HEAD, text),
-
-        HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.TEXT8);
-          opts.addInt8(opts.addObject(value));
-        })
-    );
-  }
-
-  private HtmlSink record(HtmlSink sink, ElementName elementName, ElementValue... contents) {
-    final AmbiguousRecorder childAmbiguousRecorder;
-    childAmbiguousRecorder = new AmbiguousRecorder(sink);
-
-    final ChildElementMarker childElementMarker;
-    childElementMarker = new ChildElementMarker(sink);
-
-    final ChildElementRecorder childElementRecorder;
-    childElementRecorder = new ChildElementRecorder(sink);
-
-    final ChildFragmentRecorder childFragmentRecorder;
-    childFragmentRecorder = new ChildFragmentRecorder(sink);
-
-    final RawRecorder childRawRecorder;
-    childRawRecorder = new RawRecorder(sink);
-
-    final TextRecorder childTextRecorder;
-    childTextRecorder = new TextRecorder(sink);
+    sink = HtmlSinkY.create(opts -> {
+      opts.addInt24(HtmlSink.MAX_INT24);
+      opts.addByte(HtmlBytes.TEXT8);
+      opts.addInt8(opts.addObject("ipsum"));
+    });
 
     final ElementChildrenRecorder subject;
-    subject = new ElementChildrenRecorder(childAmbiguousRecorder, childElementMarker, childElementRecorder, childFragmentRecorder, childRawRecorder, childTextRecorder);
+    subject = new ElementChildrenRecorder(sink);
 
-    subject.record(elementName, contents);
+    final ElementName elementName;
+    elementName = ElementName.DIV;
 
-    return sink;
+    final IntSize size;
+    size = IntSize.BIT8;
+
+    final RawPointer pointer;
+    pointer = new RawPointer(3);
+
+    final int res;
+    res = subject.record(elementName, size, pointer);
+
+    assertEquals(res, 1);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addInt24(HtmlSink.MAX_INT24);
+          opts.addByte(HtmlBytes.xTEXT8);
+          opts.addInt8(opts.addObject("ipsum"));
+          opts.addInt8(3);
+        })
+    );
   }
 
 }

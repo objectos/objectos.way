@@ -56,13 +56,38 @@ final class ElementChildrenRecorder {
   }
 
   private int add(IntSize size, int v) {
+    sink.consume(v);
+
     sink.addInt(size, v);
 
     return 1;
   }
 
   private int ambiguous(ElementName elementName, IntSize size, int v) {
-    throw new UnsupportedOperationException("Implement me");
+    final byte b;
+    b = sink.getByte(v);
+
+    return switch (b) {
+      case HtmlBytes.AMBIGUOUS88 -> ambiguous(HtmlBytes.eAMBIGUOUS88, size, v);
+
+      case HtmlBytes.AMBIGUOUS816 -> ambiguous(HtmlBytes.eAMBIGUOUS816, size, v);
+
+      case HtmlBytes.AMBIGUOUS824 -> ambiguous(HtmlBytes.eAMBIGUOUS824, size, v);
+
+      case HtmlBytes.aAMBIGUOUS88,
+           HtmlBytes.aAMBIGUOUS816,
+           HtmlBytes.aAMBIGUOUS824 -> 0;
+
+      default -> throw new IllegalStateException();
+    };
+  }
+
+  private int ambiguous(byte proto, IntSize size, int v) {
+    sink.setByte(v, proto);
+
+    sink.addInt(size, v);
+
+    return 1;
   }
 
   private int fragment(ElementName name, IntSize size, int v) {

@@ -104,6 +104,18 @@ public class HtmlBytesGen {
     value("eAMBIGUOUS88");
     value("eAMBIGUOUS816");
     value("eAMBIGUOUS824");
+
+    comment("xtext");
+
+    value("xTEXT8");
+    value("xTEXT16");
+    value("xTEXT24");
+
+    comment("xraw");
+
+    value("xRAW8");
+    value("xRAW16");
+    value("xRAW24");
   }
 
   protected int value = -128;
