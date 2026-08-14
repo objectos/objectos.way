@@ -19,16 +19,29 @@ import objectos.html.markup.ElementMarkup;
 import objectos.html.markup.NoOpMarkup;
 import objectos.html.markup.RawMarkup;
 import objectos.html.markup.TextMarkup;
-import objectox.html.AmbiguousName;
 import objectox.html.IntSize;
 import objectox.html.elem.ElementName;
 
 final class ElementAttributesRecorder {
 
-  private final HtmlSink sink;
+  private final AmbiguousAttributeRecorder ambiguousAttributeRecorder;
 
-  ElementAttributesRecorder(HtmlSink sink) {
-    this.sink = sink;
+  private final FragmentAttributeRecorder fragmentAttributeRecorder;
+
+  private final ValueRecorder valueRecorder;
+
+  ElementAttributesRecorder(
+      AmbiguousAttributeRecorder ambiguousAttributeRecorder,
+
+      FragmentAttributeRecorder fragmentAttributeRecorder,
+
+      ValueRecorder valueRecorder
+  ) {
+    this.ambiguousAttributeRecorder = ambiguousAttributeRecorder;
+
+    this.fragmentAttributeRecorder = fragmentAttributeRecorder;
+
+    this.valueRecorder = valueRecorder;
   }
 
   public final int record(ElementName name, IntSize size, ElementValue... values) {
@@ -43,13 +56,13 @@ final class ElementAttributesRecorder {
 
   private int record0(ElementName elementName, IntSize size, ElementValue value) {
     return switch (value) {
-      case AmbiguousPointer(int v) -> ambiguous(elementName, size, v);
+      case AmbiguousPointer(int v) -> ambiguousAttributeRecorder.record(elementName, size, v);
 
-      case AttributePointer(int v) -> add(size, v);
+      case AttributePointer(int v) -> valueRecorder.record(size, v);
 
       case ElementMarkup _ -> 0;
 
-      case FragmentPointer(int v) -> fragment(elementName, size, v);
+      case FragmentPointer(int v) -> fragmentAttributeRecorder.record(elementName, size, v);
 
       case NoOpMarkup _ -> 0;
 
@@ -57,50 +70,6 @@ final class ElementAttributesRecorder {
 
       case TextMarkup _ -> 0;
     };
-  }
-
-  private int add(IntSize size, int v) {
-    sink.consume(v);
-
-    sink.addInt(size, v);
-
-    return 1;
-  }
-
-  private int ambiguous(ElementName elementName, IntSize size, int v) {
-    final byte b;
-    b = sink.getByte(v);
-
-    return switch (b) {
-      case HtmlBytes.AMBIGUOUS88,
-           HtmlBytes.AMBIGUOUS816,
-           HtmlBytes.AMBIGUOUS824 -> {
-        final int index;
-        index = sink.getInt8(v + 1);
-
-        final AmbiguousName ambiguous;
-        ambiguous = AmbiguousName.get(index);
-
-        if (ambiguous.isAttributeOf(elementName)) {
-          final byte marked;
-          marked = HtmlBytes.attr(b);
-
-          sink.setByte(v, marked);
-
-          sink.addInt(size, v);
-
-          yield 1;
-        } else {
-          yield 0;
-        }
-      }
-
-      default -> throw new IllegalStateException();
-    };
-  }
-
-  private int fragment(ElementName elementName, IntSize size, int v) {
-    throw new UnsupportedOperationException("Implement me");
   }
 
 }

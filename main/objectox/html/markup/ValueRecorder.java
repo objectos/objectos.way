@@ -15,43 +15,22 @@
  */
 package objectox.html.markup;
 
-import objectox.html.HtmlPojo;
 import objectox.html.IntSize;
 
-final class ChildFragmentRecorder {
+final class ValueRecorder {
 
   private final HtmlSink sink;
 
-  ChildFragmentRecorder(HtmlSink sink) {
+  ValueRecorder(HtmlSink sink) {
     this.sink = sink;
   }
 
-  public final void record(HtmlPojo html) {
-    final int fragIndex;
-    fragIndex = sink.addObject(html);
+  public final int record(IntSize size, int value) {
+    sink.consume(value);
 
-    final IntSize fragSize;
-    fragSize = IntSize.of(fragIndex);
+    sink.addInt(size, value);
 
-    switch (fragSize) {
-      case BIT8 -> {
-        sink.addByte(HtmlBytes.FRAG8);
-
-        sink.addInt8(fragIndex);
-      }
-
-      case BIT16 -> {
-        sink.addByte(HtmlBytes.FRAG16);
-
-        sink.addInt16(fragIndex);
-      }
-
-      case BIT24 -> {
-        sink.addByte(HtmlBytes.FRAG24);
-
-        sink.addInt24(fragIndex);
-      }
-    }
+    return 1;
   }
 
 }

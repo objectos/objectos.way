@@ -147,6 +147,10 @@ public final class HtmlSink {
     return toInt(index, 0);
   }
 
+  public final boolean hasByte(int index) {
+    return index < codeIndex;
+  }
+
   public final Object[] objects() {
     return Arrays.copyOf(objects, objectsIndex);
   }
