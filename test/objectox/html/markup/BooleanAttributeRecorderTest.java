@@ -18,7 +18,6 @@ package objectox.html.markup;
 import static org.testng.Assert.assertEquals;
 
 import objectox.html.attr.AttributeName;
-import objectox.html.attr.BooleanAttributePojo;
 import org.testng.annotations.Test;
 
 public class BooleanAttributeRecorderTest {
@@ -34,10 +33,7 @@ public class BooleanAttributeRecorderTest {
     final AttributeName name;
     name = new AttributeName(HtmlSink.MAX_INT8, "foo");
 
-    final BooleanAttributePojo attribute;
-    attribute = new BooleanAttributePojo(name);
-
-    subject.record(attribute);
+    subject.record(name);
 
     assertEquals(
         sink,
@@ -60,10 +56,7 @@ public class BooleanAttributeRecorderTest {
     final AttributeName name;
     name = new AttributeName(HtmlSink.MAX_INT16, "foo");
 
-    final BooleanAttributePojo attribute;
-    attribute = new BooleanAttributePojo(name);
-
-    subject.record(attribute);
+    subject.record(name);
 
     assertEquals(
         sink,
@@ -86,10 +79,7 @@ public class BooleanAttributeRecorderTest {
     final AttributeName name;
     name = new AttributeName(HtmlSink.MAX_INT24, "foo");
 
-    final BooleanAttributePojo attribute;
-    attribute = new BooleanAttributePojo(name);
-
-    subject.record(attribute);
+    subject.record(name);
 
     assertEquals(
         sink,
@@ -114,11 +104,8 @@ public class BooleanAttributeRecorderTest {
     final AttributeName name;
     name = new AttributeName(HtmlSink.MAX_INT24, "foo");
 
-    final BooleanAttributePojo attribute;
-    attribute = new BooleanAttributePojo(name);
-
     final AttributePointer res;
-    res = subject.record(attribute);
+    res = subject.record(name);
 
     assertEquals(res.value(), 3);
   }

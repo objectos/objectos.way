@@ -58,22 +58,22 @@ public sealed abstract class MarkupPojo
 
   @Override
   final AttributeMarkup boolAttr(AttributeName name) {
-    throw new UnsupportedOperationException("Implement me");
+    return recorder.boolAttr(name);
   }
 
   @Override
   final AttributeMarkup attrImpl(AttributeName name, JsAction action) {
-    throw new UnsupportedOperationException("Implement me");
+    return recorder.attr(name, action);
   }
 
   @Override
   final AttributeMarkup attrImpl(AttributeName name, String value) {
-    throw new UnsupportedOperationException("Implement me");
+    return recorder.attr(name, value);
   }
 
   @Override
   final AmbiguousMarkup ambiguous(AmbiguousName name, String text) {
-    throw new UnsupportedOperationException("Implement me");
+    return recorder.ambiguous(name, text);
   }
 
   @Override
@@ -83,7 +83,7 @@ public sealed abstract class MarkupPojo
 
   @Override
   final ElementMarkup elemImpl(ElementName name, RegularElementValue... values) {
-    throw new UnsupportedOperationException("Implement me");
+    return recorder.elem(name, values);
   }
 
   @Override

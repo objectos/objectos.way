@@ -17,7 +17,6 @@ package objectox.html.markup;
 
 import objectox.html.IntSize;
 import objectox.html.attr.AttributeName;
-import objectox.html.attr.BooleanAttributePojo;
 
 final class BooleanAttributeRecorder {
 
@@ -27,10 +26,7 @@ final class BooleanAttributeRecorder {
     this.sink = sink;
   }
 
-  public final AttributePointer record(BooleanAttributePojo attribute) {
-    final AttributeName name;
-    name = attribute.attributeName();
-
+  public final AttributePointer record(AttributeName name) {
     final int nameIndex;
     nameIndex = name.index();
 

@@ -15,37 +15,59 @@
  */
 package objectox.html.markup;
 
+import objectos.html.markup.AmbiguousMarkup;
+import objectos.html.markup.ElementMarkup;
+import objectos.html.markup.RegularElementValue;
 import objectos.script.JsAction;
+import objectox.html.AmbiguousName;
 import objectox.html.HtmlPojo;
 import objectox.html.attr.AttributeName;
 import objectox.html.elem.ElementName;
 
 public final class Recorder {
 
+  private final AmbiguousRecorder ambiguousRecorder;
+
   private final AttributeRecorder attributeRecorder;
+
+  private final BooleanAttributeRecorder booleanAttributeRecorder;
 
   private final DoctypeRecorder doctypeRecorder;
 
   private final DocumentCompiler documentCompiler;
 
-  private final RegularElementRecorder elementRecorder;
+  private final FragmentRecorder fragmentRecorder;
+
+  private final RawRecorder rawRecorder;
+
+  private final RegularElementRecorder regularElementRecorder;
+
+  private final TextRecorder textRecorder;
+
+  private final VoidElementRecorder voidElementRecorder;
 
   Recorder(
+      AmbiguousRecorder ambiguousRecorder,
       AttributeRecorder attributeRecorder,
-
+      BooleanAttributeRecorder booleanAttributeRecorder,
       DoctypeRecorder doctypeRecorder,
-
       DocumentCompiler documentCompiler,
-
-      RegularElementRecorder elementRecorder
+      FragmentRecorder fragmentRecorder,
+      RawRecorder rawRecorder,
+      RegularElementRecorder regularElementRecorder,
+      TextRecorder textRecorder,
+      VoidElementRecorder voidElementRecorder
   ) {
+    this.ambiguousRecorder = ambiguousRecorder;
     this.attributeRecorder = attributeRecorder;
-
+    this.booleanAttributeRecorder = booleanAttributeRecorder;
     this.doctypeRecorder = doctypeRecorder;
-
     this.documentCompiler = documentCompiler;
-
-    this.elementRecorder = elementRecorder;
+    this.fragmentRecorder = fragmentRecorder;
+    this.rawRecorder = rawRecorder;
+    this.regularElementRecorder = regularElementRecorder;
+    this.textRecorder = textRecorder;
+    this.voidElementRecorder = voidElementRecorder;
   }
 
   public static Recorder create() {
@@ -53,43 +75,61 @@ public final class Recorder {
   }
 
   public static Recorder of(HtmlSink sink) {
-    final AttributeRecorder attributeRecorder;
-    attributeRecorder = new AttributeRecorder(sink);
+    final AmbiguousAttributeRecorder ambiguousAttributeRecorder;
+    ambiguousAttributeRecorder = new AmbiguousAttributeRecorder(sink);
 
-    final BooleanAttributeRecorder booleanAttributeRecorder;
-    booleanAttributeRecorder = new BooleanAttributeRecorder(sink);
+    final ValueRecorder valueRecorder;
+    valueRecorder = new ValueRecorder(sink);
+
+    final FragmentAttributeRecorder fragmentAttributeRecorder;
+    fragmentAttributeRecorder = new FragmentAttributeRecorder(sink, ambiguousAttributeRecorder, valueRecorder);
+
+    final ElementAttributesRecorder elementAttributesRecorder;
+    elementAttributesRecorder = new ElementAttributesRecorder(ambiguousAttributeRecorder, fragmentAttributeRecorder, valueRecorder);
+
+    final AmbiguousChildRecorder ambiguousChildRecorder;
+    ambiguousChildRecorder = new AmbiguousChildRecorder(sink);
+
+    final FragmentChildRecorder fragmentChildRecorder;
+    fragmentChildRecorder = new FragmentChildRecorder(sink, ambiguousChildRecorder, valueRecorder);
 
     return new Recorder(
-        attributeRecorder,
+        new AmbiguousRecorder(sink),
+
+        new AttributeRecorder(sink),
+
+        new BooleanAttributeRecorder(sink),
 
         new DoctypeRecorder(sink),
 
         new DocumentCompiler(sink),
 
+        new FragmentRecorder(sink),
+
+        new RawRecorder(sink),
+
         new RegularElementRecorder(
             sink,
 
-            new ElementAttributesRecorder(
-                attributeRecorder,
-
-                booleanAttributeRecorder
-            ),
+            elementAttributesRecorder,
 
             new ElementChildrenRecorder(
-                new AmbiguousRecorder(sink),
+                ambiguousChildRecorder,
 
-                new ChildElementMarker(sink),
+                fragmentChildRecorder,
 
-                new ChildElementRecorder(sink),
-
-                new ChildFragmentRecorder(sink),
-
-                new RawRecorder(sink),
-
-                new TextRecorder(sink)
+                valueRecorder
             )
-        )
+        ),
+
+        new TextRecorder(sink),
+
+        new VoidElementRecorder(sink, elementAttributesRecorder)
     );
+  }
+
+  public final AmbiguousMarkup ambiguous(AmbiguousName name, String text) {
+    return ambiguousRecorder.record(name, text);
   }
 
   public final AttributePointer attr(AttributeName name, JsAction value) {
@@ -100,6 +140,10 @@ public final class Recorder {
     return attributeRecorder.record(name, value);
   }
 
+  public final AttributePointer boolAttr(AttributeName name) {
+    return booleanAttributeRecorder.record(name);
+  }
+
   public final HtmlPojo compile() {
     return documentCompiler.compile();
   }
@@ -108,8 +152,8 @@ public final class Recorder {
     doctypeRecorder.record();
   }
 
-  public final ElementPointer element(ElementName name, ElementValue... contents) {
-    return elementRecorder.record(name, contents);
+  public final ElementMarkup elem(ElementName name, RegularElementValue... values) {
+    return regularElementRecorder.record(name, values);
   }
 
 }

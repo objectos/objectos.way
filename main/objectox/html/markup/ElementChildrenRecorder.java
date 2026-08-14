@@ -17,81 +17,55 @@ package objectox.html.markup;
 
 import objectos.html.markup.NoOpMarkup;
 import objectox.html.IntSize;
-import objectox.html.elem.ElementName;
 
 final class ElementChildrenRecorder {
 
-  private final HtmlSink sink;
+  private final AmbiguousChildRecorder ambiguousChildRecorder;
 
-  ElementChildrenRecorder(HtmlSink sink) {
-    this.sink = sink;
+  private final FragmentChildRecorder fragmentChildRecorder;
+
+  private final ValueRecorder valueRecorder;
+
+  ElementChildrenRecorder(
+      AmbiguousChildRecorder ambiguousChildRecorder,
+
+      FragmentChildRecorder fragmentChildRecorder,
+
+      ValueRecorder valueRecorder
+  ) {
+    this.ambiguousChildRecorder = ambiguousChildRecorder;
+
+    this.fragmentChildRecorder = fragmentChildRecorder;
+
+    this.valueRecorder = valueRecorder;
   }
 
-  public final int record(ElementName elementName, IntSize size, ElementValue... values) {
+  public final int record(IntSize size, ElementValue... values) {
     int sum = 0;
 
     for (ElementValue value : values) {
-      sum += record0(elementName, size, value);
+      sum += record0(size, value);
     }
 
     return sum;
   }
 
-  private int record0(ElementName elementName, IntSize size, ElementValue value) {
+  private int record0(IntSize size, ElementValue value) {
     return switch (value) {
-      case AmbiguousPointer(int v) -> ambiguous(elementName, size, v);
+      case AmbiguousPointer(int v) -> ambiguousChildRecorder.record(size, v);
 
       case AttributePointer _ -> 0;
 
-      case ElementPointer(int v) -> add(size, v);
+      case ElementPointer(int v) -> valueRecorder.record(size, v);
 
-      case FragmentPointer(int v) -> fragment(elementName, size, v);
+      case FragmentPointer(int v) -> fragmentChildRecorder.record(size, v);
 
       case NoOpMarkup _ -> 0;
 
-      case RawPointer(int v) -> add(size, v);
+      case RawPointer(int v) -> valueRecorder.record(size, v);
 
-      case TextPointer(int v) -> add(size, v);
+      case TextPointer(int v) -> valueRecorder.record(size, v);
     };
-  }
-
-  private int add(IntSize size, int v) {
-    sink.consume(v);
-
-    sink.addInt(size, v);
-
-    return 1;
-  }
-
-  private int ambiguous(ElementName elementName, IntSize size, int v) {
-    final byte b;
-    b = sink.getByte(v);
-
-    return switch (b) {
-      case HtmlBytes.AMBIGUOUS88 -> ambiguous(HtmlBytes.eAMBIGUOUS88, size, v);
-
-      case HtmlBytes.AMBIGUOUS816 -> ambiguous(HtmlBytes.eAMBIGUOUS816, size, v);
-
-      case HtmlBytes.AMBIGUOUS824 -> ambiguous(HtmlBytes.eAMBIGUOUS824, size, v);
-
-      case HtmlBytes.aAMBIGUOUS88,
-           HtmlBytes.aAMBIGUOUS816,
-           HtmlBytes.aAMBIGUOUS824 -> 0;
-
-      default -> throw new IllegalStateException();
-    };
-  }
-
-  private int ambiguous(byte proto, IntSize size, int v) {
-    sink.setByte(v, proto);
-
-    sink.addInt(size, v);
-
-    return 1;
-  }
-
-  private int fragment(ElementName name, IntSize size, int v) {
-    throw new UnsupportedOperationException("Implement me");
   }
 
 }

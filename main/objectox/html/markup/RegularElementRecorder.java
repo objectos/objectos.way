@@ -55,7 +55,7 @@ final class RegularElementRecorder {
     attributes = attributesRecorder.record(name, valuesSize, values);
 
     final int children;
-    children = childrenRecorder.record(name, valuesSize, values);
+    children = childrenRecorder.record(valuesSize, values);
 
     final int size;
     size = attributes + children;
