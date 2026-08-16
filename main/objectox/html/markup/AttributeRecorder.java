@@ -15,6 +15,7 @@
  */
 package objectox.html.markup;
 
+import objectos.html.markup.AttributeMarkup;
 import objectos.script.JsAction;
 import objectox.html.IntSize;
 import objectox.html.attr.AbstractAttribute;
@@ -27,6 +28,16 @@ final class AttributeRecorder {
 
   AttributeRecorder(HtmlSink sink) {
     this.sink = sink;
+  }
+
+  public final AttributeMarkup css(String value) {
+    final StringBuilder sb;
+    sb = new StringBuilder();
+
+    final String formatted;
+    formatted = AttributeName.formatAttrValue(value, sb);
+
+    return record(AttributeName.CLASS, formatted);
   }
 
   public final AttributePointer record(AbstractAttribute attribute) {

@@ -210,7 +210,7 @@ public class ElementChildrenRecorderTest {
     size = IntSize.BIT8;
 
     final int res;
-    res = subject.record(elementName, size, NoOpInstructionPojo.INSTANCE);
+    res = subject.record(elementName, size, NoOpMarkupPojo.INSTANCE);
 
     assertEquals(res, 0);
 

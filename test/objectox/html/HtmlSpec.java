@@ -378,7 +378,7 @@ public final class HtmlSpec {
 
   public static List<MethodSpec> textNodes() {
     return List.of(
-        new MethodSpec("RawMarkup nbsp()", "nbsp()", """
+        new MethodSpec("RawMarkup nbsp()", "raw(\"&nbsp;\")", """
         Encodes the non-breaking space `&nbsp;` HTML character entity.
         @return an object representing the encoded character entity.
         """),

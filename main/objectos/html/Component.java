@@ -19,6 +19,7 @@ import objectos.dev.Testable;
 import objectos.http.Content;
 import objectos.http.ContentProvider;
 import objectos.http.MediaType;
+import objectox.html.MarkupPojo;
 
 /// An object that renders HTML on its own or as part of a larger HTML document.
 @FunctionalInterface
@@ -28,7 +29,7 @@ public interface Component extends ContentProvider, Testable {
   ///
   /// @return the markup instance to be used by this component
   default Markup newHtmlMarkup() {
-    return new Markup.OfHtml();
+    return new MarkupPojo();
   }
 
   /// Renders the HTML of this component.
@@ -76,7 +77,7 @@ public interface Component extends ContentProvider, Testable {
   @Override
   default String toTestableText() {
     final Markup m;
-    m = new Markup.OfHtml();
+    m = new MarkupPojo();
 
     renderHtml(m);
 

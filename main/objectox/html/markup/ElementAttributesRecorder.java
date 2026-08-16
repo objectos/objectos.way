@@ -47,7 +47,17 @@ final class ElementAttributesRecorder {
   public final int record(ElementName name, IntSize size, ElementValue... values) {
     int sum = 0;
 
-    for (ElementValue value : values) {
+    for (int idx = 0; idx < values.length; idx++) {
+      final ElementValue value;
+      value = values[idx];
+
+      if (value == null) {
+        final String msg;
+        msg = "values[%d] == null".formatted(idx);
+
+        throw new NullPointerException(msg);
+      }
+
       sum += record0(name, size, value);
     }
 

@@ -17,10 +17,10 @@ package objectox.html.markup;
 
 import objectos.html.markup.NoOpMarkup;
 
-public final class NoOpInstructionPojo implements NoOpMarkup {
+public final class NoOpMarkupPojo implements NoOpMarkup {
 
-  public static final NoOpMarkup INSTANCE = new NoOpInstructionPojo();
+  public static final NoOpMarkup INSTANCE = new NoOpMarkupPojo();
 
-  private NoOpInstructionPojo() {}
+  private NoOpMarkupPojo() {}
 
 }

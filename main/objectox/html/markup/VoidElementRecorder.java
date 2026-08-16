@@ -15,7 +15,8 @@
  */
 package objectox.html.markup;
 
-import objectos.html.markup.RegularElementValue;
+import java.util.Objects;
+import objectos.html.markup.VoidElementValue;
 import objectox.html.IntSize;
 import objectox.html.elem.ElementName;
 
@@ -31,7 +32,17 @@ final class VoidElementRecorder {
     this.attributesRecorder = attributesRecorder;
   }
 
-  public final ElementPointer record(ElementName name, RegularElementValue... values) {
+  public final ElementPointer record(String name, VoidElementValue... values) {
+    final ElementName elementName;
+    elementName = ElementName.getOrCreate(name);
+
+    return record(elementName, values);
+  }
+
+  public final ElementPointer record(ElementName name, VoidElementValue... $values) {
+    final VoidElementValue[] values;
+    values = Objects.requireNonNull($values, "values == null");
+
     final IntSize valuesSize;
     valuesSize = sink.codeSize();
 

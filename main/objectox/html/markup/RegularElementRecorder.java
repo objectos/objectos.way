@@ -15,6 +15,7 @@
  */
 package objectox.html.markup;
 
+import java.util.Objects;
 import objectos.html.markup.RegularElementValue;
 import objectox.html.IntSize;
 import objectox.html.elem.ElementName;
@@ -35,7 +36,17 @@ final class RegularElementRecorder {
     this.childrenRecorder = childrenRecorder;
   }
 
-  public final ElementPointer record(ElementName name, RegularElementValue... values) {
+  public final ElementPointer record(String name, RegularElementValue... values) {
+    final ElementName elementName;
+    elementName = ElementName.getOrCreate(name);
+
+    return record(elementName, values);
+  }
+
+  public final ElementPointer record(ElementName name, RegularElementValue... $values) {
+    final RegularElementValue[] values;
+    values = Objects.requireNonNull($values, "values == null");
+
     final IntSize valuesSize;
     valuesSize = sink.codeSize();
 

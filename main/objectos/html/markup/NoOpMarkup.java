@@ -15,7 +15,7 @@
  */
 package objectos.html.markup;
 
-import objectox.html.markup.NoOpInstructionPojo;
+import objectox.html.markup.NoOpMarkupPojo;
 
 /// Represents the encoded markup that does not render anything.
 public sealed interface NoOpMarkup
@@ -23,4 +23,4 @@ public sealed interface NoOpMarkup
     RegularElementValue,
     VoidElementValue
     permits
-    NoOpInstructionPojo {}
+    NoOpMarkupPojo {}

@@ -17,6 +17,7 @@ package objectox.html.elem;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import objectos.internal.Util;
 
 public final class ElementNameUniverse {
@@ -35,7 +36,10 @@ public final class ElementNameUniverse {
     return array[index];
   }
 
-  public final ElementName getOrCreate(String name) {
+  public final ElementName getOrCreate(String $name) {
+    final String name;
+    name = Objects.requireNonNull($name, "name == null");
+
     final Map<String, ElementName> byName;
     byName = byName();
 

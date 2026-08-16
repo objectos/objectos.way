@@ -36,14 +36,6 @@ import objectox.html.attr.AttributeName;
 /// Declares the structure of an HTML document using pure Java.
 public sealed interface Markup permits MarkupPojo {
 
-  /// Markup implementation for generating HTML.
-  non-sealed class OfHtml extends MarkupPojo {
-
-    /// Sole constructor.
-    public OfHtml() {}
-
-  }
-
   /// Returns the HTML declared by this instance as a compiled artifact.
   ///
   /// @return a compiled HTML artifact
@@ -1342,16 +1334,16 @@ public sealed interface Markup permits MarkupPojo {
   //
 
   /// Encodes the specified boolean attribute.
-  /// 
+  ///
   /// @param value the boolean attribute to encode
-  /// 
+  ///
   /// @return an object representing the encoded boolean attribute
   AttributeMarkup attr(BooleanAttribute value);
 
   /// Encodes the specified attribute.
-  /// 
+  ///
   /// @param value the attribute to encode
-  /// 
+  ///
   /// @return an object representing the encoded attribute
   AttributeMarkup attr(Attribute value);
 
