@@ -36,13 +36,14 @@ import objectos.html.markup.VoidElementValue;
 import objectos.script.JsAction;
 import objectox.html.attr.AttributeName;
 import objectox.html.elem.ElementName;
+import objectox.html.markup.HtmlSink;
 import objectox.html.markup.Recorder;
 
-public final class MarkupPojo implements Markup {
+public final class ObjectoxMarkup implements Markup {
 
   private final Recorder recorder = Recorder.create();
 
-  public MarkupPojo() {
+  public ObjectoxMarkup() {
   }
 
   /// Encodes the specified boolean attribute.
@@ -138,6 +139,10 @@ public final class MarkupPojo implements Markup {
   @Override
   public final Html compile() {
     return recorder.compile();
+  }
+
+  final HtmlSink unwrap() {
+    return recorder.unwrap();
   }
 
   // BEGIN generated code

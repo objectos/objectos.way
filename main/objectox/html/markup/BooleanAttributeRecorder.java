@@ -15,8 +15,11 @@
  */
 package objectox.html.markup;
 
+import java.util.Objects;
+import objectos.html.BooleanAttribute;
 import objectox.html.IntSize;
 import objectox.html.attr.AttributeName;
+import objectox.html.attr.BooleanAttributePojo;
 
 final class BooleanAttributeRecorder {
 
@@ -43,6 +46,26 @@ final class BooleanAttributeRecorder {
     };
 
     return new AttributePointer(startIndex);
+  }
+
+  public final AttributePointer record(BooleanAttribute value) {
+    final BooleanAttribute a;
+    a = Objects.requireNonNull(value, "value == null");
+
+    final BooleanAttributePojo impl;
+    impl = (BooleanAttributePojo) a;
+
+    final AttributeName attributeName;
+    attributeName = impl.attributeName();
+
+    return record(attributeName);
+  }
+
+  public final AttributePointer record(String name) {
+    final AttributeName attributeName;
+    attributeName = AttributeName.getOrCreate(name);
+
+    return record(attributeName);
   }
 
   private int boolean8(int nameIndex) {

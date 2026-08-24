@@ -26,14 +26,25 @@ public class AttributeRecorderTest {
 
   @Test(description = "ATTRIBUTE88")
   public void attribute88() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final AttributeRecorder subject;
+    subject = new AttributeRecorder(sink);
+
     final AttributeName name;
     name = AttributeName.ID;
 
     final String value;
     value = "foo";
 
+    final AttributePointer res;
+    res = subject.record(name, value);
+
+    assertEquals(res.value(), 0);
+
     assertEquals(
-        record(name, value),
+        sink,
 
         HtmlSinkY.create(opts -> {
           opts.addByte(HtmlBytes.ATTRIBUTE88);
@@ -48,13 +59,19 @@ public class AttributeRecorderTest {
     final HtmlSink sink;
     sink = new HtmlSink(Util.EMPTY_BYTE_ARRAY, new Object[256]);
 
+    final AttributeRecorder subject;
+    subject = new AttributeRecorder(sink);
+
     final AttributeName name;
     name = AttributeName.ID;
 
     final String value;
     value = "foo";
 
-    record(sink, name, value);
+    final AttributePointer res;
+    res = subject.record(name, value);
+
+    assertEquals(res.value(), 0);
 
     assertEquals(
         sink,
@@ -73,13 +90,19 @@ public class AttributeRecorderTest {
     final HtmlSink sink;
     sink = new HtmlSink(Util.EMPTY_BYTE_ARRAY, new Object[1 << 16]);
 
+    final AttributeRecorder subject;
+    subject = new AttributeRecorder(sink);
+
     final AttributeName name;
     name = AttributeName.ID;
 
     final String value;
     value = "foo";
 
-    record(sink, name, value);
+    final AttributePointer res;
+    res = subject.record(name, value);
+
+    assertEquals(res.value(), 0);
 
     assertEquals(
         sink,

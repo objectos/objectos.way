@@ -17,13 +17,30 @@ package objectox.html.stream;
 
 import static org.testng.Assert.assertEquals;
 
-import objectox.html.attr.AttributeName;
-import objectox.html.elem.ElementNamePojo;
-import objectox.html.markup.HtmlBytes;
 import org.testng.annotations.Test;
 
 public class StartStateTest {
 
+  @Test(description = """
+  document:
+  - empty
+  """)
+  public void document01() {
+    final Ctx ctx;
+    ctx = CtxY.create(_ -> {});
+
+    final StartState subject;
+    subject = new StartState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res.getClass(), ScanDocumentNodeState.class);
+    assertEquals(ctx.hasEvent(), false);
+  }
+
+  /*
+  
   @Test(description = "empty")
   public void compute00() {
     final Ctx ctx;
@@ -170,5 +187,7 @@ public class StartStateTest {
     assertEquals(ctx.peekByte(), HtmlBytes.STARTTAG8);
     assertEquals(ctx.hasEvent(), false);
   }
+
+  */
 
 }

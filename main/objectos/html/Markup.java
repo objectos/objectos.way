@@ -30,15 +30,22 @@ import objectos.html.markup.RegularElementValue;
 import objectos.html.markup.TextMarkup;
 import objectos.html.markup.VoidElementValue;
 import objectos.script.JsAction;
-import objectox.html.MarkupPojo;
+import objectox.html.ObjectoxMarkup;
 import objectox.html.attr.AttributeName;
 
 /// Declares the structure of an HTML document using pure Java.
-public sealed interface Markup permits MarkupPojo {
+public sealed interface Markup permits ObjectoxMarkup {
 
-  /// Returns the HTML declared by this instance as a compiled artifact.
+  /// Returns a new markup instance.
   ///
-  /// @return a compiled HTML artifact
+  /// @return a newly created markup instance
+  static Markup of() {
+    return new ObjectoxMarkup();
+  }
+
+  /// Returns an object representing the HTML declared by this instance.
+  ///
+  /// @return an object representing the HTML declared by this instance
   Html compile();
 
   // BEGIN generated code

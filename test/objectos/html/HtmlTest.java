@@ -17,144 +17,24 @@ package objectos.html;
 
 import static org.testng.Assert.assertEquals;
 
-import java.util.function.Consumer;
-import objectox.html.MarkupPojo;
 import org.testng.annotations.Test;
 
 public class HtmlTest {
 
-  private void toString(Consumer<? super Markup> opts, String expected) {
-    final MarkupPojo m;
-    m = new Markup.OfHtml();
+  @Test(description = """
+  document:
+  - empty
+  """)
+  public void document01() {
+    final Html subject;
+    subject = HtmlY.create(_ -> {
 
-    opts.accept(m);
+    });
 
-    final Html html;
-    html = m.compile();
-
-    final String res;
-    res = html.toString();
-
-    assertEquals(res, expected);
-  }
-
-  @Test
-  public void toString00() {
-    toString(
-        _ -> {},
+    assertEquals(
+        subject.toString(),
 
         ""
-    );
-  }
-
-  @Test
-  public void toString01() {
-    toString(
-        m -> m.html(),
-
-        """
-        <html></html>
-        """
-    );
-  }
-
-  @Test
-  public void toString02() {
-    toString(
-        m -> m.html(
-            m.lang("pt-BR")
-        ),
-
-        """
-        <html lang="pt-BR"></html>
-        """
-    );
-  }
-
-  @Test
-  public void toString03() {
-    toString(
-        m -> m.html(
-            Markup.autofocus
-        ),
-
-        """
-        <html autofocus></html>
-        """
-    );
-  }
-
-  @Test
-  public void toString04() {
-    toString(
-        m -> m.html(
-            m.head()
-        ),
-
-        """
-        <html>
-          <head></head>
-        </html>
-        """
-    );
-  }
-
-  @Test
-  public void toString05() {
-    toString(
-        m -> m.head(
-            m.meta(m.charset("UTF-8"))
-        ),
-
-        """
-        <head>
-          <meta charset="UTF-8">
-        </head>
-        """
-    );
-  }
-
-  @Test
-  public void toString06() {
-    toString(
-        m -> m.html(
-            m.head(),
-            m.lang("pt-BR")
-        ),
-
-        """
-        <html lang="pt-BR">
-          <head></head>
-        </html>
-        """
-    );
-  }
-
-  @Test
-  public void toString07() {
-    toString(
-        m -> {
-          m.doctype();
-          m.html();
-        },
-
-        """
-        <!DOCTYPE html>
-        <html></html>
-        """
-    );
-  }
-
-  @Test
-  public void toString08() {
-    toString(
-        m -> m.span("ipsum"),
-
-        """
-        <span>
-          ipsum
-        </span>
-        """
     );
   }
 

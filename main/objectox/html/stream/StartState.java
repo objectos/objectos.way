@@ -15,7 +15,6 @@
  */
 package objectox.html.stream;
 
-import objectox.html.IntSize;
 import objectox.html.markup.HtmlBytes;
 
 final class StartState implements State {
@@ -37,17 +36,17 @@ final class StartState implements State {
       proto = ctx.peekByte();
 
       switch (proto) {
-        case HtmlBytes.xSTARTTAG8 -> { skipElement().execute(IntSize.BIT8); continue; }
-
-        case HtmlBytes.xSTARTFLAT -> throw new UnsupportedOperationException("Implement me");
-
-        case HtmlBytes.xSTARTFRAG -> throw new UnsupportedOperationException("Implement me");
-
-        case HtmlBytes.xAMBIGUOUS88, HtmlBytes.xATTRIBUTE88 -> { ctx.skip(1 + 1 + 1); continue; }
-
-        case HtmlBytes.xAMBIGUOUS816, HtmlBytes.xATTRIBUTE816 -> { ctx.skip(1 + 1 + 2); continue; }
-
-        case HtmlBytes.xAMBIGUOUS824, HtmlBytes.xATTRIBUTE824 -> { ctx.skip(1 + 1 + 3); continue; }
+        //        case HtmlBytes.xSTARTTAG8 -> { skipElement().execute(IntSize.BIT8); continue; }
+        //
+        //        case HtmlBytes.xSTARTFLAT -> throw new UnsupportedOperationException("Implement me");
+        //
+        //        case HtmlBytes.xSTARTFRAG -> throw new UnsupportedOperationException("Implement me");
+        //
+        //        case HtmlBytes.xAMBIGUOUS88, HtmlBytes.xATTRIBUTE88 -> { ctx.skip(1 + 1 + 1); continue; }
+        //
+        //        case HtmlBytes.xAMBIGUOUS816, HtmlBytes.xATTRIBUTE816 -> { ctx.skip(1 + 1 + 2); continue; }
+        //
+        //        case HtmlBytes.xAMBIGUOUS824, HtmlBytes.xATTRIBUTE824 -> { ctx.skip(1 + 1 + 3); continue; }
 
         case HtmlBytes.xBOOLEAN8 -> { ctx.skip(1 + 1); continue; }
 

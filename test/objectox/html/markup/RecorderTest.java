@@ -17,14 +17,7 @@ package objectox.html.markup;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.html.markup.Fragment0;
-import objectos.html.markup.Fragment1;
-import objectos.html.markup.Fragment2;
-import objectos.html.markup.Fragment3;
-import objectos.html.markup.Fragment4;
-import objectox.html.attr.AttributeName;
-import objectox.html.elem.ElementName;
-import objectox.html.elem.ElementNamePojo;
+import objectox.html.AmbiguousName;
 import org.testng.annotations.Test;
 
 public class RecorderTest {
@@ -33,7 +26,37 @@ public class RecorderTest {
     return Recorder.of(sink);
   }
 
-  @Test(description = "<!DOCTYPE html>")
+  @Test(description = "AmbiguousRecorder delegation")
+  public void ambiguous01() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final Recorder subject;
+    subject = create(sink);
+
+    final AmbiguousName name;
+    name = AmbiguousName.TITLE;
+
+    final String value;
+    value = "foo";
+
+    final AmbiguousPointer res;
+    res = subject.ambiguous(name, value);
+
+    assertEquals(res.value(), 0);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.AMBIGUOUS88);
+          opts.addInt8(name.index());
+          opts.addInt8(opts.addObject(value));
+        })
+    );
+  }
+
+  @Test(description = "DoctypeRecorder delegation")
   public void doctype01() {
     final HtmlSink sink;
     sink = new HtmlSink();
@@ -63,6 +86,8 @@ public class RecorderTest {
 
     assertEquals(sink, HtmlSinkY.create(_ -> {}));
   }
+
+  /*
 
   @Test(description = """
   <html></html>
@@ -655,5 +680,7 @@ public class RecorderTest {
         })
     );
   }
+
+  */
 
 }

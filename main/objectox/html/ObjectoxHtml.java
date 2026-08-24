@@ -22,6 +22,7 @@ import java.io.Reader;
 import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Spliterator;
 import java.util.Spliterators;
@@ -34,16 +35,33 @@ import objectox.html.format.FormatterPojo;
 import objectox.html.markup.HtmlSink;
 import objectox.html.stream.Player;
 
-public final class HtmlPojo implements Html {
+public final class ObjectoxHtml implements Html {
 
   private final byte[] code;
 
   private final Object[] objects;
 
-  public HtmlPojo(HtmlSink sink) {
+  public ObjectoxHtml(HtmlSink sink) {
     code = sink.code();
 
     objects = sink.objects();
+  }
+
+  @Override
+  public final void binaryTo(OutputStream out) throws IOException {
+    try (
+        Reader reader = openStream();
+        Writer writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+    ) {
+      reader.transferTo(writer);
+    }
+  }
+
+  @Override
+  public final boolean equals(Object obj) {
+    return obj == this || obj instanceof ObjectoxHtml that
+        && Arrays.equals(code, that.code)
+        && Arrays.equals(objects, that.objects);
   }
 
   @Override
@@ -58,16 +76,6 @@ public final class HtmlPojo implements Html {
     spliterator = Spliterators.spliteratorUnknownSize(player, attrs);
 
     return StreamSupport.stream(spliterator, false);
-  }
-
-  @Override
-  public final void binaryTo(OutputStream out) throws IOException {
-    try (
-        Reader reader = openStream();
-        Writer writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
-    ) {
-      reader.transferTo(writer);
-    }
   }
 
   @Override

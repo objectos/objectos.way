@@ -22,11 +22,11 @@ import objectos.dev.Testable;
 import objectos.html.format.Formatter;
 import objectos.html.stream.Event;
 import objectos.lang.BinaryObject;
-import objectox.html.HtmlPojo;
+import objectox.html.ObjectoxHtml;
 import objectox.html.attr.AttributeName;
 
 /// Represents a compiled HTML document.
-public sealed interface Html extends BinaryObject, Testable permits HtmlPojo {
+public sealed interface Html extends BinaryObject, Testable permits ObjectoxHtml {
 
   /// Formats the specified string to be used as an HTML attribute value. More
   /// specifically, this method returns a string whose value is the specified

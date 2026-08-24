@@ -15,7 +15,8 @@
  */
 package objectox.html.markup;
 
-import objectos.html.markup.AttributeMarkup;
+import java.util.Objects;
+import objectos.html.Attribute;
 import objectos.script.JsAction;
 import objectox.html.IntSize;
 import objectox.html.attr.AbstractAttribute;
@@ -30,7 +31,7 @@ final class AttributeRecorder {
     this.sink = sink;
   }
 
-  public final AttributeMarkup css(String value) {
+  public final AttributePointer css(String value) {
     final StringBuilder sb;
     sb = new StringBuilder();
 
@@ -40,19 +41,28 @@ final class AttributeRecorder {
     return record(AttributeName.CLASS, formatted);
   }
 
-  public final AttributePointer record(AbstractAttribute attribute) {
+  public final AttributePointer record(Attribute value) {
+    final Attribute a;
+    a = Objects.requireNonNull(value, "value == null");
+
+    final AbstractAttribute impl;
+    impl = (AbstractAttribute) a;
+
     final AttributeName attributeName;
-    attributeName = attribute.attributeName;
+    attributeName = impl.attributeName;
 
-    final String value;
-    value = attribute.value();
+    final String v;
+    v = value.value();
 
-    return record(attributeName, value);
+    return record(attributeName, v);
   }
 
   public final AttributePointer record(AttributeName attributeName, String value) {
+    final String v;
+    v = Objects.requireNonNull(value, "value == null");
+
     final AttributeValueEscaper escaper;
-    escaper = new AttributeValueEscaper(value);
+    escaper = new AttributeValueEscaper(v);
 
     final String escaped;
     escaped = escaper.escape();
@@ -60,8 +70,28 @@ final class AttributeRecorder {
     return record0(attributeName, escaped);
   }
 
-  public final AttributePointer record(AttributeName attributeName, JsAction value) {
-    return record0(attributeName, value);
+  public final AttributePointer record(String name, String value) {
+    final AttributeName attributeName;
+    attributeName = AttributeName.getOrCreate(name);
+
+    return record(attributeName, value);
+  }
+
+  public final AttributePointer record(AttributeName attributeName, JsAction action) {
+    final JsAction a;
+    a = Objects.requireNonNull(action, "action == null");
+
+    return record0(attributeName, a);
+  }
+
+  public final AttributePointer record(String name, JsAction action) {
+    final AttributeName attributeName;
+    attributeName = AttributeName.getOrCreate(name);
+
+    final JsAction a;
+    a = Objects.requireNonNull(action, "action == null");
+
+    return record0(attributeName, a);
   }
 
   private AttributePointer record0(AttributeName attributeName, Object value) {

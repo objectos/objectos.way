@@ -17,9 +17,7 @@ package objectox.html.markup;
 
 import objectos.html.Attribute;
 import objectos.html.BooleanAttribute;
-import objectos.html.markup.AmbiguousMarkup;
 import objectos.html.markup.AttributeMarkup;
-import objectos.html.markup.ElementMarkup;
 import objectos.html.markup.Fragment0;
 import objectos.html.markup.Fragment1;
 import objectos.html.markup.Fragment2;
@@ -33,7 +31,7 @@ import objectos.html.markup.TextMarkup;
 import objectos.html.markup.VoidElementValue;
 import objectos.script.JsAction;
 import objectox.html.AmbiguousName;
-import objectox.html.HtmlPojo;
+import objectox.html.ObjectoxHtml;
 import objectox.html.attr.AttributeName;
 import objectox.html.elem.ElementName;
 
@@ -147,12 +145,12 @@ public final class Recorder {
     );
   }
 
-  public final AmbiguousMarkup ambiguous(AmbiguousName name, String text) {
+  public final AmbiguousPointer ambiguous(AmbiguousName name, String text) {
     return ambiguousRecorder.record(name, text);
   }
 
-  public final AttributeMarkup attribute(Attribute value) {
-    throw new UnsupportedOperationException("Implement me");
+  public final AttributePointer attribute(Attribute attribute) {
+    return attributeRecorder.record(attribute);
   }
 
   public final AttributePointer attribute(AttributeName name, JsAction value) {
@@ -163,27 +161,27 @@ public final class Recorder {
     return attributeRecorder.record(name, value);
   }
 
-  public final AttributeMarkup attribute(String name, JsAction action) {
-    throw new UnsupportedOperationException("Implement me");
+  public final AttributePointer attribute(String name, JsAction action) {
+    return attributeRecorder.record(name, action);
   }
 
-  public final AttributeMarkup attribute(String name, String value) {
-    throw new UnsupportedOperationException("Implement me");
+  public final AttributePointer attribute(String name, String value) {
+    return attributeRecorder.record(name, value);
   }
 
   public final AttributePointer booleanAttribute(AttributeName name) {
     return booleanAttributeRecorder.record(name);
   }
 
-  public final AttributeMarkup booleanAttribute(BooleanAttribute value) {
-    throw new UnsupportedOperationException("Implement me");
+  public final AttributePointer booleanAttribute(BooleanAttribute value) {
+    return booleanAttributeRecorder.record(value);
   }
 
-  public final AttributeMarkup booleanAttribute(String name) {
-    throw new UnsupportedOperationException("Implement me");
+  public final AttributePointer booleanAttribute(String name) {
+    return booleanAttributeRecorder.record(name);
   }
 
-  public final HtmlPojo compile() {
+  public final ObjectoxHtml compile() {
     return documentCompiler.compile();
   }
 
@@ -223,11 +221,11 @@ public final class Recorder {
     return rawRecorder.record(value);
   }
 
-  public final ElementMarkup regularElement(ElementName name, RegularElementValue... values) {
+  public final ElementPointer regularElement(ElementName name, RegularElementValue... values) {
     return regularElementRecorder.record(name, values);
   }
 
-  public final ElementMarkup regularElement(String name, RegularElementValue... values) {
+  public final ElementPointer regularElement(String name, RegularElementValue... values) {
     return regularElementRecorder.record(name, values);
   }
 
@@ -279,20 +277,24 @@ public final class Recorder {
     return textRecorder.record(value);
   }
 
-  public final ElementMarkup textElement(ElementName name, String value) {
+  public final ElementPointer textElement(ElementName name, String value) {
     return textElementRecorder.record(name, value);
   }
 
-  public final ElementMarkup textElement(String name, String text) {
+  public final ElementPointer textElement(String name, String text) {
     return textElementRecorder.record(name, text);
   }
 
-  public final ElementMarkup voidElement(ElementName name, VoidElementValue... values) {
+  public final ElementPointer voidElement(ElementName name, VoidElementValue... values) {
     return voidElementRecorder.record(name, values);
   }
 
-  public final ElementMarkup voidElement(String name, VoidElementValue... values) {
+  public final ElementPointer voidElement(String name, VoidElementValue... values) {
     return voidElementRecorder.record(name, values);
+  }
+
+  public final HtmlSink unwrap() {
+    return documentCompiler.unwrap();
   }
 
 }
