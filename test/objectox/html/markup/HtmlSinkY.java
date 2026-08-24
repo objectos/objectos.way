@@ -28,4 +28,8 @@ public final class HtmlSinkY {
     return y;
   }
 
+  public static HtmlSink of(byte[] code, Object[] objects) {
+    return new HtmlSink(code, objects);
+  }
+
 }

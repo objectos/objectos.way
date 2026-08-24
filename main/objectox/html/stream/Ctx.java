@@ -15,6 +15,9 @@
  */
 package objectox.html.stream;
 
+import java.util.Arrays;
+import java.util.HexFormat;
+import java.util.Objects;
 import objectos.html.stream.Event;
 import objectos.internal.Util;
 import objectox.html.IntSize;
@@ -23,11 +26,11 @@ class Ctx {
 
   static final Frame[] EMPTY_STACK = new Frame[0];
 
-  private final byte[] code;
+  final byte[] code;
 
   private boolean computed;
 
-  private final Object[] objects;
+  final Object[] objects;
 
   private Event result;
 
@@ -45,6 +48,15 @@ class Ctx {
     this.stackIndex = stackIndex;
   }
 
+  @Override
+  public final boolean equals(Object obj) {
+    return obj == this || obj instanceof Ctx that
+        && Arrays.equals(code, that.code)
+        && Arrays.equals(objects, that.objects)
+        && Objects.equals(result, that.result)
+        && Arrays.equals(stack, 0, stackIndex + 1, that.stack, 0, that.stackIndex + 1);
+  }
+
   public final boolean hasByte() {
     final Frame frame;
     frame = stack[stackIndex];
@@ -54,17 +66,6 @@ class Ctx {
 
   public final boolean hasEvent() {
     return result != null;
-  }
-
-  public final Event nextEvent() {
-    final Event res;
-    res = result;
-
-    computed = false;
-
-    result = null;
-
-    return res;
   }
 
   public final byte nextByte() {
@@ -80,6 +81,17 @@ class Ctx {
     frame.index = idx + 1;
 
     return result;
+  }
+
+  public final Event nextEvent() {
+    final Event res;
+    res = result;
+
+    computed = false;
+
+    result = null;
+
+    return res;
   }
 
   public final int nextInt(IntSize size) {
@@ -105,16 +117,6 @@ class Ctx {
     o = objects[index];
 
     return (String) o;
-  }
-
-  private int toInt(int index, int shift) {
-    final byte byteValue;
-    byteValue = code[index];
-
-    final int intValue;
-    intValue = Byte.toUnsignedInt(byteValue);
-
-    return intValue << shift;
   }
 
   public final byte peekByte() {
@@ -144,17 +146,6 @@ class Ctx {
     stack[index] = frame;
   }
 
-  public final boolean shouldCompute() {
-    return !computed;
-  }
-
-  public final void skip(int value) {
-    final Frame frame;
-    frame = stack[stackIndex];
-
-    frame.index += value;
-  }
-
   public final void result(Event value) {
     if (computed) {
       final String msg;
@@ -166,6 +157,40 @@ class Ctx {
     computed = true;
 
     result = value;
+  }
+
+  public final boolean shouldCompute() {
+    return !computed;
+  }
+
+  public final void skip(int value) {
+    final Frame frame;
+    frame = stack[stackIndex];
+
+    frame.index += value;
+  }
+
+  @Override
+  public final String toString() {
+    return """
+    code    = %s
+    objects = %s
+    stack   = %s
+    """.formatted(
+        HexFormat.of().formatHex(code),
+        Arrays.toString(objects),
+        Arrays.toString(Arrays.copyOf(stack, stackIndex + 1))
+    );
+  }
+
+  private int toInt(int index, int shift) {
+    final byte byteValue;
+    byteValue = code[index];
+
+    final int intValue;
+    intValue = Byte.toUnsignedInt(byteValue);
+
+    return intValue << shift;
   }
 
 }

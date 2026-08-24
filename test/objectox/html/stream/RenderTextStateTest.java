@@ -41,7 +41,7 @@ public class RenderTextStateTest {
       opts.addInt8(ElementNamePojo.SPAN.index());
 
       opts.push(new ScanElementNodeFrame(6, IntSize.BIT8, 1));
-      opts.push(new ScanElementAttributeFrame(6, IntSize.BIT8, 1));
+      opts.push(new ScanRegularElementAttributeFrame(6, IntSize.BIT8, 1));
       opts.push(new JumpFrame(1));
     });
 
@@ -51,7 +51,7 @@ public class RenderTextStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res.getClass(), ScanElementNodeState.class);
+    assertEquals(res.getClass(), ScanRegularElementNodeState.class);
     assertEquals(ctx.hasEvent(), true);
     assertEquals(ctx.nextEvent(), RenderTextEvent.of("ipsum"));
   }

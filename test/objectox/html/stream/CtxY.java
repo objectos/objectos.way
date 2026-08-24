@@ -16,12 +16,16 @@
 package objectox.html.stream;
 
 import java.util.function.Consumer;
+import objectos.html.stream.Event;
 import objectos.internal.Util;
 import objectox.html.markup.HtmlSink;
+import objectox.html.markup.HtmlSinkY;
 
 final class CtxY {
 
-  private final HtmlSink sink = new HtmlSink();
+  private Event result;
+
+  private HtmlSink sink = new HtmlSink();
 
   private Frame[] stack = Ctx.EMPTY_STACK;
 
@@ -56,6 +60,10 @@ final class CtxY {
     return sink.addObject(value);
   }
 
+  public final void result(Event value) {
+    result = value;
+  }
+
   public final void push(Frame value) {
     final int index;
     index = ++stackIndex;
@@ -65,8 +73,13 @@ final class CtxY {
     stack[index] = value;
   }
 
+  public final void sink(Ctx ctx) {
+    sink = HtmlSinkY.of(ctx.code, ctx.objects);
+  }
+
   private Ctx build() {
-    return new Ctx(
+    final Ctx ctx;
+    ctx = new Ctx(
         sink.code(),
 
         sink.objects(),
@@ -75,6 +88,12 @@ final class CtxY {
 
         stackIndex
     );
+
+    if (result != null) {
+      ctx.result(result);
+    }
+
+    return ctx;
   }
 
 }

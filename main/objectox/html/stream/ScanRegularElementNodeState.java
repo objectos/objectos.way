@@ -18,11 +18,11 @@ package objectox.html.stream;
 import objectox.html.IntSize;
 import objectox.html.markup.HtmlBytes;
 
-final class ScanElementNodeState implements State {
+final class ScanRegularElementNodeState implements State {
 
   private final Ctx ctx;
 
-  ScanElementNodeState(Ctx ctx) {
+  ScanRegularElementNodeState(Ctx ctx) {
     this.ctx = ctx;
   }
 
@@ -39,6 +39,12 @@ final class ScanElementNodeState implements State {
     } else {
       return new RenderEndTagState(ctx);
     }
+  }
+
+  @Override
+  public final boolean equals(Object obj) {
+    return obj instanceof ScanRegularElementNodeState that
+        && ctx.equals(that.ctx);
   }
 
   private State compute0(ScanElementNodeFrame frame) {

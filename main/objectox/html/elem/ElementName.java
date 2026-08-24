@@ -100,6 +100,10 @@ public record ElementName(int index, String name) {
 
   // END generated code
 
+  public static ElementName get(int index) {
+    return U.get(index);
+  }
+
   public static ElementName getOrCreate(String name) {
     return U.getOrCreate(name);
   }

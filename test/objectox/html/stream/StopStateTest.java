@@ -17,24 +17,28 @@ package objectox.html.stream;
 
 import static org.testng.Assert.assertEquals;
 
-import objectox.html.elem.ElementNamePojo;
+import objectox.html.elem.ElementName;
 import objectox.html.markup.HtmlBytes;
 import org.testng.annotations.Test;
 
 public class StopStateTest {
 
-  @Test(description = "<html></html>")
-  public void compute01() {
+  @Test(description = """
+  regular elem:
+  - no attrs
+  - no children
+  """)
+  public void regularElement01() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.STARTTAG8);
-      opts.addInt8(ElementNamePojo.HTML.index());
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.DIV.index());
       opts.addByte(HtmlBytes.VALUES8);
       opts.addInt8(0);
-      opts.addByte(HtmlBytes.ENDTAG8);
-      opts.addInt8(ElementNamePojo.HTML.index());
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.DIV.index());
 
-      opts.push(ScanDocumentNodeFrame.of(6));
+      opts.push(new ScanDocumentNodeFrame(6));
     });
 
     final StopState subject;
@@ -43,8 +47,16 @@ public class StopStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res.getClass(), StopState.class);
-    assertEquals(ctx.hasEvent(), false);
+    assertEquals(res, new StopState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+          opts.push(new ScanDocumentNodeFrame(6));
+        })
+    );
   }
 
 }

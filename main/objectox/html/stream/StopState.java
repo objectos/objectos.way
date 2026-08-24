@@ -30,4 +30,10 @@ final class StopState implements State {
     return this;
   }
 
+  @Override
+  public final boolean equals(Object obj) {
+    return obj instanceof StopState that
+        && ctx.equals(that.ctx);
+  }
+
 }

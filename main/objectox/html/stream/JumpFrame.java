@@ -26,4 +26,9 @@ final class JumpFrame extends Frame {
     throw new UnsupportedOperationException();
   }
 
+  @Override
+  final boolean equalsImpl(Frame that) {
+    return that instanceof JumpFrame;
+  }
+
 }

@@ -17,60 +17,28 @@ package objectox.html.stream;
 
 import static org.testng.Assert.assertEquals;
 
-import objectox.html.IntSize;
-import objectox.html.attr.AttributeName;
 import objectox.html.elem.ElementName;
-import objectox.html.elem.ElementNamePojo;
 import objectox.html.markup.HtmlBytes;
 import org.testng.annotations.Test;
 
 public class RenderEndTagStateTest {
 
-  @Test(description = "<html></html>")
-  public void compute01() {
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.STARTTAG8);
-      opts.addInt8(ElementNamePojo.HTML.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(0);
-      opts.addByte(HtmlBytes.ENDTAG8);
-      opts.addInt8(ElementNamePojo.HTML.index());
-
-      opts.push(ScanDocumentNodeFrame.of(4));
-      opts.push(new ScanElementNodeFrame(4, IntSize.BIT8, 1));
-    });
-
-    final RenderEndTagState subject;
-    subject = new RenderEndTagState(ctx);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res.getClass(), EndElementState.class);
-    assertEquals(ctx.hasEvent(), true);
-    assertEquals(ctx.nextEvent(), RenderEndTagEvent.of(ElementName.HTML));
-  }
-
   @Test(description = """
-  <html lang="pt-BR"></html>
+  regular elem:
+  - no attrs
+  - no children
   """)
-  public void compute02() {
+  public void regularElement01() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.LANG.index());
-      opts.addInt8(opts.addObject("pt-BR"));
-      opts.addByte(HtmlBytes.STARTTAG8);
-      opts.addInt8(ElementNamePojo.HTML.index());
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.DIV.index());
       opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
       opts.addInt8(0);
-      opts.addByte(HtmlBytes.ENDTAG8);
-      opts.addInt8(ElementNamePojo.HTML.index());
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.DIV.index());
 
-      opts.push(ScanDocumentNodeFrame.of(7));
-      opts.push(new ScanElementNodeFrame(8, IntSize.BIT8, 1));
+      opts.push(new ScanDocumentNodeFrame(4));
     });
 
     final RenderEndTagState subject;
@@ -79,86 +47,17 @@ public class RenderEndTagStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res.getClass(), EndElementState.class);
-    assertEquals(ctx.hasEvent(), true);
-    assertEquals(ctx.nextEvent(), RenderEndTagEvent.of(ElementName.HTML));
-  }
+    assertEquals(res, new EndElementState(ctx));
 
-  @Test(description = """
-  <head><meta charset="UTF-8"></head>
-  """)
-  public void compute05() {
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.CHARSET.index());
-      opts.addInt8(opts.addObject("UTF-8"));
-      opts.addByte(HtmlBytes.xSTARTTAG8);
-      opts.addInt8(ElementNamePojo.META.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-      opts.addByte(HtmlBytes.VOIDELEM);
-      opts.addByte(HtmlBytes.STARTTAG8);
-      opts.addInt8(ElementNamePojo.HEAD.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(3);
-      opts.addByte(HtmlBytes.ENDTAG8);
-      opts.addInt8(ElementNamePojo.HEAD.index());
+    assertEquals(
+        ctx,
 
-      opts.push(ScanDocumentNodeFrame.of(13));
-      opts.push(new ScanElementNodeFrame(14, IntSize.BIT8, 1, 1));
-      opts.push(new JumpFrame(7));
-      opts.push(new ScanElementNodeFrame(8, IntSize.BIT8, 1, 1));
-    });
-
-    final RenderEndTagState subject;
-    subject = new RenderEndTagState(ctx);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res.getClass(), EndElementState.class);
-    assertEquals(ctx.hasEvent(), false);
-  }
-
-  @Test(description = """
-  <head><meta charset="UTF-8"></head>
-  """)
-  public void compute05b() {
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.CHARSET.index());
-      opts.addInt8(opts.addObject("UTF-8"));
-      opts.addByte(HtmlBytes.xSTARTTAG8);
-      opts.addInt8(ElementNamePojo.META.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-      opts.addByte(HtmlBytes.VOIDELEM);
-      opts.addByte(HtmlBytes.STARTTAG8);
-      opts.addInt8(ElementNamePojo.HEAD.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(3);
-      opts.addByte(HtmlBytes.ENDTAG8);
-      opts.addInt8(ElementNamePojo.HEAD.index());
-
-      opts.push(ScanDocumentNodeFrame.of(13));
-      opts.push(new ScanElementNodeFrame(14, IntSize.BIT8, 1, 1));
-    });
-
-    final RenderEndTagState subject;
-    subject = new RenderEndTagState(ctx);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res.getClass(), EndElementState.class);
-    assertEquals(ctx.hasEvent(), true);
-    assertEquals(ctx.nextEvent(), RenderEndTagEvent.of(ElementName.HEAD));
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+          opts.result(RenderEndTagEvent.of(ElementName.DIV));
+          opts.push(new ScanDocumentNodeFrame(6));
+        })
+    );
   }
 
 }

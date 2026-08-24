@@ -19,7 +19,7 @@ sealed abstract class Frame
     permits
     JumpFrame,
     ScanDocumentNodeFrame,
-    ScanElementAttributeFrame,
+    ScanRegularElementAttributeFrame,
     ScanElementNodeFrame {
 
   int index;
@@ -32,6 +32,15 @@ sealed abstract class Frame
     return type.cast(this);
   }
 
+  @Override
+  public final boolean equals(Object obj) {
+    return obj == this || obj instanceof Frame that
+        && index == that.index
+        && equalsImpl(that);
+  }
+
+  abstract boolean equalsImpl(Frame that);
+
   public final IllegalStateException expected(Class<?> expectedType) {
     final String msg;
     msg = "Expected frame %s but got %s".formatted(expectedType.getSimpleName(), getClass().getSimpleName());
@@ -40,6 +49,21 @@ sealed abstract class Frame
   }
 
   public abstract State newState(Ctx ctx);
+
+  @Override
+  public final String toString() {
+    final Class<? extends Frame> c;
+    c = getClass();
+
+    final String simpleName;
+    simpleName = c.getSimpleName();
+
+    return simpleName + "(" + index + toStringImpl() + ")";
+  }
+
+  String toStringImpl() {
+    return "";
+  }
 
   public void updateIfNecessary(ScanElementNodeFrame previous) {
     // noop

@@ -40,8 +40,8 @@ public class ScanElementNodeStateTest {
       opts.push(new ScanElementNodeFrame(4, IntSize.BIT8, 0));
     });
 
-    final ScanElementNodeState subject;
-    subject = new ScanElementNodeState(ctx);
+    final ScanRegularElementNodeState subject;
+    subject = new ScanRegularElementNodeState(ctx);
 
     final State res;
     res = subject.compute();
@@ -71,13 +71,13 @@ public class ScanElementNodeStateTest {
       opts.push(new ScanElementNodeFrame(7, IntSize.BIT8, 1));
     });
 
-    final ScanElementNodeState subject;
-    subject = new ScanElementNodeState(ctx);
+    final ScanRegularElementNodeState subject;
+    subject = new ScanRegularElementNodeState(ctx);
 
     final State res;
     res = subject.compute();
 
-    assertEquals(res.getClass(), ScanElementNodeState.class);
+    assertEquals(res.getClass(), ScanRegularElementNodeState.class);
     assertEquals(ctx.hasEvent(), false);
     assertEquals(ctx.nextByte(), HtmlBytes.ENDTAG8);
   }
@@ -103,8 +103,8 @@ public class ScanElementNodeStateTest {
       opts.push(new ScanElementNodeFrame(8, IntSize.BIT8, 1, 1));
     });
 
-    final ScanElementNodeState subject;
-    subject = new ScanElementNodeState(ctx);
+    final ScanRegularElementNodeState subject;
+    subject = new ScanRegularElementNodeState(ctx);
 
     final State res;
     res = subject.compute();
@@ -134,8 +134,8 @@ public class ScanElementNodeStateTest {
       opts.push(new ScanElementNodeFrame(10, IntSize.BIT8, 1));
     });
 
-    final ScanElementNodeState subject;
-    subject = new ScanElementNodeState(ctx);
+    final ScanRegularElementNodeState subject;
+    subject = new ScanRegularElementNodeState(ctx);
 
     final State res;
     res = subject.compute();
@@ -172,8 +172,8 @@ public class ScanElementNodeStateTest {
       opts.push(new ScanElementNodeFrame(14, IntSize.BIT8, 1, 1));
     });
 
-    final ScanElementNodeState subject;
-    subject = new ScanElementNodeState(ctx);
+    final ScanRegularElementNodeState subject;
+    subject = new ScanRegularElementNodeState(ctx);
 
     final State res;
     res = subject.compute();
@@ -201,8 +201,8 @@ public class ScanElementNodeStateTest {
       opts.push(new ScanElementNodeFrame(6, IntSize.BIT8, 1));
     });
 
-    final ScanElementNodeState subject;
-    subject = new ScanElementNodeState(ctx);
+    final ScanRegularElementNodeState subject;
+    subject = new ScanRegularElementNodeState(ctx);
 
     final State res;
     res = subject.compute();

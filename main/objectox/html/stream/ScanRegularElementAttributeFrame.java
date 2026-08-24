@@ -17,13 +17,7 @@ package objectox.html.stream;
 
 import objectox.html.IntSize;
 
-final class ScanElementAttributeFrame extends Frame {
-
-  private int childTextCount;
-
-  private int childRawCount;
-
-  private int childElementCount;
+final class ScanRegularElementAttributeFrame extends Frame {
 
   private int current;
 
@@ -31,7 +25,7 @@ final class ScanElementAttributeFrame extends Frame {
 
   private final IntSize size;
 
-  ScanElementAttributeFrame(int index, IntSize size, int length) {
+  ScanRegularElementAttributeFrame(int index, IntSize size, int length) {
     super(index);
 
     this.size = size;
@@ -39,7 +33,7 @@ final class ScanElementAttributeFrame extends Frame {
     this.length = length;
   }
 
-  ScanElementAttributeFrame(int index, IntSize size, int length, int current) {
+  ScanRegularElementAttributeFrame(int index, IntSize size, int length, int current) {
     super(index);
 
     this.current = current;
@@ -49,22 +43,17 @@ final class ScanElementAttributeFrame extends Frame {
     this.length = length;
   }
 
-  public final void childElement() {
-    childElementCount++;
+  @Override
+  final boolean equalsImpl(Frame f) {
+    return f instanceof ScanRegularElementAttributeFrame that
+        && current == that.current
+        && length == that.length
+        && size == that.size;
   }
 
-  public final void childRaw() {
-    childRawCount++;
-  }
-
-  public final void childText() {
-    childTextCount++;
-  }
-
-  public final boolean emptyElement() {
-    return childElementCount == 0
-        && childRawCount == 0
-        && childTextCount == 0;
+  @Override
+  final String toStringImpl() {
+    return ", " + size + ", " + current + ", " + length;
   }
 
   public final boolean hasNext() {
@@ -73,7 +62,7 @@ final class ScanElementAttributeFrame extends Frame {
 
   @Override
   public final State newState(Ctx ctx) {
-    return new ScanElementAttributeState(ctx);
+    return new ScanRegularElementAttributeState(ctx);
   }
 
   public final int nextInt(Ctx ctx) {

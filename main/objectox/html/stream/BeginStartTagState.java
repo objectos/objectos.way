@@ -16,16 +16,20 @@
 package objectox.html.stream;
 
 import objectox.html.IntSize;
-import objectox.html.elem.ElementNamePojo;
+import objectox.html.elem.ElementName;
 
 final class BeginStartTagState implements State {
 
   private final Ctx ctx;
 
+  private final ElementKind elementKind;
+
   private final IntSize nameSize;
 
-  BeginStartTagState(Ctx ctx, IntSize nameSize) {
+  BeginStartTagState(Ctx ctx, ElementKind elementKind, IntSize nameSize) {
     this.ctx = ctx;
+
+    this.elementKind = elementKind;
 
     this.nameSize = nameSize;
   }
@@ -35,15 +39,29 @@ final class BeginStartTagState implements State {
     final int nameIndex;
     nameIndex = ctx.nextInt(nameSize);
 
-    final ElementNamePojo elementName;
-    elementName = ElementNamePojo.get(nameIndex);
+    final ElementName elementName;
+    elementName = ElementName.get(nameIndex);
 
     final BeginStartTagEvent event;
     event = new BeginStartTagEvent(elementName);
 
     ctx.result(event);
 
-    return new BeginElementContentsState(ctx);
+    return switch (elementKind) {
+      case REGULAR -> new BeginRegularElementContentsState(ctx);
+
+      case VOID -> throw new UnsupportedOperationException("Implement me");
+
+      case TEXT -> throw new UnsupportedOperationException("Implement me");
+    };
+  }
+
+  @Override
+  public final boolean equals(Object obj) {
+    return obj instanceof BeginStartTagState that
+        && ctx.equals(that.ctx)
+        && elementKind.equals(that.elementKind)
+        && nameSize.equals(that.nameSize);
   }
 
 }

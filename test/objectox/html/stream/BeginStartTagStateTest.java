@@ -18,71 +18,47 @@ package objectox.html.stream;
 import static org.testng.Assert.assertEquals;
 
 import objectox.html.IntSize;
-import objectox.html.attr.AttributeName;
-import objectox.html.elem.ElementNamePojo;
+import objectox.html.elem.ElementName;
 import objectox.html.markup.HtmlBytes;
 import org.testng.annotations.Test;
 
 public class BeginStartTagStateTest {
 
-  @Test(description = "<html></html>")
-  public void compute01() {
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.STARTTAG8);
-      opts.addInt8(ElementNamePojo.HTML.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(0);
-      opts.addByte(HtmlBytes.ENDTAG8);
-      opts.addInt8(ElementNamePojo.HTML.index());
-
-      opts.push(ScanDocumentNodeFrame.of(1));
-    });
-
-    final BeginStartTagState subject;
-    subject = new BeginStartTagState(ctx, IntSize.BIT8);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res.getClass(), BeginElementContentsState.class);
-    assertEquals(ctx.hasEvent(), true);
-    assertEquals(ctx.nextEvent(), BeginStartTagEvent.of(ElementNamePojo.HTML));
-  }
-
   @Test(description = """
-  <div class="c1 c2"></html>
+  regular elem:
+  - no attrs
+  - no children
   """)
-  public void compute09() {
+  public void regularElement01() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.CLASS.index());
-      opts.addInt8(opts.addObject("c1"));
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.CLASS.index());
-      opts.addInt8(opts.addObject("c2"));
-      opts.addByte(HtmlBytes.STARTTAG8);
-      opts.addInt8(ElementNamePojo.DIV.index());
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.DIV.index());
       opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(2);
       opts.addInt8(0);
-      opts.addInt8(3);
-      opts.addByte(HtmlBytes.ENDTAG8);
-      opts.addInt8(ElementNamePojo.DIV.index());
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.DIV.index());
 
-      opts.push(ScanDocumentNodeFrame.of(7));
+      opts.push(new ScanDocumentNodeFrame(1));
     });
 
     final BeginStartTagState subject;
-    subject = new BeginStartTagState(ctx, IntSize.BIT8);
+    subject = new BeginStartTagState(ctx, ElementKind.REGULAR, IntSize.BIT8);
 
     final State res;
     res = subject.compute();
 
-    assertEquals(res.getClass(), BeginElementContentsState.class);
-    assertEquals(ctx.hasEvent(), true);
-    assertEquals(ctx.nextEvent(), BeginStartTagEvent.of(ElementNamePojo.DIV));
+    assertEquals(res, new BeginRegularElementContentsState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+          opts.push(new ScanDocumentNodeFrame(2));
+          opts.result(BeginStartTagEvent.of(ElementName.DIV));
+        })
+    );
   }
 
 }

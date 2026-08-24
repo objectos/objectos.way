@@ -17,7 +17,6 @@ package objectox.html.stream;
 
 import objectox.html.IntSize;
 import objectox.html.elem.ElementName;
-import objectox.html.elem.ElementNamePojo;
 import objectox.html.markup.HtmlBytes;
 
 final class RenderEndTagState implements State {
@@ -34,12 +33,16 @@ final class RenderEndTagState implements State {
     code = ctx.nextByte();
 
     return switch (code) {
-      case HtmlBytes.ENDTAG8 -> renderEndTag(IntSize.BIT8);
-
-      case HtmlBytes.VOIDELEM -> renderVoidElem();
+      case HtmlBytes.ELEMEND8 -> renderEndTag(IntSize.BIT8);
 
       default -> throw State.malformed();
     };
+  }
+
+  @Override
+  public final boolean equals(Object obj) {
+    return obj instanceof RenderEndTagState that
+        && ctx.equals(that.ctx);
   }
 
   private State renderEndTag(IntSize size) {
@@ -47,31 +50,12 @@ final class RenderEndTagState implements State {
     nameIndex = ctx.nextInt(size);
 
     final ElementName elementName;
-    elementName = ElementNamePojo.get(nameIndex);
+    elementName = ElementName.get(nameIndex);
 
     final RenderEndTagEvent event;
     event = new RenderEndTagEvent(elementName);
 
     ctx.result(event);
-
-    return computeEnd();
-  }
-
-  private State renderVoidElem() {
-    return computeEnd();
-  }
-
-  private State computeEnd() {
-    final Frame f;
-    f = ctx.pop();
-
-    final ScanElementNodeFrame previous;
-    previous = f.as(ScanElementNodeFrame.class);
-
-    final Frame current;
-    current = ctx.peekFrame();
-
-    current.updateIfNecessary(previous);
 
     return new EndElementState(ctx);
   }

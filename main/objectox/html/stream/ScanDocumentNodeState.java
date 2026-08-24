@@ -35,6 +35,12 @@ final class ScanDocumentNodeState implements State {
     }
   }
 
+  @Override
+  public final boolean equals(Object obj) {
+    return obj instanceof ScanDocumentNodeState that
+        && ctx.equals(that.ctx);
+  }
+
   private State compute0() {
     final byte code;
     code = ctx.nextByte();
@@ -42,7 +48,7 @@ final class ScanDocumentNodeState implements State {
     return switch (code) {
       case HtmlBytes.DOCTYPE -> doctype();
 
-      case HtmlBytes.STARTTAG8 -> new BeginStartTagState(ctx, IntSize.BIT8);
+      case HtmlBytes.ELEMSTR8 -> new BeginStartTagState(ctx, ElementKind.REGULAR, IntSize.BIT8);
 
       default -> throw State.implCode(code);
     };

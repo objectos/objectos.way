@@ -46,4 +46,10 @@ final class EndElementState implements State {
     };
   }
 
+  @Override
+  public final boolean equals(Object obj) {
+    return obj instanceof EndElementState that
+        && ctx.equals(that.ctx);
+  }
+
 }

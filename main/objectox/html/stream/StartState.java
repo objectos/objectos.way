@@ -29,7 +29,10 @@ final class StartState implements State {
 
   @Override
   public final ScanDocumentNodeState compute() {
-    ctx.push(ScanDocumentNodeFrame.of(0));
+    final ScanDocumentNodeFrame start;
+    start = new ScanDocumentNodeFrame(0);
+
+    ctx.push(start);
 
     while (ctx.hasByte()) {
       final byte proto;

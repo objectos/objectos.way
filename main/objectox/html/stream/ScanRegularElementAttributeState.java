@@ -19,11 +19,11 @@ import objectos.html.stream.EndStartTagKind;
 import objectox.html.IntSize;
 import objectox.html.markup.HtmlBytes;
 
-final class ScanElementAttributeState implements State {
+final class ScanRegularElementAttributeState implements State {
 
   private final Ctx ctx;
 
-  ScanElementAttributeState(Ctx ctx) {
+  ScanRegularElementAttributeState(Ctx ctx) {
     this.ctx = ctx;
   }
 
@@ -32,17 +32,23 @@ final class ScanElementAttributeState implements State {
     final Frame f;
     f = ctx.peekFrame();
 
-    final ScanElementAttributeFrame frame;
-    frame = f.as(ScanElementAttributeFrame.class);
+    final ScanRegularElementAttributeFrame frame;
+    frame = f.as(ScanRegularElementAttributeFrame.class);
 
     if (frame.hasNext()) {
       return compute0(frame);
     } else {
-      return end();
+      return endEmpty();
     }
   }
 
-  private State compute0(ScanElementAttributeFrame frame) {
+  @Override
+  public final boolean equals(Object obj) {
+    return obj instanceof ScanRegularElementAttributeState that
+        && ctx.equals(that.ctx);
+  }
+
+  private State compute0(ScanRegularElementAttributeFrame frame) {
     final int jmpIndex;
     jmpIndex = frame.nextInt(ctx);
 
@@ -63,57 +69,22 @@ final class ScanElementAttributeState implements State {
 
       case HtmlBytes.xBOOLEAN8 -> new RenderBooleanAttributeState(ctx, IntSize.BIT8);
 
-      case HtmlBytes.xSTARTTAG8 -> {
-        frame.childElement();
-
-        yield skip();
-      }
-
-      case HtmlBytes.xTEXT8, HtmlBytes.xTEXT16, HtmlBytes.xTEXT24 -> {
-        frame.childText();
-
-        yield skip();
-      }
-
-      case HtmlBytes.xRAW8, HtmlBytes.xRAW16, HtmlBytes.xRAW24 -> {
-        frame.childRaw();
-
-        yield skip();
-      }
-
       default -> throw State.implCode(code);
     };
   }
 
-  private State end() {
+  private State endEmpty() {
+    ctx.pop(); // ScanRegularElementAttributeFrame
+
     final EndStartTagKind kind;
-    kind = endKind();
+    kind = EndStartTagKind.EMPTY_ELEMENT;
 
     final EndStartTagEvent event;
     event = new EndStartTagEvent(kind);
 
     ctx.result(event);
 
-    return new ScanElementNodeState(ctx);
-  }
-
-  private EndStartTagKind endKind() {
-    final byte peek;
-    peek = ctx.peekByte();
-
-    final Frame f;
-    f = ctx.pop();
-
-    if (peek == HtmlBytes.VOIDELEM) {
-      return EndStartTagKind.VOID_ELEMENT;
-    }
-
-    final ScanElementAttributeFrame frame;
-    frame = f.as(ScanElementAttributeFrame.class);
-
-    return frame.emptyElement()
-        ? EndStartTagKind.EMPTY_ELEMENT
-        : EndStartTagKind.ELEMENT;
+    return new RenderEndTagState(ctx);
   }
 
   private State skip() {

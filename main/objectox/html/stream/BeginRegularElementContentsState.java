@@ -18,11 +18,11 @@ package objectox.html.stream;
 import objectox.html.IntSize;
 import objectox.html.markup.HtmlBytes;
 
-final class BeginElementContentsState implements State {
+final class BeginRegularElementContentsState implements State {
 
   private final Ctx ctx;
 
-  BeginElementContentsState(Ctx ctx) {
+  BeginRegularElementContentsState(Ctx ctx) {
     this.ctx = ctx;
   }
 
@@ -42,27 +42,28 @@ final class BeginElementContentsState implements State {
     };
   }
 
+  @Override
+  public final boolean equals(Object obj) {
+    return obj instanceof BeginRegularElementContentsState that
+        && ctx.equals(that.ctx);
+  }
+
   private State compute(IntSize size) {
     final int length;
     length = ctx.nextInt(size);
 
-    final Frame frame;
-    frame = ctx.peekFrame();
+    final Frame currentFrame;
+    currentFrame = ctx.peekFrame();
 
     final int startIndex;
-    startIndex = frame.index;
+    startIndex = currentFrame.index;
 
-    final ScanElementNodeFrame nodeFrame;
-    nodeFrame = new ScanElementNodeFrame(startIndex, size, length);
+    final ScanRegularElementAttributeFrame nextFrame;
+    nextFrame = new ScanRegularElementAttributeFrame(startIndex, size, length);
 
-    ctx.push(nodeFrame);
+    ctx.push(nextFrame);
 
-    final ScanElementAttributeFrame attrFrame;
-    attrFrame = new ScanElementAttributeFrame(startIndex, size, length);
-
-    ctx.push(attrFrame);
-
-    return new ScanElementAttributeState(ctx);
+    return new ScanRegularElementAttributeState(ctx);
   }
 
 }

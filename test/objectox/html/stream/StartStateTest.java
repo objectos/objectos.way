@@ -17,6 +17,8 @@ package objectox.html.stream;
 
 import static org.testng.Assert.assertEquals;
 
+import objectox.html.elem.ElementName;
+import objectox.html.markup.HtmlBytes;
 import org.testng.annotations.Test;
 
 public class StartStateTest {
@@ -35,111 +37,31 @@ public class StartStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res.getClass(), ScanDocumentNodeState.class);
-    assertEquals(ctx.hasEvent(), false);
-  }
+    assertEquals(res, new ScanDocumentNodeState(ctx));
 
-  /*
-  
-  @Test(description = "empty")
-  public void compute00() {
-    final Ctx ctx;
-    ctx = CtxY.create(_ -> {});
+    assertEquals(
+        ctx,
 
-    final StartState subject;
-    subject = new StartState(ctx);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res.getClass(), ScanDocumentNodeState.class);
-    assertEquals(ctx.hasEvent(), false);
-  }
-
-  @Test(description = "<html></html>")
-  public void compute01() {
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.STARTTAG8);
-      opts.addInt8(ElementNamePojo.HTML.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(0);
-      opts.addByte(HtmlBytes.ENDTAG8);
-      opts.addInt8(ElementNamePojo.HTML.index());
-
-      opts.push(ScanDocumentNodeFrame.of(0));
-    });
-
-    final StartState subject;
-    subject = new StartState(ctx);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res.getClass(), ScanDocumentNodeState.class);
-    assertEquals(ctx.peekByte(), HtmlBytes.STARTTAG8);
-    assertEquals(ctx.hasEvent(), false);
-  }
-
-  @Test(description = "<html><head></head></html>")
-  public void compute04() {
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.xSTARTTAG8);
-      opts.addInt8(ElementNamePojo.HEAD.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(0);
-      opts.addByte(HtmlBytes.ENDTAG8);
-      opts.addInt8(ElementNamePojo.HEAD.index());
-      opts.addByte(HtmlBytes.STARTTAG8);
-      opts.addInt8(ElementNamePojo.HTML.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-      opts.addByte(HtmlBytes.ENDTAG8);
-      opts.addInt8(ElementNamePojo.HTML.index());
-
-      opts.push(ScanDocumentNodeFrame.of(0));
-    });
-
-    final StartState subject;
-    subject = new StartState(ctx);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res.getClass(), ScanDocumentNodeState.class);
-    assertEquals(ctx.peekByte(), HtmlBytes.STARTTAG8);
-    assertEquals(ctx.hasEvent(), false);
+        CtxY.create(opts -> {
+          opts.push(new ScanDocumentNodeFrame(0));
+        })
+    );
   }
 
   @Test(description = """
-  <html lang="pt-BR">
-    <head></head>
-  </html>
+  regular elem:
+  - no attrs
+  - no children
   """)
-  public void compute06() {
+  public void regularElement01() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.xSTARTTAG8);
-      opts.addInt8(ElementNamePojo.HEAD.index());
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.DIV.index());
       opts.addByte(HtmlBytes.VALUES8);
       opts.addInt8(0);
-      opts.addByte(HtmlBytes.ENDTAG8);
-      opts.addInt8(ElementNamePojo.HEAD.index());
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.LANG.index());
-      opts.addInt8(opts.addObject("pt-BR"));
-      opts.addByte(HtmlBytes.STARTTAG8);
-      opts.addInt8(ElementNamePojo.HTML.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(2);
-      opts.addInt8(0);
-      opts.addInt8(6);
-      opts.addByte(HtmlBytes.ENDTAG8);
-      opts.addInt8(ElementNamePojo.HTML.index());
-
-      opts.push(ScanDocumentNodeFrame.of(0));
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.DIV.index());
     });
 
     final StartState subject;
@@ -148,46 +70,17 @@ public class StartStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res.getClass(), ScanDocumentNodeState.class);
-    assertEquals(ctx.peekByte(), HtmlBytes.STARTTAG8);
-    assertEquals(ctx.hasEvent(), false);
+    assertEquals(res, new ScanDocumentNodeState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(new ScanDocumentNodeFrame(0));
+        })
+    );
   }
-
-  @Test(description = """
-  <div class="c1 c2"></html>
-  """)
-  public void compute09() {
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.CLASS.index());
-      opts.addInt8(opts.addObject("c1"));
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.CLASS.index());
-      opts.addInt8(opts.addObject("c2"));
-      opts.addByte(HtmlBytes.STARTTAG8);
-      opts.addInt8(ElementNamePojo.DIV.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(2);
-      opts.addInt8(0);
-      opts.addInt8(3);
-      opts.addByte(HtmlBytes.ENDTAG8);
-      opts.addInt8(ElementNamePojo.DIV.index());
-
-      opts.push(ScanDocumentNodeFrame.of(0));
-    });
-
-    final StartState subject;
-    subject = new StartState(ctx);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res.getClass(), ScanDocumentNodeState.class);
-    assertEquals(ctx.peekByte(), HtmlBytes.STARTTAG8);
-    assertEquals(ctx.hasEvent(), false);
-  }
-
-  */
 
 }

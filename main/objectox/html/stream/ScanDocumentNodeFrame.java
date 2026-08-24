@@ -17,12 +17,8 @@ package objectox.html.stream;
 
 final class ScanDocumentNodeFrame extends Frame {
 
-  private ScanDocumentNodeFrame(int index) {
+  ScanDocumentNodeFrame(int index) {
     super(index);
-  }
-
-  public static ScanDocumentNodeFrame of(int index) {
-    return new ScanDocumentNodeFrame(index);
   }
 
   @Override
@@ -33,6 +29,11 @@ final class ScanDocumentNodeFrame extends Frame {
   @Override
   public final void updateIfNecessary(ScanElementNodeFrame previous) {
     index = previous.index;
+  }
+
+  @Override
+  final boolean equalsImpl(Frame that) {
+    return that instanceof ScanDocumentNodeFrame;
   }
 
 }

@@ -43,7 +43,7 @@ public class RenderAttributeStateTest {
       opts.addInt8(ElementNamePojo.HTML.index());
 
       opts.push(new ScanElementNodeFrame(7, IntSize.BIT8, 1));
-      opts.push(new ScanElementAttributeFrame(8, IntSize.BIT8, 1));
+      opts.push(new ScanRegularElementAttributeFrame(8, IntSize.BIT8, 1));
       opts.push(new JumpFrame(1));
     });
 
@@ -53,7 +53,7 @@ public class RenderAttributeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res.getClass(), ScanElementAttributeState.class);
+    assertEquals(res.getClass(), ScanRegularElementAttributeState.class);
     assertEquals(ctx.hasEvent(), true);
     assertEquals(ctx.nextEvent(), RenderAttributeEvent.of(AttributeName.LANG, "pt-BR"));
   }

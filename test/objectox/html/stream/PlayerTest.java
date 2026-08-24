@@ -17,6 +17,9 @@ package objectox.html.stream;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.html.stream.EndStartTagKind;
+import objectox.html.elem.ElementName;
+import objectox.html.markup.HtmlBytes;
 import org.testng.annotations.Test;
 
 public class PlayerTest {
@@ -31,6 +34,31 @@ public class PlayerTest {
 
     });
 
+    assertEquals(subject.hasNext(), false);
+  }
+
+  @Test(description = """
+  regular elem:
+  - no attrs
+  - no children
+  """)
+  public void regularElement01() {
+    final Player subject;
+    subject = PlayerY.create(opts -> {
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.DIV.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.DIV.index());
+    });
+
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new BeginStartTagEvent(ElementName.DIV));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EndStartTagEvent(EndStartTagKind.EMPTY_ELEMENT));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new RenderEndTagEvent(ElementName.DIV));
     assertEquals(subject.hasNext(), false);
   }
 

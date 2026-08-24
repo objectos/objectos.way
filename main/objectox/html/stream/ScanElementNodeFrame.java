@@ -43,6 +43,19 @@ final class ScanElementNodeFrame extends Frame {
     this.current = current;
   }
 
+  @Override
+  final boolean equalsImpl(Frame f) {
+    return f instanceof ScanElementNodeFrame that
+        && current == that.current
+        && length == that.length
+        && size == that.size;
+  }
+
+  @Override
+  final String toStringImpl() {
+    return ", " + size + ", " + current + ", " + length;
+  }
+
   public final boolean hasNext() {
     return current < length;
   }
@@ -55,7 +68,7 @@ final class ScanElementNodeFrame extends Frame {
 
   @Override
   public final State newState(Ctx ctx) {
-    return new ScanElementNodeState(ctx);
+    return new ScanRegularElementNodeState(ctx);
   }
 
 }
