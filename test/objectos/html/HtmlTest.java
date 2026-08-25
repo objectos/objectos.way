@@ -180,4 +180,86 @@ public class HtmlTest {
     );
   }
 
+  @Test(description = """
+  void elem:
+  - 1 reg attr (markup) (8bit)
+  """)
+  public void voidElement02_8bit() {
+    final Html subject;
+    subject = HtmlY.create(opts -> {
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.TYPE.index());
+      opts.addInt8(opts.addObject("password"));
+      opts.addByte(HtmlBytes.ELEMVOID8);
+      opts.addInt8(ElementName.INPUT.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+    });
+
+    assertEquals(
+        subject.toString(),
+
+        """
+        <input type="password">
+        """
+    );
+  }
+
+  @Test(description = """
+  void elem:
+  - 1 reg attr (markup) (16bit)
+  """)
+  public void voidElement02_16bit() {
+    final Html subject;
+    subject = HtmlY.create(opts -> {
+      opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
+
+      opts.addByte(HtmlBytes.xATTRIBUTE816);
+      opts.addInt8(AttributeName.TYPE.index());
+      opts.addInt16(opts.addObject("password"));
+      opts.addByte(HtmlBytes.ELEMVOID8);
+      opts.addInt8(ElementName.INPUT.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+    });
+
+    assertEquals(
+        subject.toString(),
+
+        """
+        <input type="password">
+        """
+    );
+  }
+
+  @Test(description = """
+  void elem:
+  - 1 reg attr (markup) (24bit)
+  """)
+  public void voidElement02_24bit() {
+    final Html subject;
+    subject = HtmlY.create(opts -> {
+      opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
+
+      opts.addByte(HtmlBytes.xATTRIBUTE824);
+      opts.addInt8(AttributeName.TYPE.index());
+      opts.addInt24(opts.addObject("password"));
+      opts.addByte(HtmlBytes.ELEMVOID8);
+      opts.addInt8(ElementName.INPUT.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+    });
+
+    assertEquals(
+        subject.toString(),
+
+        """
+        <input type="password">
+        """
+    );
+  }
+
 }

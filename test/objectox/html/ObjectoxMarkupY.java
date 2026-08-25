@@ -20,9 +20,9 @@ import objectox.html.markup.HtmlSink;
 
 public final class ObjectoxMarkupY {
 
-  private int codeInitial;
+  private IntSize codeInitial = IntSize.BIT8;
 
-  private int objectsInitial;
+  private IntSize objectsInitial = IntSize.BIT8;
 
   private ObjectoxMarkupY() {}
 
@@ -35,21 +35,41 @@ public final class ObjectoxMarkupY {
     return y.build();
   }
 
-  public final void objects(int initial) {
+  public final void code(IntSize initial) {
+    codeInitial = initial;
+  }
+
+  public final void objects(IntSize initial) {
     objectsInitial = initial;
   }
 
   private ObjectoxMarkup build() {
+    final int codeLen;
+    codeLen = len(codeInitial);
+
     final byte[] code;
-    code = new byte[codeInitial];
+    code = new byte[codeLen];
+
+    final int objectsLen;
+    objectsLen = len(objectsInitial);
 
     final Object[] objects;
-    objects = new Object[objectsInitial];
+    objects = new Object[objectsLen];
 
     final HtmlSink sink;
     sink = new HtmlSink(code, objects);
 
     return ObjectoxMarkup.of(sink);
+  }
+
+  private int len(IntSize size) {
+    return switch (size) {
+      case BIT8 -> 0;
+
+      case BIT16 -> HtmlSink.MAX_INT8 + 1;
+
+      case BIT24 -> HtmlSink.MAX_INT16 + 1;
+    };
   }
 
 }

@@ -17,58 +17,27 @@ package objectox.html.stream;
 
 import objectox.html.IntSize;
 
-final class ScanElementAttributeFrame extends Frame {
+final class ScanVoidElementAttributeFrame extends AbstractElementAttributeFrame {
 
-  private int current;
-
-  private final int length;
-
-  private final IntSize size;
-
-  ScanElementAttributeFrame(int index, IntSize size, int length) {
-    super(index);
-
-    this.size = size;
-
-    this.length = length;
+  ScanVoidElementAttributeFrame(int index, IntSize size, int length) {
+    super(index, size, length);
   }
 
-  ScanElementAttributeFrame(int index, IntSize size, int length, int current) {
-    super(index);
-
-    this.current = current;
-
-    this.size = size;
-
-    this.length = length;
+  ScanVoidElementAttributeFrame(int index, IntSize size, int length, int current) {
+    super(index, size, length, current);
   }
 
   @Override
   final boolean equalsImpl(Frame f) {
-    return f instanceof ScanElementAttributeFrame that
+    return f instanceof ScanVoidElementAttributeFrame that
         && current == that.current
         && length == that.length
         && size == that.size;
   }
 
   @Override
-  final String toStringImpl() {
-    return ", " + size + ", " + current + ", " + length;
-  }
-
-  public final boolean hasNext() {
-    return current < length;
-  }
-
-  @Override
   public final State newState(Ctx ctx) {
-    return new ScanRegularElementAttributeState(ctx);
-  }
-
-  public final int nextInt(Ctx ctx) {
-    current += 1;
-
-    return ctx.nextInt(size);
+    return new ScanVoidElementAttributeState(ctx);
   }
 
 }

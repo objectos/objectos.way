@@ -15,6 +15,8 @@
  */
 package objectox.html.stream;
 
+import objectox.html.IntSize;
+
 final class BeginVoidElementContentsState extends AbstractBeginElementContentsState {
 
   BeginVoidElementContentsState(Ctx ctx) {
@@ -25,6 +27,11 @@ final class BeginVoidElementContentsState extends AbstractBeginElementContentsSt
   public final boolean equals(Object obj) {
     return obj instanceof BeginVoidElementContentsState that
         && ctx.equals(that.ctx);
+  }
+
+  @Override
+  final AbstractElementAttributeFrame newFrame(int startIndex, IntSize size, int length) {
+    return new ScanVoidElementAttributeFrame(startIndex, size, length);
   }
 
   @Override

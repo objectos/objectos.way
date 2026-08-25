@@ -15,6 +15,8 @@
  */
 package objectox.html.stream;
 
+import objectox.html.IntSize;
+
 final class BeginRegularElementContentsState extends AbstractBeginElementContentsState {
 
   BeginRegularElementContentsState(Ctx ctx) {
@@ -25,6 +27,11 @@ final class BeginRegularElementContentsState extends AbstractBeginElementContent
   public final boolean equals(Object obj) {
     return obj instanceof BeginRegularElementContentsState that
         && ctx.equals(that.ctx);
+  }
+
+  @Override
+  final AbstractElementAttributeFrame newFrame(int startIndex, IntSize size, int length) {
+    return new ScanRegularElementAttributeFrame(startIndex, size, length);
   }
 
   @Override

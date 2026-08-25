@@ -42,7 +42,7 @@ public class RenderBooleanAttributeStateTest {
       opts.addInt8(ElementNamePojo.HTML.index());
 
       opts.push(new ScanElementNodeFrame(6, IntSize.BIT8, 1));
-      opts.push(new ScanElementAttributeFrame(7, IntSize.BIT8, 1));
+      opts.push(new ScanRegularElementAttributeFrame(7, IntSize.BIT8, 1));
       opts.push(new JumpFrame(1));
     });
 

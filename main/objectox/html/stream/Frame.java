@@ -17,9 +17,9 @@ package objectox.html.stream;
 
 sealed abstract class Frame
     permits
+    AbstractElementAttributeFrame,
     JumpFrame,
     ScanDocumentNodeFrame,
-    ScanElementAttributeFrame,
     ScanElementNodeFrame {
 
   int index;
@@ -65,7 +65,7 @@ sealed abstract class Frame
     return "";
   }
 
-  public void updateIfNecessary(ScanElementAttributeFrame previous) {
+  public void updateIfNecessary(AbstractElementAttributeFrame previous) {
     // noop
   }
 
