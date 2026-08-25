@@ -65,7 +65,7 @@ sealed abstract class Frame
     return "";
   }
 
-  public void updateIfNecessary(ScanElementNodeFrame previous) {
+  public void updateIfNecessary(ScanRegularElementAttributeFrame previous) {
     // noop
   }
 

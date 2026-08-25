@@ -18,8 +18,10 @@ package objectox.html.stream;
 import static org.testng.Assert.assertEquals;
 
 import objectos.html.stream.EndStartTagKind;
+import objectox.html.attr.AttributeName;
 import objectox.html.elem.ElementName;
 import objectox.html.markup.HtmlBytes;
+import objectox.html.markup.HtmlSink;
 import org.testng.annotations.Test;
 
 public class PlayerTest {
@@ -55,6 +57,103 @@ public class PlayerTest {
 
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new BeginStartTagEvent(ElementName.DIV));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EndStartTagEvent(EndStartTagKind.EMPTY_ELEMENT));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new RenderEndTagEvent(ElementName.DIV));
+    assertEquals(subject.hasNext(), false);
+  }
+
+  @Test(description = """
+  regular elem:
+  - 1 reg attr (markup) (8bit)
+  - no children
+  """)
+  public void regularElement02_8bit() {
+    final Player subject;
+    subject = PlayerY.create(opts -> {
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.CONTENTEDITABLE.index());
+      opts.addInt8(opts.addObject("false"));
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.DIV.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.DIV.index());
+    });
+
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new BeginStartTagEvent(ElementName.DIV));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new RenderAttributeEvent(AttributeName.CONTENTEDITABLE, "false"));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EndStartTagEvent(EndStartTagKind.EMPTY_ELEMENT));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new RenderEndTagEvent(ElementName.DIV));
+    assertEquals(subject.hasNext(), false);
+  }
+
+  @Test(description = """
+  regular elem:
+  - 1 reg attr (markup) (16bit)
+  - no children
+  """)
+  public void regularElement02_16bit() {
+    final Player subject;
+    subject = PlayerY.create(opts -> {
+      opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
+
+      opts.addByte(HtmlBytes.xATTRIBUTE816);
+      opts.addInt8(AttributeName.CONTENTEDITABLE.index());
+      opts.addInt16(opts.addObject("false"));
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.DIV.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.DIV.index());
+    });
+
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new BeginStartTagEvent(ElementName.DIV));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new RenderAttributeEvent(AttributeName.CONTENTEDITABLE, "false"));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EndStartTagEvent(EndStartTagKind.EMPTY_ELEMENT));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new RenderEndTagEvent(ElementName.DIV));
+    assertEquals(subject.hasNext(), false);
+  }
+
+  @Test(description = """
+  regular elem:
+  - 1 reg attr (markup) (24bit)
+  - no children
+  """)
+  public void regularElement02_24bit() {
+    final Player subject;
+    subject = PlayerY.create(opts -> {
+      opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
+
+      opts.addByte(HtmlBytes.xATTRIBUTE824);
+      opts.addInt8(AttributeName.CONTENTEDITABLE.index());
+      opts.addInt24(opts.addObject("false"));
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.DIV.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.DIV.index());
+    });
+
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new BeginStartTagEvent(ElementName.DIV));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new RenderAttributeEvent(AttributeName.CONTENTEDITABLE, "false"));
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new EndStartTagEvent(EndStartTagKind.EMPTY_ELEMENT));
     assertEquals(subject.hasNext(), true);

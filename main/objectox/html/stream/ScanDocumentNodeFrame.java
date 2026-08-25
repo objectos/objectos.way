@@ -27,7 +27,7 @@ final class ScanDocumentNodeFrame extends Frame {
   }
 
   @Override
-  public final void updateIfNecessary(ScanElementNodeFrame previous) {
+  public final void updateIfNecessary(ScanRegularElementAttributeFrame previous) {
     index = previous.index;
   }
 

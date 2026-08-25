@@ -72,7 +72,16 @@ final class ScanRegularElementAttributeState implements State {
   }
 
   private State endEmpty() {
-    ctx.pop(); // ScanRegularElementAttributeFrame
+    final Frame f; // ScanRegularElementAttributeFrame
+    f = ctx.pop();
+
+    final ScanRegularElementAttributeFrame previous;
+    previous = f.as(ScanRegularElementAttributeFrame.class);
+
+    final Frame current;
+    current = ctx.peekFrame();
+
+    current.updateIfNecessary(previous);
 
     final EndStartTagKind kind;
     kind = EndStartTagKind.EMPTY_ELEMENT;

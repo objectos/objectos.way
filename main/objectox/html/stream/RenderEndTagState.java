@@ -35,7 +35,7 @@ final class RenderEndTagState implements State {
     return switch (code) {
       case HtmlBytes.ELEMEND8 -> renderEndTag(IntSize.BIT8);
 
-      default -> throw State.malformed();
+      default -> throw State.implCode(code);
     };
   }
 
