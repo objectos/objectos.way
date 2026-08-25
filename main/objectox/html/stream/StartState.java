@@ -21,8 +21,6 @@ final class StartState implements State {
 
   private final Ctx ctx;
 
-  private SkipElement skipElement;
-
   StartState(Ctx ctx) {
     this.ctx = ctx;
   }
@@ -56,14 +54,6 @@ final class StartState implements State {
   public final boolean equals(Object obj) {
     return obj instanceof StartState that
         && ctx.equals(that.ctx);
-  }
-
-  private SkipElement skipElement() {
-    if (skipElement == null) {
-      skipElement = new SkipElement(ctx);
-    }
-
-    return skipElement;
   }
 
 }

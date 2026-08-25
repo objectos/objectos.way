@@ -185,4 +185,37 @@ public class EndElementStateTest {
     );
   }
 
+  @Test(description = """
+  void elem:
+  - no attrs
+  """)
+  public void voidElement01() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.ELEMVOID8);
+      opts.addInt8(ElementName.HR.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(0);
+
+      opts.push(new ScanDocumentNodeFrame(4));
+    });
+
+    final EndElementState subject;
+    subject = new EndElementState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new ScanDocumentNodeState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+          opts.push(new ScanDocumentNodeFrame(4));
+        })
+    );
+  }
+
 }
