@@ -63,8 +63,6 @@ final class VoidElementRecorder {
 
     sink.setInt(valuesSize, valuesIndex, size);
 
-    sink.addByte(HtmlBytes.ELEMVOID);
-
     return new ElementPointer(startIndex);
   }
 
@@ -78,7 +76,7 @@ final class VoidElementRecorder {
 
   private int startTag8(int nameIndex) {
     final int startIndex;
-    startIndex = sink.addByte(HtmlBytes.ELEMSTR8);
+    startIndex = sink.addByte(HtmlBytes.ELEMVOID8);
 
     sink.addInt8(nameIndex);
 

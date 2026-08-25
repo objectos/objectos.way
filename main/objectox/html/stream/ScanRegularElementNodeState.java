@@ -60,8 +60,6 @@ final class ScanRegularElementNodeState implements State {
     code = ctx.nextByte();
 
     return switch (code) {
-      case HtmlBytes.xSTARTTAG8 -> new BeginStartTagState(ctx, IntSize.BIT8);
-
       case HtmlBytes.xTEXT8 -> new RenderTextState(ctx, IntSize.BIT8);
 
       case HtmlBytes.xTEXT16 -> new RenderTextState(ctx, IntSize.BIT16);

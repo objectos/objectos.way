@@ -72,11 +72,10 @@ public class RegularElementRecorderTest {
     final HtmlSink sink;
     sink = HtmlSinkY.create(opts -> {
       opts.addInt24(HtmlSink.MAX_INT24);
-      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addByte(HtmlBytes.ELEMVOID8);
       opts.addInt8(ElementName.HR.index());
       opts.addByte(HtmlBytes.VALUES8);
       opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMVOID);
       opts.addByte(HtmlBytes.ATTRIBUTE88);
       opts.addInt8(AttributeName.ID.index());
       opts.addInt8(opts.addObject("foo"));
@@ -89,23 +88,22 @@ public class RegularElementRecorderTest {
     pointer1 = new ElementPointer(3);
 
     final AttributePointer pointer2;
-    pointer2 = new AttributePointer(8);
+    pointer2 = new AttributePointer(7);
 
     final ElementPointer res;
     res = subject.record(ElementName.DIV, pointer1, pointer2);
 
-    assertEquals(res.value(), 11);
+    assertEquals(res.value(), 10);
 
     assertEquals(
         sink,
 
         HtmlSinkY.create(opts -> {
           opts.addInt24(HtmlSink.MAX_INT24);
-          opts.addByte(HtmlBytes.xELEMSTR8);
+          opts.addByte(HtmlBytes.xELEMVOID8);
           opts.addInt8(ElementName.HR.index());
           opts.addByte(HtmlBytes.VALUES8);
           opts.addInt8(0);
-          opts.addByte(HtmlBytes.ELEMVOID);
           opts.addByte(HtmlBytes.xATTRIBUTE88);
           opts.addInt8(AttributeName.ID.index());
           opts.addInt8(opts.addObject("foo"));
@@ -113,7 +111,7 @@ public class RegularElementRecorderTest {
           opts.addInt8(ElementName.DIV.index());
           opts.addByte(HtmlBytes.VALUES8);
           opts.addInt8(2);
-          opts.addInt8(8);
+          opts.addInt8(7);
           opts.addInt8(3);
           opts.addByte(HtmlBytes.ELEMEND8);
           opts.addInt8(ElementName.DIV.index());
@@ -128,11 +126,10 @@ public class RegularElementRecorderTest {
     final HtmlSink sink;
     sink = HtmlSinkY.create(opts -> {
       opts.addInt24(HtmlSink.MAX_INT24);
-      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addByte(HtmlBytes.ELEMVOID8);
       opts.addInt8(ElementName.HR.index());
       opts.addByte(HtmlBytes.VALUES8);
       opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMVOID);
     });
 
     final RegularElementRecorder subject;
@@ -144,18 +141,17 @@ public class RegularElementRecorderTest {
     final ElementPointer res;
     res = subject.record(ElementName.DIV, pointer);
 
-    assertEquals(res.value(), 8);
+    assertEquals(res.value(), 7);
 
     assertEquals(
         sink,
 
         HtmlSinkY.create(opts -> {
           opts.addInt24(HtmlSink.MAX_INT24);
-          opts.addByte(HtmlBytes.xELEMSTR8);
+          opts.addByte(HtmlBytes.xELEMVOID8);
           opts.addInt8(ElementName.HR.index());
           opts.addByte(HtmlBytes.VALUES8);
           opts.addInt8(0);
-          opts.addByte(HtmlBytes.ELEMVOID);
           opts.addByte(HtmlBytes.ELEMSTR8);
           opts.addInt8(ElementName.DIV.index());
           opts.addByte(HtmlBytes.VALUES8);
@@ -168,11 +164,26 @@ public class RegularElementRecorderTest {
   }
 
   private RegularElementRecorder create(HtmlSink sink) {
+    final AmbiguousAttributeRecorder ambiguousAttributeRecorder;
+    ambiguousAttributeRecorder = new AmbiguousAttributeRecorder(sink);
+
+    final ValueRecorder valueRecorder;
+    valueRecorder = new ValueRecorder(sink);
+
+    final FragmentAttributeRecorder fragmentAttributeRecorder;
+    fragmentAttributeRecorder = new FragmentAttributeRecorder(sink, ambiguousAttributeRecorder, valueRecorder);
+
     final ElementAttributesRecorder attributesRecorder;
-    attributesRecorder = new ElementAttributesRecorder(sink);
+    attributesRecorder = new ElementAttributesRecorder(ambiguousAttributeRecorder, fragmentAttributeRecorder, valueRecorder);
+
+    final AmbiguousChildRecorder ambiguousChildRecorder;
+    ambiguousChildRecorder = new AmbiguousChildRecorder(sink);
+
+    final FragmentChildRecorder fragmentChildRecorder;
+    fragmentChildRecorder = new FragmentChildRecorder(sink, ambiguousChildRecorder, valueRecorder);
 
     final ElementChildrenRecorder childrenRecorder;
-    childrenRecorder = new ElementChildrenRecorder(sink);
+    childrenRecorder = new ElementChildrenRecorder(ambiguousChildRecorder, fragmentChildRecorder, valueRecorder);
 
     return new RegularElementRecorder(sink, attributesRecorder, childrenRecorder);
   }

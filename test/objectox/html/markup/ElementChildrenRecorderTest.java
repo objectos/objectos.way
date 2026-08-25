@@ -37,10 +37,7 @@ public class ElementChildrenRecorderTest {
     });
 
     final ElementChildrenRecorder subject;
-    subject = new ElementChildrenRecorder(sink);
-
-    final ElementName elementName;
-    elementName = ElementName.HEAD;
+    subject = create(sink);
 
     final IntSize size;
     size = IntSize.BIT8;
@@ -49,7 +46,7 @@ public class ElementChildrenRecorderTest {
     pointer = new AmbiguousPointer(3);
 
     final int res;
-    res = subject.record(elementName, size, pointer);
+    res = subject.record(size, pointer);
 
     assertEquals(res, 1);
 
@@ -79,10 +76,7 @@ public class ElementChildrenRecorderTest {
     });
 
     final ElementChildrenRecorder subject;
-    subject = new ElementChildrenRecorder(sink);
-
-    final ElementName elementName;
-    elementName = ElementName.DIV;
+    subject = create(sink);
 
     final IntSize size;
     size = IntSize.BIT8;
@@ -91,7 +85,7 @@ public class ElementChildrenRecorderTest {
     pointer = new AmbiguousPointer(3);
 
     final int res;
-    res = subject.record(elementName, size, pointer);
+    res = subject.record(size, pointer);
 
     assertEquals(res, 0);
 
@@ -119,10 +113,7 @@ public class ElementChildrenRecorderTest {
     });
 
     final ElementChildrenRecorder subject;
-    subject = new ElementChildrenRecorder(sink);
-
-    final ElementName elementName;
-    elementName = ElementName.DIV;
+    subject = create(sink);
 
     final IntSize size;
     size = IntSize.BIT8;
@@ -131,7 +122,7 @@ public class ElementChildrenRecorderTest {
     pointer = new AttributePointer(3);
 
     final int res;
-    res = subject.record(elementName, size, pointer);
+    res = subject.record(size, pointer);
 
     assertEquals(res, 0);
 
@@ -161,10 +152,7 @@ public class ElementChildrenRecorderTest {
     });
 
     final ElementChildrenRecorder subject;
-    subject = new ElementChildrenRecorder(sink);
-
-    final ElementName elementName;
-    elementName = ElementName.DIV;
+    subject = create(sink);
 
     final IntSize size;
     size = IntSize.BIT8;
@@ -173,7 +161,7 @@ public class ElementChildrenRecorderTest {
     pointer = new ElementPointer(3);
 
     final int res;
-    res = subject.record(elementName, size, pointer);
+    res = subject.record(size, pointer);
 
     assertEquals(res, 1);
 
@@ -201,16 +189,13 @@ public class ElementChildrenRecorderTest {
     });
 
     final ElementChildrenRecorder subject;
-    subject = new ElementChildrenRecorder(sink);
-
-    final ElementName elementName;
-    elementName = ElementName.DIV;
+    subject = create(sink);
 
     final IntSize size;
     size = IntSize.BIT8;
 
     final int res;
-    res = subject.record(elementName, size, NoOpMarkupPojo.INSTANCE);
+    res = subject.record(size, NoOpMarkupPojo.INSTANCE);
 
     assertEquals(res, 0);
 
@@ -233,10 +218,7 @@ public class ElementChildrenRecorderTest {
     });
 
     final ElementChildrenRecorder subject;
-    subject = new ElementChildrenRecorder(sink);
-
-    final ElementName elementName;
-    elementName = ElementName.DIV;
+    subject = create(sink);
 
     final IntSize size;
     size = IntSize.BIT8;
@@ -245,7 +227,7 @@ public class ElementChildrenRecorderTest {
     pointer = new RawPointer(3);
 
     final int res;
-    res = subject.record(elementName, size, pointer);
+    res = subject.record(size, pointer);
 
     assertEquals(res, 1);
 
@@ -271,19 +253,16 @@ public class ElementChildrenRecorderTest {
     });
 
     final ElementChildrenRecorder subject;
-    subject = new ElementChildrenRecorder(sink);
-
-    final ElementName elementName;
-    elementName = ElementName.DIV;
+    subject = create(sink);
 
     final IntSize size;
     size = IntSize.BIT8;
 
-    final RawPointer pointer;
-    pointer = new RawPointer(3);
+    final TextPointer pointer;
+    pointer = new TextPointer(3);
 
     final int res;
-    res = subject.record(elementName, size, pointer);
+    res = subject.record(size, pointer);
 
     assertEquals(res, 1);
 
@@ -297,6 +276,19 @@ public class ElementChildrenRecorderTest {
           opts.addInt8(3);
         })
     );
+  }
+
+  private ElementChildrenRecorder create(HtmlSink sink) {
+    final AmbiguousChildRecorder ambiguousChildRecorder;
+    ambiguousChildRecorder = new AmbiguousChildRecorder(sink);
+
+    final ValueRecorder valueRecorder;
+    valueRecorder = new ValueRecorder(sink);
+
+    final FragmentChildRecorder fragmentChildRecorder;
+    fragmentChildRecorder = new FragmentChildRecorder(sink, ambiguousChildRecorder, valueRecorder);
+
+    return new ElementChildrenRecorder(ambiguousChildRecorder, fragmentChildRecorder, valueRecorder);
   }
 
 }

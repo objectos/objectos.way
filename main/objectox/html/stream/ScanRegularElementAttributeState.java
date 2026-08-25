@@ -72,7 +72,7 @@ final class ScanRegularElementAttributeState implements State {
   }
 
   private State endEmpty() {
-    final Frame f; // ScanRegularElementAttributeFrame
+    final Frame f;
     f = ctx.pop();
 
     final ScanRegularElementAttributeFrame previous;
