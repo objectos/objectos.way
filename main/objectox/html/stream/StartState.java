@@ -39,25 +39,11 @@ final class StartState implements State {
       proto = ctx.peekByte();
 
       switch (proto) {
-        //        case HtmlBytes.xSTARTTAG8 -> { skipElement().execute(IntSize.BIT8); continue; }
-        //
-        //        case HtmlBytes.xSTARTFLAT -> throw new UnsupportedOperationException("Implement me");
-        //
-        //        case HtmlBytes.xSTARTFRAG -> throw new UnsupportedOperationException("Implement me");
-        //
-        //        case HtmlBytes.xAMBIGUOUS88, HtmlBytes.xATTRIBUTE88 -> { ctx.skip(1 + 1 + 1); continue; }
-        //
-        //        case HtmlBytes.xAMBIGUOUS816, HtmlBytes.xATTRIBUTE816 -> { ctx.skip(1 + 1 + 2); continue; }
-        //
-        //        case HtmlBytes.xAMBIGUOUS824, HtmlBytes.xATTRIBUTE824 -> { ctx.skip(1 + 1 + 3); continue; }
+        case HtmlBytes.xATTRIBUTE88 -> { ctx.skip(1 + 1 + 1); continue; }
 
-        case HtmlBytes.xBOOLEAN8 -> { ctx.skip(1 + 1); continue; }
+        case HtmlBytes.xATTRIBUTE816 -> { ctx.skip(1 + 1 + 2); continue; }
 
-        case HtmlBytes.xRAW8, HtmlBytes.xTEXT8 -> { ctx.skip(1 + 1); continue; }
-
-        case HtmlBytes.xRAW16, HtmlBytes.xTEXT16 -> { ctx.skip(1 + 2); continue; }
-
-        case HtmlBytes.xRAW24, HtmlBytes.xTEXT24 -> { ctx.skip(1 + 3); continue; }
+        case HtmlBytes.xATTRIBUTE824 -> { ctx.skip(1 + 1 + 3); continue; }
       }
 
       break;

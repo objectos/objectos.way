@@ -41,9 +41,24 @@ import objectox.html.markup.Recorder;
 
 public final class ObjectoxMarkup implements Markup {
 
-  private final Recorder recorder = Recorder.create();
+  private final Recorder recorder;
 
-  public ObjectoxMarkup() {
+  private ObjectoxMarkup(Recorder recorder) {
+    this.recorder = recorder;
+  }
+
+  public static ObjectoxMarkup create() {
+    final Recorder recorder;
+    recorder = Recorder.create();
+
+    return new ObjectoxMarkup(recorder);
+  }
+
+  public static ObjectoxMarkup of(HtmlSink sink) {
+    final Recorder recorder;
+    recorder = Recorder.of(sink);
+
+    return new ObjectoxMarkup(recorder);
   }
 
   /// Encodes the specified boolean attribute.

@@ -29,7 +29,7 @@ public interface Component extends ContentProvider, Testable {
   ///
   /// @return the markup instance to be used by this component
   default Markup newHtmlMarkup() {
-    return new ObjectoxMarkup();
+    return ObjectoxMarkup.create();
   }
 
   /// Renders the HTML of this component.
@@ -77,7 +77,7 @@ public interface Component extends ContentProvider, Testable {
   @Override
   default String toTestableText() {
     final Markup m;
-    m = new ObjectoxMarkup();
+    m = ObjectoxMarkup.create();
 
     renderHtml(m);
 

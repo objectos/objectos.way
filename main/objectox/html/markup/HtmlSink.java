@@ -42,7 +42,7 @@ public final class HtmlSink {
     objects = Util.EMPTY_OBJECT_ARRAY;
   }
 
-  HtmlSink(byte[] code, Object[] objects) {
+  public HtmlSink(byte[] code, Object[] objects) {
     this.code = code;
 
     codeIndex = code.length;
@@ -153,6 +153,10 @@ public final class HtmlSink {
 
   public final Object[] objects() {
     return Arrays.copyOf(objects, objectsIndex);
+  }
+
+  public final void objectsIndex(int value) {
+    objectsIndex = value;
   }
 
   public final void setByte(int index, byte value) {

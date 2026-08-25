@@ -60,6 +60,10 @@ final class CtxY {
     return sink.addObject(value);
   }
 
+  public final void objectsIndex(int value) {
+    sink.objectsIndex(value);
+  }
+
   public final void result(Event value) {
     result = value;
   }

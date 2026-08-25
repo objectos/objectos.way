@@ -40,7 +40,7 @@ public sealed interface Markup permits ObjectoxMarkup {
   ///
   /// @return a newly created markup instance
   static Markup of() {
-    return new ObjectoxMarkup();
+    return ObjectoxMarkup.create();
   }
 
   /// Returns an object representing the HTML declared by this instance.
