@@ -161,4 +161,86 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), false);
   }
 
+  @Test(description = """
+  void elem:
+  - 1 reg attr (markup) (8bit)
+  """)
+  public void voidElement02_8bit() {
+    final Player subject;
+    subject = PlayerY.create(opts -> {
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.TYPE.index());
+      opts.addInt8(opts.addObject("password"));
+      opts.addByte(HtmlBytes.ELEMVOID8);
+      opts.addInt8(ElementName.INPUT.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+    });
+
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new BeginStartTagEvent(ElementName.INPUT));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new RenderAttributeEvent(AttributeName.TYPE, "password"));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EndStartTagEvent(EndStartTagKind.VOID_ELEMENT));
+    assertEquals(subject.hasNext(), false);
+  }
+
+  @Test(description = """
+  void elem:
+  - 1 reg attr (markup) (16bit)
+  """)
+  public void voidElement02_16bit() {
+    final Player subject;
+    subject = PlayerY.create(opts -> {
+      opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
+
+      opts.addByte(HtmlBytes.xATTRIBUTE816);
+      opts.addInt8(AttributeName.TYPE.index());
+      opts.addInt16(opts.addObject("password"));
+      opts.addByte(HtmlBytes.ELEMVOID8);
+      opts.addInt8(ElementName.INPUT.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+    });
+
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new BeginStartTagEvent(ElementName.INPUT));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new RenderAttributeEvent(AttributeName.TYPE, "password"));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EndStartTagEvent(EndStartTagKind.VOID_ELEMENT));
+    assertEquals(subject.hasNext(), false);
+  }
+
+  @Test(description = """
+  void elem:
+  - 1 reg attr (markup) (24bit)
+  """)
+  public void voidElement02_24bit() {
+    final Player subject;
+    subject = PlayerY.create(opts -> {
+      opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
+
+      opts.addByte(HtmlBytes.xATTRIBUTE824);
+      opts.addInt8(AttributeName.TYPE.index());
+      opts.addInt24(opts.addObject("password"));
+      opts.addByte(HtmlBytes.ELEMVOID8);
+      opts.addInt8(ElementName.INPUT.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+    });
+
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new BeginStartTagEvent(ElementName.INPUT));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new RenderAttributeEvent(AttributeName.TYPE, "password"));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EndStartTagEvent(EndStartTagKind.VOID_ELEMENT));
+    assertEquals(subject.hasNext(), false);
+  }
+
 }
