@@ -67,8 +67,6 @@ final class ScanRegularElementAttributeState implements State {
 
       case HtmlBytes.xATTRIBUTE824 -> new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT24);
 
-      case HtmlBytes.xBOOLEAN8 -> new RenderBooleanAttributeState(ctx, IntSize.BIT8);
-
       default -> throw State.implCode(code);
     };
   }

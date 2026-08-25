@@ -58,4 +58,12 @@ final class RenderAttributeState implements State {
     return new ScanRegularElementAttributeState(ctx);
   }
 
+  @Override
+  public final boolean equals(Object obj) {
+    return obj instanceof RenderAttributeState that
+        && ctx.equals(that.ctx)
+        && nameSize.equals(that.nameSize)
+        && valueSize.equals(that.valueSize);
+  }
+
 }

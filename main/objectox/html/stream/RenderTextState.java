@@ -47,4 +47,11 @@ final class RenderTextState implements State {
     return new ScanRegularElementNodeState(ctx);
   }
 
+  @Override
+  public final boolean equals(Object obj) {
+    return obj instanceof RenderTextState that
+        && ctx.equals(that.ctx)
+        && textSize.equals(that.textSize);
+  }
+
 }

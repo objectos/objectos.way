@@ -52,6 +52,12 @@ final class StartState implements State {
     return new ScanDocumentNodeState(ctx);
   }
 
+  @Override
+  public final boolean equals(Object obj) {
+    return obj instanceof StartState that
+        && ctx.equals(that.ctx);
+  }
+
   private SkipElement skipElement() {
     if (skipElement == null) {
       skipElement = new SkipElement(ctx);
