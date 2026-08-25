@@ -41,7 +41,7 @@ public class RenderTextStateTest {
       opts.addInt8(ElementNamePojo.SPAN.index());
 
       opts.push(new ScanElementNodeFrame(6, IntSize.BIT8, 1));
-      opts.push(new ScanRegularElementAttributeFrame(6, IntSize.BIT8, 1));
+      opts.push(new ScanElementAttributeFrame(6, IntSize.BIT8, 1));
       opts.push(new JumpFrame(1));
     });
 

@@ -167,4 +167,26 @@ public class ObjectoxMarkupTest {
     );
   }
 
+  @Test(description = """
+  void elem:
+  - no attrs
+  """)
+  public void voidElement01() {
+    final ObjectoxMarkup subject;
+    subject = ObjectoxMarkup.create();
+
+    subject.hr();
+
+    assertEquals(
+        subject.unwrap(),
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.ELEMVOID8);
+          opts.addInt8(ElementName.HR.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(0);
+        })
+    );
+  }
+
 }

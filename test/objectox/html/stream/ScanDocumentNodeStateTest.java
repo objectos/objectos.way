@@ -382,4 +382,38 @@ public class ScanDocumentNodeStateTest {
     );
   }
 
+  @Test(description = """
+  void elem:
+  - no attrs
+  """)
+  public void voidElement01() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.ELEMVOID8);
+      opts.addInt8(ElementName.HR.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(0);
+
+      opts.push(new ScanDocumentNodeFrame(0));
+    });
+
+    final ScanDocumentNodeState subject;
+    subject = new ScanDocumentNodeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new BeginStartTagState(ctx, ElementKind.VOID, IntSize.BIT8));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(new ScanDocumentNodeFrame(1));
+        })
+    );
+  }
+
 }

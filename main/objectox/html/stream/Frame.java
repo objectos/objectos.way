@@ -19,7 +19,7 @@ sealed abstract class Frame
     permits
     JumpFrame,
     ScanDocumentNodeFrame,
-    ScanRegularElementAttributeFrame,
+    ScanElementAttributeFrame,
     ScanElementNodeFrame {
 
   int index;
@@ -65,7 +65,7 @@ sealed abstract class Frame
     return "";
   }
 
-  public void updateIfNecessary(ScanRegularElementAttributeFrame previous) {
+  public void updateIfNecessary(ScanElementAttributeFrame previous) {
     // noop
   }
 

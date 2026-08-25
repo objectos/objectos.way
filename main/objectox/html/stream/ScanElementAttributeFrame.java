@@ -17,7 +17,7 @@ package objectox.html.stream;
 
 import objectox.html.IntSize;
 
-final class ScanRegularElementAttributeFrame extends Frame {
+final class ScanElementAttributeFrame extends Frame {
 
   private int current;
 
@@ -25,7 +25,7 @@ final class ScanRegularElementAttributeFrame extends Frame {
 
   private final IntSize size;
 
-  ScanRegularElementAttributeFrame(int index, IntSize size, int length) {
+  ScanElementAttributeFrame(int index, IntSize size, int length) {
     super(index);
 
     this.size = size;
@@ -33,7 +33,7 @@ final class ScanRegularElementAttributeFrame extends Frame {
     this.length = length;
   }
 
-  ScanRegularElementAttributeFrame(int index, IntSize size, int length, int current) {
+  ScanElementAttributeFrame(int index, IntSize size, int length, int current) {
     super(index);
 
     this.current = current;
@@ -45,7 +45,7 @@ final class ScanRegularElementAttributeFrame extends Frame {
 
   @Override
   final boolean equalsImpl(Frame f) {
-    return f instanceof ScanRegularElementAttributeFrame that
+    return f instanceof ScanElementAttributeFrame that
         && current == that.current
         && length == that.length
         && size == that.size;

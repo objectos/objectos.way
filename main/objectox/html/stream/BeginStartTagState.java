@@ -50,7 +50,7 @@ final class BeginStartTagState implements State {
     return switch (elementKind) {
       case REGULAR -> new BeginRegularElementContentsState(ctx);
 
-      case VOID -> throw new UnsupportedOperationException("Implement me");
+      case VOID -> new BeginVoidElementContentsState(ctx);
 
       case TEXT -> throw new UnsupportedOperationException("Implement me");
     };

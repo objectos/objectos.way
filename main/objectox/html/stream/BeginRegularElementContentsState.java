@@ -15,31 +15,10 @@
  */
 package objectox.html.stream;
 
-import objectox.html.IntSize;
-import objectox.html.markup.HtmlBytes;
-
-final class BeginRegularElementContentsState implements State {
-
-  private final Ctx ctx;
+final class BeginRegularElementContentsState extends AbstractBeginElementContentsState {
 
   BeginRegularElementContentsState(Ctx ctx) {
-    this.ctx = ctx;
-  }
-
-  @Override
-  public final State compute() {
-    final byte code;
-    code = ctx.nextByte();
-
-    return switch (code) {
-      case HtmlBytes.VALUES8 -> compute(IntSize.BIT8);
-
-      case HtmlBytes.VALUES16 -> compute(IntSize.BIT16);
-
-      case HtmlBytes.VALUES24 -> compute(IntSize.BIT24);
-
-      default -> throw State.malformed();
-    };
+    super(ctx);
   }
 
   @Override
@@ -48,21 +27,8 @@ final class BeginRegularElementContentsState implements State {
         && ctx.equals(that.ctx);
   }
 
-  private State compute(IntSize size) {
-    final int length;
-    length = ctx.nextInt(size);
-
-    final Frame currentFrame;
-    currentFrame = ctx.peekFrame();
-
-    final int startIndex;
-    startIndex = currentFrame.index;
-
-    final ScanRegularElementAttributeFrame nextFrame;
-    nextFrame = new ScanRegularElementAttributeFrame(startIndex, size, length);
-
-    ctx.push(nextFrame);
-
+  @Override
+  final State nextState() {
     return new ScanRegularElementAttributeState(ctx);
   }
 

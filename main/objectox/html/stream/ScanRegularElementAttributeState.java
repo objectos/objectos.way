@@ -16,30 +16,11 @@
 package objectox.html.stream;
 
 import objectos.html.stream.EndStartTagKind;
-import objectox.html.IntSize;
-import objectox.html.markup.HtmlBytes;
 
-final class ScanRegularElementAttributeState implements State {
-
-  private final Ctx ctx;
+final class ScanRegularElementAttributeState extends AbstractScanElementAttributeState {
 
   ScanRegularElementAttributeState(Ctx ctx) {
-    this.ctx = ctx;
-  }
-
-  @Override
-  public final State compute() {
-    final Frame f;
-    f = ctx.peekFrame();
-
-    final ScanRegularElementAttributeFrame frame;
-    frame = f.as(ScanRegularElementAttributeFrame.class);
-
-    if (frame.hasNext()) {
-      return compute0(frame);
-    } else {
-      return endEmpty();
-    }
+    super(ctx);
   }
 
   @Override
@@ -48,56 +29,19 @@ final class ScanRegularElementAttributeState implements State {
         && ctx.equals(that.ctx);
   }
 
-  private State compute0(ScanRegularElementAttributeFrame frame) {
-    final int jmpIndex;
-    jmpIndex = frame.nextInt(ctx);
-
-    final JumpFrame jmpFrame;
-    jmpFrame = new JumpFrame(jmpIndex);
-
-    ctx.push(jmpFrame);
-
-    final byte code;
-    code = ctx.nextByte();
-
-    return switch (code) {
-      case HtmlBytes.xATTRIBUTE88 -> new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT8);
-
-      case HtmlBytes.xATTRIBUTE816 -> new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT16);
-
-      case HtmlBytes.xATTRIBUTE824 -> new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT24);
-
-      default -> throw State.implCode(code);
-    };
+  @Override
+  final State computeNonAttribute(byte code) {
+    throw State.implCode(code);
   }
 
-  private State endEmpty() {
-    final Frame f;
-    f = ctx.pop();
+  @Override
+  final EndStartTagKind endTagIsEmpty() {
+    return EndStartTagKind.EMPTY_ELEMENT;
+  }
 
-    final ScanRegularElementAttributeFrame previous;
-    previous = f.as(ScanRegularElementAttributeFrame.class);
-
-    final Frame current;
-    current = ctx.peekFrame();
-
-    current.updateIfNecessary(previous);
-
-    final EndStartTagKind kind;
-    kind = EndStartTagKind.EMPTY_ELEMENT;
-
-    final EndStartTagEvent event;
-    event = new EndStartTagEvent(kind);
-
-    ctx.result(event);
-
+  @Override
+  final State endTagIsEmptyNextState() {
     return new RenderEndTagState(ctx);
-  }
-
-  private State skip() {
-    ctx.pop(); // jmp frame
-
-    return this;
   }
 
 }

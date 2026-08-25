@@ -158,4 +158,26 @@ public class HtmlTest {
     );
   }
 
+  @Test(description = """
+  void elem:
+  - no attrs
+  """)
+  public void voidElement01() {
+    final Html subject;
+    subject = HtmlY.create(opts -> {
+      opts.addByte(HtmlBytes.ELEMVOID8);
+      opts.addInt8(ElementName.HR.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(0);
+    });
+
+    assertEquals(
+        subject.toString(),
+
+        """
+        <hr>
+        """
+    );
+  }
+
 }

@@ -46,7 +46,7 @@ public class RenderAttributeStateTest {
       opts.addInt8(ElementName.DIV.index());
 
       opts.push(new ScanDocumentNodeFrame(7));
-      opts.push(new ScanRegularElementAttributeFrame(8, IntSize.BIT8, 1, 1));
+      opts.push(new ScanElementAttributeFrame(8, IntSize.BIT8, 1, 1));
       opts.push(new JumpFrame(1));
     });
 
@@ -65,7 +65,7 @@ public class RenderAttributeStateTest {
           opts.sink(ctx);
           opts.result(RenderAttributeEvent.of(AttributeName.CONTENTEDITABLE, "false"));
           opts.push(new ScanDocumentNodeFrame(7));
-          opts.push(new ScanRegularElementAttributeFrame(8, IntSize.BIT8, 1, 1));
+          opts.push(new ScanElementAttributeFrame(8, IntSize.BIT8, 1, 1));
         })
     );
   }
@@ -92,7 +92,7 @@ public class RenderAttributeStateTest {
       opts.addInt8(ElementName.DIV.index());
 
       opts.push(new ScanDocumentNodeFrame(8));
-      opts.push(new ScanRegularElementAttributeFrame(9, IntSize.BIT8, 1, 1));
+      opts.push(new ScanElementAttributeFrame(9, IntSize.BIT8, 1, 1));
       opts.push(new JumpFrame(1));
     });
 
@@ -111,7 +111,7 @@ public class RenderAttributeStateTest {
           opts.sink(ctx);
           opts.result(RenderAttributeEvent.of(AttributeName.CONTENTEDITABLE, "false"));
           opts.push(new ScanDocumentNodeFrame(8));
-          opts.push(new ScanRegularElementAttributeFrame(9, IntSize.BIT8, 1, 1));
+          opts.push(new ScanElementAttributeFrame(9, IntSize.BIT8, 1, 1));
         })
     );
   }
@@ -138,7 +138,7 @@ public class RenderAttributeStateTest {
       opts.addInt8(ElementName.DIV.index());
 
       opts.push(new ScanDocumentNodeFrame(9));
-      opts.push(new ScanRegularElementAttributeFrame(10, IntSize.BIT8, 1, 1));
+      opts.push(new ScanElementAttributeFrame(10, IntSize.BIT8, 1, 1));
       opts.push(new JumpFrame(1));
     });
 
@@ -157,7 +157,7 @@ public class RenderAttributeStateTest {
           opts.sink(ctx);
           opts.result(RenderAttributeEvent.of(AttributeName.CONTENTEDITABLE, "false"));
           opts.push(new ScanDocumentNodeFrame(9));
-          opts.push(new ScanRegularElementAttributeFrame(10, IntSize.BIT8, 1, 1));
+          opts.push(new ScanElementAttributeFrame(10, IntSize.BIT8, 1, 1));
         })
     );
   }

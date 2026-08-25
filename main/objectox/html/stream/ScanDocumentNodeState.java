@@ -50,6 +50,8 @@ final class ScanDocumentNodeState implements State {
 
       case HtmlBytes.ELEMSTR8 -> new BeginStartTagState(ctx, ElementKind.REGULAR, IntSize.BIT8);
 
+      case HtmlBytes.ELEMVOID8 -> new BeginStartTagState(ctx, ElementKind.VOID, IntSize.BIT8);
+
       default -> throw State.implCode(code);
     };
   }
