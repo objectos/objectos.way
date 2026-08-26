@@ -17,10 +17,13 @@ package objectox.html.markup;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.html.Attribute;
+import objectos.html.BooleanAttribute;
 import objectox.html.AmbiguousName;
 import objectox.html.IntSize;
 import objectox.html.elem.ElementName;
 import objectox.html.attr.AttributeName;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class ElementAttributesRecorderTest {
@@ -103,6 +106,120 @@ public class ElementAttributesRecorderTest {
           opts.addInt8(0);
         })
     );
+  }
+
+  @Test(
+      description = "Object attribute detected",
+      expectedExceptions = ObjectAttributeDetected.class
+  )
+  public void attribute02() {
+    final HtmlSink sink;
+    sink = HtmlSinkY.create(_ -> {});
+
+    final ElementAttributesRecorder subject;
+    subject = create(sink);
+
+    final ElementName elementName;
+    elementName = ElementName.DIV;
+
+    final IntSize size;
+    size = IntSize.BIT8;
+
+    final Attribute attribute;
+    attribute = Attribute.of("id", "foo");
+
+    subject.record(elementName, size, attribute);
+  }
+
+  @Test(description = "ValueRecorder delegation for an encoded boolean attribute")
+  public void booleanAttribute01() {
+    final HtmlSink sink;
+    sink = HtmlSinkY.create(opts -> {
+      opts.addByte(HtmlBytes.BOOLEAN8);
+      opts.addInt8(AttributeName.CHECKED.index());
+    });
+
+    final ElementAttributesRecorder subject;
+    subject = create(sink);
+
+    final ElementName elementName;
+    elementName = ElementName.DIV;
+
+    final IntSize size;
+    size = IntSize.BIT8;
+
+    final AttributePointer pointer;
+    pointer = new AttributePointer(0);
+
+    final int res;
+    res = subject.record(elementName, size, pointer);
+
+    assertEquals(res, 1);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.xBOOLEAN8);
+          opts.addInt8(AttributeName.CHECKED.index());
+          opts.addInt8(0);
+        })
+    );
+  }
+
+  @Test(
+      description = "Object boolean attribute detected",
+      expectedExceptions = ObjectAttributeDetected.class
+  )
+  public void booleanAttribute02() {
+    final HtmlSink sink;
+    sink = HtmlSinkY.create(_ -> {});
+
+    final ElementAttributesRecorder subject;
+    subject = create(sink);
+
+    final ElementName elementName;
+    elementName = ElementName.DIV;
+
+    final IntSize size;
+    size = IntSize.BIT8;
+
+    final BooleanAttribute attribute;
+    attribute = BooleanAttribute.of("checked");
+
+    subject.record(elementName, size, attribute);
+  }
+
+  @DataProvider
+  public Object[][] ignoredProvider() {
+    return new Object[][] {
+        {new ElementPointer(0)},
+        {NoOpMarkupPojo.INSTANCE},
+        {new RawPointer(0)},
+        {new TextPointer(0)}
+    };
+  }
+
+  @Test(dataProvider = "ignoredProvider", description = "values that produce no sink changes")
+  public void ignored(ElementValue value) {
+    final HtmlSink sink;
+    sink = HtmlSinkY.create(_ -> {});
+
+    final ElementAttributesRecorder subject;
+    subject = create(sink);
+
+    final ElementName elementName;
+    elementName = ElementName.DIV;
+
+    final IntSize size;
+    size = IntSize.BIT8;
+
+    final int res;
+    res = subject.record(elementName, size, value);
+
+    assertEquals(res, 0);
+
+    assertEquals(sink, HtmlSinkY.create(_ -> {}));
   }
 
   private ElementAttributesRecorder create(HtmlSink sink) {

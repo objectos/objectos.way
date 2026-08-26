@@ -27,6 +27,140 @@ import org.testng.annotations.Test;
 public class TemplateTest {
 
   @Test(description = """
+  document:
+  - empty
+  """)
+  public void document01() {
+    test(
+        new Template() {
+          @Override
+          protected final void render() {
+
+          }
+        },
+
+        ""
+    );
+  }
+
+  @Test(description = """
+  regular elem:
+  - no attrs
+  - no children
+  """)
+  public void regularElement01() {
+    test(
+        new Template() {
+          @Override
+          protected final void render() {
+            div();
+          }
+        },
+
+        """
+        <div></div>
+        """
+    );
+  }
+
+  @Test(description = """
+  regular elem:
+  - 1 reg attr (markup) (8bit)
+  - no children
+  """)
+  public void regularElement02_8bit() {
+    test(
+        new Template() {
+          @Override
+          protected final void render() {
+            div(contenteditable("false"));
+          }
+        },
+
+        """
+        <div contenteditable="false"></div>
+        """
+    );
+  }
+
+  @Test(description = """
+  regular elem:
+  - 1 boolean attr (object) (8bit)
+  - no children
+  """)
+  public void regularElement03() {
+    test(
+        new Template() {
+          @Override
+          protected final void render() {
+            span(autofocus);
+          }
+        },
+
+        """
+        <span autofocus></span>
+        """
+    );
+  }
+
+  @Test(description = """
+  void elem:
+  - no attrs
+  """)
+  public void voidElement01() {
+    test(
+        new Template() {
+          @Override
+          protected final void render() {
+            hr();
+          }
+        },
+
+        """
+        <hr>
+        """
+    );
+  }
+
+  @Test(description = """
+  void elem:
+  - 1 reg attr (markup) (8bit)
+  """)
+  public void voidElement02_8bit() {
+    test(
+        new Template() {
+          @Override
+          protected final void render() {
+            input(type("password"));
+          }
+        },
+
+        """
+        <input type="password">
+        """
+    );
+  }
+
+  @Test(description = """
+  void elem:
+  - 1 boolean attr (object) (8bit)
+  """)
+  public void voidElement03() {
+    test(
+        new Template() {
+          @Override
+          protected final void render() {
+            input(checked);
+          }
+        },
+
+        """
+        <input checked>
+        """
+    );
+  }
+
+  @Test(description = """
   HtmlTemplate TC00
 
   - single html element
@@ -973,7 +1107,7 @@ public class TemplateTest {
   /*
   @Test(description = """
   HtmlTemplate TC46 (A)
-
+  
   - flatten instruction
   """)
   public void testCase46a() {
@@ -990,16 +1124,16 @@ public class TemplateTest {
             );
           }
         },
-
+  
         """
         <form disabled><label></label><input></form>
         """
     );
   }
-
+  
   @Test(description = """
   HtmlTemplate TC46 (B)
-
+  
   - flatten instruction
   """)
   public void testCase46b() {
@@ -1009,7 +1143,7 @@ public class TemplateTest {
               ClassName.of("cn1"),
               ClassName.of("cn2")
           );
-
+  
           @Override
           protected final void render() {
             div(
@@ -1017,7 +1151,7 @@ public class TemplateTest {
             );
           }
         },
-
+  
         """
         <div class="cn1 cn2"></div>
         """
@@ -1326,23 +1460,23 @@ public class TemplateTest {
             div(
                 c(html -> html.span("as child"))
             );
-
+  
             div(f(this::fragment0));
-
+  
             div(f(this::fragment1));
           }
-
+  
           private void fragment0() {
             c(html -> html.span("fragment root"));
           }
-
+  
           private void fragment1() {
             div(
                 c(html -> html.span("fragment child"))
             );
           }
         },
-
+  
         """
         <div><span>as child</span></div>
         <div><span>fragment root</span></div>

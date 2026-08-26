@@ -43,7 +43,7 @@ public class ElementAttributesPreRecorderTest {
     title = Attribute.of("title", "Hello");
 
     final ElementValue[] values;
-    values = new ElementValue[] { title };
+    values = new ElementValue[] {title};
 
     subject.record(values);
 
@@ -78,7 +78,7 @@ public class ElementAttributesPreRecorderTest {
     checked = BooleanAttribute.of("checked");
 
     final ElementValue[] values;
-    values = new ElementValue[] { checked };
+    values = new ElementValue[] {checked};
 
     subject.record(values);
 
@@ -95,7 +95,7 @@ public class ElementAttributesPreRecorderTest {
   }
 
   @DataProvider
-  public Object[][] elementValueProvider() {
+  public Object[][] ignoredProvider() {
     return new Object[][] {
         {new AmbiguousPointer(0)},
         {new AttributePointer(0)},
@@ -107,7 +107,7 @@ public class ElementAttributesPreRecorderTest {
     };
   }
 
-  @Test(dataProvider = "elementValueProvider", description = "other values leave the sink unchanged")
+  @Test(dataProvider = "ignoredProvider", description = "other values leave the sink unchanged")
   public void ignored(ElementValue value) {
     final HtmlSink sink;
     sink = new HtmlSink();
@@ -122,7 +122,7 @@ public class ElementAttributesPreRecorderTest {
     subject = new ElementAttributesPreRecorder(attributeRecorder, booleanAttributeRecorder);
 
     final ElementValue[] values;
-    values = new ElementValue[] { value };
+    values = new ElementValue[] {value};
 
     subject.record(values);
 
