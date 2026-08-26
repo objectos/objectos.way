@@ -333,4 +333,45 @@ public class RenderAttributeStateTest {
     );
   }
 
+  @Test(description = """
+  void elem:
+  - 1 reg attr (object) (8bit)
+  """)
+  public void voidElement04() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.ID.index());
+      opts.addInt8(opts.addObject("foo"));
+      opts.addByte(HtmlBytes.ELEMVOID8);
+      opts.addInt8(ElementName.INPUT.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+
+      opts.push(new ScanDocumentNodeFrame(7));
+      opts.push(new ScanVoidElementAttributeFrame(8, IntSize.BIT8, 1, 1));
+      opts.push(new JumpFrame(1));
+    });
+
+    final RenderAttributeState subject;
+    subject = new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT8);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new ScanVoidElementAttributeState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+          opts.result(RenderAttributeEvent.of(AttributeName.ID, "foo"));
+          opts.push(new ScanDocumentNodeFrame(7));
+          opts.push(new ScanVoidElementAttributeFrame(8, IntSize.BIT8, 1, 1));
+        })
+    );
+  }
+
 }

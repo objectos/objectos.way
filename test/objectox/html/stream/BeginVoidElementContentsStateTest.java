@@ -220,4 +220,43 @@ public class BeginVoidElementContentsStateTest {
     );
   }
 
+  @Test(description = """
+  void elem:
+  - 1 reg attr (object) (8bit)
+  """)
+  public void voidElement04() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.ID.index());
+      opts.addInt8(opts.addObject("foo"));
+      opts.addByte(HtmlBytes.ELEMVOID8);
+      opts.addInt8(ElementName.INPUT.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+
+      opts.push(new ScanDocumentNodeFrame(5));
+    });
+
+    final BeginVoidElementContentsState subject;
+    subject = new BeginVoidElementContentsState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new ScanVoidElementAttributeState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(new ScanDocumentNodeFrame(7));
+          opts.push(new ScanVoidElementAttributeFrame(7, IntSize.BIT8, 1));
+        })
+    );
+  }
+
 }

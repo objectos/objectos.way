@@ -17,6 +17,7 @@ package objectox.html.markup;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.html.Id;
 import objectox.html.attr.AttributeName;
 import objectox.html.elem.ElementName;
 import org.testng.annotations.Test;
@@ -56,6 +57,43 @@ public class VoidElementRecorderTest {
           opts.addInt8(opts.addObject("foo"));
           opts.addByte(HtmlBytes.ELEMVOID8);
           opts.addInt8(ElementName.IMG.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(1);
+          opts.addInt8(3);
+        })
+    );
+  }
+
+  @Test(description = """
+  Attribute object (savepoint rollback + pre-record)
+  """)
+  public void voidElement04() {
+    final HtmlSink sink;
+    sink = HtmlSinkY.create(opts -> {
+      opts.addInt24(HtmlSink.MAX_INT24);
+    });
+
+    final VoidElementRecorder subject;
+    subject = create(sink);
+
+    final Id id;
+    id = Id.of("foo");
+
+    final ElementPointer res;
+    res = subject.record(ElementName.INPUT, id);
+
+    assertEquals(res.value(), 6);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addInt24(HtmlSink.MAX_INT24);
+          opts.addByte(HtmlBytes.xATTRIBUTE88);
+          opts.addInt8(AttributeName.ID.index());
+          opts.addInt8(opts.addObject("foo"));
+          opts.addByte(HtmlBytes.ELEMVOID8);
+          opts.addInt8(ElementName.INPUT.index());
           opts.addByte(HtmlBytes.VALUES8);
           opts.addInt8(1);
           opts.addInt8(3);

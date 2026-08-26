@@ -181,6 +181,25 @@ public class TemplateTest {
   }
 
   @Test(description = """
+  void elem:
+  - 1 reg attr (object) (8bit)
+  """)
+  public void voidElement04() {
+    test(
+        new Template() {
+          @Override
+          protected final void render() {
+            input(Id.of("foo"));
+          }
+        },
+
+        """
+        <input id="foo">
+        """
+    );
+  }
+
+  @Test(description = """
   HtmlTemplate TC00
 
   - single html element
