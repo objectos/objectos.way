@@ -106,7 +106,16 @@ public class VoidElementRecorderTest {
     final ElementAttributesRecorder attributesRecorder;
     attributesRecorder = new ElementAttributesRecorder(ambiguousAttributeRecorder, fragmentAttributeRecorder, valueRecorder);
 
-    return new VoidElementRecorder(sink, attributesRecorder);
+    final AttributeRecorder attributeRecorder;
+    attributeRecorder = new AttributeRecorder(sink);
+
+    final BooleanAttributeRecorder booleanAttributeRecorder;
+    booleanAttributeRecorder = new BooleanAttributeRecorder(sink);
+
+    final ElementAttributesPreRecorder elementAttributesPreRecorder;
+    elementAttributesPreRecorder = new ElementAttributesPreRecorder(attributeRecorder, booleanAttributeRecorder);
+
+    return new VoidElementRecorder(sink, attributesRecorder, elementAttributesPreRecorder);
   }
 
 }

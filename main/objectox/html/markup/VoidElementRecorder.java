@@ -26,10 +26,14 @@ final class VoidElementRecorder {
 
   private final ElementAttributesRecorder attributesRecorder;
 
-  VoidElementRecorder(HtmlSink sink, ElementAttributesRecorder attributesRecorder) {
+  private final ElementAttributesPreRecorder elementAttributesPreRecorder;
+
+  VoidElementRecorder(HtmlSink sink, ElementAttributesRecorder attributesRecorder, ElementAttributesPreRecorder elementAttributesPreRecorder) {
     this.sink = sink;
 
     this.attributesRecorder = attributesRecorder;
+
+    this.elementAttributesPreRecorder = elementAttributesPreRecorder;
   }
 
   public final ElementPointer record(String name, VoidElementValue... values) {
@@ -51,7 +55,7 @@ final class VoidElementRecorder {
     } catch (ObjectAttributeDetected e) {
       sink.codeIndex(savepoint);
 
-      attributesRecorder.prerecord(values);
+      elementAttributesPreRecorder.record(values);
 
       return record0(name, values);
     }

@@ -105,8 +105,11 @@ public final class Recorder {
     final BooleanAttributeRecorder booleanAttributeRecorder;
     booleanAttributeRecorder = new BooleanAttributeRecorder(sink);
 
+    final ElementAttributesPreRecorder elementAttributesPreRecorder;
+    elementAttributesPreRecorder = new ElementAttributesPreRecorder(attributeRecorder, booleanAttributeRecorder);
+
     final ElementAttributesRecorder elementAttributesRecorder;
-    elementAttributesRecorder = new ElementAttributesRecorder(ambiguousAttributeRecorder, attributeRecorder, booleanAttributeRecorder, fragmentAttributeRecorder, valueRecorder);
+    elementAttributesRecorder = new ElementAttributesRecorder(ambiguousAttributeRecorder, fragmentAttributeRecorder, valueRecorder);
 
     final AmbiguousChildRecorder ambiguousChildRecorder;
     ambiguousChildRecorder = new AmbiguousChildRecorder(sink);
@@ -134,6 +137,8 @@ public final class Recorder {
 
             elementAttributesRecorder,
 
+            elementAttributesPreRecorder,
+
             new ElementChildrenRecorder(
                 ambiguousChildRecorder,
 
@@ -147,7 +152,7 @@ public final class Recorder {
 
         new TextRecorder(sink),
 
-        new VoidElementRecorder(sink, elementAttributesRecorder)
+        new VoidElementRecorder(sink, elementAttributesRecorder, elementAttributesPreRecorder)
     );
   }
 

@@ -176,6 +176,15 @@ public class RegularElementRecorderTest {
     final ElementAttributesRecorder attributesRecorder;
     attributesRecorder = new ElementAttributesRecorder(ambiguousAttributeRecorder, fragmentAttributeRecorder, valueRecorder);
 
+    final AttributeRecorder attributeRecorder;
+    attributeRecorder = new AttributeRecorder(sink);
+
+    final BooleanAttributeRecorder booleanAttributeRecorder;
+    booleanAttributeRecorder = new BooleanAttributeRecorder(sink);
+
+    final ElementAttributesPreRecorder elementAttributesPreRecorder;
+    elementAttributesPreRecorder = new ElementAttributesPreRecorder(attributeRecorder, booleanAttributeRecorder);
+
     final AmbiguousChildRecorder ambiguousChildRecorder;
     ambiguousChildRecorder = new AmbiguousChildRecorder(sink);
 
@@ -185,7 +194,7 @@ public class RegularElementRecorderTest {
     final ElementChildrenRecorder childrenRecorder;
     childrenRecorder = new ElementChildrenRecorder(ambiguousChildRecorder, fragmentChildRecorder, valueRecorder);
 
-    return new RegularElementRecorder(sink, attributesRecorder, childrenRecorder);
+    return new RegularElementRecorder(sink, attributesRecorder, elementAttributesPreRecorder, childrenRecorder);
   }
 
 }
