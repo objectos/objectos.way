@@ -314,4 +314,83 @@ public class ScanVoidElementAttributeStateTest {
     );
   }
 
+  @Test(description = """
+  void elem:
+  - 1 boolean attr (object) (8bit)
+  """)
+  public void voidElement03() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xBOOLEAN8);
+      opts.addInt8(AttributeName.CHECKED.index());
+      opts.addByte(HtmlBytes.ELEMVOID8);
+      opts.addInt8(ElementName.INPUT.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+
+      opts.push(new ScanDocumentNodeFrame(6));
+      opts.push(new ScanVoidElementAttributeFrame(6, IntSize.BIT8, 1));
+    });
+
+    final ScanVoidElementAttributeState subject;
+    subject = new ScanVoidElementAttributeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new RenderBooleanAttributeState(ctx, IntSize.BIT8));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(new ScanDocumentNodeFrame(6));
+          opts.push(new ScanVoidElementAttributeFrame(7, IntSize.BIT8, 1, 1));
+          opts.push(new JumpFrame(1));
+        })
+    );
+  }
+
+  @Test(description = """
+  void elem:
+  - 1 boolean attr (object) (8bit)
+  """)
+  public void voidElement03b() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xBOOLEAN8);
+      opts.addInt8(AttributeName.CHECKED.index());
+      opts.addByte(HtmlBytes.ELEMVOID8);
+      opts.addInt8(ElementName.INPUT.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+
+      opts.push(new ScanDocumentNodeFrame(6));
+      opts.push(new ScanVoidElementAttributeFrame(7, IntSize.BIT8, 1, 1));
+    });
+
+    final ScanVoidElementAttributeState subject;
+    subject = new ScanVoidElementAttributeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new EndElementState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(new ScanDocumentNodeFrame(7));
+          opts.result(EndStartTagEvent.of(EndStartTagKind.VOID_ELEMENT));
+        })
+    );
+  }
+
 }

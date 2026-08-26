@@ -290,4 +290,29 @@ public class HtmlTest {
     );
   }
 
+  @Test(description = """
+  void elem:
+  - 1 boolean attr (object) (8bit)
+  """)
+  public void voidElement03() {
+    final Html subject;
+    subject = HtmlY.create(opts -> {
+      opts.addByte(HtmlBytes.xBOOLEAN8);
+      opts.addInt8(AttributeName.CHECKED.index());
+      opts.addByte(HtmlBytes.ELEMVOID8);
+      opts.addInt8(ElementName.INPUT.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+    });
+
+    assertEquals(
+        subject.toString(),
+
+        """
+        <input checked>
+        """
+    );
+  }
+
 }

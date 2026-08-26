@@ -69,4 +69,45 @@ public class RenderBooleanAttributeStateTest {
     );
   }
 
+  @Test(description = """
+  void elem:
+  - 1 boolean attr (object) (8bit)
+  """)
+  public void voidElement03() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xBOOLEAN8);
+      opts.addInt8(AttributeName.CHECKED.index());
+      opts.addByte(HtmlBytes.ELEMVOID8);
+      opts.addInt8(ElementName.INPUT.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+
+      opts.push(new ScanDocumentNodeFrame(6));
+      opts.push(new ScanVoidElementAttributeFrame(7, IntSize.BIT8, 1, 1));
+      opts.push(new JumpFrame(1));
+    });
+
+    final RenderBooleanAttributeState subject;
+    subject = new RenderBooleanAttributeState(ctx, IntSize.BIT8);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new ScanVoidElementAttributeState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(new ScanDocumentNodeFrame(6));
+          opts.push(new ScanVoidElementAttributeFrame(7, IntSize.BIT8, 1, 1));
+          opts.result(RenderBooleanAttributeEvent.of(AttributeName.CHECKED));
+        })
+    );
+  }
+
 }

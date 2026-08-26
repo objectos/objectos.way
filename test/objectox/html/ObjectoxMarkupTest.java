@@ -316,4 +316,31 @@ public class ObjectoxMarkupTest {
     );
   }
 
+  @Test(description = """
+  void elem:
+  - 1 boolean attr (object) (8bit)
+  """)
+  public void voidElement03() {
+    final ObjectoxMarkup subject;
+    subject = ObjectoxMarkup.create();
+
+    subject.input(
+        subject.attr(Markup.checked)
+    );
+
+    assertEquals(
+        subject.unwrap(),
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.xBOOLEAN8);
+          opts.addInt8(AttributeName.CHECKED.index());
+          opts.addByte(HtmlBytes.ELEMVOID8);
+          opts.addInt8(ElementName.INPUT.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(1);
+          opts.addInt8(0);
+        })
+    );
+  }
+
 }
