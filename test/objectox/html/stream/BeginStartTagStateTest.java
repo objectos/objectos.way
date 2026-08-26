@@ -342,4 +342,44 @@ public class BeginStartTagStateTest {
     );
   }
 
+  @Test(description = """
+  regular elem:
+  - 1 boolean attr (object) (8bit)
+  - no children
+  """)
+  public void regularElement03() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xBOOLEAN8);
+      opts.addInt8(AttributeName.AUTOFOCUS.index());
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.SPAN.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.SPAN.index());
+
+      opts.push(new ScanDocumentNodeFrame(3));
+    });
+
+    final BeginStartTagState subject;
+    subject = new BeginStartTagState(ctx, ElementKind.REGULAR, IntSize.BIT8);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new BeginRegularElementContentsState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+          opts.push(new ScanDocumentNodeFrame(4));
+          opts.result(BeginStartTagEvent.of(ElementName.SPAN));
+        })
+    );
+  }
+
 }

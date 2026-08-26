@@ -20,7 +20,7 @@ import static org.testng.Assert.assertEquals;
 import objectos.html.format.IndentationStyle;
 import objectos.html.format.NewLineStyle;
 import objectos.html.stream.RenderEndTag;
-import objectox.html.elem.ElementNamePojo;
+import objectox.html.elem.ElementName;
 import objectox.html.stream.RenderEndTagEvent;
 import org.testng.annotations.Test;
 
@@ -28,7 +28,7 @@ public class RenderEndTagFormatterTest {
 
   private String format(RenderEndTagFormatter subject) {
     final RenderEndTag event;
-    event = RenderEndTagEvent.of(ElementNamePojo.DIV);
+    event = RenderEndTagEvent.of(ElementName.DIV);
 
     final Output out;
     out = OutputY.create();
@@ -40,7 +40,7 @@ public class RenderEndTagFormatterTest {
 
   private String format(RenderEndTagFormatter subject, String text) {
     final RenderEndTag event;
-    event = RenderEndTagEvent.of(ElementNamePojo.DIV);
+    event = RenderEndTagEvent.of(ElementName.DIV);
 
     final Output out;
     out = OutputY.create(opts -> {

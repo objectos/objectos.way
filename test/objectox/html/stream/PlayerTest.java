@@ -243,4 +243,34 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), false);
   }
 
+  @Test(description = """
+  regular elem:
+  - 1 boolean attr (object) (8bit)
+  - no children
+  """)
+  public void regularElement03() {
+    final Player subject;
+    subject = PlayerY.create(opts -> {
+      opts.addByte(HtmlBytes.xBOOLEAN8);
+      opts.addInt8(AttributeName.AUTOFOCUS.index());
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.SPAN.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.SPAN.index());
+    });
+
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new BeginStartTagEvent(ElementName.SPAN));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new RenderBooleanAttributeEvent(AttributeName.AUTOFOCUS));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EndStartTagEvent(EndStartTagKind.EMPTY_ELEMENT));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new RenderEndTagEvent(ElementName.SPAN));
+    assertEquals(subject.hasNext(), false);
+  }
+
 }

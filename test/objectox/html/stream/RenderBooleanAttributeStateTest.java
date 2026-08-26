@@ -19,30 +19,32 @@ import static org.testng.Assert.assertEquals;
 
 import objectox.html.IntSize;
 import objectox.html.attr.AttributeName;
-import objectox.html.elem.ElementNamePojo;
+import objectox.html.elem.ElementName;
 import objectox.html.markup.HtmlBytes;
 import org.testng.annotations.Test;
 
 public class RenderBooleanAttributeStateTest {
 
   @Test(description = """
-  <html autofocus></html>
+  regular elem:
+  - 1 boolean attr (object) (8bit)
+  - no children
   """)
-  public void compute03() {
+  public void regularElement03() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.xBOOLEAN8);
       opts.addInt8(AttributeName.AUTOFOCUS.index());
-      opts.addByte(HtmlBytes.STARTTAG8);
-      opts.addInt8(ElementNamePojo.HTML.index());
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.SPAN.index());
       opts.addByte(HtmlBytes.VALUES8);
       opts.addInt8(1);
       opts.addInt8(0);
-      opts.addByte(HtmlBytes.ENDTAG8);
-      opts.addInt8(ElementNamePojo.HTML.index());
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.SPAN.index());
 
-      opts.push(new ScanElementNodeFrame(6, IntSize.BIT8, 1));
-      opts.push(new ScanRegularElementAttributeFrame(7, IntSize.BIT8, 1));
+      opts.push(new ScanDocumentNodeFrame(6));
+      opts.push(new ScanRegularElementAttributeFrame(7, IntSize.BIT8, 1, 1));
       opts.push(new JumpFrame(1));
     });
 
@@ -52,9 +54,19 @@ public class RenderBooleanAttributeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res.getClass(), ScanRegularElementAttributeState.class);
-    assertEquals(ctx.hasEvent(), true);
-    assertEquals(ctx.nextEvent(), RenderBooleanAttributeEvent.of(AttributeName.AUTOFOCUS));
+    assertEquals(res, new ScanRegularElementAttributeState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(new ScanDocumentNodeFrame(6));
+          opts.push(new ScanRegularElementAttributeFrame(7, IntSize.BIT8, 1, 1));
+          opts.result(RenderBooleanAttributeEvent.of(AttributeName.AUTOFOCUS));
+        })
+    );
   }
 
 }

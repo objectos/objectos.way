@@ -69,6 +69,12 @@ sealed abstract class AbstractScanElementAttributeState
 
       case HtmlBytes.xATTRIBUTE824 -> new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT24);
 
+      case HtmlBytes.xBOOLEAN8 -> new RenderBooleanAttributeState(ctx, IntSize.BIT8);
+
+      case HtmlBytes.xBOOLEAN16 -> new RenderBooleanAttributeState(ctx, IntSize.BIT16);
+
+      case HtmlBytes.xBOOLEAN24 -> new RenderBooleanAttributeState(ctx, IntSize.BIT24);
+
       default -> computeNonAttribute(code);
     };
   }

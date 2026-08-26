@@ -19,7 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import objectos.html.format.IndentationStyle;
 import objectos.html.stream.BeginStartTag;
-import objectox.html.elem.ElementNamePojo;
+import objectox.html.elem.ElementName;
 import objectox.html.stream.BeginStartTagEvent;
 import org.testng.annotations.Test;
 
@@ -27,7 +27,7 @@ public class BeginStartTagFormatterTest {
 
   private String format(BeginStartTagFormatter subject) {
     final BeginStartTag event;
-    event = new BeginStartTagEvent(ElementNamePojo.DIV);
+    event = new BeginStartTagEvent(ElementName.DIV);
 
     final Output out;
     out = OutputY.create();
@@ -39,7 +39,7 @@ public class BeginStartTagFormatterTest {
 
   private String format(BeginStartTagFormatter subject, String text) {
     final BeginStartTag event;
-    event = new BeginStartTagEvent(ElementNamePojo.DIV);
+    event = new BeginStartTagEvent(ElementName.DIV);
 
     final Output out;
     out = OutputY.create(opts -> {
