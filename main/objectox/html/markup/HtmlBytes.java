@@ -36,79 +36,75 @@ public final class HtmlBytes {
   public static final byte ATTRIBUTE816 = -120;
   public static final byte ATTRIBUTE824 = -119;
   public static final byte BOOLEAN8 = -118;
-  public static final byte BOOLEAN16 = -117;
-  public static final byte BOOLEAN24 = -116;
 
   // ambiguous
 
-  public static final byte AMBIGUOUS88 = -115;
-  public static final byte AMBIGUOUS816 = -114;
-  public static final byte AMBIGUOUS824 = -113;
+  public static final byte AMBIGUOUS88 = -117;
+  public static final byte AMBIGUOUS816 = -116;
+  public static final byte AMBIGUOUS824 = -115;
 
   // fragment
 
-  public static final byte FRAGSTR = -112;
-  public static final byte FRAGEND = -111;
+  public static final byte FRAGSTR = -114;
+  public static final byte FRAGEND = -113;
 
   // text
 
-  public static final byte TEXT8 = -110;
-  public static final byte TEXT16 = -109;
-  public static final byte TEXT24 = -108;
+  public static final byte TEXT8 = -112;
+  public static final byte TEXT16 = -111;
+  public static final byte TEXT24 = -110;
 
   // raw
 
-  public static final byte RAW8 = -107;
-  public static final byte RAW16 = -106;
-  public static final byte RAW24 = -105;
+  public static final byte RAW8 = -109;
+  public static final byte RAW16 = -108;
+  public static final byte RAW24 = -107;
 
   // contents
 
-  public static final byte VALUES8 = -104;
-  public static final byte VALUES16 = -103;
-  public static final byte VALUES24 = -102;
+  public static final byte VALUES8 = -106;
+  public static final byte VALUES16 = -105;
+  public static final byte VALUES24 = -104;
 
   // xelement
 
-  public static final byte xELEMSTR8 = -101;
-  public static final byte xELEMTXT88 = -100;
-  public static final byte xELEMTXT816 = -99;
-  public static final byte xELEMTXT824 = -98;
-  public static final byte xELEMVOID8 = -97;
+  public static final byte xELEMSTR8 = -103;
+  public static final byte xELEMTXT88 = -102;
+  public static final byte xELEMTXT816 = -101;
+  public static final byte xELEMTXT824 = -100;
+  public static final byte xELEMVOID8 = -99;
 
   // xattributes
 
-  public static final byte xATTRIBUTE88 = -96;
-  public static final byte xATTRIBUTE816 = -95;
-  public static final byte xATTRIBUTE824 = -94;
-  public static final byte xBOOLEAN8 = -93;
-  public static final byte xBOOLEAN16 = -92;
-  public static final byte xBOOLEAN24 = -91;
+  public static final byte xATTRIBUTE88 = -98;
+  public static final byte xATTRIBUTE816 = -97;
+  public static final byte xATTRIBUTE824 = -96;
+  public static final byte xBOOLEAN8 = -95;
 
   // xambiguous
 
-  public static final byte aAMBIGUOUS88 = -90;
-  public static final byte aAMBIGUOUS816 = -89;
-  public static final byte aAMBIGUOUS824 = -88;
-  public static final byte eAMBIGUOUS88 = -87;
-  public static final byte eAMBIGUOUS816 = -86;
-  public static final byte eAMBIGUOUS824 = -85;
+  public static final byte aAMBIGUOUS88 = -94;
+  public static final byte aAMBIGUOUS816 = -93;
+  public static final byte aAMBIGUOUS824 = -92;
+  public static final byte eAMBIGUOUS88 = -91;
+  public static final byte eAMBIGUOUS816 = -90;
+  public static final byte eAMBIGUOUS824 = -89;
 
   // xfragment
 
-  public static final byte xFRAGSTR = -84;
+  public static final byte xFRAGSTR = -88;
 
   // xtext
 
-  public static final byte xTEXT8 = -83;
-  public static final byte xTEXT16 = -82;
-  public static final byte xTEXT24 = -81;
+  public static final byte xTEXT8 = -87;
+  public static final byte xTEXT16 = -86;
+  public static final byte xTEXT24 = -85;
 
   // xraw
 
-  public static final byte xRAW8 = -80;
-  public static final byte xRAW16 = -79;
-  public static final byte xRAW24 = -78;
+  public static final byte xRAW8 = -84;
+  public static final byte xRAW16 = -83;
+  public static final byte xRAW24 = -82;
 
   private HtmlBytes() {}
 
@@ -143,10 +139,6 @@ public final class HtmlBytes {
       case ATTRIBUTE824 -> xATTRIBUTE824;
 
       case BOOLEAN8 -> xBOOLEAN8;
-
-      case BOOLEAN16 -> xBOOLEAN16;
-
-      case BOOLEAN24 -> xBOOLEAN24;
 
       case RAW8 -> xRAW8;
 

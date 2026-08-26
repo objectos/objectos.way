@@ -44,8 +44,6 @@ public class HtmlBytesGen {
     value("ATTRIBUTE816");
     value("ATTRIBUTE824");
     value("BOOLEAN8");
-    value("BOOLEAN16");
-    value("BOOLEAN24");
 
     comment("ambiguous");
 
@@ -90,8 +88,6 @@ public class HtmlBytesGen {
     value("xATTRIBUTE816");
     value("xATTRIBUTE824");
     value("xBOOLEAN8");
-    value("xBOOLEAN16");
-    value("xBOOLEAN24");
 
     comment("xambiguous");
 

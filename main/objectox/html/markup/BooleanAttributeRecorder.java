@@ -17,7 +17,6 @@ package objectox.html.markup;
 
 import java.util.Objects;
 import objectos.html.BooleanAttribute;
-import objectox.html.IntSize;
 import objectox.html.attr.AttributeName;
 import objectox.html.attr.BooleanAttributePojo;
 
@@ -33,17 +32,15 @@ final class BooleanAttributeRecorder {
     final int nameIndex;
     nameIndex = name.index();
 
-    final IntSize nameSize;
-    nameSize = IntSize.of(nameIndex);
+    if (nameIndex > HtmlSink.MAX_INT8) {
+      final String msg;
+      msg = "Attribute name index too large: %d".formatted(nameIndex);
+
+      throw new IllegalArgumentException(msg);
+    }
 
     final int startIndex;
-    startIndex = switch (nameSize) {
-      case BIT8 -> boolean8(nameIndex);
-
-      case BIT16 -> boolean16(nameIndex);
-
-      case BIT24 -> boolean24(nameIndex);
-    };
+    startIndex = boolean8(nameIndex);
 
     return new AttributePointer(startIndex);
   }
@@ -73,24 +70,6 @@ final class BooleanAttributeRecorder {
     startIndex = sink.addByte(HtmlBytes.BOOLEAN8);
 
     sink.addInt8(nameIndex);
-
-    return startIndex;
-  }
-
-  private int boolean16(int nameIndex) {
-    final int startIndex;
-    startIndex = sink.addByte(HtmlBytes.BOOLEAN16);
-
-    sink.addInt16(nameIndex);
-
-    return startIndex;
-  }
-
-  private int boolean24(int nameIndex) {
-    final int startIndex;
-    startIndex = sink.addByte(HtmlBytes.BOOLEAN24);
-
-    sink.addInt24(nameIndex);
 
     return startIndex;
   }

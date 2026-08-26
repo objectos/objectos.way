@@ -16,6 +16,7 @@
 package objectox.html.markup;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertThrows;
 
 import objectox.html.attr.AttributeName;
 import org.testng.annotations.Test;
@@ -45,8 +46,8 @@ public class BooleanAttributeRecorderTest {
     );
   }
 
-  @Test(description = "BOOLEAN16")
-  public void boolean16() {
+  @Test(description = "index too large")
+  public void booleanInvalid() {
     final HtmlSink sink;
     sink = new HtmlSink();
 
@@ -54,41 +55,9 @@ public class BooleanAttributeRecorderTest {
     subject = new BooleanAttributeRecorder(sink);
 
     final AttributeName name;
-    name = new AttributeName(HtmlSink.MAX_INT16, "foo");
+    name = new AttributeName(HtmlSink.MAX_INT8 + 1, "foo");
 
-    subject.record(name);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.BOOLEAN16);
-          opts.addInt16(name.index());
-        })
-    );
-  }
-
-  @Test(description = "BOOLEAN24")
-  public void boolean24() {
-    final HtmlSink sink;
-    sink = new HtmlSink();
-
-    final BooleanAttributeRecorder subject;
-    subject = new BooleanAttributeRecorder(sink);
-
-    final AttributeName name;
-    name = new AttributeName(HtmlSink.MAX_INT24, "foo");
-
-    subject.record(name);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.BOOLEAN24);
-          opts.addInt24(name.index());
-        })
-    );
+    assertThrows(IllegalArgumentException.class, () -> subject.record(name));
   }
 
   @Test(description = "returned markup")
@@ -102,7 +71,7 @@ public class BooleanAttributeRecorderTest {
     subject = new BooleanAttributeRecorder(sink);
 
     final AttributeName name;
-    name = new AttributeName(HtmlSink.MAX_INT24, "foo");
+    name = new AttributeName(HtmlSink.MAX_INT8, "foo");
 
     final AttributePointer res;
     res = subject.record(name);
