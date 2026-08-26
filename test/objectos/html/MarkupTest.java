@@ -17,6 +17,7 @@ package objectos.html;
 
 import static org.testng.Assert.assertEquals;
 
+import objectox.html.attr.AttributeName;
 import objectox.html.elem.ElementName;
 import objectox.html.markup.HtmlBytes;
 import org.testng.annotations.Test;
@@ -58,6 +59,37 @@ public class MarkupTest {
           opts.addByte(HtmlBytes.ELEMSTR8);
           opts.addInt8(ElementName.DIV.index());
           opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(0);
+          opts.addByte(HtmlBytes.ELEMEND8);
+          opts.addInt8(ElementName.DIV.index());
+        })
+    );
+  }
+
+  @Test(description = """
+  regular elem:
+  - 1 reg attr (object) (8bit)
+  - no children
+  """)
+  public void regularElement04() {
+    final Markup subject;
+    subject = Markup.of();
+
+    subject.div(
+        Id.of("foo")
+    );
+
+    assertEquals(
+        subject.compile(),
+
+        HtmlY.create(opts -> {
+          opts.addByte(HtmlBytes.xATTRIBUTE88);
+          opts.addInt8(AttributeName.ID.index());
+          opts.addInt8(opts.addObject("foo"));
+          opts.addByte(HtmlBytes.ELEMSTR8);
+          opts.addInt8(ElementName.DIV.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(1);
           opts.addInt8(0);
           opts.addByte(HtmlBytes.ELEMEND8);
           opts.addInt8(ElementName.DIV.index());

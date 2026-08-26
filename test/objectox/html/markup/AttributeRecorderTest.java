@@ -18,6 +18,8 @@ package objectox.html.markup;
 import static org.testng.Assert.assertEquals;
 
 import java.util.stream.IntStream;
+import objectos.html.Attribute;
+import objectos.html.Id;
 import objectos.internal.Util;
 import objectox.html.attr.AttributeName;
 import org.testng.annotations.Test;
@@ -116,6 +118,52 @@ public class AttributeRecorderTest {
     );
   }
 
+  @Test(description = "Attribute object (ATTRIBUTE88)")
+  public void object01() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final AttributeRecorder subject;
+    subject = new AttributeRecorder(sink);
+
+    final Attribute value;
+    value = Id.of("foo");
+
+    final AttributePointer res;
+    res = subject.record(value);
+
+    assertEquals(res.value(), 0);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.ATTRIBUTE88);
+          opts.addInt8(AttributeName.ID.index());
+          opts.addInt8(opts.addObject("foo"));
+        })
+    );
+  }
+
+  @Test(description = "Attribute object value should be escaped")
+  public void object02() {
+    final Attribute value;
+    value = Id.of("A&B");
+
+    final HtmlSink sink;
+    sink = record(value);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.ATTRIBUTE88);
+          opts.addInt8(AttributeName.ID.index());
+          opts.addInt8(opts.addObject("A&amp;B"));
+        })
+    );
+  }
+
   @Test(description = "returned markup")
   public void markup01() {
     final HtmlSink sink;
@@ -165,6 +213,18 @@ public class AttributeRecorderTest {
     sink = new HtmlSink();
 
     record(sink, name, value);
+
+    return sink;
+  }
+
+  private HtmlSink record(Attribute value) {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final AttributeRecorder subject;
+    subject = new AttributeRecorder(sink);
+
+    subject.record(value);
 
     return sink;
   }

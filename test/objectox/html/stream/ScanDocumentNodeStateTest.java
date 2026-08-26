@@ -130,47 +130,6 @@ public class ScanDocumentNodeStateTest {
 
   @Test(description = """
   regular elem:
-  - 1 reg attr (markup) (8bit)
-  - no children
-  """)
-  public void regularElement02_8bit() {
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.CONTENTEDITABLE.index());
-      opts.addInt8(opts.addObject("false"));
-      opts.addByte(HtmlBytes.ELEMSTR8);
-      opts.addInt8(ElementName.DIV.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.DIV.index());
-
-      opts.push(new ScanDocumentNodeFrame(3));
-    });
-
-    final ScanDocumentNodeState subject;
-    subject = new ScanDocumentNodeState(ctx);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res, new BeginStartTagState(ctx, ElementKind.REGULAR, IntSize.BIT8));
-
-    assertEquals(
-        ctx,
-
-        CtxY.create(opts -> {
-          opts.sink(ctx);
-
-          opts.push(new ScanDocumentNodeFrame(4));
-        })
-    );
-  }
-
-  @Test(description = """
-  regular elem:
   - 1 reg attr (markup) (16bit)
   - no children
   """)
@@ -260,7 +219,7 @@ public class ScanDocumentNodeStateTest {
   - 1 reg attr (markup) (8bit)
   - no children
   """)
-  public void regularElement02b_8bit() {
+  public void regularElement02_8bit() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.xATTRIBUTE88);
@@ -274,7 +233,7 @@ public class ScanDocumentNodeStateTest {
       opts.addByte(HtmlBytes.ELEMEND8);
       opts.addInt8(ElementName.DIV.index());
 
-      opts.push(new ScanDocumentNodeFrame(10));
+      opts.push(new ScanDocumentNodeFrame(3));
     });
 
     final ScanDocumentNodeState subject;
@@ -283,7 +242,7 @@ public class ScanDocumentNodeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new StopState(ctx));
+    assertEquals(res, new BeginStartTagState(ctx, ElementKind.REGULAR, IntSize.BIT8));
 
     assertEquals(
         ctx,
@@ -291,7 +250,7 @@ public class ScanDocumentNodeStateTest {
         CtxY.create(opts -> {
           opts.sink(ctx);
 
-          opts.push(new ScanDocumentNodeFrame(10));
+          opts.push(new ScanDocumentNodeFrame(4));
         })
     );
   }
@@ -383,6 +342,168 @@ public class ScanDocumentNodeStateTest {
   }
 
   @Test(description = """
+  regular elem:
+  - 1 reg attr (markup) (8bit)
+  - no children
+  """)
+  public void regularElement02b_8bit() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.CONTENTEDITABLE.index());
+      opts.addInt8(opts.addObject("false"));
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.DIV.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.DIV.index());
+
+      opts.push(new ScanDocumentNodeFrame(10));
+    });
+
+    final ScanDocumentNodeState subject;
+    subject = new ScanDocumentNodeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new StopState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(new ScanDocumentNodeFrame(10));
+        })
+    );
+  }
+
+  @Test(description = """
+  regular elem:
+  - 1 boolean attr (object) (8bit)
+  - no children
+  """)
+  public void regularElement03() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xBOOLEAN8);
+      opts.addInt8(AttributeName.AUTOFOCUS.index());
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.SPAN.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.SPAN.index());
+
+      opts.push(new ScanDocumentNodeFrame(2));
+    });
+
+    final ScanDocumentNodeState subject;
+    subject = new ScanDocumentNodeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new BeginStartTagState(ctx, ElementKind.REGULAR, IntSize.BIT8));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(new ScanDocumentNodeFrame(3));
+        })
+    );
+  }
+
+  @Test(description = """
+  regular elem:
+  - 1 boolean attr (object) (8bit)
+  - no children
+  """)
+  public void regularElement03b() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xBOOLEAN8);
+      opts.addInt8(AttributeName.AUTOFOCUS.index());
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.SPAN.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.SPAN.index());
+
+      opts.push(new ScanDocumentNodeFrame(9));
+    });
+
+    final ScanDocumentNodeState subject;
+    subject = new ScanDocumentNodeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new StopState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(new ScanDocumentNodeFrame(9));
+        })
+    );
+  }
+
+  @Test(description = """
+  regular elem:
+  - 1 reg attr (object) (8bit)
+  - no children
+  """)
+  public void regularElement04() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.ID.index());
+      opts.addInt8(opts.addObject("foo"));
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.DIV.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.DIV.index());
+
+      opts.push(new ScanDocumentNodeFrame(3));
+    });
+
+    final ScanDocumentNodeState subject;
+    subject = new ScanDocumentNodeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new BeginStartTagState(ctx, ElementKind.REGULAR, IntSize.BIT8));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(new ScanDocumentNodeFrame(4));
+        })
+    );
+  }
+
+  @Test(description = """
   void elem:
   - no attrs
   """)
@@ -412,44 +533,6 @@ public class ScanDocumentNodeStateTest {
           opts.sink(ctx);
 
           opts.push(new ScanDocumentNodeFrame(1));
-        })
-    );
-  }
-
-  @Test(description = """
-  void elem:
-  - 1 reg attr (markup) (8bit)
-  """)
-  public void voidElement02_8bit() {
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.TYPE.index());
-      opts.addInt8(opts.addObject("password"));
-      opts.addByte(HtmlBytes.ELEMVOID8);
-      opts.addInt8(ElementName.INPUT.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-
-      opts.push(new ScanDocumentNodeFrame(3));
-    });
-
-    final ScanDocumentNodeState subject;
-    subject = new ScanDocumentNodeState(ctx);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res, new BeginStartTagState(ctx, ElementKind.VOID, IntSize.BIT8));
-
-    assertEquals(
-        ctx,
-
-        CtxY.create(opts -> {
-          opts.sink(ctx);
-
-          opts.push(new ScanDocumentNodeFrame(4));
         })
     );
   }
@@ -535,24 +618,22 @@ public class ScanDocumentNodeStateTest {
   }
 
   @Test(description = """
-  regular elem:
-  - 1 boolean attr (object) (8bit)
-  - no children
+  void elem:
+  - 1 reg attr (markup) (8bit)
   """)
-  public void regularElement03() {
+  public void voidElement02_8bit() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.xBOOLEAN8);
-      opts.addInt8(AttributeName.AUTOFOCUS.index());
-      opts.addByte(HtmlBytes.ELEMSTR8);
-      opts.addInt8(ElementName.SPAN.index());
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.TYPE.index());
+      opts.addInt8(opts.addObject("password"));
+      opts.addByte(HtmlBytes.ELEMVOID8);
+      opts.addInt8(ElementName.INPUT.index());
       opts.addByte(HtmlBytes.VALUES8);
       opts.addInt8(1);
       opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.SPAN.index());
 
-      opts.push(new ScanDocumentNodeFrame(2));
+      opts.push(new ScanDocumentNodeFrame(3));
     });
 
     final ScanDocumentNodeState subject;
@@ -561,7 +642,7 @@ public class ScanDocumentNodeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new BeginStartTagState(ctx, ElementKind.REGULAR, IntSize.BIT8));
+    assertEquals(res, new BeginStartTagState(ctx, ElementKind.VOID, IntSize.BIT8));
 
     assertEquals(
         ctx,
@@ -569,47 +650,7 @@ public class ScanDocumentNodeStateTest {
         CtxY.create(opts -> {
           opts.sink(ctx);
 
-          opts.push(new ScanDocumentNodeFrame(3));
-        })
-    );
-  }
-
-  @Test(description = """
-  regular elem:
-  - 1 boolean attr (object) (8bit)
-  - no children
-  """)
-  public void regularElement03b() {
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.xBOOLEAN8);
-      opts.addInt8(AttributeName.AUTOFOCUS.index());
-      opts.addByte(HtmlBytes.ELEMSTR8);
-      opts.addInt8(ElementName.SPAN.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.SPAN.index());
-
-      opts.push(new ScanDocumentNodeFrame(9));
-    });
-
-    final ScanDocumentNodeState subject;
-    subject = new ScanDocumentNodeState(ctx);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res, new StopState(ctx));
-
-    assertEquals(
-        ctx,
-
-        CtxY.create(opts -> {
-          opts.sink(ctx);
-
-          opts.push(new ScanDocumentNodeFrame(9));
+          opts.push(new ScanDocumentNodeFrame(4));
         })
     );
   }

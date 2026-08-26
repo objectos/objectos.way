@@ -104,6 +104,26 @@ public class TemplateTest {
   }
 
   @Test(description = """
+  regular elem:
+  - 1 reg attr (object) (8bit)
+  - no children
+  """)
+  public void regularElement04() {
+    test(
+        new Template() {
+          @Override
+          protected final void render() {
+            div(Id.of("foo"));
+          }
+        },
+
+        """
+        <div id="foo"></div>
+        """
+    );
+  }
+
+  @Test(description = """
   void elem:
   - no attrs
   """)

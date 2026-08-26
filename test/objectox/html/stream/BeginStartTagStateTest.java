@@ -65,47 +65,6 @@ public class BeginStartTagStateTest {
 
   @Test(description = """
   regular elem:
-  - 1 reg attr (markup) (8bit)
-  - no children
-  """)
-  public void regularElement02_8bit() {
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.CONTENTEDITABLE.index());
-      opts.addInt8(opts.addObject("false"));
-      opts.addByte(HtmlBytes.ELEMSTR8);
-      opts.addInt8(ElementName.DIV.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.DIV.index());
-
-      opts.push(new ScanDocumentNodeFrame(4));
-    });
-
-    final BeginStartTagState subject;
-    subject = new BeginStartTagState(ctx, ElementKind.REGULAR, IntSize.BIT8);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res, new BeginRegularElementContentsState(ctx));
-
-    assertEquals(
-        ctx,
-
-        CtxY.create(opts -> {
-          opts.sink(ctx);
-          opts.push(new ScanDocumentNodeFrame(5));
-          opts.result(BeginStartTagEvent.of(ElementName.DIV));
-        })
-    );
-  }
-
-  @Test(description = """
-  regular elem:
   - 1 reg attr (markup) (16bit)
   - no children
   """)
@@ -191,6 +150,128 @@ public class BeginStartTagStateTest {
   }
 
   @Test(description = """
+  regular elem:
+  - 1 reg attr (markup) (8bit)
+  - no children
+  """)
+  public void regularElement02_8bit() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.CONTENTEDITABLE.index());
+      opts.addInt8(opts.addObject("false"));
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.DIV.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.DIV.index());
+
+      opts.push(new ScanDocumentNodeFrame(4));
+    });
+
+    final BeginStartTagState subject;
+    subject = new BeginStartTagState(ctx, ElementKind.REGULAR, IntSize.BIT8);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new BeginRegularElementContentsState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+          opts.push(new ScanDocumentNodeFrame(5));
+          opts.result(BeginStartTagEvent.of(ElementName.DIV));
+        })
+    );
+  }
+
+  @Test(description = """
+  regular elem:
+  - 1 boolean attr (object) (8bit)
+  - no children
+  """)
+  public void regularElement03() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xBOOLEAN8);
+      opts.addInt8(AttributeName.AUTOFOCUS.index());
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.SPAN.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.SPAN.index());
+
+      opts.push(new ScanDocumentNodeFrame(3));
+    });
+
+    final BeginStartTagState subject;
+    subject = new BeginStartTagState(ctx, ElementKind.REGULAR, IntSize.BIT8);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new BeginRegularElementContentsState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+          opts.push(new ScanDocumentNodeFrame(4));
+          opts.result(BeginStartTagEvent.of(ElementName.SPAN));
+        })
+    );
+  }
+
+  @Test(description = """
+  regular elem:
+  - 1 reg attr (object) (8bit)
+  - no children
+  """)
+  public void regularElement04() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.ID.index());
+      opts.addInt8(opts.addObject("foo"));
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.DIV.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.DIV.index());
+
+      opts.push(new ScanDocumentNodeFrame(4));
+    });
+
+    final BeginStartTagState subject;
+    subject = new BeginStartTagState(ctx, ElementKind.REGULAR, IntSize.BIT8);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new BeginRegularElementContentsState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+          opts.push(new ScanDocumentNodeFrame(5));
+          opts.result(BeginStartTagEvent.of(ElementName.DIV));
+        })
+    );
+  }
+
+  @Test(description = """
   void elem:
   - no attrs
   """)
@@ -220,44 +301,6 @@ public class BeginStartTagStateTest {
           opts.sink(ctx);
           opts.push(new ScanDocumentNodeFrame(2));
           opts.result(BeginStartTagEvent.of(ElementName.HR));
-        })
-    );
-  }
-
-  @Test(description = """
-  void elem:
-  - 1 reg attr (markup) (8bit)
-  """)
-  public void voidElement02_8bit() {
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.TYPE.index());
-      opts.addInt8(opts.addObject("password"));
-      opts.addByte(HtmlBytes.ELEMVOID8);
-      opts.addInt8(ElementName.INPUT.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-
-      opts.push(new ScanDocumentNodeFrame(4));
-    });
-
-    final BeginStartTagState subject;
-    subject = new BeginStartTagState(ctx, ElementKind.VOID, IntSize.BIT8);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res, new BeginVoidElementContentsState(ctx));
-
-    assertEquals(
-        ctx,
-
-        CtxY.create(opts -> {
-          opts.sink(ctx);
-          opts.push(new ScanDocumentNodeFrame(5));
-          opts.result(BeginStartTagEvent.of(ElementName.INPUT));
         })
     );
   }
@@ -343,41 +386,39 @@ public class BeginStartTagStateTest {
   }
 
   @Test(description = """
-  regular elem:
-  - 1 boolean attr (object) (8bit)
-  - no children
+  void elem:
+  - 1 reg attr (markup) (8bit)
   """)
-  public void regularElement03() {
+  public void voidElement02_8bit() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.xBOOLEAN8);
-      opts.addInt8(AttributeName.AUTOFOCUS.index());
-      opts.addByte(HtmlBytes.ELEMSTR8);
-      opts.addInt8(ElementName.SPAN.index());
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.TYPE.index());
+      opts.addInt8(opts.addObject("password"));
+      opts.addByte(HtmlBytes.ELEMVOID8);
+      opts.addInt8(ElementName.INPUT.index());
       opts.addByte(HtmlBytes.VALUES8);
       opts.addInt8(1);
       opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.SPAN.index());
 
-      opts.push(new ScanDocumentNodeFrame(3));
+      opts.push(new ScanDocumentNodeFrame(4));
     });
 
     final BeginStartTagState subject;
-    subject = new BeginStartTagState(ctx, ElementKind.REGULAR, IntSize.BIT8);
+    subject = new BeginStartTagState(ctx, ElementKind.VOID, IntSize.BIT8);
 
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new BeginRegularElementContentsState(ctx));
+    assertEquals(res, new BeginVoidElementContentsState(ctx));
 
     assertEquals(
         ctx,
 
         CtxY.create(opts -> {
           opts.sink(ctx);
-          opts.push(new ScanDocumentNodeFrame(4));
-          opts.result(BeginStartTagEvent.of(ElementName.SPAN));
+          opts.push(new ScanDocumentNodeFrame(5));
+          opts.result(BeginStartTagEvent.of(ElementName.INPUT));
         })
     );
   }
