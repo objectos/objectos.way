@@ -17,7 +17,7 @@ package objectox.html.attr;
 
 import java.util.Objects;
 
-public final class RegularAttribute extends AbstractAttribute {
+public final class RegularAttribute extends ObjectoxAttribute {
 
   public final String value;
 

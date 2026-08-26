@@ -15,6 +15,8 @@
  */
 package objectox.html.markup;
 
+import objectos.html.Attribute;
+import objectos.html.BooleanAttribute;
 import objectos.html.markup.NoOpMarkup;
 import objectox.html.IntSize;
 
@@ -54,7 +56,11 @@ final class ElementChildrenRecorder {
     return switch (value) {
       case AmbiguousPointer(int v) -> ambiguousChildRecorder.record(size, v);
 
+      case Attribute _ -> throw new IllegalStateException("Object attribute in children");
+
       case AttributePointer _ -> 0;
+
+      case BooleanAttribute _ -> throw new IllegalStateException("Object attribute in children");
 
       case ElementPointer(int v) -> valueRecorder.record(size, v);
 

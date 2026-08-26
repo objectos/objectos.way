@@ -140,17 +140,47 @@ public final class HtmlBytes {
 
       case BOOLEAN8 -> xBOOLEAN8;
 
+      case TEXT8 -> xTEXT8;
+
+      case TEXT16 -> xTEXT16;
+
+      case TEXT24 -> xTEXT24;
+
       case RAW8 -> xRAW8;
 
       case RAW16 -> xRAW16;
 
       case RAW24 -> xRAW24;
 
-      case TEXT8 -> xTEXT8;
+      case xELEMSTR8 -> xELEMSTR8;
 
-      case TEXT16 -> xTEXT16;
+      case xELEMTXT88 -> xELEMTXT88;
 
-      case TEXT24 -> xTEXT24;
+      case xELEMTXT816 -> xELEMTXT816;
+
+      case xELEMTXT824 -> xELEMTXT824;
+
+      case xELEMVOID8 -> xELEMVOID8;
+
+      case xATTRIBUTE88 -> xATTRIBUTE88;
+
+      case xATTRIBUTE816 -> xATTRIBUTE816;
+
+      case xATTRIBUTE824 -> xATTRIBUTE824;
+
+      case xBOOLEAN8 -> xBOOLEAN8;
+
+      case xTEXT8 -> xTEXT8;
+
+      case xTEXT16 -> xTEXT16;
+
+      case xTEXT24 -> xTEXT24;
+
+      case xRAW8 -> xRAW8;
+
+      case xRAW16 -> xRAW16;
+
+      case xRAW24 -> xRAW24;
 
       default -> throw new IllegalArgumentException("source=" + source);
     };

@@ -296,7 +296,7 @@ public class ObjectoxMarkupTest {
     subject = ObjectoxMarkup.create();
 
     subject.span(
-        subject.attr(Markup.autofocus)
+        Markup.autofocus
     );
 
     assertEquals(
@@ -325,7 +325,7 @@ public class ObjectoxMarkupTest {
     subject = ObjectoxMarkup.create();
 
     subject.input(
-        subject.attr(Markup.checked)
+        Markup.checked
     );
 
     assertEquals(

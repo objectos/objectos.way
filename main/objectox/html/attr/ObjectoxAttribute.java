@@ -20,7 +20,7 @@ import objectos.html.Attribute;
 import objectos.html.ClassName;
 import objectos.html.Id;
 
-public sealed abstract class AbstractAttribute
+public sealed abstract class ObjectoxAttribute
     implements
     Attribute
     permits
@@ -31,7 +31,7 @@ public sealed abstract class AbstractAttribute
 
   public final AttributeName attributeName;
 
-  protected AbstractAttribute(AttributeName attributeName) {
+  protected ObjectoxAttribute(AttributeName attributeName) {
     this.attributeName = Objects.requireNonNull(attributeName, "attributeName == null");
   }
 

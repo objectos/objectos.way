@@ -18,7 +18,7 @@ package objectox.html.attr;
 import java.util.Objects;
 import objectos.script.JsAction;
 
-public final class JsActionAttribute extends AbstractAttribute {
+public final class JsActionAttribute extends ObjectoxAttribute {
 
   public final JsAction action;
 

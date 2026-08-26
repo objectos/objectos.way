@@ -47,9 +47,21 @@ final class RegularElementRecorder {
     final RegularElementValue[] values;
     values = Objects.requireNonNull($values, "values == null");
 
-    final IntSize valuesSize;
-    valuesSize = sink.codeSize();
+    final int savepoint;
+    savepoint = sink.codeIndex();
 
+    try {
+      return record0(name, values);
+    } catch (ObjectAttributeDetected e) {
+      sink.codeIndex(savepoint);
+
+      attributesRecorder.prerecord(values);
+
+      return record0(name, values);
+    }
+  }
+
+  private ElementPointer record0(ElementName name, RegularElementValue[] values) {
     final int nameIndex;
     nameIndex = name.index();
 
@@ -58,6 +70,9 @@ final class RegularElementRecorder {
 
     final int startIndex;
     startIndex = startTag(nameIndex, nameSize);
+
+    final IntSize valuesSize;
+    valuesSize = sink.codeSize();
 
     final int valuesIndex;
     valuesIndex = valuesBytes(valuesSize);

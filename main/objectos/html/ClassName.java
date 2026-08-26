@@ -16,13 +16,13 @@
 package objectos.html;
 
 import java.util.Objects;
-import objectox.html.attr.AbstractAttribute;
+import objectox.html.attr.ObjectoxAttribute;
 import objectox.html.attr.AttributeName;
 
 /// Represents an HTML `class` attribute and its value.
 public final class ClassName
     extends
-    AbstractAttribute {
+    ObjectoxAttribute {
 
   private final String value;
 

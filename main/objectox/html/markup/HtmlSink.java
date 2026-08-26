@@ -121,6 +121,14 @@ public final class HtmlSink {
     return Arrays.copyOf(code, codeIndex);
   }
 
+  public final int codeIndex() {
+    return codeIndex;
+  }
+
+  public final void codeIndex(int value) {
+    codeIndex = value;
+  }
+
   public final IntSize codeSize() {
     return IntSize.of(codeIndex);
   }

@@ -18,11 +18,11 @@ package objectox.html.attr;
 import java.util.Objects;
 import objectos.html.BooleanAttribute;
 
-public record BooleanAttributePojo(AttributeName attributeName)
+public record ObjectoxBooleanAttribute(AttributeName attributeName)
     implements
     BooleanAttribute {
 
-  public BooleanAttributePojo {
+  public ObjectoxBooleanAttribute {
     Objects.requireNonNull(attributeName, "attributeName == null");
   }
 

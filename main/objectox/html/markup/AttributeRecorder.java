@@ -19,7 +19,7 @@ import java.util.Objects;
 import objectos.html.Attribute;
 import objectos.script.JsAction;
 import objectox.html.IntSize;
-import objectox.html.attr.AbstractAttribute;
+import objectox.html.attr.ObjectoxAttribute;
 import objectox.html.attr.AttributeName;
 import objectox.html.attr.AttributeValueEscaper;
 
@@ -45,8 +45,8 @@ final class AttributeRecorder {
     final Attribute a;
     a = Objects.requireNonNull(value, "value == null");
 
-    final AbstractAttribute impl;
-    impl = (AbstractAttribute) a;
+    final ObjectoxAttribute impl;
+    impl = (ObjectoxAttribute) a;
 
     final AttributeName attributeName;
     attributeName = impl.attributeName;

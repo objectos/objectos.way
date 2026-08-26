@@ -15,6 +15,8 @@
  */
 package objectox.html.markup;
 
+import objectos.html.Attribute;
+import objectos.html.BooleanAttribute;
 import objectos.html.markup.ElementMarkup;
 import objectos.html.markup.NoOpMarkup;
 import objectos.html.markup.RawMarkup;
@@ -26,6 +28,10 @@ final class ElementAttributesRecorder {
 
   private final AmbiguousAttributeRecorder ambiguousAttributeRecorder;
 
+  private final AttributeRecorder attributeRecorder;
+
+  private final BooleanAttributeRecorder booleanAttributeRecorder;
+
   private final FragmentAttributeRecorder fragmentAttributeRecorder;
 
   private final ValueRecorder valueRecorder;
@@ -33,11 +39,19 @@ final class ElementAttributesRecorder {
   ElementAttributesRecorder(
       AmbiguousAttributeRecorder ambiguousAttributeRecorder,
 
+      AttributeRecorder attributeRecorder,
+
+      BooleanAttributeRecorder booleanAttributeRecorder,
+
       FragmentAttributeRecorder fragmentAttributeRecorder,
 
       ValueRecorder valueRecorder
   ) {
     this.ambiguousAttributeRecorder = ambiguousAttributeRecorder;
+
+    this.attributeRecorder = attributeRecorder;
+
+    this.booleanAttributeRecorder = booleanAttributeRecorder;
 
     this.fragmentAttributeRecorder = fragmentAttributeRecorder;
 
@@ -68,7 +82,11 @@ final class ElementAttributesRecorder {
     return switch (value) {
       case AmbiguousPointer(int v) -> ambiguousAttributeRecorder.record(elementName, size, v);
 
+      case Attribute _ -> throw new ObjectAttributeDetected();
+
       case AttributePointer(int v) -> valueRecorder.record(size, v);
+
+      case BooleanAttribute _ -> throw new ObjectAttributeDetected();
 
       case ElementMarkup _ -> 0;
 
@@ -80,6 +98,19 @@ final class ElementAttributesRecorder {
 
       case TextMarkup _ -> 0;
     };
+  }
+
+  final void prerecord(ElementValue[] values) {
+    for (int idx = 0; idx < values.length; idx++) {
+      final ElementValue value;
+      value = values[idx];
+
+      if (value instanceof BooleanAttribute booleanAttribute) {
+        values[idx] = booleanAttributeRecorder.record(booleanAttribute);
+      } else if (value instanceof Attribute attribute) {
+        values[idx] = attributeRecorder.record(attribute);
+      }
+    }
   }
 
 }

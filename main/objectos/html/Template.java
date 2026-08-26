@@ -16,6 +16,7 @@
 package objectos.html;
 
 import objectos.html.markup.AmbiguousMarkup;
+import objectos.html.markup.AttributeMarkup;
 import objectos.html.markup.ElementMarkup;
 import objectos.html.markup.Fragment0;
 import objectos.html.markup.Fragment1;
@@ -30,8 +31,6 @@ import objectos.html.markup.TextMarkup;
 import objectos.html.markup.VoidElementValue;
 import objectos.internal.Check;
 import objectos.script.JsAction;
-import objectox.html.elem.ElementName;
-import objectox.html.markup.ElementValue;
 
 /**
  * A template in pure Java for generating HTML.
@@ -167,7 +166,7 @@ public abstract class Template implements Component {
   ///
   /// @param value the text block containing class names, possibly spread across multiple lines
   /// @return an object representing the encoded attribute.
-  protected final Attribute css(String value) {
+  protected final AttributeMarkup css(String value) {
     return markup().css(value);
   }
 
@@ -404,7 +403,7 @@ public abstract class Template implements Component {
   /// @param values the encoded attributes and encoded child nodes of the element
   ///
   /// @return an object representing the encoded element
-  protected final ElementMarkup elem(ElementName name, ElementValue... values) {
+  protected final ElementMarkup elem(String name, RegularElementValue... values) {
     return markup().elem(name, values);
   }
 
@@ -414,8 +413,18 @@ public abstract class Template implements Component {
   /// @param text the text value of this element
   ///
   /// @return an object representing the encoded element
-  protected final ElementMarkup elem(ElementName name, String text) {
+  protected final ElementMarkup elem(String name, String text) {
     return markup().elem(name, text);
+  }
+
+  /// Encodes an HTML void element with the specified name and values.
+  ///
+  /// @param name the element name
+  /// @param values the encoded attributes of the element
+  ///
+  /// @return an object representing the encoded element
+  protected final ElementMarkup voidElem(String name, VoidElementValue... values) {
+    return markup().voidElem(name, values);
   }
 
   /// Encodes the `<!DOCTYPE html>` doctype.
@@ -1696,7 +1705,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute accesskey(String value) {
+  protected final AttributeMarkup accesskey(String value) {
     return markup().accesskey(value);
   }
 
@@ -1705,7 +1714,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute action(String value) {
+  protected final AttributeMarkup action(String value) {
     return markup().action(value);
   }
 
@@ -1714,7 +1723,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute align(String value) {
+  protected final AttributeMarkup align(String value) {
     return markup().align(value);
   }
 
@@ -1723,7 +1732,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute alignmentBaseline(String value) {
+  protected final AttributeMarkup alignmentBaseline(String value) {
     return markup().alignmentBaseline(value);
   }
 
@@ -1732,7 +1741,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute alt(String value) {
+  protected final AttributeMarkup alt(String value) {
     return markup().alt(value);
   }
 
@@ -1741,7 +1750,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute ariaCurrent(String value) {
+  protected final AttributeMarkup ariaCurrent(String value) {
     return markup().ariaCurrent(value);
   }
 
@@ -1750,7 +1759,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute ariaDisabled(String value) {
+  protected final AttributeMarkup ariaDisabled(String value) {
     return markup().ariaDisabled(value);
   }
 
@@ -1759,7 +1768,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute ariaHidden(String value) {
+  protected final AttributeMarkup ariaHidden(String value) {
     return markup().ariaHidden(value);
   }
 
@@ -1768,7 +1777,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute ariaInvalid(String value) {
+  protected final AttributeMarkup ariaInvalid(String value) {
     return markup().ariaInvalid(value);
   }
 
@@ -1777,7 +1786,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute ariaLabel(String value) {
+  protected final AttributeMarkup ariaLabel(String value) {
     return markup().ariaLabel(value);
   }
 
@@ -1786,7 +1795,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute ariaLabelledBy(String value) {
+  protected final AttributeMarkup ariaLabelledBy(String value) {
     return markup().ariaLabelledBy(value);
   }
 
@@ -1795,7 +1804,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute ariaModal(String value) {
+  protected final AttributeMarkup ariaModal(String value) {
     return markup().ariaModal(value);
   }
 
@@ -1804,7 +1813,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute ariaPlaceholder(String value) {
+  protected final AttributeMarkup ariaPlaceholder(String value) {
     return markup().ariaPlaceholder(value);
   }
 
@@ -1813,7 +1822,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute ariaReadonly(String value) {
+  protected final AttributeMarkup ariaReadonly(String value) {
     return markup().ariaReadonly(value);
   }
 
@@ -1822,7 +1831,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute ariaRequired(String value) {
+  protected final AttributeMarkup ariaRequired(String value) {
     return markup().ariaRequired(value);
   }
 
@@ -1831,7 +1840,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute ariaSelected(String value) {
+  protected final AttributeMarkup ariaSelected(String value) {
     return markup().ariaSelected(value);
   }
 
@@ -1840,7 +1849,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute as(String value) {
+  protected final AttributeMarkup as(String value) {
     return markup().as(value);
   }
 
@@ -1849,7 +1858,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute autocomplete(String value) {
+  protected final AttributeMarkup autocomplete(String value) {
     return markup().autocomplete(value);
   }
 
@@ -1858,7 +1867,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute baselineShift(String value) {
+  protected final AttributeMarkup baselineShift(String value) {
     return markup().baselineShift(value);
   }
 
@@ -1867,7 +1876,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute border(String value) {
+  protected final AttributeMarkup border(String value) {
     return markup().border(value);
   }
 
@@ -1876,7 +1885,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute cellpadding(String value) {
+  protected final AttributeMarkup cellpadding(String value) {
     return markup().cellpadding(value);
   }
 
@@ -1885,7 +1894,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute cellspacing(String value) {
+  protected final AttributeMarkup cellspacing(String value) {
     return markup().cellspacing(value);
   }
 
@@ -1894,7 +1903,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute charset(String value) {
+  protected final AttributeMarkup charset(String value) {
     return markup().charset(value);
   }
 
@@ -1903,7 +1912,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute cite(String value) {
+  protected final AttributeMarkup cite(String value) {
     return markup().cite(value);
   }
 
@@ -1912,7 +1921,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute className(String value) {
+  protected final AttributeMarkup className(String value) {
     return markup().className(value);
   }
 
@@ -1921,7 +1930,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute clipRule(String value) {
+  protected final AttributeMarkup clipRule(String value) {
     return markup().clipRule(value);
   }
 
@@ -1930,7 +1939,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute closedby(String value) {
+  protected final AttributeMarkup closedby(String value) {
     return markup().closedby(value);
   }
 
@@ -1939,7 +1948,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute color(String value) {
+  protected final AttributeMarkup color(String value) {
     return markup().color(value);
   }
 
@@ -1948,7 +1957,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute colorInterpolation(String value) {
+  protected final AttributeMarkup colorInterpolation(String value) {
     return markup().colorInterpolation(value);
   }
 
@@ -1958,7 +1967,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute colorInterpolationFilters(String value) {
+  protected final AttributeMarkup colorInterpolationFilters(String value) {
     return markup().colorInterpolationFilters(value);
   }
 
@@ -1967,7 +1976,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute cols(String value) {
+  protected final AttributeMarkup cols(String value) {
     return markup().cols(value);
   }
 
@@ -1976,7 +1985,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute content(String value) {
+  protected final AttributeMarkup content(String value) {
     return markup().content(value);
   }
 
@@ -1985,7 +1994,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute contenteditable(String value) {
+  protected final AttributeMarkup contenteditable(String value) {
     return markup().contenteditable(value);
   }
 
@@ -1994,7 +2003,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute crossorigin(String value) {
+  protected final AttributeMarkup crossorigin(String value) {
     return markup().crossorigin(value);
   }
 
@@ -2003,7 +2012,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute cursor(String value) {
+  protected final AttributeMarkup cursor(String value) {
     return markup().cursor(value);
   }
 
@@ -2012,7 +2021,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute d(String value) {
+  protected final AttributeMarkup d(String value) {
     return markup().d(value);
   }
 
@@ -2021,7 +2030,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute dir(String value) {
+  protected final AttributeMarkup dir(String value) {
     return markup().dir(value);
   }
 
@@ -2030,7 +2039,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute direction(String value) {
+  protected final AttributeMarkup direction(String value) {
     return markup().direction(value);
   }
 
@@ -2039,7 +2048,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute dirname(String value) {
+  protected final AttributeMarkup dirname(String value) {
     return markup().dirname(value);
   }
 
@@ -2048,7 +2057,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute display(String value) {
+  protected final AttributeMarkup display(String value) {
     return markup().display(value);
   }
 
@@ -2057,7 +2066,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute dominantBaseline(String value) {
+  protected final AttributeMarkup dominantBaseline(String value) {
     return markup().dominantBaseline(value);
   }
 
@@ -2066,7 +2075,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute download(String value) {
+  protected final AttributeMarkup download(String value) {
     return markup().download(value);
   }
 
@@ -2075,7 +2084,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute draggable(String value) {
+  protected final AttributeMarkup draggable(String value) {
     return markup().draggable(value);
   }
 
@@ -2084,7 +2093,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute enctype(String value) {
+  protected final AttributeMarkup enctype(String value) {
     return markup().enctype(value);
   }
 
@@ -2093,7 +2102,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute fill(String value) {
+  protected final AttributeMarkup fill(String value) {
     return markup().fill(value);
   }
 
@@ -2102,7 +2111,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute fillOpacity(String value) {
+  protected final AttributeMarkup fillOpacity(String value) {
     return markup().fillOpacity(value);
   }
 
@@ -2111,7 +2120,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute fillRule(String value) {
+  protected final AttributeMarkup fillRule(String value) {
     return markup().fillRule(value);
   }
 
@@ -2120,7 +2129,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute filter(String value) {
+  protected final AttributeMarkup filter(String value) {
     return markup().filter(value);
   }
 
@@ -2129,7 +2138,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute floodColor(String value) {
+  protected final AttributeMarkup floodColor(String value) {
     return markup().floodColor(value);
   }
 
@@ -2138,7 +2147,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute floodOpacity(String value) {
+  protected final AttributeMarkup floodOpacity(String value) {
     return markup().floodOpacity(value);
   }
 
@@ -2147,7 +2156,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute forId(String value) {
+  protected final AttributeMarkup forId(String value) {
     return markup().forId(value);
   }
 
@@ -2157,7 +2166,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute glyphOrientationHorizontal(String value) {
+  protected final AttributeMarkup glyphOrientationHorizontal(String value) {
     return markup().glyphOrientationHorizontal(value);
   }
 
@@ -2167,7 +2176,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute glyphOrientationVertical(String value) {
+  protected final AttributeMarkup glyphOrientationVertical(String value) {
     return markup().glyphOrientationVertical(value);
   }
 
@@ -2176,7 +2185,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute height(String value) {
+  protected final AttributeMarkup height(String value) {
     return markup().height(value);
   }
 
@@ -2185,7 +2194,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute href(String value) {
+  protected final AttributeMarkup href(String value) {
     return markup().href(value);
   }
 
@@ -2194,7 +2203,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute httpEquiv(String value) {
+  protected final AttributeMarkup httpEquiv(String value) {
     return markup().httpEquiv(value);
   }
 
@@ -2203,7 +2212,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute id(String value) {
+  protected final AttributeMarkup id(String value) {
     return markup().id(value);
   }
 
@@ -2212,7 +2221,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute imageRendering(String value) {
+  protected final AttributeMarkup imageRendering(String value) {
     return markup().imageRendering(value);
   }
 
@@ -2221,7 +2230,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute integrity(String value) {
+  protected final AttributeMarkup integrity(String value) {
     return markup().integrity(value);
   }
 
@@ -2230,7 +2239,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute lang(String value) {
+  protected final AttributeMarkup lang(String value) {
     return markup().lang(value);
   }
 
@@ -2239,7 +2248,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute letterSpacing(String value) {
+  protected final AttributeMarkup letterSpacing(String value) {
     return markup().letterSpacing(value);
   }
 
@@ -2248,7 +2257,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute lightingColor(String value) {
+  protected final AttributeMarkup lightingColor(String value) {
     return markup().lightingColor(value);
   }
 
@@ -2257,7 +2266,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute markerEnd(String value) {
+  protected final AttributeMarkup markerEnd(String value) {
     return markup().markerEnd(value);
   }
 
@@ -2266,7 +2275,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute markerMid(String value) {
+  protected final AttributeMarkup markerMid(String value) {
     return markup().markerMid(value);
   }
 
@@ -2275,7 +2284,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute markerStart(String value) {
+  protected final AttributeMarkup markerStart(String value) {
     return markup().markerStart(value);
   }
 
@@ -2284,7 +2293,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute mask(String value) {
+  protected final AttributeMarkup mask(String value) {
     return markup().mask(value);
   }
 
@@ -2293,7 +2302,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute maskType(String value) {
+  protected final AttributeMarkup maskType(String value) {
     return markup().maskType(value);
   }
 
@@ -2302,7 +2311,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute maxlength(String value) {
+  protected final AttributeMarkup maxlength(String value) {
     return markup().maxlength(value);
   }
 
@@ -2311,7 +2320,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute media(String value) {
+  protected final AttributeMarkup media(String value) {
     return markup().media(value);
   }
 
@@ -2320,7 +2329,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute method(String value) {
+  protected final AttributeMarkup method(String value) {
     return markup().method(value);
   }
 
@@ -2329,7 +2338,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute minlength(String value) {
+  protected final AttributeMarkup minlength(String value) {
     return markup().minlength(value);
   }
 
@@ -2338,7 +2347,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute name(String value) {
+  protected final AttributeMarkup name(String value) {
     return markup().name(value);
   }
 
@@ -2347,7 +2356,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute onclick(String value) {
+  protected final AttributeMarkup onclick(String value) {
     return markup().onclick(value);
   }
 
@@ -2356,7 +2365,7 @@ public abstract class Template implements Component {
   /// @param value the action to be executed
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute onclick(JsAction value) {
+  protected final AttributeMarkup onclick(JsAction value) {
     return markup().onclick(value);
   }
 
@@ -2365,7 +2374,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute onload(String value) {
+  protected final AttributeMarkup onload(String value) {
     return markup().onload(value);
   }
 
@@ -2374,7 +2383,7 @@ public abstract class Template implements Component {
   /// @param value the action to be executed
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute onload(JsAction value) {
+  protected final AttributeMarkup onload(JsAction value) {
     return markup().onload(value);
   }
 
@@ -2383,7 +2392,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute onpopstate(String value) {
+  protected final AttributeMarkup onpopstate(String value) {
     return markup().onpopstate(value);
   }
 
@@ -2392,7 +2401,7 @@ public abstract class Template implements Component {
   /// @param value the action to be executed
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute onpopstate(JsAction value) {
+  protected final AttributeMarkup onpopstate(JsAction value) {
     return markup().onpopstate(value);
   }
 
@@ -2401,7 +2410,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute onsubmit(String value) {
+  protected final AttributeMarkup onsubmit(String value) {
     return markup().onsubmit(value);
   }
 
@@ -2410,7 +2419,7 @@ public abstract class Template implements Component {
   /// @param value the action to be executed
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute onsubmit(JsAction value) {
+  protected final AttributeMarkup onsubmit(JsAction value) {
     return markup().onsubmit(value);
   }
 
@@ -2419,7 +2428,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute opacity(String value) {
+  protected final AttributeMarkup opacity(String value) {
     return markup().opacity(value);
   }
 
@@ -2428,7 +2437,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute overflow(String value) {
+  protected final AttributeMarkup overflow(String value) {
     return markup().overflow(value);
   }
 
@@ -2437,7 +2446,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute paintOrder(String value) {
+  protected final AttributeMarkup paintOrder(String value) {
     return markup().paintOrder(value);
   }
 
@@ -2446,7 +2455,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute placeholder(String value) {
+  protected final AttributeMarkup placeholder(String value) {
     return markup().placeholder(value);
   }
 
@@ -2455,7 +2464,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute pointerEvents(String value) {
+  protected final AttributeMarkup pointerEvents(String value) {
     return markup().pointerEvents(value);
   }
 
@@ -2464,7 +2473,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute property(String value) {
+  protected final AttributeMarkup property(String value) {
     return markup().property(value);
   }
 
@@ -2473,7 +2482,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute referrerpolicy(String value) {
+  protected final AttributeMarkup referrerpolicy(String value) {
     return markup().referrerpolicy(value);
   }
 
@@ -2482,7 +2491,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute rel(String value) {
+  protected final AttributeMarkup rel(String value) {
     return markup().rel(value);
   }
 
@@ -2491,7 +2500,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute rev(String value) {
+  protected final AttributeMarkup rev(String value) {
     return markup().rev(value);
   }
 
@@ -2500,7 +2509,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute role(String value) {
+  protected final AttributeMarkup role(String value) {
     return markup().role(value);
   }
 
@@ -2509,7 +2518,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute rows(String value) {
+  protected final AttributeMarkup rows(String value) {
     return markup().rows(value);
   }
 
@@ -2518,7 +2527,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute shapeRendering(String value) {
+  protected final AttributeMarkup shapeRendering(String value) {
     return markup().shapeRendering(value);
   }
 
@@ -2527,7 +2536,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute size(String value) {
+  protected final AttributeMarkup size(String value) {
     return markup().size(value);
   }
 
@@ -2536,7 +2545,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute sizes(String value) {
+  protected final AttributeMarkup sizes(String value) {
     return markup().sizes(value);
   }
 
@@ -2545,7 +2554,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute spellcheck(String value) {
+  protected final AttributeMarkup spellcheck(String value) {
     return markup().spellcheck(value);
   }
 
@@ -2554,7 +2563,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute src(String value) {
+  protected final AttributeMarkup src(String value) {
     return markup().src(value);
   }
 
@@ -2563,7 +2572,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute srcset(String value) {
+  protected final AttributeMarkup srcset(String value) {
     return markup().srcset(value);
   }
 
@@ -2572,7 +2581,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute start(String value) {
+  protected final AttributeMarkup start(String value) {
     return markup().start(value);
   }
 
@@ -2581,7 +2590,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute stopColor(String value) {
+  protected final AttributeMarkup stopColor(String value) {
     return markup().stopColor(value);
   }
 
@@ -2590,7 +2599,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute stopOpacity(String value) {
+  protected final AttributeMarkup stopOpacity(String value) {
     return markup().stopOpacity(value);
   }
 
@@ -2599,7 +2608,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute stroke(String value) {
+  protected final AttributeMarkup stroke(String value) {
     return markup().stroke(value);
   }
 
@@ -2608,7 +2617,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute strokeDasharray(String value) {
+  protected final AttributeMarkup strokeDasharray(String value) {
     return markup().strokeDasharray(value);
   }
 
@@ -2617,7 +2626,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute strokeDashoffset(String value) {
+  protected final AttributeMarkup strokeDashoffset(String value) {
     return markup().strokeDashoffset(value);
   }
 
@@ -2626,7 +2635,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute strokeLinecap(String value) {
+  protected final AttributeMarkup strokeLinecap(String value) {
     return markup().strokeLinecap(value);
   }
 
@@ -2635,7 +2644,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute strokeLinejoin(String value) {
+  protected final AttributeMarkup strokeLinejoin(String value) {
     return markup().strokeLinejoin(value);
   }
 
@@ -2644,7 +2653,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute strokeMiterlimit(String value) {
+  protected final AttributeMarkup strokeMiterlimit(String value) {
     return markup().strokeMiterlimit(value);
   }
 
@@ -2653,7 +2662,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute strokeOpacity(String value) {
+  protected final AttributeMarkup strokeOpacity(String value) {
     return markup().strokeOpacity(value);
   }
 
@@ -2662,7 +2671,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute strokeWidth(String value) {
+  protected final AttributeMarkup strokeWidth(String value) {
     return markup().strokeWidth(value);
   }
 
@@ -2671,7 +2680,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute tabindex(String value) {
+  protected final AttributeMarkup tabindex(String value) {
     return markup().tabindex(value);
   }
 
@@ -2680,7 +2689,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute target(String value) {
+  protected final AttributeMarkup target(String value) {
     return markup().target(value);
   }
 
@@ -2689,7 +2698,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute textAnchor(String value) {
+  protected final AttributeMarkup textAnchor(String value) {
     return markup().textAnchor(value);
   }
 
@@ -2698,7 +2707,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute textDecoration(String value) {
+  protected final AttributeMarkup textDecoration(String value) {
     return markup().textDecoration(value);
   }
 
@@ -2707,7 +2716,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute textOverflow(String value) {
+  protected final AttributeMarkup textOverflow(String value) {
     return markup().textOverflow(value);
   }
 
@@ -2716,7 +2725,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute textRendering(String value) {
+  protected final AttributeMarkup textRendering(String value) {
     return markup().textRendering(value);
   }
 
@@ -2725,7 +2734,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute transform(String value) {
+  protected final AttributeMarkup transform(String value) {
     return markup().transform(value);
   }
 
@@ -2734,7 +2743,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute transformOrigin(String value) {
+  protected final AttributeMarkup transformOrigin(String value) {
     return markup().transformOrigin(value);
   }
 
@@ -2743,7 +2752,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute translate(String value) {
+  protected final AttributeMarkup translate(String value) {
     return markup().translate(value);
   }
 
@@ -2752,7 +2761,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute type(String value) {
+  protected final AttributeMarkup type(String value) {
     return markup().type(value);
   }
 
@@ -2761,7 +2770,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute unicodeBidi(String value) {
+  protected final AttributeMarkup unicodeBidi(String value) {
     return markup().unicodeBidi(value);
   }
 
@@ -2770,7 +2779,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute value(String value) {
+  protected final AttributeMarkup value(String value) {
     return markup().value(value);
   }
 
@@ -2779,7 +2788,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute vectorEffect(String value) {
+  protected final AttributeMarkup vectorEffect(String value) {
     return markup().vectorEffect(value);
   }
 
@@ -2788,7 +2797,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute viewBox(String value) {
+  protected final AttributeMarkup viewBox(String value) {
     return markup().viewBox(value);
   }
 
@@ -2797,7 +2806,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute visibility(String value) {
+  protected final AttributeMarkup visibility(String value) {
     return markup().visibility(value);
   }
 
@@ -2806,7 +2815,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute whiteSpace(String value) {
+  protected final AttributeMarkup whiteSpace(String value) {
     return markup().whiteSpace(value);
   }
 
@@ -2815,7 +2824,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute width(String value) {
+  protected final AttributeMarkup width(String value) {
     return markup().width(value);
   }
 
@@ -2824,7 +2833,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute wordSpacing(String value) {
+  protected final AttributeMarkup wordSpacing(String value) {
     return markup().wordSpacing(value);
   }
 
@@ -2833,7 +2842,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute wrap(String value) {
+  protected final AttributeMarkup wrap(String value) {
     return markup().wrap(value);
   }
 
@@ -2842,7 +2851,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute writingMode(String value) {
+  protected final AttributeMarkup writingMode(String value) {
     return markup().writingMode(value);
   }
 
@@ -2851,7 +2860,7 @@ public abstract class Template implements Component {
   /// @param value the attribute value
   ///
   /// @return an object representing the encoded attribute
-  protected final Attribute xmlns(String value) {
+  protected final AttributeMarkup xmlns(String value) {
     return markup().xmlns(value);
   }
 

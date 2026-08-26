@@ -237,7 +237,7 @@ public record AttributeName(int index, String name) {
   }
 
   public final BooleanAttribute toBooleanAttribute() {
-    return new BooleanAttributePojo(this);
+    return new ObjectoxBooleanAttribute(this);
   }
 
 }

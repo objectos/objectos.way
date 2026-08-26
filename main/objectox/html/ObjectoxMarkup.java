@@ -15,8 +15,6 @@
  */
 package objectox.html;
 
-import objectos.html.Attribute;
-import objectos.html.BooleanAttribute;
 import objectos.html.Html;
 import objectos.html.Markup;
 import objectos.html.markup.AmbiguousMarkup;
@@ -61,16 +59,6 @@ public final class ObjectoxMarkup implements Markup {
     return new ObjectoxMarkup(recorder);
   }
 
-  /// Encodes the specified boolean attribute.
-  ///
-  /// @param value the boolean attribute to encode
-  ///
-  /// @return an object representing the encoded boolean attribute
-  @Override
-  public final AttributeMarkup attr(BooleanAttribute value) {
-    return recorder.booleanAttribute(value);
-  }
-
   /// Encodes a boolean attribute with the specified name.
   ///
   /// @param name the attribute name
@@ -79,16 +67,6 @@ public final class ObjectoxMarkup implements Markup {
   @Override
   public final AttributeMarkup attr(String name) {
     return recorder.booleanAttribute(name);
-  }
-
-  /// Encodes the specified attribute.
-  ///
-  /// @param value the attribute to encode
-  ///
-  /// @return an object representing the encoded attribute
-  @Override
-  public final AttributeMarkup attr(Attribute value) {
-    return recorder.attribute(value);
   }
 
   /// Encodes an attribute with the specified name and action.

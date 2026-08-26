@@ -15,6 +15,8 @@
  */
 package objectos.html.markup;
 
+import objectos.html.Attribute;
+import objectos.html.BooleanAttribute;
 import objectox.html.markup.ElementValue;
 
 /// Represents an object allowed as an argument to an HTML void element
@@ -23,6 +25,8 @@ public sealed interface VoidElementValue
     extends
     ElementValue
     permits
+    Attribute,
     AttributeMarkup,
+    BooleanAttribute,
     FragmentMarkup,
     NoOpMarkup {}

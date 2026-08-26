@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import objectos.html.markup.ElementMarkup;
 import objectos.http.Content;
-import objectox.html.elem.ElementName;
 import org.testng.annotations.Test;
 
 public class TemplateTest {
@@ -1303,7 +1302,7 @@ public class TemplateTest {
           @Override
           protected final void render() {
             elem(
-                ElementName.BLOCKQUOTE,
+                "blockquote",
                 className("foo")
             );
           }

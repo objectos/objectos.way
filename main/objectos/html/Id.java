@@ -16,11 +16,11 @@
 package objectos.html;
 
 import java.util.Objects;
-import objectox.html.attr.AbstractAttribute;
+import objectox.html.attr.ObjectoxAttribute;
 import objectox.html.attr.AttributeName;
 
 /// Represents an HTML `id` attribute and its value.
-public final class Id extends AbstractAttribute {
+public final class Id extends ObjectoxAttribute {
 
   private final String value;
 

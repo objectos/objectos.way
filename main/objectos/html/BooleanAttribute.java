@@ -15,13 +15,18 @@
  */
 package objectos.html;
 
+import objectos.html.markup.RegularElementValue;
+import objectos.html.markup.VoidElementValue;
 import objectox.html.attr.AttributeName;
-import objectox.html.attr.BooleanAttributePojo;
+import objectox.html.attr.ObjectoxBooleanAttribute;
 
 /// Represents a boolean HTML attribute.
 public sealed interface BooleanAttribute
+    extends
+    RegularElementValue,
+    VoidElementValue
     permits
-    BooleanAttributePojo {
+    ObjectoxBooleanAttribute {
 
   /// Creates an object representing a boolean HTML attribute with the specified
   /// name.
@@ -33,7 +38,7 @@ public sealed interface BooleanAttribute
     final AttributeName attributeName;
     attributeName = AttributeName.getOrCreate(name);
 
-    return new BooleanAttributePojo(attributeName);
+    return new ObjectoxBooleanAttribute(attributeName);
   }
 
   /// Returns the attribute name.

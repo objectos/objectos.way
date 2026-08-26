@@ -100,7 +100,7 @@ public class TemplateGen {
     /// @param name the element name
     /// @param values the encoded attributes and encoded child nodes of the element
     /// @return an object representing the encoded element
-    protected final ElementMarkup elem(ElementName name, ElementValue... values) {
+    protected final ElementMarkup elem(String name, RegularElementValue... values) {
       return markup().elem(name, values);
     }
 
@@ -108,8 +108,16 @@ public class TemplateGen {
     /// @param name the element name
     /// @param text the text value of this element
     /// @return an object representing the encoded element
-    protected final ElementMarkup elem(ElementName name, String text) {
+    protected final ElementMarkup elem(String name, String text) {
       return markup().elem(name, text);
+    }
+
+    /// Encodes an HTML void element with the specified name and values.
+    /// @param name the element name
+    /// @param values the encoded attributes of the element
+    /// @return an object representing the encoded element
+    protected final ElementMarkup voidElem(String name, VoidElementValue... values) {
+      return markup().voidElem(name, values);
     }
 
     /// Encodes the `<!DOCTYPE html>` doctype.
@@ -201,7 +209,7 @@ public class TemplateGen {
         /// Encodes the `%s` attribute with the specified value.
         /// @param value the attribute value
         /// @return an object representing the encoded attribute
-        protected final Attribute %s(String value) {
+        protected final AttributeMarkup %s(String value) {
           return markup().%s(value);
         }
         """.formatted(attr.htmlName(), attr.methodName(), attr.methodName()));
@@ -212,7 +220,7 @@ public class TemplateGen {
         /// Encodes the `%s` attribute with the specified action.
         /// @param value the action to be executed
         /// @return an object representing the encoded attribute
-        protected final Attribute %s(JsAction value) {
+        protected final AttributeMarkup %s(JsAction value) {
           return markup().%s(value);
         }
         """.formatted(attr.htmlName(), attr.methodName(), attr.methodName()));

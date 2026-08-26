@@ -99,8 +99,14 @@ public final class Recorder {
     final FragmentAttributeRecorder fragmentAttributeRecorder;
     fragmentAttributeRecorder = new FragmentAttributeRecorder(sink, ambiguousAttributeRecorder, valueRecorder);
 
+    final AttributeRecorder attributeRecorder;
+    attributeRecorder = new AttributeRecorder(sink);
+
+    final BooleanAttributeRecorder booleanAttributeRecorder;
+    booleanAttributeRecorder = new BooleanAttributeRecorder(sink);
+
     final ElementAttributesRecorder elementAttributesRecorder;
-    elementAttributesRecorder = new ElementAttributesRecorder(ambiguousAttributeRecorder, fragmentAttributeRecorder, valueRecorder);
+    elementAttributesRecorder = new ElementAttributesRecorder(ambiguousAttributeRecorder, attributeRecorder, booleanAttributeRecorder, fragmentAttributeRecorder, valueRecorder);
 
     final AmbiguousChildRecorder ambiguousChildRecorder;
     ambiguousChildRecorder = new AmbiguousChildRecorder(sink);
@@ -111,9 +117,9 @@ public final class Recorder {
     return new Recorder(
         new AmbiguousRecorder(sink),
 
-        new AttributeRecorder(sink),
+        attributeRecorder,
 
-        new BooleanAttributeRecorder(sink),
+        booleanAttributeRecorder,
 
         new DoctypeRecorder(sink),
 
