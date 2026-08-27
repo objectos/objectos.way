@@ -18,6 +18,8 @@ package objectox.html.markup;
 import static org.testng.Assert.assertEquals;
 
 import objectos.html.Id;
+import objectos.script.Js;
+import objectos.script.JsAction;
 import objectox.html.attr.AttributeName;
 import objectox.html.elem.ElementName;
 import org.testng.annotations.Test;
@@ -92,6 +94,49 @@ public class VoidElementRecorderTest {
           opts.addByte(HtmlBytes.xATTRIBUTE88);
           opts.addInt8(AttributeName.ID.index());
           opts.addInt8(opts.addObject("foo"));
+          opts.addByte(HtmlBytes.ELEMVOID8);
+          opts.addInt8(ElementName.INPUT.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(1);
+          opts.addInt8(3);
+        })
+    );
+  }
+
+  @Test(description = """
+  Attribute jsaction (savepoint rollback + pre-record)
+  """)
+  public void voidElement05() {
+    final JsAction action;
+    action = Js.noop();
+
+    final HtmlSink sink;
+    sink = HtmlSinkY.create(opts -> {
+      opts.addInt24(HtmlSink.MAX_INT24);
+      opts.addByte(HtmlBytes.JSACTION88);
+      opts.addInt8(AttributeName.ONCLICK.index());
+      opts.addInt8(opts.addObject(action));
+    });
+
+    final VoidElementRecorder subject;
+    subject = create(sink);
+
+    final AttributePointer pointer;
+    pointer = new AttributePointer(3);
+
+    final ElementPointer res;
+    res = subject.record(ElementName.INPUT, pointer);
+
+    assertEquals(res.value(), 6);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addInt24(HtmlSink.MAX_INT24);
+          opts.addByte(HtmlBytes.xJSACTION88);
+          opts.addInt8(AttributeName.ONCLICK.index());
+          opts.addInt8(opts.addObject(action));
           opts.addByte(HtmlBytes.ELEMVOID8);
           opts.addInt8(ElementName.INPUT.index());
           opts.addByte(HtmlBytes.VALUES8);

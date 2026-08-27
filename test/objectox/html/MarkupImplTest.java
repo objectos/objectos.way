@@ -17,6 +17,7 @@ package objectox.html;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.html.HtmlY;
 import objectos.html.Id;
 import objectos.html.Markup;
 import objectos.script.Js;
@@ -430,6 +431,37 @@ public class MarkupImplTest {
           opts.addByte(HtmlBytes.xATTRIBUTE88);
           opts.addInt8(AttributeName.ID.index());
           opts.addInt8(opts.addObject("foo"));
+          opts.addByte(HtmlBytes.ELEMVOID8);
+          opts.addInt8(ElementName.INPUT.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(1);
+          opts.addInt8(0);
+        })
+    );
+  }
+
+  @Test(description = """
+  void elem:
+  - 1 js action attr (object) (8bit)
+  """)
+  public void voidElement05() {
+    final MarkupImpl subject;
+    subject = MarkupImpl.create();
+
+    final JsAction action;
+    action = Js.noop();
+
+    subject.input(
+        subject.onclick(action)
+    );
+
+    assertEquals(
+        subject.compile(),
+
+        HtmlY.create(opts -> {
+          opts.addByte(HtmlBytes.xJSACTION88);
+          opts.addInt8(AttributeName.ONCLICK.index());
+          opts.addInt8(opts.addObject(action));
           opts.addByte(HtmlBytes.ELEMVOID8);
           opts.addInt8(ElementName.INPUT.index());
           opts.addByte(HtmlBytes.VALUES8);

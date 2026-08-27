@@ -71,6 +71,35 @@ public class HtmlTest {
 
   @Test(description = """
   regular elem:
+  - 1 reg attr (markup) (8bit)
+  - no children
+  """)
+  public void regularElement02_08bit() {
+    final Html subject;
+    subject = HtmlY.create(opts -> {
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.CONTENTEDITABLE.index());
+      opts.addInt8(opts.addObject("false"));
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.DIV.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.DIV.index());
+    });
+
+    assertEquals(
+        subject.toString(),
+
+        """
+        <div contenteditable="false"></div>
+        """
+    );
+  }
+
+  @Test(description = """
+  regular elem:
   - 1 reg attr (markup) (16bit)
   - no children
   """)
@@ -113,35 +142,6 @@ public class HtmlTest {
       opts.addByte(HtmlBytes.xATTRIBUTE824);
       opts.addInt8(AttributeName.CONTENTEDITABLE.index());
       opts.addInt24(opts.addObject("false"));
-      opts.addByte(HtmlBytes.ELEMSTR8);
-      opts.addInt8(ElementName.DIV.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.DIV.index());
-    });
-
-    assertEquals(
-        subject.toString(),
-
-        """
-        <div contenteditable="false"></div>
-        """
-    );
-  }
-
-  @Test(description = """
-  regular elem:
-  - 1 reg attr (markup) (8bit)
-  - no children
-  """)
-  public void regularElement02_08bit() {
-    final Html subject;
-    subject = HtmlY.create(opts -> {
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.CONTENTEDITABLE.index());
-      opts.addInt8(opts.addObject("false"));
       opts.addByte(HtmlBytes.ELEMSTR8);
       opts.addInt8(ElementName.DIV.index());
       opts.addByte(HtmlBytes.VALUES8);
@@ -400,6 +400,35 @@ public class HtmlTest {
 
         """
         <input id="foo">
+        """
+    );
+  }
+
+  @Test(description = """
+  void elem:
+  - 1 js action attr (object) (8bit)
+  """)
+  public void voidElement05() {
+    final JsAction action;
+    action = Js.noop();
+
+    final Html subject;
+    subject = HtmlY.create(opts -> {
+      opts.addByte(HtmlBytes.xJSACTION88);
+      opts.addInt8(AttributeName.ONCLICK.index());
+      opts.addInt8(opts.addObject(action));
+      opts.addByte(HtmlBytes.ELEMVOID8);
+      opts.addInt8(ElementName.INPUT.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+    });
+
+    assertEquals(
+        subject.toString(),
+
+        """
+        <input onclick='["NO"]'>
         """
     );
   }

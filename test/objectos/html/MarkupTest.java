@@ -161,4 +161,35 @@ public class MarkupTest {
     );
   }
 
+  @Test(description = """
+  void elem:
+  - 1 js action attr (object) (8bit)
+  """)
+  public void voidElement05() {
+    final Markup subject;
+    subject = Markup.of();
+
+    final JsAction action;
+    action = Js.noop();
+
+    subject.input(
+        subject.onclick(action)
+    );
+
+    assertEquals(
+        subject.compile(),
+
+        HtmlY.create(opts -> {
+          opts.addByte(HtmlBytes.xJSACTION88);
+          opts.addInt8(AttributeName.ONCLICK.index());
+          opts.addInt8(opts.addObject(action));
+          opts.addByte(HtmlBytes.ELEMVOID8);
+          opts.addInt8(ElementName.INPUT.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(1);
+          opts.addInt8(0);
+        })
+    );
+  }
+
 }

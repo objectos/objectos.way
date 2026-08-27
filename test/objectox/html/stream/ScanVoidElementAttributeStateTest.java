@@ -18,6 +18,8 @@ package objectox.html.stream;
 import static org.testng.Assert.assertEquals;
 
 import objectos.html.stream.EndStartTagKind;
+import objectos.script.Js;
+import objectos.script.JsAction;
 import objectox.html.IntSize;
 import objectox.html.attr.AttributeName;
 import objectox.html.elem.ElementName;
@@ -436,14 +438,61 @@ public class ScanVoidElementAttributeStateTest {
 
   @Test(description = """
   void elem:
-  - 1 reg attr (object) (8bit)
+  - 1 js action attr (object) (8bit)
   """)
-  public void voidElement04b() {
+  public void voidElement05() {
+    final JsAction action;
+    action = Js.noop();
+
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.ID.index());
-      opts.addInt8(opts.addObject("foo"));
+      opts.addByte(HtmlBytes.xJSACTION88);
+      opts.addInt8(AttributeName.ONCLICK.index());
+      opts.addInt8(opts.addObject(action));
+      opts.addByte(HtmlBytes.ELEMVOID8);
+      opts.addInt8(ElementName.INPUT.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+
+      opts.push(new ScanDocumentNodeFrame(7));
+      opts.push(new ScanVoidElementAttributeFrame(7, IntSize.BIT8, 1));
+    });
+
+    final ScanVoidElementAttributeState subject;
+    subject = new ScanVoidElementAttributeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new RenderJsActionAttributeState(ctx, IntSize.BIT8, IntSize.BIT8));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(new ScanDocumentNodeFrame(7));
+          opts.push(new ScanVoidElementAttributeFrame(8, IntSize.BIT8, 1, 1));
+          opts.push(new JumpFrame(1));
+        })
+    );
+  }
+
+  @Test(description = """
+  void elem:
+  - 1 js action attr (object) (8bit)
+  """)
+  public void voidElement05b() {
+    final JsAction action;
+    action = Js.noop();
+
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xJSACTION88);
+      opts.addInt8(AttributeName.ONCLICK.index());
+      opts.addInt8(opts.addObject(action));
       opts.addByte(HtmlBytes.ELEMVOID8);
       opts.addInt8(ElementName.INPUT.index());
       opts.addByte(HtmlBytes.VALUES8);
