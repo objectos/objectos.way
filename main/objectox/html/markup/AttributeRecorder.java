@@ -67,7 +67,7 @@ final class AttributeRecorder {
     final String escaped;
     escaped = escaper.escape();
 
-    return record0(attributeName, escaped);
+    return record0(attributeName, false, escaped);
   }
 
   public final AttributePointer record(String name, String value) {
@@ -81,7 +81,7 @@ final class AttributeRecorder {
     final JsAction a;
     a = Objects.requireNonNull(action, "action == null");
 
-    return record0(attributeName, a);
+    return record0(attributeName, true, a);
   }
 
   public final AttributePointer record(String name, JsAction action) {
@@ -91,10 +91,10 @@ final class AttributeRecorder {
     final JsAction a;
     a = Objects.requireNonNull(action, "action == null");
 
-    return record0(attributeName, a);
+    return record0(attributeName, true, a);
   }
 
-  private AttributePointer record0(AttributeName attributeName, Object value) {
+  private AttributePointer record0(AttributeName attributeName, boolean jsaction, Object value) {
     final int nameIndex;
     nameIndex = attributeName.index();
 
@@ -106,7 +106,7 @@ final class AttributeRecorder {
 
     final int startIndex;
     startIndex = switch (nameSize) {
-      case BIT8 -> record8(nameIndex, valueIndex);
+      case BIT8 -> record8(jsaction, nameIndex, valueIndex);
 
       case BIT16, BIT24 -> throw new UnsupportedOperationException();
     };
@@ -114,22 +114,22 @@ final class AttributeRecorder {
     return new AttributePointer(startIndex);
   }
 
-  private int record8(final int nameIndex, final int valueIndex) {
+  private int record8(boolean jsaction, final int nameIndex, final int valueIndex) {
     final IntSize valueSize;
     valueSize = IntSize.of(valueIndex);
 
     return switch (valueSize) {
-      case BIT8 -> record88(nameIndex, valueIndex);
+      case BIT8 -> record88(jsaction, nameIndex, valueIndex);
 
-      case BIT16 -> record816(nameIndex, valueIndex);
+      case BIT16 -> record816(jsaction, nameIndex, valueIndex);
 
-      case BIT24 -> record824(nameIndex, valueIndex);
+      case BIT24 -> record824(jsaction, nameIndex, valueIndex);
     };
   }
 
-  private int record88(int nameIndex, int valueIndex) {
+  private int record88(boolean jsaction, int nameIndex, int valueIndex) {
     final int startIndex;
-    startIndex = sink.addByte(HtmlBytes.ATTRIBUTE88);
+    startIndex = sink.addByte(jsaction ? HtmlBytes.JSACTION88 : HtmlBytes.ATTRIBUTE88);
 
     sink.addInt8(nameIndex);
 
@@ -138,9 +138,9 @@ final class AttributeRecorder {
     return startIndex;
   }
 
-  private int record816(int nameIndex, int valueIndex) {
+  private int record816(boolean jsaction, int nameIndex, int valueIndex) {
     final int startIndex;
-    startIndex = sink.addByte(HtmlBytes.ATTRIBUTE816);
+    startIndex = sink.addByte(jsaction ? HtmlBytes.JSACTION816 : HtmlBytes.ATTRIBUTE816);
 
     sink.addInt8(nameIndex);
 
@@ -149,9 +149,9 @@ final class AttributeRecorder {
     return startIndex;
   }
 
-  private int record824(int nameIndex, int valueIndex) {
+  private int record824(boolean jsaction, int nameIndex, int valueIndex) {
     final int startIndex;
-    startIndex = sink.addByte(HtmlBytes.ATTRIBUTE824);
+    startIndex = sink.addByte(jsaction ? HtmlBytes.JSACTION824 : HtmlBytes.ATTRIBUTE824);
 
     sink.addInt8(nameIndex);
 

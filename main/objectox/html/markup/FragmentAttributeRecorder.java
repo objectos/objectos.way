@@ -70,6 +70,9 @@ final class FragmentAttributeRecorder {
       case HtmlBytes.ATTRIBUTE88,
            HtmlBytes.ATTRIBUTE816,
            HtmlBytes.ATTRIBUTE824,
+           HtmlBytes.JSACTION88,
+           HtmlBytes.JSACTION816,
+           HtmlBytes.JSACTION824,
            HtmlBytes.BOOLEAN8 -> valueRecorder.record(size, value);
 
       case HtmlBytes.FRAGSTR -> record(elementName, size, value);

@@ -111,6 +111,49 @@ public class FragmentAttributeRecorderTest {
     );
   }
 
+  @Test(description = "JSACTION88 (ValueRecorder delegation)")
+  public void jsaction01() {
+    final HtmlSink sink;
+    sink = HtmlSinkY.create(opts -> {
+      opts.addInt24(HtmlSink.MAX_INT24);
+      opts.addByte(HtmlBytes.FRAGSTR);
+      opts.addInt24(0);
+      opts.addByte(HtmlBytes.JSACTION88);
+      opts.addInt8(AttributeName.ID.index());
+      opts.addInt8(opts.addObject("foo"));
+      opts.addByte(HtmlBytes.FRAGEND);
+    });
+
+    final FragmentAttributeRecorder subject;
+    subject = create(sink);
+
+    final ElementName elementName;
+    elementName = ElementName.DIV;
+
+    final IntSize size;
+    size = IntSize.BIT8;
+
+    final int res;
+    res = subject.record(elementName, size, 3);
+
+    assertEquals(res, 1);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addInt24(HtmlSink.MAX_INT24);
+          opts.addByte(HtmlBytes.FRAGSTR);
+          opts.addInt24(0);
+          opts.addByte(HtmlBytes.xJSACTION88);
+          opts.addInt8(AttributeName.ID.index());
+          opts.addInt8(opts.addObject("foo"));
+          opts.addByte(HtmlBytes.FRAGEND);
+          opts.addInt8(7);
+        })
+    );
+  }
+
   private FragmentAttributeRecorder create(HtmlSink sink) {
     final AmbiguousAttributeRecorder ambiguousAttributeRecorder;
     ambiguousAttributeRecorder = new AmbiguousAttributeRecorder(sink);

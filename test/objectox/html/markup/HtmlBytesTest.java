@@ -36,6 +36,10 @@ public class HtmlBytesTest {
         {HtmlBytes.ATTRIBUTE824, HtmlBytes.xATTRIBUTE824},
         {HtmlBytes.BOOLEAN8, HtmlBytes.xBOOLEAN8},
 
+        {HtmlBytes.JSACTION88, HtmlBytes.xJSACTION88},
+        {HtmlBytes.JSACTION816, HtmlBytes.xJSACTION816},
+        {HtmlBytes.JSACTION824, HtmlBytes.xJSACTION824},
+
         {HtmlBytes.TEXT8, HtmlBytes.xTEXT8},
         {HtmlBytes.TEXT16, HtmlBytes.xTEXT16},
         {HtmlBytes.TEXT24, HtmlBytes.xTEXT24},
@@ -54,6 +58,10 @@ public class HtmlBytesTest {
         {HtmlBytes.xATTRIBUTE816, HtmlBytes.xATTRIBUTE816},
         {HtmlBytes.xATTRIBUTE824, HtmlBytes.xATTRIBUTE824},
         {HtmlBytes.xBOOLEAN8, HtmlBytes.xBOOLEAN8},
+
+        {HtmlBytes.xJSACTION88, HtmlBytes.xJSACTION88},
+        {HtmlBytes.xJSACTION816, HtmlBytes.xJSACTION816},
+        {HtmlBytes.xJSACTION824, HtmlBytes.xJSACTION824},
 
         {HtmlBytes.xTEXT8, HtmlBytes.xTEXT8},
         {HtmlBytes.xTEXT16, HtmlBytes.xTEXT16},

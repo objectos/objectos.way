@@ -21,6 +21,8 @@ import java.util.stream.IntStream;
 import objectos.html.Attribute;
 import objectos.html.Id;
 import objectos.internal.Util;
+import objectos.script.Js;
+import objectos.script.JsAction;
 import objectox.html.attr.AttributeName;
 import org.testng.annotations.Test;
 
@@ -114,6 +116,98 @@ public class AttributeRecorderTest {
           opts.addByte(HtmlBytes.ATTRIBUTE824);
           opts.addInt8(name.index());
           opts.addInt24(opts.addObject("foo"));
+        })
+    );
+  }
+
+  @Test(description = "JSACTION88")
+  public void jsaction88() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final AttributeRecorder subject;
+    subject = new AttributeRecorder(sink);
+
+    final AttributeName name;
+    name = AttributeName.ID;
+
+    final JsAction value;
+    value = Js.submit();
+
+    final AttributePointer res;
+    res = subject.record(name, value);
+
+    assertEquals(res.value(), 0);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.JSACTION88);
+          opts.addInt8(name.index());
+          opts.addInt8(opts.addObject(value));
+        })
+    );
+  }
+
+  @Test(description = "JSACTION816")
+  public void jsaction816() {
+    final HtmlSink sink;
+    sink = new HtmlSink(Util.EMPTY_BYTE_ARRAY, new Object[256]);
+
+    final AttributeRecorder subject;
+    subject = new AttributeRecorder(sink);
+
+    final AttributeName name;
+    name = AttributeName.ID;
+
+    final JsAction value;
+    value = Js.submit();
+
+    final AttributePointer res;
+    res = subject.record(name, value);
+
+    assertEquals(res.value(), 0);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          IntStream.range(0, 256).forEach(_ -> opts.addObject(null));
+          opts.addByte(HtmlBytes.JSACTION816);
+          opts.addInt8(name.index());
+          opts.addInt16(opts.addObject(value));
+        })
+    );
+  }
+
+  @Test(description = "JSACTION824")
+  public void jsaction824() {
+    final HtmlSink sink;
+    sink = new HtmlSink(Util.EMPTY_BYTE_ARRAY, new Object[1 << 16]);
+
+    final AttributeRecorder subject;
+    subject = new AttributeRecorder(sink);
+
+    final AttributeName name;
+    name = AttributeName.ID;
+
+    final JsAction value;
+    value = Js.submit();
+
+    final AttributePointer res;
+    res = subject.record(name, value);
+
+    assertEquals(res.value(), 0);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          IntStream.range(0, 1 << 16).forEach(_ -> opts.addObject(null));
+          opts.addByte(HtmlBytes.JSACTION824);
+          opts.addInt8(name.index());
+          opts.addInt24(opts.addObject(value));
         })
     );
   }
