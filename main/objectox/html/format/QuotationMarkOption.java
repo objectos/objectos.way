@@ -16,17 +16,36 @@
 package objectox.html.format;
 
 import objectos.html.format.QuotationMarkStyle;
+import objectox.html.markup.CommonEscaper;
 
 public enum QuotationMarkOption implements QuotationMarkStyle {
 
-  DOUBLE('\"'),
+  DOUBLE('\"', CommonEscaper.create(opts -> {
+    opts.add('&', "&amp;");
+    opts.add('<', "&lt;");
+    opts.add('>', "&gt;");
+    opts.add('"', "&quot;");
+  })),
 
-  SINGLE('\'');
+  SINGLE('\'', CommonEscaper.create(opts -> {
+    opts.add('&', "&amp;");
+    opts.add('<', "&lt;");
+    opts.add('>', "&gt;");
+    opts.add('\'', "&#39;");
+  }));
 
   final char mark;
 
-  private QuotationMarkOption(char mark) {
+  private final CommonEscaper escaper;
+
+  private QuotationMarkOption(char mark, CommonEscaper escaper) {
     this.mark = mark;
+
+    this.escaper = escaper;
+  }
+
+  public final String escape(String value) {
+    return escaper.escape(value);
   }
 
 }

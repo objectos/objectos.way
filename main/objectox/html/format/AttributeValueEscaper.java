@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html.attr;
+package objectox.html.format;
 
 import objectox.html.markup.CommonEscaper;
 
