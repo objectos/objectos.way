@@ -16,18 +16,21 @@
 package objectos.html;
 
 import java.util.Objects;
-import objectox.html.attr.ObjectoxAttribute;
+import objectos.html.markup.RegularElementValue;
+import objectos.html.markup.VoidElementValue;
+import objectox.html.attr.AttributeObject;
 import objectox.html.attr.AttributeName;
 
 /// Represents an HTML `id` attribute and its value.
-public final class Id extends ObjectoxAttribute {
-
-  private final String value;
+public final class Id
+    extends
+    AttributeObject
+    implements
+    RegularElementValue,
+    VoidElementValue {
 
   private Id(String value) {
-    super(AttributeName.ID);
-
-    this.value = value;
+    super(AttributeName.ID, value);
   }
 
   /**
@@ -42,16 +45,6 @@ public final class Id extends ObjectoxAttribute {
     Objects.requireNonNull(value, "value == null");
 
     return new Id(value);
-  }
-
-  /**
-   * Returns the {@code id} value.
-   *
-   * @return the {@code id} value
-   */
-  @Override
-  public final String value() {
-    return value;
   }
 
 }

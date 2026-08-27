@@ -15,8 +15,9 @@
  */
 package objectox.html.markup;
 
-import objectos.html.Attribute;
-import objectos.html.BooleanAttribute;
+import objectos.html.ClassName;
+import objectos.html.Id;
+import objectos.html.markup.BooleanAttribute;
 
 final class ElementAttributesPreRecorder {
 
@@ -48,9 +49,11 @@ final class ElementAttributesPreRecorder {
 
   private ElementValue record0(ElementValue value) {
     return switch (value) {
-      case Attribute a -> attributeRecorder.record(a);
-
       case BooleanAttribute a -> booleanAttributeRecorder.record(a);
+
+      case ClassName attr -> attributeRecorder.record(attr);
+
+      case Id attr -> attributeRecorder.record(attr);
 
       default -> null;
     };

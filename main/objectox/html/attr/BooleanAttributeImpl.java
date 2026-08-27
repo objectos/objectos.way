@@ -16,19 +16,14 @@
 package objectox.html.attr;
 
 import java.util.Objects;
-import objectos.html.BooleanAttribute;
+import objectos.html.markup.BooleanAttribute;
 
-public record ObjectoxBooleanAttribute(AttributeName attributeName)
+public record BooleanAttributeImpl(AttributeName attributeName)
     implements
     BooleanAttribute {
 
-  public ObjectoxBooleanAttribute {
+  public BooleanAttributeImpl {
     Objects.requireNonNull(attributeName, "attributeName == null");
-  }
-
-  @Override
-  public final String name() {
-    return attributeName.name();
   }
 
 }

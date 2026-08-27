@@ -17,6 +17,7 @@ package objectos.html;
 
 import objectos.html.markup.AmbiguousMarkup;
 import objectos.html.markup.AttributeMarkup;
+import objectos.html.markup.BooleanAttribute;
 import objectos.html.markup.ElementMarkup;
 import objectos.html.markup.Fragment0;
 import objectos.html.markup.Fragment1;

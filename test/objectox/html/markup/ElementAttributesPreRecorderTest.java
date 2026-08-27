@@ -17,8 +17,10 @@ package objectox.html.markup;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.html.Attribute;
-import objectos.html.BooleanAttribute;
+import objectos.html.ClassName;
+import objectos.html.Id;
+import objectos.html.Markup;
+import objectos.html.markup.BooleanAttribute;
 import objectox.html.attr.AttributeName;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -39,11 +41,11 @@ public class ElementAttributesPreRecorderTest {
     final ElementAttributesPreRecorder subject;
     subject = new ElementAttributesPreRecorder(attributeRecorder, booleanAttributeRecorder);
 
-    final Attribute title;
-    title = Attribute.of("title", "Hello");
+    final ClassName attr;
+    attr = ClassName.of("block");
 
     final ElementValue[] values;
-    values = new ElementValue[] {title};
+    values = new ElementValue[] {attr};
 
     subject.record(values);
 
@@ -54,8 +56,43 @@ public class ElementAttributesPreRecorderTest {
 
         HtmlSinkY.create(opts -> {
           opts.addByte(HtmlBytes.ATTRIBUTE88);
-          opts.addInt8(AttributeName.TITLE.index());
-          opts.addInt8(opts.addObject("Hello"));
+          opts.addInt8(AttributeName.CLASS.index());
+          opts.addInt8(opts.addObject("block"));
+        })
+    );
+  }
+
+  @Test(description = "AttributeRecorder delegation")
+  public void attribute02() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final AttributeRecorder attributeRecorder;
+    attributeRecorder = new AttributeRecorder(sink);
+
+    final BooleanAttributeRecorder booleanAttributeRecorder;
+    booleanAttributeRecorder = new BooleanAttributeRecorder(sink);
+
+    final ElementAttributesPreRecorder subject;
+    subject = new ElementAttributesPreRecorder(attributeRecorder, booleanAttributeRecorder);
+
+    final Id attr;
+    attr = Id.of("foo");
+
+    final ElementValue[] values;
+    values = new ElementValue[] {attr};
+
+    subject.record(values);
+
+    assertEquals(values[0], new AttributePointer(0));
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.ATTRIBUTE88);
+          opts.addInt8(AttributeName.ID.index());
+          opts.addInt8(opts.addObject("foo"));
         })
     );
   }
@@ -75,7 +112,7 @@ public class ElementAttributesPreRecorderTest {
     subject = new ElementAttributesPreRecorder(attributeRecorder, booleanAttributeRecorder);
 
     final BooleanAttribute checked;
-    checked = BooleanAttribute.of("checked");
+    checked = Markup.checked;
 
     final ElementValue[] values;
     values = new ElementValue[] {checked};

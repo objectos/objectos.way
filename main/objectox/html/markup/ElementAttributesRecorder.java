@@ -15,8 +15,9 @@
  */
 package objectox.html.markup;
 
-import objectos.html.Attribute;
-import objectos.html.BooleanAttribute;
+import objectos.html.ClassName;
+import objectos.html.Id;
+import objectos.html.markup.BooleanAttribute;
 import objectos.html.markup.ElementMarkup;
 import objectos.html.markup.NoOpMarkup;
 import objectos.html.markup.RawMarkup;
@@ -70,15 +71,17 @@ final class ElementAttributesRecorder {
     return switch (value) {
       case AmbiguousPointer(int v) -> ambiguousAttributeRecorder.record(elementName, size, v);
 
-      case Attribute _ -> throw new ObjectAttributeDetected();
-
       case AttributePointer(int v) -> valueRecorder.record(size, v);
 
       case BooleanAttribute _ -> throw new ObjectAttributeDetected();
 
+      case ClassName _ -> throw new ObjectAttributeDetected();
+
       case ElementMarkup _ -> 0;
 
       case FragmentPointer(int v) -> fragmentAttributeRecorder.record(elementName, size, v);
+
+      case Id _ -> throw new ObjectAttributeDetected();
 
       case NoOpMarkup _ -> 0;
 

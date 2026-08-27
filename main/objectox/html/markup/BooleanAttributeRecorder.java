@@ -16,9 +16,9 @@
 package objectox.html.markup;
 
 import java.util.Objects;
-import objectos.html.BooleanAttribute;
+import objectos.html.markup.BooleanAttribute;
 import objectox.html.attr.AttributeName;
-import objectox.html.attr.ObjectoxBooleanAttribute;
+import objectox.html.attr.BooleanAttributeImpl;
 
 final class BooleanAttributeRecorder {
 
@@ -49,8 +49,8 @@ final class BooleanAttributeRecorder {
     final BooleanAttribute a;
     a = Objects.requireNonNull(value, "value == null");
 
-    final ObjectoxBooleanAttribute impl;
-    impl = (ObjectoxBooleanAttribute) a;
+    final BooleanAttributeImpl impl;
+    impl = (BooleanAttributeImpl) a;
 
     final AttributeName attributeName;
     attributeName = impl.attributeName();

@@ -13,28 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html.attr;
+package objectos.html.markup;
 
-import java.util.Objects;
-import objectos.script.JsAction;
+import objectox.html.attr.BooleanAttributeImpl;
 
-public final class JsActionAttribute extends ObjectoxAttribute {
-
-  public final JsAction action;
-
-  public JsActionAttribute(AttributeName attributeName, JsAction action) {
-    super(attributeName);
-
-    this.action = Objects.requireNonNull(action, "action == null");
-  }
-
-  public static JsActionAttribute of0(AttributeName name, JsAction action) {
-    return new JsActionAttribute(name, action);
-  }
-
-  @Override
-  public final String value() {
-    return action.toString();
-  }
-
-}
+/// Represents a boolean HTML attribute.
+public sealed interface BooleanAttribute
+    extends
+    RegularElementValue,
+    VoidElementValue
+    permits
+    BooleanAttributeImpl {}

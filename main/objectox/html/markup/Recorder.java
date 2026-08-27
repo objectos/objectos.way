@@ -15,9 +15,8 @@
  */
 package objectox.html.markup;
 
-import objectos.html.Attribute;
-import objectos.html.BooleanAttribute;
 import objectos.html.markup.AttributeMarkup;
+import objectos.html.markup.BooleanAttribute;
 import objectos.html.markup.Fragment0;
 import objectos.html.markup.Fragment1;
 import objectos.html.markup.Fragment2;
@@ -158,10 +157,6 @@ public final class Recorder {
 
   public final AmbiguousPointer ambiguous(AmbiguousName name, String text) {
     return ambiguousRecorder.record(name, text);
-  }
-
-  public final AttributePointer attribute(Attribute attribute) {
-    return attributeRecorder.record(attribute);
   }
 
   public final AttributePointer attribute(AttributeName name, JsAction value) {

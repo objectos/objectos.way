@@ -15,23 +15,27 @@
  */
 package objectox.html.attr;
 
-import java.util.Objects;
+import objectos.html.ClassName;
+import objectos.html.Id;
 
-public final class RegularAttribute extends ObjectoxAttribute {
+public sealed abstract class AttributeObject
+    permits
+    ClassName,
+    Id {
+
+  public final AttributeName attributeName;
 
   public final String value;
 
-  public RegularAttribute(AttributeName attributeName, String value) {
-    super(attributeName);
+  protected AttributeObject(AttributeName attributeName, String value) {
+    this.attributeName = attributeName;
 
-    this.value = Objects.requireNonNull(value, "value == null");
+    this.value = value;
   }
 
-  public static RegularAttribute of(AttributeName name, String value) {
-    return new RegularAttribute(name, value);
-  }
-
-  @Override
+  /// Returns the attribute value.
+  ///
+  /// @return the attribute value
   public final String value() {
     return value;
   }

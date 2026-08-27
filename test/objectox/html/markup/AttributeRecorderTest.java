@@ -18,12 +18,12 @@ package objectox.html.markup;
 import static org.testng.Assert.assertEquals;
 
 import java.util.stream.IntStream;
-import objectos.html.Attribute;
 import objectos.html.Id;
 import objectos.internal.Util;
 import objectos.script.Js;
 import objectos.script.JsAction;
 import objectox.html.attr.AttributeName;
+import objectox.html.attr.AttributeObject;
 import org.testng.annotations.Test;
 
 public class AttributeRecorderTest {
@@ -220,7 +220,7 @@ public class AttributeRecorderTest {
     final AttributeRecorder subject;
     subject = new AttributeRecorder(sink);
 
-    final Attribute value;
+    final Id value;
     value = Id.of("foo");
 
     final AttributePointer res;
@@ -241,7 +241,7 @@ public class AttributeRecorderTest {
 
   @Test(description = "Attribute object value should be escaped")
   public void object02() {
-    final Attribute value;
+    final Id value;
     value = Id.of("A&B");
 
     final HtmlSink sink;
@@ -311,7 +311,7 @@ public class AttributeRecorderTest {
     return sink;
   }
 
-  private HtmlSink record(Attribute value) {
+  private HtmlSink record(AttributeObject value) {
     final HtmlSink sink;
     sink = new HtmlSink();
 

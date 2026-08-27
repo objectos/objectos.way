@@ -18,8 +18,8 @@ package objectox.html.markup;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertThrows;
 
-import objectos.html.BooleanAttribute;
 import objectos.html.Markup;
+import objectos.html.markup.BooleanAttribute;
 import objectox.html.attr.AttributeName;
 import org.testng.annotations.Test;
 

@@ -15,8 +15,9 @@
  */
 package objectox.html.markup;
 
-import objectos.html.Attribute;
-import objectos.html.BooleanAttribute;
+import objectos.html.ClassName;
+import objectos.html.Id;
+import objectos.html.markup.BooleanAttribute;
 import objectos.html.markup.NoOpMarkup;
 import objectox.html.IntSize;
 
@@ -56,15 +57,17 @@ final class ElementChildrenRecorder {
     return switch (value) {
       case AmbiguousPointer(int v) -> ambiguousChildRecorder.record(size, v);
 
-      case Attribute _ -> throw new IllegalStateException("Object attribute in children");
-
       case AttributePointer _ -> 0;
 
-      case BooleanAttribute _ -> throw new IllegalStateException("Object attribute in children");
+      case BooleanAttribute _ -> 0;
+
+      case ClassName _ -> 0;
 
       case ElementPointer(int v) -> valueRecorder.record(size, v);
 
       case FragmentPointer(int v) -> fragmentChildRecorder.record(size, v);
+
+      case Id _ -> 0;
 
       case NoOpMarkup _ -> 0;
 

@@ -16,20 +16,21 @@
 package objectos.html;
 
 import java.util.Objects;
-import objectox.html.attr.ObjectoxAttribute;
+import objectos.html.markup.RegularElementValue;
+import objectos.html.markup.VoidElementValue;
+import objectox.html.attr.AttributeObject;
 import objectox.html.attr.AttributeName;
 
 /// Represents an HTML `class` attribute and its value.
 public final class ClassName
     extends
-    ObjectoxAttribute {
-
-  private final String value;
+    AttributeObject
+    implements
+    RegularElementValue,
+    VoidElementValue {
 
   private ClassName(String value) {
-    super(AttributeName.CLASS);
-
-    this.value = value;
+    super(AttributeName.CLASS, value);
   }
 
   /**
@@ -75,9 +76,10 @@ public final class ClassName
    * @return a newly constructed {@code ClassName} instance
    */
   public static ClassName of(String value) {
-    Objects.requireNonNull(value, "value == null");
+    final String v;
+    v = Objects.requireNonNull(value, "value == null");
 
-    return new ClassName(value);
+    return new ClassName(v);
   }
 
   /**
@@ -117,16 +119,6 @@ public final class ClassName
     result = Html.formatAttrValue(value);
 
     return new ClassName(result);
-  }
-
-  /**
-   * Returns the {@code class} value.
-   *
-   * @return the {@code class} value
-   */
-  @Override
-  public final String value() {
-    return value;
   }
 
 }

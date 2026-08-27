@@ -17,8 +17,10 @@ package objectox.html.markup;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.html.Attribute;
-import objectos.html.BooleanAttribute;
+import objectos.html.ClassName;
+import objectos.html.Id;
+import objectos.html.Markup;
+import objectos.html.markup.BooleanAttribute;
 import objectox.html.AmbiguousName;
 import objectox.html.IntSize;
 import objectox.html.elem.ElementName;
@@ -125,8 +127,31 @@ public class ElementAttributesRecorderTest {
     final IntSize size;
     size = IntSize.BIT8;
 
-    final Attribute attribute;
-    attribute = Attribute.of("id", "foo");
+    final ClassName attribute;
+    attribute = ClassName.of("block");
+
+    subject.record(elementName, size, attribute);
+  }
+
+  @Test(
+      description = "Object attribute detected",
+      expectedExceptions = ObjectAttributeDetected.class
+  )
+  public void attribute03() {
+    final HtmlSink sink;
+    sink = HtmlSinkY.create(_ -> {});
+
+    final ElementAttributesRecorder subject;
+    subject = create(sink);
+
+    final ElementName elementName;
+    elementName = ElementName.DIV;
+
+    final IntSize size;
+    size = IntSize.BIT8;
+
+    final Id attribute;
+    attribute = Id.of("foo");
 
     subject.record(elementName, size, attribute);
   }
@@ -185,7 +210,7 @@ public class ElementAttributesRecorderTest {
     size = IntSize.BIT8;
 
     final BooleanAttribute attribute;
-    attribute = BooleanAttribute.of("checked");
+    attribute = Markup.autofocus;
 
     subject.record(elementName, size, attribute);
   }

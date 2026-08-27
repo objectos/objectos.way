@@ -15,7 +15,7 @@
  */
 package objectox.html.attr;
 
-import objectos.html.BooleanAttribute;
+import objectos.html.markup.BooleanAttribute;
 
 public record AttributeName(int index, String name) {
 
@@ -237,7 +237,7 @@ public record AttributeName(int index, String name) {
   }
 
   public final BooleanAttribute toBooleanAttribute() {
-    return new ObjectoxBooleanAttribute(this);
+    return new BooleanAttributeImpl(this);
   }
 
 }

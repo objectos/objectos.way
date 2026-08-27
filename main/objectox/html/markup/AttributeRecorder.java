@@ -16,10 +16,9 @@
 package objectox.html.markup;
 
 import java.util.Objects;
-import objectos.html.Attribute;
 import objectos.script.JsAction;
 import objectox.html.IntSize;
-import objectox.html.attr.ObjectoxAttribute;
+import objectox.html.attr.AttributeObject;
 import objectox.html.attr.AttributeName;
 import objectox.html.attr.AttributeValueEscaper;
 
@@ -41,18 +40,15 @@ final class AttributeRecorder {
     return record(AttributeName.CLASS, formatted);
   }
 
-  public final AttributePointer record(Attribute value) {
-    final Attribute a;
+  public final AttributePointer record(AttributeObject value) {
+    final AttributeObject a;
     a = Objects.requireNonNull(value, "value == null");
 
-    final ObjectoxAttribute impl;
-    impl = (ObjectoxAttribute) a;
-
     final AttributeName attributeName;
-    attributeName = impl.attributeName;
+    attributeName = a.attributeName;
 
     final String v;
-    v = value.value();
+    v = a.value();
 
     return record(attributeName, v);
   }

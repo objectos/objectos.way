@@ -15,8 +15,8 @@
  */
 package objectos.html.markup;
 
-import objectos.html.Attribute;
-import objectos.html.BooleanAttribute;
+import objectos.html.ClassName;
+import objectos.html.Id;
 import objectox.html.markup.ElementValue;
 
 /// Represents an object allowed as an argument to an HTML non-void element
@@ -26,11 +26,12 @@ public sealed interface RegularElementValue
     ElementValue
     permits
     AmbiguousMarkup,
-    Attribute,
     AttributeMarkup,
     BooleanAttribute,
+    ClassName,
     ElementMarkup,
     FragmentMarkup,
+    Id,
     NoOpMarkup,
     RawMarkup,
     TextMarkup {}
