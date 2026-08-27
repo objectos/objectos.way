@@ -44,6 +44,12 @@ final class StartState implements State {
         case HtmlBytes.xATTRIBUTE824 -> { ctx.skip(1 + 1 + 3); continue; }
 
         case HtmlBytes.xBOOLEAN8 -> { ctx.skip(1 + 1); continue; }
+
+        case HtmlBytes.xJSACTION88 -> { ctx.skip(1 + 1 + 1); continue; }
+
+        case HtmlBytes.xJSACTION816 -> { ctx.skip(1 + 1 + 2); continue; }
+
+        case HtmlBytes.xJSACTION824 -> { ctx.skip(1 + 1 + 3); continue; }
       }
 
       break;

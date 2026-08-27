@@ -23,6 +23,7 @@ import objectos.html.stream.RenderAttribute;
 import objectos.html.stream.RenderBooleanAttribute;
 import objectos.html.stream.RenderDoctype;
 import objectos.html.stream.RenderEndTag;
+import objectos.html.stream.RenderJsActionAttribute;
 import objectos.html.stream.RenderText;
 
 public final class FormatterPojo implements Formatter {
@@ -80,6 +81,8 @@ public final class FormatterPojo implements Formatter {
       case RenderAttribute attr -> renderAttributeFormatter.format(attr, out);
 
       case RenderBooleanAttribute attr -> renderBooleanAttributeFormatter.format(attr, out);
+
+      case RenderJsActionAttribute _ -> throw new UnsupportedOperationException("Implement me");
 
       case RenderDoctype doctype -> renderDoctypeFormatter.format(doctype, out);
 

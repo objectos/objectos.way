@@ -18,6 +18,8 @@ package objectox.html.stream;
 import static org.testng.Assert.assertEquals;
 
 import objectos.html.stream.EndStartTagKind;
+import objectos.script.Js;
+import objectos.script.JsAction;
 import objectox.html.IntSize;
 import objectox.html.attr.AttributeName;
 import objectox.html.elem.ElementName;
@@ -429,6 +431,98 @@ public class ScanRegularElementAttributeStateTest {
       opts.addByte(HtmlBytes.xATTRIBUTE88);
       opts.addInt8(AttributeName.ID.index());
       opts.addInt8(opts.addObject("foo"));
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.DIV.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.DIV.index());
+
+      opts.push(new ScanDocumentNodeFrame(7));
+      opts.push(new ScanRegularElementAttributeFrame(8, IntSize.BIT8, 1, 1));
+    });
+
+    final ScanRegularElementAttributeState subject;
+    subject = new ScanRegularElementAttributeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new RenderEndTagState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+          opts.result(EndStartTagEvent.of(EndStartTagKind.EMPTY_ELEMENT));
+          opts.push(new ScanDocumentNodeFrame(8));
+        })
+    );
+  }
+
+  @Test(description = """
+  regular elem:
+  - 1 js action attr (object) (8bit)
+  - no children
+  """)
+  public void regularElement05() {
+    final JsAction action;
+    action = Js.noop();
+
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xJSACTION88);
+      opts.addInt8(AttributeName.ONCLICK.index());
+      opts.addInt8(opts.addObject(action));
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.DIV.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.DIV.index());
+
+      opts.push(new ScanDocumentNodeFrame(7));
+      opts.push(new ScanRegularElementAttributeFrame(7, IntSize.BIT8, 1));
+    });
+
+    final ScanRegularElementAttributeState subject;
+    subject = new ScanRegularElementAttributeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new RenderJsActionAttributeState(ctx, IntSize.BIT8, IntSize.BIT8));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(new ScanDocumentNodeFrame(7));
+          opts.push(new ScanRegularElementAttributeFrame(8, IntSize.BIT8, 1, 1));
+          opts.push(new JumpFrame(1));
+        })
+    );
+  }
+
+  @Test(description = """
+  regular elem:
+  - 1 js action attr (object) (8bit)
+  - no children
+  """)
+  public void regularElement05b() {
+    final JsAction action;
+    action = Js.noop();
+
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xJSACTION88);
+      opts.addInt8(AttributeName.ONCLICK.index());
+      opts.addInt8(opts.addObject(action));
       opts.addByte(HtmlBytes.ELEMSTR8);
       opts.addInt8(ElementName.DIV.index());
       opts.addByte(HtmlBytes.VALUES8);

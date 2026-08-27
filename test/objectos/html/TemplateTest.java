@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import objectos.html.markup.ElementMarkup;
 import objectos.http.Content;
+import objectos.script.Js;
 import org.testng.annotations.Test;
 
 public class TemplateTest {
@@ -68,7 +69,7 @@ public class TemplateTest {
   - 1 reg attr (markup) (8bit)
   - no children
   """)
-  public void regularElement02_8bit() {
+  public void regularElement02() {
     test(
         new Template() {
           @Override
@@ -119,6 +120,26 @@ public class TemplateTest {
 
         """
         <div id="foo"></div>
+        """
+    );
+  }
+
+  @Test(description = """
+  regular elem:
+  - 1 js action attr (object) (8bit)
+  - no children
+  """)
+  public void regularElement05() {
+    test(
+        new Template() {
+          @Override
+          protected final void render() {
+            div(onclick(Js.noop()));
+          }
+        },
+
+        """
+        <div onclick='["NO"]'></div>
         """
     );
   }

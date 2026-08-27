@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.HexFormat;
 import java.util.Objects;
 import objectos.html.stream.Event;
+import objectos.script.JsAction;
 import objectos.internal.Util;
 import objectox.html.IntSize;
 
@@ -110,6 +111,13 @@ class Ctx {
 
       case BIT24 -> toInt(startIndex, 16) | toInt(startIndex + 1, 8) | toInt(startIndex + 2, 0);
     };
+  }
+
+  public final JsAction objJsAction(int index) {
+    final Object o;
+    o = objects[index];
+
+    return (JsAction) o;
   }
 
   public final String objString(int index) {

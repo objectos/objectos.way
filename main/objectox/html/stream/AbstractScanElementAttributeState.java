@@ -71,6 +71,12 @@ sealed abstract class AbstractScanElementAttributeState
 
       case HtmlBytes.xBOOLEAN8 -> new RenderBooleanAttributeState(ctx, IntSize.BIT8);
 
+      case HtmlBytes.xJSACTION88 -> new RenderJsActionAttributeState(ctx, IntSize.BIT8, IntSize.BIT8);
+
+      case HtmlBytes.xJSACTION816 -> new RenderJsActionAttributeState(ctx, IntSize.BIT8, IntSize.BIT16);
+
+      case HtmlBytes.xJSACTION824 -> new RenderJsActionAttributeState(ctx, IntSize.BIT8, IntSize.BIT24);
+
       default -> computeNonAttribute(code);
     };
   }

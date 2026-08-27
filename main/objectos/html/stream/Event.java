@@ -24,4 +24,5 @@ public sealed interface Event
     RenderBooleanAttribute,
     RenderDoctype,
     RenderEndTag,
+    RenderJsActionAttribute,
     RenderText {}
