@@ -239,7 +239,7 @@ public class AttributeRecorderTest {
     );
   }
 
-  @Test(description = "Attribute object value should be escaped")
+  @Test(description = "Attribute object value should be recorded raw")
   public void object02() {
     final Id value;
     value = Id.of("A&B");
@@ -253,7 +253,7 @@ public class AttributeRecorderTest {
         HtmlSinkY.create(opts -> {
           opts.addByte(HtmlBytes.ATTRIBUTE88);
           opts.addInt8(AttributeName.ID.index());
-          opts.addInt8(opts.addObject("A&amp;B"));
+          opts.addInt8(opts.addObject("A&B"));
         })
     );
   }
@@ -280,7 +280,7 @@ public class AttributeRecorderTest {
     assertEquals(res.value(), 3);
   }
 
-  @Test(description = "value should be escaped")
+  @Test(description = "value should be recorded raw")
   public void value01() {
     final AttributeName name;
     name = AttributeName.ID;
@@ -288,16 +288,13 @@ public class AttributeRecorderTest {
     final String value;
     value = "A&B";
 
-    final String escaped;
-    escaped = "A&amp;B";
-
     assertEquals(
         record(name, value),
 
         HtmlSinkY.create(opts -> {
           opts.addByte(HtmlBytes.ATTRIBUTE88);
           opts.addInt8(name.index());
-          opts.addInt8(opts.addObject(escaped));
+          opts.addInt8(opts.addObject(value));
         })
     );
   }

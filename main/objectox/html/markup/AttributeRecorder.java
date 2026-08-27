@@ -20,7 +20,6 @@ import objectos.script.JsAction;
 import objectox.html.IntSize;
 import objectox.html.attr.AttributeObject;
 import objectox.html.attr.AttributeName;
-import objectox.html.attr.AttributeValueEscaper;
 
 final class AttributeRecorder {
 
@@ -57,13 +56,7 @@ final class AttributeRecorder {
     final String v;
     v = Objects.requireNonNull(value, "value == null");
 
-    final AttributeValueEscaper escaper;
-    escaper = new AttributeValueEscaper(v);
-
-    final String escaped;
-    escaped = escaper.escape();
-
-    return record0(attributeName, false, escaped);
+    return record0(attributeName, false, v);
   }
 
   public final AttributePointer record(String name, String value) {
