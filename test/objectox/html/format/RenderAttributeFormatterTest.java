@@ -38,8 +38,12 @@ public class RenderAttributeFormatterTest {
   }
 
   private String format(RenderAttributeFormatter subject, String text) {
+    return format(subject, "value", text);
+  }
+
+  private String format(RenderAttributeFormatter subject, String attrValue, String text) {
     final RenderAttribute attr;
-    attr = RenderAttributeEvent.of(AttributeName.ID, "value");
+    attr = RenderAttributeEvent.of(AttributeName.ID, attrValue);
 
     final Output out;
     out = OutputY.create(opts -> {
@@ -93,6 +97,51 @@ public class RenderAttributeFormatterTest {
         format(subject, "text"),
 
         "text id=\"value\""
+    );
+  }
+
+  @Test(description = "double quotation mark escapes the attribute value")
+  public void escape01() {
+    final QuotationMarkStyle quotationMark;
+    quotationMark = QuotationMarkStyle.doubleMark();
+
+    final RenderAttributeFormatter subject;
+    subject = new RenderAttributeFormatter(quotationMark);
+
+    assertEquals(
+        format(subject, "A&B", ""),
+
+        " id=\"A&amp;B\""
+    );
+  }
+
+  @Test(description = "double quotation mark escapes double quotes in the attribute value")
+  public void escape02() {
+    final QuotationMarkStyle quotationMark;
+    quotationMark = QuotationMarkStyle.doubleMark();
+
+    final RenderAttributeFormatter subject;
+    subject = new RenderAttributeFormatter(quotationMark);
+
+    assertEquals(
+        format(subject, "A\"B", ""),
+
+        " id=\"A&quot;B\""
+    );
+  }
+
+  @Test(description = "single quotation mark escapes single quotes in the attribute value")
+  public void escape03() {
+    final QuotationMarkStyle quotationMark;
+    quotationMark = QuotationMarkStyle.single();
+
+    final RenderAttributeFormatter subject;
+    subject = new RenderAttributeFormatter(quotationMark);
+
+    assertEquals(
+        format(subject, "A'B", ""),
+
+        " id='A&#39;B'"
     );
   }
 

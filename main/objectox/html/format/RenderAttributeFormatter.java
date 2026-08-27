@@ -37,7 +37,13 @@ final class RenderAttributeFormatter {
       case QuotationMarkOption o -> {
         out.append(o.mark);
 
-        out.append(attr.value());
+        final String value;
+        value = attr.value();
+
+        final String escaped;
+        escaped = o.escape(value);
+
+        out.append(escaped);
 
         out.append(o.mark);
       }
