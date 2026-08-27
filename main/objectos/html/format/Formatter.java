@@ -17,10 +17,10 @@ package objectos.html.format;
 
 import java.util.function.Consumer;
 import objectox.html.format.FormatterBuilder;
-import objectox.html.format.FormatterPojo;
+import objectox.html.format.FormatterImpl;
 
 /// Formats the string representation of a compiled Objectos HTML document.
-public sealed interface Formatter permits FormatterPojo {
+public sealed interface Formatter permits FormatterImpl {
 
   /// Returns a new formatter instance with the specified options.
   ///

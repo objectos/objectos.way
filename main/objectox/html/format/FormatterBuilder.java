@@ -25,6 +25,7 @@ import objectos.html.format.RenderAttributeOptions;
 import objectos.html.format.RenderBooleanAttributeOptions;
 import objectos.html.format.RenderDoctypeOptions;
 import objectos.html.format.RenderEndTagOptions;
+import objectos.html.format.RenderJsActionAttributeOptions;
 import objectos.html.format.RenderTextOptions;
 
 public final class FormatterBuilder implements FormatterOptions {
@@ -41,6 +42,8 @@ public final class FormatterBuilder implements FormatterOptions {
 
   private final RenderEndTagFormatterBuilder renderEndTagFormatterBuilder = new RenderEndTagFormatterBuilder();
 
+  private final RenderJsActionAttributeFormatterBuilder renderJsActionAttributeFormatterBuilder = new RenderJsActionAttributeFormatterBuilder();
+
   private final RenderTextFormatterBuilder renderTextFormatterBuilder = new RenderTextFormatterBuilder();
 
   private String indentationText = "  ";
@@ -56,7 +59,7 @@ public final class FormatterBuilder implements FormatterOptions {
     final Indentation indentation;
     indentation = new Indentation(indentationText);
 
-    return new FormatterPojo(
+    return new FormatterImpl(
         beginStartTagFormatterBuilder.build(indentation),
 
         endStartTagFormatterBuilder.build(indentation, newLine),
@@ -68,6 +71,8 @@ public final class FormatterBuilder implements FormatterOptions {
         renderDoctypeFormatterBuilder.build(newLine),
 
         renderEndTagFormatterBuilder.build(indentation, newLine),
+
+        renderJsActionAttributeFormatterBuilder.build(),
 
         renderTextFormatterBuilder.build(indentation, newLine)
     );
@@ -121,6 +126,11 @@ public final class FormatterBuilder implements FormatterOptions {
   @Override
   public final void renderEndTag(Consumer<? super RenderEndTagOptions> opts) {
     opts.accept(renderEndTagFormatterBuilder);
+  }
+
+  @Override
+  public final void renderJsActionAttribute(Consumer<? super RenderJsActionAttributeOptions> opts) {
+    opts.accept(renderJsActionAttributeFormatterBuilder);
   }
 
   @Override

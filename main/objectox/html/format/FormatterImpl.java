@@ -26,7 +26,7 @@ import objectos.html.stream.RenderEndTag;
 import objectos.html.stream.RenderJsActionAttribute;
 import objectos.html.stream.RenderText;
 
-public final class FormatterPojo implements Formatter {
+public final class FormatterImpl implements Formatter {
 
   private final BeginStartTagFormatter beginStartTagFormatter;
 
@@ -40,9 +40,11 @@ public final class FormatterPojo implements Formatter {
 
   private final RenderEndTagFormatter renderEndTagFormatter;
 
+  private final RenderJsActionAttributeFormatter renderJsActionAttributeFormatter;
+
   private final RenderTextFormatter renderTextFormatter;
 
-  FormatterPojo(
+  FormatterImpl(
       BeginStartTagFormatter beginStartTagFormatter,
 
       EndStartTagFormatter endStartTagFormatter,
@@ -54,6 +56,8 @@ public final class FormatterPojo implements Formatter {
       RenderDoctypeFormatter renderDoctypeFormatter,
 
       RenderEndTagFormatter renderEndTagFormatter,
+
+      RenderJsActionAttributeFormatter renderJsActionAttributeFormatter,
 
       RenderTextFormatter renderTextFormatter
   ) {
@@ -69,6 +73,8 @@ public final class FormatterPojo implements Formatter {
 
     this.renderEndTagFormatter = renderEndTagFormatter;
 
+    this.renderJsActionAttributeFormatter = renderJsActionAttributeFormatter;
+
     this.renderTextFormatter = renderTextFormatter;
   }
 
@@ -82,7 +88,7 @@ public final class FormatterPojo implements Formatter {
 
       case RenderBooleanAttribute attr -> renderBooleanAttributeFormatter.format(attr, out);
 
-      case RenderJsActionAttribute _ -> throw new UnsupportedOperationException("Implement me");
+      case RenderJsActionAttribute attr -> renderJsActionAttributeFormatter.format(attr, out);
 
       case RenderDoctype doctype -> renderDoctypeFormatter.format(doctype, out);
 

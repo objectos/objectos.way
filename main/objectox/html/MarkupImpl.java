@@ -37,26 +37,26 @@ import objectox.html.elem.ElementName;
 import objectox.html.markup.HtmlSink;
 import objectox.html.markup.Recorder;
 
-public final class ObjectoxMarkup implements Markup {
+public final class MarkupImpl implements Markup {
 
   private final Recorder recorder;
 
-  private ObjectoxMarkup(Recorder recorder) {
+  private MarkupImpl(Recorder recorder) {
     this.recorder = recorder;
   }
 
-  public static ObjectoxMarkup create() {
+  public static MarkupImpl create() {
     final Recorder recorder;
     recorder = Recorder.create();
 
-    return new ObjectoxMarkup(recorder);
+    return new MarkupImpl(recorder);
   }
 
-  public static ObjectoxMarkup of(HtmlSink sink) {
+  public static MarkupImpl of(HtmlSink sink) {
     final Recorder recorder;
     recorder = Recorder.of(sink);
 
-    return new ObjectoxMarkup(recorder);
+    return new MarkupImpl(recorder);
   }
 
   /// Encodes a boolean attribute with the specified name.

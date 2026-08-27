@@ -19,12 +19,12 @@ import java.util.Iterator;
 import java.util.Set;
 import objectox.html.elem.ElementSpec;
 
-public class MarkupPojoGen {
+public class MarkupImplGen {
 
   private final StringBuilder methods = new StringBuilder();
 
   public static void main(String[] args) {
-    System.out.println(new MarkupPojoGen());
+    System.out.println(new MarkupImplGen());
   }
 
   @Override

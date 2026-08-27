@@ -31,7 +31,7 @@ import objectos.html.markup.TextMarkup;
 import objectos.html.markup.VoidElementValue;
 import objectos.script.JsAction;
 import objectox.html.AmbiguousName;
-import objectox.html.ObjectoxHtml;
+import objectox.html.HtmlImpl;
 import objectox.html.attr.AttributeName;
 import objectox.html.elem.ElementName;
 
@@ -192,7 +192,7 @@ public final class Recorder {
     return booleanAttributeRecorder.record(name);
   }
 
-  public final ObjectoxHtml compile() {
+  public final HtmlImpl compile() {
     return documentCompiler.compile();
   }
 

@@ -31,17 +31,17 @@ import java.util.stream.StreamSupport;
 import objectos.html.Html;
 import objectos.html.format.Formatter;
 import objectos.html.stream.Event;
-import objectox.html.format.FormatterPojo;
+import objectox.html.format.FormatterImpl;
 import objectox.html.markup.HtmlSink;
 import objectox.html.stream.Player;
 
-public final class ObjectoxHtml implements Html {
+public final class HtmlImpl implements Html {
 
   private final byte[] code;
 
   private final Object[] objects;
 
-  public ObjectoxHtml(HtmlSink sink) {
+  public HtmlImpl(HtmlSink sink) {
     code = sink.code();
 
     objects = sink.objects();
@@ -59,7 +59,7 @@ public final class ObjectoxHtml implements Html {
 
   @Override
   public final boolean equals(Object obj) {
-    return obj == this || obj instanceof ObjectoxHtml that
+    return obj == this || obj instanceof HtmlImpl that
         && Arrays.equals(code, that.code)
         && Arrays.equals(objects, that.objects);
   }
@@ -83,8 +83,8 @@ public final class ObjectoxHtml implements Html {
     final Formatter f;
     f = Objects.requireNonNull(formatter, "formatter == null");
 
-    final FormatterPojo pojo;
-    pojo = (FormatterPojo) f;
+    final FormatterImpl pojo;
+    pojo = (FormatterImpl) f;
 
     final Player player;
     player = Player.of(code, objects);

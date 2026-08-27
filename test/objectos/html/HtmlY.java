@@ -16,7 +16,7 @@
 package objectos.html;
 
 import java.util.function.Consumer;
-import objectox.html.ObjectoxHtml;
+import objectox.html.HtmlImpl;
 import objectox.html.markup.HtmlSink;
 
 public final class HtmlY {
@@ -30,7 +30,7 @@ public final class HtmlY {
 
     opts.accept(sink);
 
-    return new ObjectoxHtml(sink);
+    return new HtmlImpl(sink);
   }
 
 }

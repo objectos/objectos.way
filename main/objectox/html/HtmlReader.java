@@ -20,7 +20,7 @@ import java.io.Reader;
 import java.util.Iterator;
 import java.util.Objects;
 import objectos.html.stream.Event;
-import objectox.html.format.FormatterPojo;
+import objectox.html.format.FormatterImpl;
 import objectox.html.format.Output;
 
 public final class HtmlReader extends Reader {
@@ -29,11 +29,11 @@ public final class HtmlReader extends Reader {
 
   private final Iterator<Event> events;
 
-  private final FormatterPojo formatter;
+  private final FormatterImpl formatter;
 
   private String overflow = "";
 
-  HtmlReader(Iterator<Event> events, FormatterPojo formatter) {
+  HtmlReader(Iterator<Event> events, FormatterImpl formatter) {
     this.events = events;
 
     this.formatter = formatter;

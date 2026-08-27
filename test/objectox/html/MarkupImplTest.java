@@ -28,15 +28,15 @@ import objectox.html.markup.HtmlSink;
 import objectox.html.markup.HtmlSinkY;
 import org.testng.annotations.Test;
 
-public class ObjectoxMarkupTest {
+public class MarkupImplTest {
 
   @Test(description = """
   document:
   - empty
   """)
   public void document01() {
-    final ObjectoxMarkup subject;
-    subject = ObjectoxMarkup.create();
+    final MarkupImpl subject;
+    subject = MarkupImpl.create();
 
     assertEquals(
         subject.unwrap(),
@@ -51,8 +51,8 @@ public class ObjectoxMarkupTest {
   - no children
   """)
   public void regularElement01() {
-    final ObjectoxMarkup subject;
-    subject = ObjectoxMarkup.create();
+    final MarkupImpl subject;
+    subject = MarkupImpl.create();
 
     subject.div();
 
@@ -76,8 +76,8 @@ public class ObjectoxMarkupTest {
   - no children
   """)
   public void regularElement02_08bit() {
-    final ObjectoxMarkup subject;
-    subject = ObjectoxMarkup.create();
+    final MarkupImpl subject;
+    subject = MarkupImpl.create();
 
     subject.div(
         subject.contenteditable("false")
@@ -107,8 +107,8 @@ public class ObjectoxMarkupTest {
   - no children
   """)
   public void regularElement02_16bit() {
-    final ObjectoxMarkup subject;
-    subject = ObjectoxMarkupY.create(opts -> {
+    final MarkupImpl subject;
+    subject = MarkupImplY.create(opts -> {
       opts.objects(IntSize.BIT16);
     });
 
@@ -142,8 +142,8 @@ public class ObjectoxMarkupTest {
   - no children
   """)
   public void regularElement02_24bit() {
-    final ObjectoxMarkup subject;
-    subject = ObjectoxMarkupY.create(opts -> {
+    final MarkupImpl subject;
+    subject = MarkupImplY.create(opts -> {
       opts.objects(IntSize.BIT24);
     });
 
@@ -177,8 +177,8 @@ public class ObjectoxMarkupTest {
   - no children
   """)
   public void regularElement03() {
-    final ObjectoxMarkup subject;
-    subject = ObjectoxMarkup.create();
+    final MarkupImpl subject;
+    subject = MarkupImpl.create();
 
     subject.span(
         Markup.autofocus
@@ -207,8 +207,8 @@ public class ObjectoxMarkupTest {
   - no children
   """)
   public void regularElement04() {
-    final ObjectoxMarkup subject;
-    subject = ObjectoxMarkup.create();
+    final MarkupImpl subject;
+    subject = MarkupImpl.create();
 
     subject.div(
         Id.of("foo")
@@ -238,8 +238,8 @@ public class ObjectoxMarkupTest {
   - no children
   """)
   public void regularElement05() {
-    final ObjectoxMarkup subject;
-    subject = ObjectoxMarkup.create();
+    final MarkupImpl subject;
+    subject = MarkupImpl.create();
 
     final JsAction action;
     action = Js.noop();
@@ -271,8 +271,8 @@ public class ObjectoxMarkupTest {
   - no attrs
   """)
   public void voidElement01() {
-    final ObjectoxMarkup subject;
-    subject = ObjectoxMarkup.create();
+    final MarkupImpl subject;
+    subject = MarkupImpl.create();
 
     subject.hr();
 
@@ -293,8 +293,8 @@ public class ObjectoxMarkupTest {
   - 1 reg attr (markup) (8bit)
   """)
   public void voidElement02_08bit() {
-    final ObjectoxMarkup subject;
-    subject = ObjectoxMarkupY.create(opts -> {
+    final MarkupImpl subject;
+    subject = MarkupImplY.create(opts -> {
       opts.objects(IntSize.BIT8);
     });
 
@@ -325,8 +325,8 @@ public class ObjectoxMarkupTest {
   - 1 reg attr (markup) (16bit)
   """)
   public void voidElement02_16bit() {
-    final ObjectoxMarkup subject;
-    subject = ObjectoxMarkupY.create(opts -> {
+    final MarkupImpl subject;
+    subject = MarkupImplY.create(opts -> {
       opts.objects(IntSize.BIT16);
     });
 
@@ -357,8 +357,8 @@ public class ObjectoxMarkupTest {
   - 1 reg attr (markup) (24bit)
   """)
   public void voidElement02_24bit() {
-    final ObjectoxMarkup subject;
-    subject = ObjectoxMarkupY.create(opts -> {
+    final MarkupImpl subject;
+    subject = MarkupImplY.create(opts -> {
       opts.objects(IntSize.BIT24);
     });
 
@@ -389,8 +389,8 @@ public class ObjectoxMarkupTest {
   - 1 boolean attr (object) (8bit)
   """)
   public void voidElement03() {
-    final ObjectoxMarkup subject;
-    subject = ObjectoxMarkup.create();
+    final MarkupImpl subject;
+    subject = MarkupImpl.create();
 
     subject.input(
         Markup.checked
@@ -416,8 +416,8 @@ public class ObjectoxMarkupTest {
   - 1 reg attr (object) (8bit)
   """)
   public void voidElement04() {
-    final ObjectoxMarkup subject;
-    subject = ObjectoxMarkup.create();
+    final MarkupImpl subject;
+    subject = MarkupImpl.create();
 
     subject.input(
         Id.of("foo")

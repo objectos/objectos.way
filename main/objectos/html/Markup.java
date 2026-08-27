@@ -30,17 +30,17 @@ import objectos.html.markup.RegularElementValue;
 import objectos.html.markup.TextMarkup;
 import objectos.html.markup.VoidElementValue;
 import objectos.script.JsAction;
-import objectox.html.ObjectoxMarkup;
+import objectox.html.MarkupImpl;
 import objectox.html.attr.AttributeName;
 
 /// Declares the structure of an HTML document using pure Java.
-public sealed interface Markup permits ObjectoxMarkup {
+public sealed interface Markup permits MarkupImpl {
 
   /// Returns a new markup instance.
   ///
   /// @return a newly created markup instance
   static Markup of() {
-    return ObjectoxMarkup.create();
+    return MarkupImpl.create();
   }
 
   /// Returns an object representing the HTML declared by this instance.

@@ -15,7 +15,7 @@
  */
 package objectox.html.markup;
 
-import objectox.html.ObjectoxHtml;
+import objectox.html.HtmlImpl;
 
 final class DocumentCompiler {
 
@@ -25,8 +25,8 @@ final class DocumentCompiler {
     this.sink = sink;
   }
 
-  public final ObjectoxHtml compile() {
-    return new ObjectoxHtml(sink);
+  public final HtmlImpl compile() {
+    return new HtmlImpl(sink);
   }
 
   final HtmlSink unwrap() {

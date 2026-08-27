@@ -18,17 +18,17 @@ package objectox.html;
 import java.util.function.Consumer;
 import objectox.html.markup.HtmlSink;
 
-public final class ObjectoxMarkupY {
+public final class MarkupImplY {
 
   private IntSize codeInitial = IntSize.BIT8;
 
   private IntSize objectsInitial = IntSize.BIT8;
 
-  private ObjectoxMarkupY() {}
+  private MarkupImplY() {}
 
-  public static ObjectoxMarkup create(Consumer<? super ObjectoxMarkupY> opts) {
-    final ObjectoxMarkupY y;
-    y = new ObjectoxMarkupY();
+  public static MarkupImpl create(Consumer<? super MarkupImplY> opts) {
+    final MarkupImplY y;
+    y = new MarkupImplY();
 
     opts.accept(y);
 
@@ -43,7 +43,7 @@ public final class ObjectoxMarkupY {
     objectsInitial = initial;
   }
 
-  private ObjectoxMarkup build() {
+  private MarkupImpl build() {
     final int codeLen;
     codeLen = len(codeInitial);
 
@@ -59,7 +59,7 @@ public final class ObjectoxMarkupY {
     final HtmlSink sink;
     sink = new HtmlSink(code, objects);
 
-    return ObjectoxMarkup.of(sink);
+    return MarkupImpl.of(sink);
   }
 
   private int len(IntSize size) {
