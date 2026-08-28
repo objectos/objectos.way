@@ -145,6 +145,26 @@ public class TemplateTest {
   }
 
   @Test(description = """
+  regular elem:
+  - 2 reg attrs (markup) (8bit)
+  - no children
+  """)
+  public void regularElement06() {
+    test(
+        new Template() {
+          @Override
+          protected final void render() {
+            html(lang("pt-BR"), dir("auto"));
+          }
+        },
+
+        """
+        <html lang="pt-BR" dir="auto"></html>
+        """
+    );
+  }
+
+  @Test(description = """
   void elem:
   - no attrs
   """)

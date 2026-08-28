@@ -328,6 +328,49 @@ public class StartStateTest {
   }
 
   @Test(description = """
+  regular elem:
+  - 2 reg attrs (markup) (8bit)
+  - no children
+  """)
+  public void regularElement06() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.LANG.index());
+      opts.addInt8(opts.addObject("pt-BR"));
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.DIR.index());
+      opts.addInt8(opts.addObject("auto"));
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.HTML.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(2);
+      opts.addInt8(0);
+      opts.addInt8(3);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.HTML.index());
+    });
+
+    final StartState subject;
+    subject = new StartState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new ScanDocumentNodeState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(new ScanDocumentNodeFrame(6));
+        })
+    );
+  }
+
+  @Test(description = """
   void elem:
   - 1 reg attr (markup) (16bit)
   """)

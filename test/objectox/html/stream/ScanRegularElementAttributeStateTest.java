@@ -554,4 +554,146 @@ public class ScanRegularElementAttributeStateTest {
     );
   }
 
+  @Test(description = """
+  regular elem:
+  - 2 reg attrs (markup) (8bit)
+  - no children
+  """)
+  public void regularElement06() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.LANG.index());
+      opts.addInt8(opts.addObject("pt-BR"));
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.DIR.index());
+      opts.addInt8(opts.addObject("auto"));
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.HTML.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(2);
+      opts.addInt8(0);
+      opts.addInt8(3);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.HTML.index());
+
+      opts.push(new ScanDocumentNodeFrame(10));
+      opts.push(new ScanRegularElementAttributeFrame(10, IntSize.BIT8, 2));
+    });
+
+    final ScanRegularElementAttributeState subject;
+    subject = new ScanRegularElementAttributeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT8));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(new ScanDocumentNodeFrame(10));
+          opts.push(new ScanRegularElementAttributeFrame(11, IntSize.BIT8, 2, 1));
+          opts.push(new JumpFrame(1));
+        })
+    );
+  }
+
+  @Test(description = """
+  regular elem:
+  - 2 reg attrs (markup) (8bit)
+  - no children
+  """)
+  public void regularElement06b() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.LANG.index());
+      opts.addInt8(opts.addObject("pt-BR"));
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.DIR.index());
+      opts.addInt8(opts.addObject("auto"));
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.HTML.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(2);
+      opts.addInt8(0);
+      opts.addInt8(3);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.HTML.index());
+
+      opts.push(new ScanDocumentNodeFrame(10));
+      opts.push(new ScanRegularElementAttributeFrame(11, IntSize.BIT8, 2, 1));
+    });
+
+    final ScanRegularElementAttributeState subject;
+    subject = new ScanRegularElementAttributeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT8));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(new ScanDocumentNodeFrame(10));
+          opts.push(new ScanRegularElementAttributeFrame(12, IntSize.BIT8, 2, 2));
+          opts.push(new JumpFrame(4));
+        })
+    );
+  }
+
+  @Test(description = """
+  regular elem:
+  - 2 reg attrs (markup) (8bit)
+  - no children
+  """)
+  public void regularElement06c() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.LANG.index());
+      opts.addInt8(opts.addObject("pt-BR"));
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.DIR.index());
+      opts.addInt8(opts.addObject("auto"));
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.HTML.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(2);
+      opts.addInt8(0);
+      opts.addInt8(3);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.HTML.index());
+
+      opts.push(new ScanDocumentNodeFrame(10));
+      opts.push(new ScanRegularElementAttributeFrame(12, IntSize.BIT8, 2, 2));
+    });
+
+    final ScanRegularElementAttributeState subject;
+    subject = new ScanRegularElementAttributeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new RenderEndTagState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+          opts.result(EndStartTagEvent.of(EndStartTagKind.EMPTY_ELEMENT));
+          opts.push(new ScanDocumentNodeFrame(12));
+        })
+    );
+  }
+
 }

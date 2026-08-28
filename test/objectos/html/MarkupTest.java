@@ -134,6 +134,42 @@ public class MarkupTest {
   }
 
   @Test(description = """
+  regular elem:
+  - 2 reg attrs (markup) (8bit)
+  - no children
+  """)
+  public void regularElement06() {
+    final Markup subject;
+    subject = Markup.of();
+
+    subject.html(
+        subject.lang("pt-BR"),
+        subject.dir("auto")
+    );
+
+    assertEquals(
+        subject.compile(),
+
+        HtmlY.create(opts -> {
+          opts.addByte(HtmlBytes.xATTRIBUTE88);
+          opts.addInt8(AttributeName.LANG.index());
+          opts.addInt8(opts.addObject("pt-BR"));
+          opts.addByte(HtmlBytes.xATTRIBUTE88);
+          opts.addInt8(AttributeName.DIR.index());
+          opts.addInt8(opts.addObject("auto"));
+          opts.addByte(HtmlBytes.ELEMSTR8);
+          opts.addInt8(ElementName.HTML.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(2);
+          opts.addInt8(0);
+          opts.addInt8(3);
+          opts.addByte(HtmlBytes.ELEMEND8);
+          opts.addInt8(ElementName.HTML.index());
+        })
+    );
+  }
+
+  @Test(description = """
   void elem:
   - 1 reg attr (object) (8bit)
   """)
