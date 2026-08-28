@@ -507,4 +507,37 @@ public class MarkupImplTest {
     );
   }
 
+  @Test(description = """
+  void elem:
+  - 2 reg attrs (markup) (8bit)
+  """)
+  public void voidElement06() {
+    final MarkupImpl subject;
+    subject = MarkupImpl.create();
+
+    subject.input(
+        subject.type("text"),
+        subject.size("30")
+    );
+
+    assertEquals(
+        subject.compile(),
+
+        HtmlY.create(opts -> {
+          opts.addByte(HtmlBytes.xATTRIBUTE88);
+          opts.addInt8(AttributeName.TYPE.index());
+          opts.addInt8(opts.addObject("text"));
+          opts.addByte(HtmlBytes.xATTRIBUTE88);
+          opts.addInt8(AttributeName.SIZE.index());
+          opts.addInt8(opts.addObject("30"));
+          opts.addByte(HtmlBytes.ELEMVOID8);
+          opts.addInt8(ElementName.INPUT.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(2);
+          opts.addInt8(0);
+          opts.addInt8(3);
+        })
+    );
+  }
+
 }

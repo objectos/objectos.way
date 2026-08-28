@@ -104,6 +104,57 @@ public class VoidElementRecorderTest {
   }
 
   @Test(description = """
+  void elem:
+  - 2 reg attrs (markup) (8bit)
+  """)
+  public void voidElement06() {
+    final HtmlSink sink;
+    sink = HtmlSinkY.create(opts -> {
+      opts.addInt24(HtmlSink.MAX_INT24);
+      opts.addByte(HtmlBytes.ATTRIBUTE88);
+      opts.addInt8(AttributeName.TYPE.index());
+      opts.addInt8(opts.addObject("text"));
+      opts.addByte(HtmlBytes.ATTRIBUTE88);
+      opts.addInt8(AttributeName.SIZE.index());
+      opts.addInt8(opts.addObject("30"));
+    });
+
+    final VoidElementRecorder subject;
+    subject = create(sink);
+
+    final AttributePointer type;
+    type = new AttributePointer(3);
+
+    final AttributePointer size;
+    size = new AttributePointer(6);
+
+    final ElementPointer res;
+    res = subject.record(ElementName.INPUT, type, size);
+
+    assertEquals(res.value(), 9);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addInt24(HtmlSink.MAX_INT24);
+          opts.addByte(HtmlBytes.xATTRIBUTE88);
+          opts.addInt8(AttributeName.TYPE.index());
+          opts.addInt8(opts.addObject("text"));
+          opts.addByte(HtmlBytes.xATTRIBUTE88);
+          opts.addInt8(AttributeName.SIZE.index());
+          opts.addInt8(opts.addObject("30"));
+          opts.addByte(HtmlBytes.ELEMVOID8);
+          opts.addInt8(ElementName.INPUT.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(2);
+          opts.addInt8(3);
+          opts.addInt8(6);
+        })
+    );
+  }
+
+  @Test(description = """
   Attribute jsaction (savepoint rollback + pre-record)
   """)
   public void voidElement05() {

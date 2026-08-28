@@ -523,4 +523,138 @@ public class ScanVoidElementAttributeStateTest {
     );
   }
 
+  @Test(description = """
+  void elem:
+  - 2 reg attrs (markup) (8bit)
+  """)
+  public void voidElement06() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.TYPE.index());
+      opts.addInt8(opts.addObject("text"));
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.SIZE.index());
+      opts.addInt8(opts.addObject("30"));
+      opts.addByte(HtmlBytes.ELEMVOID8);
+      opts.addInt8(ElementName.INPUT.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(2);
+      opts.addInt8(0);
+      opts.addInt8(3);
+
+      opts.push(new ScanDocumentNodeFrame(10));
+      opts.push(new ScanVoidElementAttributeFrame(10, IntSize.BIT8, 2));
+    });
+
+    final ScanVoidElementAttributeState subject;
+    subject = new ScanVoidElementAttributeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT8));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(new ScanDocumentNodeFrame(10));
+          opts.push(new ScanVoidElementAttributeFrame(11, IntSize.BIT8, 2, 1));
+          opts.push(new JumpFrame(1));
+        })
+    );
+  }
+
+  @Test(description = """
+  void elem:
+  - 2 reg attrs (markup) (8bit)
+  """)
+  public void voidElement06b() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.TYPE.index());
+      opts.addInt8(opts.addObject("text"));
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.SIZE.index());
+      opts.addInt8(opts.addObject("30"));
+      opts.addByte(HtmlBytes.ELEMVOID8);
+      opts.addInt8(ElementName.INPUT.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(2);
+      opts.addInt8(0);
+      opts.addInt8(3);
+
+      opts.push(new ScanDocumentNodeFrame(10));
+      opts.push(new ScanVoidElementAttributeFrame(11, IntSize.BIT8, 2, 1));
+    });
+
+    final ScanVoidElementAttributeState subject;
+    subject = new ScanVoidElementAttributeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT8));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(new ScanDocumentNodeFrame(10));
+          opts.push(new ScanVoidElementAttributeFrame(12, IntSize.BIT8, 2, 2));
+          opts.push(new JumpFrame(4));
+        })
+    );
+  }
+
+  @Test(description = """
+  void elem:
+  - 2 reg attrs (markup) (8bit)
+  """)
+  public void voidElement06c() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.TYPE.index());
+      opts.addInt8(opts.addObject("text"));
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.SIZE.index());
+      opts.addInt8(opts.addObject("30"));
+      opts.addByte(HtmlBytes.ELEMVOID8);
+      opts.addInt8(ElementName.INPUT.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(2);
+      opts.addInt8(0);
+      opts.addInt8(3);
+
+      opts.push(new ScanDocumentNodeFrame(10));
+      opts.push(new ScanVoidElementAttributeFrame(12, IntSize.BIT8, 2, 2));
+    });
+
+    final ScanVoidElementAttributeState subject;
+    subject = new ScanVoidElementAttributeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new EndElementState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(new ScanDocumentNodeFrame(12));
+          opts.result(EndStartTagEvent.of(EndStartTagKind.VOID_ELEMENT));
+        })
+    );
+  }
+
 }

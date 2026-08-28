@@ -241,6 +241,28 @@ public class TemplateTest {
   }
 
   @Test(description = """
+  void elem:
+  - 2 reg attrs (markup) (8bit)
+  """)
+  public void voidElement06() {
+    test(
+        new Template() {
+          @Override
+          protected final void render() {
+            input(
+                type("text"),
+                size("30")
+            );
+          }
+        },
+
+        """
+        <input type="text" size="30">
+        """
+    );
+  }
+
+  @Test(description = """
   HtmlTemplate TC00
 
   - single html element
