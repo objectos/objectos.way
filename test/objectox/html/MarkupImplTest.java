@@ -582,4 +582,42 @@ public class MarkupImplTest {
     );
   }
 
+  @Test(description = """
+  void elem:
+  - 3 reg attrs (class) (8bit)
+  """)
+  public void voidElement07() {
+    final MarkupImpl subject;
+    subject = MarkupImpl.create();
+
+    subject.input(
+        ClassName.of("c1"),
+        subject.className("c2"),
+        ClassName.of("c3")
+    );
+
+    assertEquals(
+        subject.unwrap(),
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.xATTRIBUTE88);
+          opts.addInt8(AttributeName.CLASS.index());
+          opts.addInt8(opts.addObject("c2"));
+          opts.addByte(HtmlBytes.xATTRIBUTE88);
+          opts.addInt8(AttributeName.CLASS.index());
+          opts.addInt8(opts.addObject("c1"));
+          opts.addByte(HtmlBytes.xATTRIBUTE88);
+          opts.addInt8(AttributeName.CLASS.index());
+          opts.addInt8(opts.addObject("c3"));
+          opts.addByte(HtmlBytes.ELEMVOID8);
+          opts.addInt8(ElementName.INPUT.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(3);
+          opts.addInt8(3);
+          opts.addInt8(0);
+          opts.addInt8(6);
+        })
+    );
+  }
+
 }
