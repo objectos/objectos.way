@@ -17,7 +17,6 @@ package objectos.script;
 
 import java.util.Objects;
 import java.util.function.Consumer;
-import objectox.html.attr.AttributeName;
 
 /// A JS runtime `Element` instance.
 public final class JsElement extends JsNode {
@@ -63,12 +62,12 @@ public final class JsElement extends JsNode {
   /// @param name the attribute name
   ///
   /// @return the attribute value
-  public final JsString attr(AttributeName name) {
-    final String attrName;
-    attrName = name.name();
+  public final JsString attr(String name) {
+    final String n;
+    n = Objects.requireNonNull(name, "name == null");
 
     final JsString $name;
-    $name = JsString.of(attrName);
+    $name = JsString.of(n);
 
     return attr($name);
   }
@@ -88,17 +87,18 @@ public final class JsElement extends JsNode {
   /// @param value the attribute value
   ///
   /// @return an object representing this action
-  public final JsAction attr(AttributeName name, String value) {
-    Objects.requireNonNull(value, "value == null");
+  public final JsAction attr(String name, String value) {
+    final String n;
+    n = Objects.requireNonNull(name, "name == null");
 
-    final String attrName;
-    attrName = name.name();
+    final String v;
+    v = Objects.requireNonNull(value, "value == null");
 
     final JsString $name;
-    $name = JsString.of(attrName);
+    $name = JsString.of(n);
 
     final JsString $value;
-    $value = JsString.of(value);
+    $value = JsString.of(v);
 
     return attr($name, $value);
   }
@@ -119,12 +119,12 @@ public final class JsElement extends JsNode {
   /// @param name the attribute name
   ///
   /// @return a boolean
-  public final JsBoolean hasAttribute(AttributeName name) {
-    final String attrName;
-    attrName = name.name();
+  public final JsBoolean hasAttribute(String name) {
+    final String n;
+    n = Objects.requireNonNull(name, "name == null");
 
     final JsString $name;
-    $name = JsString.of(attrName);
+    $name = JsString.of(n);
 
     return hasAttribute($name);
   }

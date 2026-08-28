@@ -1701,6 +1701,25 @@ public abstract class Template implements Component {
   // ATTRIBUTES
   //
 
+  /// Encodes a boolean attribute with the specified name.
+  ///
+  /// @param name the boolean attribute name
+  ///
+  /// @return an object representing the encoded boolean attribute
+  protected final AttributeMarkup attr(String name) {
+    return markup().attr(name);
+  }
+
+  /// Encodes an attribute with the specified name and value.
+  ///
+  /// @param name the attribute name
+  /// @param value the attribute value
+  ///
+  /// @return an object representing the encoded attribute
+  protected final AttributeMarkup attr(String name, String value) {
+    return markup().attr(name, value);
+  }
+
   /// Encodes the `accesskey` attribute with the specified value.
   ///
   /// @param value the attribute value

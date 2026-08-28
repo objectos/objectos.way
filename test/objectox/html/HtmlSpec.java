@@ -403,13 +403,6 @@ public final class HtmlSpec {
   // # BEGIN: Way
   // ##################################################################
 
-  public static List<AttributeSpec> dataAttrs() {
-    return List.of(
-        new AttributeSpec("DATA_HIGH", "dataHigh", "data-high", false),
-        new AttributeSpec("DATA_LINE", "dataLine", "data-line", false)
-    );
-  }
-
   public static List<MethodSpec> wayNodes() {
     return List.of(
         new MethodSpec("AttributeMarkup css(String value)", "css(value)", """

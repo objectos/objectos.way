@@ -167,9 +167,6 @@ public record AttributeName(int index, String name) {
   public static final AttributeName WRITING_MODE = U.create("writing-mode");
   public static final AttributeName XMLNS = U.create("xmlns");
 
-  public static final AttributeName DATA_HIGH = U.create("data-high");
-  public static final AttributeName DATA_LINE = U.create("data-line");
-
   // END generated code
 
   public static String formatAttrValue(String value, StringBuilder sb) {

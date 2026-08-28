@@ -24,7 +24,6 @@ import objectos.script.Js;
 import objectos.script.JsAction;
 import objectos.script.JsResponse;
 import objectos.script.JsString;
-import objectox.html.attr.AttributeName;
 
 /*
 
@@ -37,7 +36,7 @@ Test case 018
 @CssSource
 public final class Script018 extends AbstractDevScript {
 
-  public static final JsAction ACTION = Js.fetch(Js.target().attr(AttributeName.HREF))
+  public static final JsAction ACTION = Js.fetch(Js.target().attr("href"))
       .then(Js.args(0).as(JsResponse.type).text())
       .then(Js.byId("subject").textContent(Js.args(0).as(JsString.type)));
 

@@ -17,7 +17,6 @@ package objectos.way.dev;
 
 import objectos.http.Request;
 import objectos.http.Result;
-import objectox.html.attr.AttributeName;
 import objectos.html.Id;
 import objectos.html.Template;
 import objectos.http.Handler;
@@ -25,7 +24,7 @@ import objectos.http.HeaderName;
 
 abstract class AbstractDevScript extends Template implements Handler {
 
-  static final AttributeName DATA_TEST = AttributeName.of("data-test");
+  static final String DATA_TEST = "data-test";
 
   static final HeaderName WAY_TEST = HeaderName.of("Way-Test");
 

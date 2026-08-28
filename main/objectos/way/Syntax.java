@@ -16,8 +16,6 @@
 package objectos.way;
 
 import objectos.html.Component;
-import objectox.html.attr.AttributeName;
-import objectox.html.attr.AttributeName;
 
 /**
  * The <strong>Objectos Syntax</strong> main class, part of Objectos HTML.
@@ -26,9 +24,9 @@ public final class Syntax {
 
   public sealed interface Language permits SyntaxLanguage {}
 
-  public static final AttributeName DATA_LINE = AttributeName.DATA_LINE;
+  public static final String DATA_LINE = "data-line";
 
-  public static final AttributeName DATA_HIGH = AttributeName.DATA_HIGH;
+  public static final String DATA_HIGH = "data-high";
 
   // languages
 

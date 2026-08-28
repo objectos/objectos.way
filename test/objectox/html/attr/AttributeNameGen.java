@@ -43,14 +43,6 @@ public class AttributeNameGen {
     for (AttributeSpec spec : HtmlSpec.attributes()) {
       spec(spec);
     }
-
-    fields.append("""
-
-    """);
-
-    for (AttributeSpec spec : HtmlSpec.dataAttrs()) {
-      spec(spec);
-    }
   }
 
   private void spec(AttributeSpec spec) {
