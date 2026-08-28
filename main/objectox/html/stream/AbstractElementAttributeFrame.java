@@ -61,4 +61,8 @@ sealed abstract class AbstractElementAttributeFrame extends Frame
     return ctx.nextInt(size);
   }
 
+  public final int peekInt(Ctx ctx) {
+    return ctx.peekInt(size);
+  }
+
 }

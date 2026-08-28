@@ -32,11 +32,11 @@ final class RenderBooleanAttributeState implements State {
 
   @Override
   public final State compute() {
-    final int nameCode;
-    nameCode = ctx.nextInt(nameSize);
+    final int nameIndex;
+    nameIndex = ctx.nextInt(nameSize);
 
     final AttributeName attributeName;
-    attributeName = AttributeName.get(nameCode);
+    attributeName = AttributeName.get(nameIndex);
 
     final RenderBooleanAttributeEvent event;
     event = new RenderBooleanAttributeEvent(attributeName);

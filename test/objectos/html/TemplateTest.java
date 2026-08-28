@@ -165,6 +165,26 @@ public class TemplateTest {
   }
 
   @Test(description = """
+  regular elem:
+  - 3 reg attrs (class) (8bit)
+  - no children
+  """)
+  public void regularElement07() {
+    test(
+        new Template() {
+          @Override
+          protected final void render() {
+            span(className("c1"), ClassName.of("c2"), className("c3"));
+          }
+        },
+
+        """
+        <span class="c1 c2 c3"></span>
+        """
+    );
+  }
+
+  @Test(description = """
   void elem:
   - no attrs
   """)

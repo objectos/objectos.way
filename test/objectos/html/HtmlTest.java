@@ -283,6 +283,43 @@ public class HtmlTest {
   }
 
   @Test(description = """
+  regular elem:
+  - 3 reg attrs (class) (8bit)
+  - no children
+  """)
+  public void regularElement07() {
+    final Html subject;
+    subject = HtmlY.create(opts -> {
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.CLASS.index());
+      opts.addInt8(opts.addObject("c1"));
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.CLASS.index());
+      opts.addInt8(opts.addObject("c3"));
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.CLASS.index());
+      opts.addInt8(opts.addObject("c2"));
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.SPAN.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(3);
+      opts.addInt8(0);
+      opts.addInt8(6);
+      opts.addInt8(3);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.SPAN.index());
+    });
+
+    assertEquals(
+        subject.toString(),
+
+        """
+        <span class="c1 c2 c3"></span>
+        """
+    );
+  }
+
+  @Test(description = """
   void elem:
   - no attrs
   """)

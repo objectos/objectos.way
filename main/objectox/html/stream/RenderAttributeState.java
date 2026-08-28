@@ -36,11 +36,11 @@ final class RenderAttributeState implements State {
 
   @Override
   public final State compute() {
-    final int nameCode;
-    nameCode = ctx.nextInt(nameSize);
+    final int nameIndex;
+    nameIndex = ctx.nextInt(nameSize);
 
     final AttributeName attributeName;
-    attributeName = AttributeName.get(nameCode);
+    attributeName = AttributeName.get(nameIndex);
 
     final int valueIndex;
     valueIndex = ctx.nextInt(valueSize);
@@ -48,17 +48,9 @@ final class RenderAttributeState implements State {
     final String value;
     value = ctx.objString(valueIndex);
 
-    final RenderAttributeEvent event;
-    event = new RenderAttributeEvent(attributeName, value);
-
-    ctx.result(event);
-
     ctx.pop(); // jmp frame
 
-    final Frame current;
-    current = ctx.peekFrame();
-
-    return current.newState(ctx);
+    return new MergeAttributeState(ctx, nameSize, attributeName, value);
   }
 
   @Override

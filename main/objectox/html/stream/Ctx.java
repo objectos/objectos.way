@@ -113,6 +113,22 @@ class Ctx {
     };
   }
 
+  public final int peekInt(IntSize size) {
+    final Frame frame;
+    frame = stack[stackIndex];
+
+    final int startIndex;
+    startIndex = frame.index;
+
+    return switch (size) {
+      case BIT8 -> toInt(startIndex, 0);
+
+      case BIT16 -> toInt(startIndex, 8) | toInt(startIndex + 1, 0);
+
+      case BIT24 -> toInt(startIndex, 16) | toInt(startIndex + 1, 8) | toInt(startIndex + 2, 0);
+    };
+  }
+
   public final JsAction objJsAction(int index) {
     final Object o;
     o = objects[index];

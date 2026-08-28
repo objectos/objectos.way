@@ -24,6 +24,10 @@ public record RenderAttributeEvent(AttributeName attributeName, String value) im
     return new RenderAttributeEvent(attributeName, value);
   }
 
+  public final RenderAttributeEvent merge(String more) {
+    return new RenderAttributeEvent(attributeName, value + ' ' + more);
+  }
+
   @Override
   public final String name() {
     return attributeName.name();
