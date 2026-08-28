@@ -128,4 +128,13 @@ final class MergeAttributeState implements State {
     return current.newState(ctx);
   }
 
+  @Override
+  public final boolean equals(Object obj) {
+    return obj instanceof MergeAttributeState that
+        && ctx.equals(that.ctx)
+        && nameSize.equals(that.nameSize)
+        && attributeName.equals(that.attributeName)
+        && value.equals(that.value);
+  }
+
 }
