@@ -123,7 +123,7 @@ public class RegularElementRecorderTest {
   @Test(description = """
   Attribute object (savepoint rollback + pre-record)
   """)
-  public void regularElement04() {
+  public void regularAttribute03() {
     final HtmlSink sink;
     sink = HtmlSinkY.create(opts -> {
       opts.addInt24(HtmlSink.MAX_INT24);

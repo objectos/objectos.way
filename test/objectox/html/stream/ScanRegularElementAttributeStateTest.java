@@ -30,315 +30,13 @@ import org.testng.annotations.Test;
 public class ScanRegularElementAttributeStateTest {
 
   @Test(description = """
-  regular elem:
-  - no attrs
-  - no children
+  boolean attr:
+  - count: 1
+  - object
+  - name (8 bit)
+  - reg elem
   """)
-  public void regularElement01() {
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.ELEMSTR8);
-      opts.addInt8(ElementName.DIV.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.DIV.index());
-
-      opts.push(new ScanDocumentNodeFrame(4));
-      opts.push(new ScanRegularElementAttributeFrame(4, IntSize.BIT8, 0));
-    });
-
-    final ScanRegularElementAttributeState subject;
-    subject = new ScanRegularElementAttributeState(ctx);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res, new RenderEndTagState(ctx));
-
-    assertEquals(
-        ctx,
-
-        CtxY.create(opts -> {
-          opts.sink(ctx);
-          opts.result(EndStartTagEvent.of(EndStartTagKind.EMPTY_ELEMENT));
-          opts.push(new ScanDocumentNodeFrame(4));
-        })
-    );
-  }
-
-  @Test(description = """
-  regular elem:
-  - 1 reg attr (markup) (8bit)
-  - no children
-  """)
-  public void regularElement02_08bit() {
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.CONTENTEDITABLE.index());
-      opts.addInt8(opts.addObject("false"));
-      opts.addByte(HtmlBytes.ELEMSTR8);
-      opts.addInt8(ElementName.DIV.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.DIV.index());
-
-      opts.push(new ScanDocumentNodeFrame(7));
-      opts.push(new ScanRegularElementAttributeFrame(7, IntSize.BIT8, 1));
-    });
-
-    final ScanRegularElementAttributeState subject;
-    subject = new ScanRegularElementAttributeState(ctx);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res, new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT8));
-
-    assertEquals(
-        ctx,
-
-        CtxY.create(opts -> {
-          opts.sink(ctx);
-
-          opts.push(new ScanDocumentNodeFrame(7));
-          opts.push(new ScanRegularElementAttributeFrame(8, IntSize.BIT8, 1, 1));
-          opts.push(new JumpFrame(1));
-        })
-    );
-  }
-
-  @Test(description = """
-  regular elem:
-  - 1 reg attr (markup) (16bit)
-  - no children
-  """)
-  public void regularElement02_16bit() {
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
-
-      opts.addByte(HtmlBytes.xATTRIBUTE816);
-      opts.addInt8(AttributeName.CONTENTEDITABLE.index());
-      opts.addInt16(opts.addObject("false"));
-      opts.addByte(HtmlBytes.ELEMSTR8);
-      opts.addInt8(ElementName.DIV.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.DIV.index());
-
-      opts.push(new ScanDocumentNodeFrame(8));
-      opts.push(new ScanRegularElementAttributeFrame(8, IntSize.BIT8, 1));
-    });
-
-    final ScanRegularElementAttributeState subject;
-    subject = new ScanRegularElementAttributeState(ctx);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res, new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT16));
-
-    assertEquals(
-        ctx,
-
-        CtxY.create(opts -> {
-          opts.sink(ctx);
-
-          opts.push(new ScanDocumentNodeFrame(8));
-          opts.push(new ScanRegularElementAttributeFrame(9, IntSize.BIT8, 1, 1));
-          opts.push(new JumpFrame(1));
-        })
-    );
-  }
-
-  @Test(description = """
-  regular elem:
-  - 1 reg attr (markup) (24bit)
-  - no children
-  """)
-  public void regularElement02_24bit() {
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
-
-      opts.addByte(HtmlBytes.xATTRIBUTE824);
-      opts.addInt8(AttributeName.CONTENTEDITABLE.index());
-      opts.addInt24(opts.addObject("false"));
-      opts.addByte(HtmlBytes.ELEMSTR8);
-      opts.addInt8(ElementName.DIV.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.DIV.index());
-
-      opts.push(new ScanDocumentNodeFrame(9));
-      opts.push(new ScanRegularElementAttributeFrame(9, IntSize.BIT8, 1));
-    });
-
-    final ScanRegularElementAttributeState subject;
-    subject = new ScanRegularElementAttributeState(ctx);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res, new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT24));
-
-    assertEquals(
-        ctx,
-
-        CtxY.create(opts -> {
-          opts.sink(ctx);
-
-          opts.push(new ScanDocumentNodeFrame(9));
-          opts.push(new ScanRegularElementAttributeFrame(10, IntSize.BIT8, 1, 1));
-          opts.push(new JumpFrame(1));
-        })
-    );
-  }
-
-  @Test(description = """
-  regular elem:
-  - 1 reg attr (markup) (8bit)
-  - no children
-  """)
-  public void regularElement02b_08bit() {
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.CONTENTEDITABLE.index());
-      opts.addInt8(opts.addObject("false"));
-      opts.addByte(HtmlBytes.ELEMSTR8);
-      opts.addInt8(ElementName.DIV.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.DIV.index());
-
-      opts.push(new ScanDocumentNodeFrame(7));
-      opts.push(new ScanRegularElementAttributeFrame(8, IntSize.BIT8, 1, 1));
-    });
-
-    final ScanRegularElementAttributeState subject;
-    subject = new ScanRegularElementAttributeState(ctx);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res, new RenderEndTagState(ctx));
-
-    assertEquals(
-        ctx,
-
-        CtxY.create(opts -> {
-          opts.sink(ctx);
-          opts.result(EndStartTagEvent.of(EndStartTagKind.EMPTY_ELEMENT));
-          opts.push(new ScanDocumentNodeFrame(8));
-        })
-    );
-  }
-
-  @Test(description = """
-  regular elem:
-  - 1 reg attr (markup) (16bit)
-  - no children
-  """)
-  public void regularElement02b_16bit() {
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
-
-      opts.addByte(HtmlBytes.xATTRIBUTE816);
-      opts.addInt8(AttributeName.CONTENTEDITABLE.index());
-      opts.addInt16(opts.addObject("false"));
-      opts.addByte(HtmlBytes.ELEMSTR8);
-      opts.addInt8(ElementName.DIV.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.DIV.index());
-
-      opts.push(new ScanDocumentNodeFrame(8));
-      opts.push(new ScanRegularElementAttributeFrame(9, IntSize.BIT8, 1, 1));
-    });
-
-    final ScanRegularElementAttributeState subject;
-    subject = new ScanRegularElementAttributeState(ctx);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res, new RenderEndTagState(ctx));
-
-    assertEquals(
-        ctx,
-
-        CtxY.create(opts -> {
-          opts.sink(ctx);
-          opts.result(EndStartTagEvent.of(EndStartTagKind.EMPTY_ELEMENT));
-          opts.push(new ScanDocumentNodeFrame(9));
-        })
-    );
-  }
-
-  @Test(description = """
-  regular elem:
-  - 1 reg attr (markup) (24bit)
-  - no children
-  """)
-  public void regularElement02b_24bit() {
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
-
-      opts.addByte(HtmlBytes.xATTRIBUTE824);
-      opts.addInt8(AttributeName.CONTENTEDITABLE.index());
-      opts.addInt24(opts.addObject("false"));
-      opts.addByte(HtmlBytes.ELEMSTR8);
-      opts.addInt8(ElementName.DIV.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.DIV.index());
-
-      opts.push(new ScanDocumentNodeFrame(9));
-      opts.push(new ScanRegularElementAttributeFrame(10, IntSize.BIT8, 1, 1));
-    });
-
-    final ScanRegularElementAttributeState subject;
-    subject = new ScanRegularElementAttributeState(ctx);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res, new RenderEndTagState(ctx));
-
-    assertEquals(
-        ctx,
-
-        CtxY.create(opts -> {
-          opts.sink(ctx);
-          opts.result(EndStartTagEvent.of(EndStartTagKind.EMPTY_ELEMENT));
-          opts.push(new ScanDocumentNodeFrame(10));
-        })
-    );
-  }
-
-  @Test(description = """
-  regular elem:
-  - 1 boolean attr (object) (8bit)
-  - no children
-  """)
-  public void regularElement03() {
+  public void booleanAttribute01() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.xBOOLEAN8);
@@ -377,97 +75,13 @@ public class ScanRegularElementAttributeStateTest {
   }
 
   @Test(description = """
-  regular elem:
-  - 1 reg attr (object) (8bit)
-  - no children
+  js action attr:
+  - count: 1
+  - markup
+  - name (8 bit)
+  - reg elem
   """)
-  public void regularElement04() {
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.ID.index());
-      opts.addInt8(opts.addObject("foo"));
-      opts.addByte(HtmlBytes.ELEMSTR8);
-      opts.addInt8(ElementName.DIV.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.DIV.index());
-
-      opts.push(new ScanDocumentNodeFrame(7));
-      opts.push(new ScanRegularElementAttributeFrame(7, IntSize.BIT8, 1));
-    });
-
-    final ScanRegularElementAttributeState subject;
-    subject = new ScanRegularElementAttributeState(ctx);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res, new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT8));
-
-    assertEquals(
-        ctx,
-
-        CtxY.create(opts -> {
-          opts.sink(ctx);
-
-          opts.push(new ScanDocumentNodeFrame(7));
-          opts.push(new ScanRegularElementAttributeFrame(8, IntSize.BIT8, 1, 1));
-          opts.push(new JumpFrame(1));
-        })
-    );
-  }
-
-  @Test(description = """
-  regular elem:
-  - 1 reg attr (object) (8bit)
-  - no children
-  """)
-  public void regularElement04b() {
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.ID.index());
-      opts.addInt8(opts.addObject("foo"));
-      opts.addByte(HtmlBytes.ELEMSTR8);
-      opts.addInt8(ElementName.DIV.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.DIV.index());
-
-      opts.push(new ScanDocumentNodeFrame(7));
-      opts.push(new ScanRegularElementAttributeFrame(8, IntSize.BIT8, 1, 1));
-    });
-
-    final ScanRegularElementAttributeState subject;
-    subject = new ScanRegularElementAttributeState(ctx);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res, new RenderEndTagState(ctx));
-
-    assertEquals(
-        ctx,
-
-        CtxY.create(opts -> {
-          opts.sink(ctx);
-          opts.result(EndStartTagEvent.of(EndStartTagKind.EMPTY_ELEMENT));
-          opts.push(new ScanDocumentNodeFrame(8));
-        })
-    );
-  }
-
-  @Test(description = """
-  regular elem:
-  - 1 js action attr (object) (8bit)
-  - no children
-  """)
-  public void regularElement05() {
+  public void jsActionAttribute01() {
     final JsAction action;
     action = Js.noop();
 
@@ -510,11 +124,13 @@ public class ScanRegularElementAttributeStateTest {
   }
 
   @Test(description = """
-  regular elem:
-  - 1 js action attr (object) (8bit)
-  - no children
+  js action attr:
+  - count: 1
+  - markup
+  - name (8 bit)
+  - reg elem
   """)
-  public void regularElement05b() {
+  public void jsActionAttribute01b() {
     final JsAction action;
     action = Js.noop();
 
@@ -555,11 +171,381 @@ public class ScanRegularElementAttributeStateTest {
   }
 
   @Test(description = """
-  regular elem:
-  - 2 reg attrs (markup) (8bit)
-  - no children
+  reg attr:
+  - count: 1
+  - markup
+  - name (8 bit)
+  - reg elem
   """)
-  public void regularElement06() {
+  public void regularAttribute01_08bit() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.CONTENTEDITABLE.index());
+      opts.addInt8(opts.addObject("false"));
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.DIV.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.DIV.index());
+
+      opts.push(new ScanDocumentNodeFrame(7));
+      opts.push(new ScanRegularElementAttributeFrame(7, IntSize.BIT8, 1));
+    });
+
+    final ScanRegularElementAttributeState subject;
+    subject = new ScanRegularElementAttributeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT8));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(new ScanDocumentNodeFrame(7));
+          opts.push(new ScanRegularElementAttributeFrame(8, IntSize.BIT8, 1, 1));
+          opts.push(new JumpFrame(1));
+        })
+    );
+  }
+
+  @Test(description = """
+  reg attr:
+  - count: 1
+  - markup
+  - name (16 bit)
+  - reg elem
+  """)
+  public void regularAttribute01_16bit() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
+
+      opts.addByte(HtmlBytes.xATTRIBUTE816);
+      opts.addInt8(AttributeName.CONTENTEDITABLE.index());
+      opts.addInt16(opts.addObject("false"));
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.DIV.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.DIV.index());
+
+      opts.push(new ScanDocumentNodeFrame(8));
+      opts.push(new ScanRegularElementAttributeFrame(8, IntSize.BIT8, 1));
+    });
+
+    final ScanRegularElementAttributeState subject;
+    subject = new ScanRegularElementAttributeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT16));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(new ScanDocumentNodeFrame(8));
+          opts.push(new ScanRegularElementAttributeFrame(9, IntSize.BIT8, 1, 1));
+          opts.push(new JumpFrame(1));
+        })
+    );
+  }
+
+  @Test(description = """
+  reg attr:
+  - count: 1
+  - markup
+  - name (24 bit)
+  - reg elem
+  """)
+  public void regularAttribute01_24bit() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
+
+      opts.addByte(HtmlBytes.xATTRIBUTE824);
+      opts.addInt8(AttributeName.CONTENTEDITABLE.index());
+      opts.addInt24(opts.addObject("false"));
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.DIV.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.DIV.index());
+
+      opts.push(new ScanDocumentNodeFrame(9));
+      opts.push(new ScanRegularElementAttributeFrame(9, IntSize.BIT8, 1));
+    });
+
+    final ScanRegularElementAttributeState subject;
+    subject = new ScanRegularElementAttributeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT24));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(new ScanDocumentNodeFrame(9));
+          opts.push(new ScanRegularElementAttributeFrame(10, IntSize.BIT8, 1, 1));
+          opts.push(new JumpFrame(1));
+        })
+    );
+  }
+
+  @Test(description = """
+  reg attr:
+  - count: 1
+  - markup
+  - name (8 bit)
+  - reg elem
+  """)
+  public void regularAttribute01b_08bit() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.CONTENTEDITABLE.index());
+      opts.addInt8(opts.addObject("false"));
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.DIV.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.DIV.index());
+
+      opts.push(new ScanDocumentNodeFrame(7));
+      opts.push(new ScanRegularElementAttributeFrame(8, IntSize.BIT8, 1, 1));
+    });
+
+    final ScanRegularElementAttributeState subject;
+    subject = new ScanRegularElementAttributeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new RenderEndTagState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+          opts.result(EndStartTagEvent.of(EndStartTagKind.EMPTY_ELEMENT));
+          opts.push(new ScanDocumentNodeFrame(8));
+        })
+    );
+  }
+
+  @Test(description = """
+  reg attr:
+  - count: 1
+  - markup
+  - name (16 bit)
+  - reg elem
+  """)
+  public void regularAttribute01b_16bit() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
+
+      opts.addByte(HtmlBytes.xATTRIBUTE816);
+      opts.addInt8(AttributeName.CONTENTEDITABLE.index());
+      opts.addInt16(opts.addObject("false"));
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.DIV.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.DIV.index());
+
+      opts.push(new ScanDocumentNodeFrame(8));
+      opts.push(new ScanRegularElementAttributeFrame(9, IntSize.BIT8, 1, 1));
+    });
+
+    final ScanRegularElementAttributeState subject;
+    subject = new ScanRegularElementAttributeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new RenderEndTagState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+          opts.result(EndStartTagEvent.of(EndStartTagKind.EMPTY_ELEMENT));
+          opts.push(new ScanDocumentNodeFrame(9));
+        })
+    );
+  }
+
+  @Test(description = """
+  reg attr:
+  - count: 1
+  - markup
+  - name (24 bit)
+  - reg elem
+  """)
+  public void regularAttribute01b_24bit() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
+
+      opts.addByte(HtmlBytes.xATTRIBUTE824);
+      opts.addInt8(AttributeName.CONTENTEDITABLE.index());
+      opts.addInt24(opts.addObject("false"));
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.DIV.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.DIV.index());
+
+      opts.push(new ScanDocumentNodeFrame(9));
+      opts.push(new ScanRegularElementAttributeFrame(10, IntSize.BIT8, 1, 1));
+    });
+
+    final ScanRegularElementAttributeState subject;
+    subject = new ScanRegularElementAttributeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new RenderEndTagState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+          opts.result(EndStartTagEvent.of(EndStartTagKind.EMPTY_ELEMENT));
+          opts.push(new ScanDocumentNodeFrame(10));
+        })
+    );
+  }
+
+  @Test(description = """
+  reg attr:
+  - count: 1
+  - object
+  - name (8 bit)
+  - reg elem
+  """)
+  public void regularAttribute03() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.ID.index());
+      opts.addInt8(opts.addObject("foo"));
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.DIV.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.DIV.index());
+
+      opts.push(new ScanDocumentNodeFrame(7));
+      opts.push(new ScanRegularElementAttributeFrame(7, IntSize.BIT8, 1));
+    });
+
+    final ScanRegularElementAttributeState subject;
+    subject = new ScanRegularElementAttributeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT8));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(new ScanDocumentNodeFrame(7));
+          opts.push(new ScanRegularElementAttributeFrame(8, IntSize.BIT8, 1, 1));
+          opts.push(new JumpFrame(1));
+        })
+    );
+  }
+
+  @Test(description = """
+  reg attr:
+  - count: 1
+  - object
+  - name (8 bit)
+  - reg elem
+  """)
+  public void regularAttribute03b() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.ID.index());
+      opts.addInt8(opts.addObject("foo"));
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.DIV.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.DIV.index());
+
+      opts.push(new ScanDocumentNodeFrame(7));
+      opts.push(new ScanRegularElementAttributeFrame(8, IntSize.BIT8, 1, 1));
+    });
+
+    final ScanRegularElementAttributeState subject;
+    subject = new ScanRegularElementAttributeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new RenderEndTagState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+          opts.result(EndStartTagEvent.of(EndStartTagKind.EMPTY_ELEMENT));
+          opts.push(new ScanDocumentNodeFrame(8));
+        })
+    );
+  }
+
+  @Test(description = """
+  reg attr:
+  - count: 2
+  - markup
+  - name (8 bit)
+  - reg elem
+  """)
+  public void regularAttribute05() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.xATTRIBUTE88);
@@ -603,11 +589,13 @@ public class ScanRegularElementAttributeStateTest {
   }
 
   @Test(description = """
-  regular elem:
-  - 2 reg attrs (markup) (8bit)
-  - no children
+  reg attr:
+  - count: 2
+  - markup
+  - name (8 bit)
+  - reg elem
   """)
-  public void regularElement06b() {
+  public void regularAttribute05b() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.xATTRIBUTE88);
@@ -651,11 +639,13 @@ public class ScanRegularElementAttributeStateTest {
   }
 
   @Test(description = """
-  regular elem:
-  - 2 reg attrs (markup) (8bit)
-  - no children
+  reg attr:
+  - count: 2
+  - markup
+  - name (8 bit)
+  - reg elem
   """)
-  public void regularElement06c() {
+  public void regularAttribute05c() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.xATTRIBUTE88);
@@ -697,11 +687,13 @@ public class ScanRegularElementAttributeStateTest {
   }
 
   @Test(description = """
-  regular elem:
-  - 3 reg attrs (class) (8bit)
-  - no children
+  reg attr:
+  - count: 3
+  - object (class)
+  - name (8 bit)
+  - reg elem
   """)
-  public void regularElement07() {
+  public void regularAttribute07() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.xATTRIBUTE88);
@@ -749,11 +741,13 @@ public class ScanRegularElementAttributeStateTest {
   }
 
   @Test(description = """
-  regular elem:
-  - 3 reg attrs (class) (8bit)
-  - no children
+  reg attr:
+  - count: 3
+  - object (class)
+  - name (8 bit)
+  - reg elem
   """)
-  public void regularElement07b() {
+  public void regularAttribute07b() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.xATTRIBUTE88);
@@ -801,11 +795,13 @@ public class ScanRegularElementAttributeStateTest {
   }
 
   @Test(description = """
-  regular elem:
-  - 3 reg attrs (class) (8bit)
-  - no children
+  reg attr:
+  - count: 3
+  - object (class)
+  - name (8 bit)
+  - reg elem
   """)
-  public void regularElement07c() {
+  public void regularAttribute07c() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.xATTRIBUTE88);
@@ -853,11 +849,13 @@ public class ScanRegularElementAttributeStateTest {
   }
 
   @Test(description = """
-  regular elem:
-  - 3 reg attrs (class) (8bit)
-  - no children
+  reg attr:
+  - count: 3
+  - object (class)
+  - name (8 bit)
+  - reg elem
   """)
-  public void regularElement07d() {
+  public void regularAttribute07d() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.xATTRIBUTE88);
@@ -898,6 +896,44 @@ public class ScanRegularElementAttributeStateTest {
           opts.sink(ctx);
           opts.result(EndStartTagEvent.of(EndStartTagKind.EMPTY_ELEMENT));
           opts.push(new ScanDocumentNodeFrame(16));
+        })
+    );
+  }
+
+  @Test(description = """
+  regular elem:
+  - no attrs
+  - no children
+  """)
+  public void regularElement01() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.DIV.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.DIV.index());
+
+      opts.push(new ScanDocumentNodeFrame(4));
+      opts.push(new ScanRegularElementAttributeFrame(4, IntSize.BIT8, 0));
+    });
+
+    final ScanRegularElementAttributeState subject;
+    subject = new ScanRegularElementAttributeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new RenderEndTagState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+          opts.result(EndStartTagEvent.of(EndStartTagKind.EMPTY_ELEMENT));
+          opts.push(new ScanDocumentNodeFrame(4));
         })
     );
   }

@@ -26,11 +26,13 @@ import org.testng.annotations.Test;
 public class RenderBooleanAttributeStateTest {
 
   @Test(description = """
-  regular elem:
-  - 1 boolean attr (object) (8bit)
-  - no children
+  boolean attr:
+  - count: 1
+  - object
+  - name (8 bit)
+  - reg elem
   """)
-  public void regularElement03() {
+  public void booleanAttribute01() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.xBOOLEAN8);
@@ -70,10 +72,13 @@ public class RenderBooleanAttributeStateTest {
   }
 
   @Test(description = """
-  void elem:
-  - 1 boolean attr (object) (8bit)
+  boolean attr:
+  - count: 1
+  - object
+  - name (8 bit)
+  - void elem
   """)
-  public void voidElement03() {
+  public void booleanAttribute02() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.xBOOLEAN8);

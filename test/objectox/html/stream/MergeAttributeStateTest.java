@@ -26,11 +26,13 @@ import org.testng.annotations.Test;
 public class MergeAttributeStateTest {
 
   @Test(description = """
-  regular elem:
-  - 3 reg attrs (class) (8bit)
-  - no children
+  reg attr:
+  - count: 3
+  - object (class)
+  - name (8 bit)
+  - reg elem
   """)
-  public void regularElement07() {
+  public void regularAttribute07() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.xATTRIBUTE88);

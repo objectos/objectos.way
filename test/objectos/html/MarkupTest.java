@@ -44,67 +44,13 @@ public class MarkupTest {
   }
 
   @Test(description = """
-  regular elem:
-  - no attrs
-  - no children
+  js action attr:
+  - count: 1
+  - markup
+  - name (8 bit)
+  - reg elem
   """)
-  public void regularElement01() {
-    final Markup subject;
-    subject = Markup.of();
-
-    subject.div();
-
-    assertEquals(
-        subject.compile(),
-
-        HtmlY.create(opts -> {
-          opts.addByte(HtmlBytes.ELEMSTR8);
-          opts.addInt8(ElementName.DIV.index());
-          opts.addByte(HtmlBytes.VALUES8);
-          opts.addInt8(0);
-          opts.addByte(HtmlBytes.ELEMEND8);
-          opts.addInt8(ElementName.DIV.index());
-        })
-    );
-  }
-
-  @Test(description = """
-  regular elem:
-  - 1 reg attr (object) (8bit)
-  - no children
-  """)
-  public void regularElement04() {
-    final Markup subject;
-    subject = Markup.of();
-
-    subject.div(
-        Id.of("foo")
-    );
-
-    assertEquals(
-        subject.compile(),
-
-        HtmlY.create(opts -> {
-          opts.addByte(HtmlBytes.xATTRIBUTE88);
-          opts.addInt8(AttributeName.ID.index());
-          opts.addInt8(opts.addObject("foo"));
-          opts.addByte(HtmlBytes.ELEMSTR8);
-          opts.addInt8(ElementName.DIV.index());
-          opts.addByte(HtmlBytes.VALUES8);
-          opts.addInt8(1);
-          opts.addInt8(0);
-          opts.addByte(HtmlBytes.ELEMEND8);
-          opts.addInt8(ElementName.DIV.index());
-        })
-    );
-  }
-
-  @Test(description = """
-  regular elem:
-  - 1 js action attr (object) (8bit)
-  - no children
-  """)
-  public void regularElement05() {
+  public void jsActionAttribute01() {
     final Markup subject;
     subject = Markup.of();
 
@@ -134,11 +80,111 @@ public class MarkupTest {
   }
 
   @Test(description = """
-  regular elem:
-  - 2 reg attrs (markup) (8bit)
-  - no children
+  js action attr:
+  - count: 1
+  - markup
+  - name (8 bit)
+  - void elem
   """)
-  public void regularElement06() {
+  public void jsActionAttribute02() {
+    final Markup subject;
+    subject = Markup.of();
+
+    final JsAction action;
+    action = Js.noop();
+
+    subject.input(
+        subject.onclick(action)
+    );
+
+    assertEquals(
+        subject.compile(),
+
+        HtmlY.create(opts -> {
+          opts.addByte(HtmlBytes.xJSACTION88);
+          opts.addInt8(AttributeName.ONCLICK.index());
+          opts.addInt8(opts.addObject(action));
+          opts.addByte(HtmlBytes.ELEMVOID8);
+          opts.addInt8(ElementName.INPUT.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(1);
+          opts.addInt8(0);
+        })
+    );
+  }
+
+  @Test(description = """
+  reg attr:
+  - count: 1
+  - object
+  - name (8 bit)
+  - reg elem
+  """)
+  public void regularAttribute03() {
+    final Markup subject;
+    subject = Markup.of();
+
+    subject.div(
+        Id.of("foo")
+    );
+
+    assertEquals(
+        subject.compile(),
+
+        HtmlY.create(opts -> {
+          opts.addByte(HtmlBytes.xATTRIBUTE88);
+          opts.addInt8(AttributeName.ID.index());
+          opts.addInt8(opts.addObject("foo"));
+          opts.addByte(HtmlBytes.ELEMSTR8);
+          opts.addInt8(ElementName.DIV.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(1);
+          opts.addInt8(0);
+          opts.addByte(HtmlBytes.ELEMEND8);
+          opts.addInt8(ElementName.DIV.index());
+        })
+    );
+  }
+
+  @Test(description = """
+  reg attr:
+  - count: 1
+  - object
+  - name (8 bit)
+  - void elem
+  """)
+  public void regularAttribute04() {
+    final Markup subject;
+    subject = Markup.of();
+
+    subject.input(
+        Id.of("foo")
+    );
+
+    assertEquals(
+        subject.compile(),
+
+        HtmlY.create(opts -> {
+          opts.addByte(HtmlBytes.xATTRIBUTE88);
+          opts.addInt8(AttributeName.ID.index());
+          opts.addInt8(opts.addObject("foo"));
+          opts.addByte(HtmlBytes.ELEMVOID8);
+          opts.addInt8(ElementName.INPUT.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(1);
+          opts.addInt8(0);
+        })
+    );
+  }
+
+  @Test(description = """
+  reg attr:
+  - count: 2
+  - markup
+  - name (8 bit)
+  - reg elem
+  """)
+  public void regularAttribute05() {
     final Markup subject;
     subject = Markup.of();
 
@@ -170,11 +216,49 @@ public class MarkupTest {
   }
 
   @Test(description = """
-  regular elem:
-  - 3 reg attrs (class) (8bit)
-  - no children
+  reg attr:
+  - count: 2
+  - markup
+  - name (8 bit)
+  - void elem
   """)
-  public void regularElement07() {
+  public void regularAttribute06() {
+    final Markup subject;
+    subject = Markup.of();
+
+    subject.input(
+        subject.type("text"),
+        subject.size("30")
+    );
+
+    assertEquals(
+        subject.compile(),
+
+        HtmlY.create(opts -> {
+          opts.addByte(HtmlBytes.xATTRIBUTE88);
+          opts.addInt8(AttributeName.TYPE.index());
+          opts.addInt8(opts.addObject("text"));
+          opts.addByte(HtmlBytes.xATTRIBUTE88);
+          opts.addInt8(AttributeName.SIZE.index());
+          opts.addInt8(opts.addObject("30"));
+          opts.addByte(HtmlBytes.ELEMVOID8);
+          opts.addInt8(ElementName.INPUT.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(2);
+          opts.addInt8(0);
+          opts.addInt8(3);
+        })
+    );
+  }
+
+  @Test(description = """
+  reg attr:
+  - count: 3
+  - object (class)
+  - name (8 bit)
+  - reg elem
+  """)
+  public void regularAttribute07() {
     final Markup subject;
     subject = Markup.of();
 
@@ -211,102 +295,13 @@ public class MarkupTest {
   }
 
   @Test(description = """
-  void elem:
-  - 1 reg attr (object) (8bit)
+  reg attr:
+  - count: 3
+  - object (class)
+  - name (8 bit)
+  - void elem
   """)
-  public void voidElement04() {
-    final Markup subject;
-    subject = Markup.of();
-
-    subject.input(
-        Id.of("foo")
-    );
-
-    assertEquals(
-        subject.compile(),
-
-        HtmlY.create(opts -> {
-          opts.addByte(HtmlBytes.xATTRIBUTE88);
-          opts.addInt8(AttributeName.ID.index());
-          opts.addInt8(opts.addObject("foo"));
-          opts.addByte(HtmlBytes.ELEMVOID8);
-          opts.addInt8(ElementName.INPUT.index());
-          opts.addByte(HtmlBytes.VALUES8);
-          opts.addInt8(1);
-          opts.addInt8(0);
-        })
-    );
-  }
-
-  @Test(description = """
-  void elem:
-  - 1 js action attr (object) (8bit)
-  """)
-  public void voidElement05() {
-    final Markup subject;
-    subject = Markup.of();
-
-    final JsAction action;
-    action = Js.noop();
-
-    subject.input(
-        subject.onclick(action)
-    );
-
-    assertEquals(
-        subject.compile(),
-
-        HtmlY.create(opts -> {
-          opts.addByte(HtmlBytes.xJSACTION88);
-          opts.addInt8(AttributeName.ONCLICK.index());
-          opts.addInt8(opts.addObject(action));
-          opts.addByte(HtmlBytes.ELEMVOID8);
-          opts.addInt8(ElementName.INPUT.index());
-          opts.addByte(HtmlBytes.VALUES8);
-          opts.addInt8(1);
-          opts.addInt8(0);
-        })
-    );
-  }
-
-  @Test(description = """
-  void elem:
-  - 2 reg attrs (markup) (8bit)
-  """)
-  public void voidElement06() {
-    final Markup subject;
-    subject = Markup.of();
-
-    subject.input(
-        subject.type("text"),
-        subject.size("30")
-    );
-
-    assertEquals(
-        subject.compile(),
-
-        HtmlY.create(opts -> {
-          opts.addByte(HtmlBytes.xATTRIBUTE88);
-          opts.addInt8(AttributeName.TYPE.index());
-          opts.addInt8(opts.addObject("text"));
-          opts.addByte(HtmlBytes.xATTRIBUTE88);
-          opts.addInt8(AttributeName.SIZE.index());
-          opts.addInt8(opts.addObject("30"));
-          opts.addByte(HtmlBytes.ELEMVOID8);
-          opts.addInt8(ElementName.INPUT.index());
-          opts.addByte(HtmlBytes.VALUES8);
-          opts.addInt8(2);
-          opts.addInt8(0);
-          opts.addInt8(3);
-        })
-    );
-  }
-
-  @Test(description = """
-  void elem:
-  - 3 reg attrs (class) (8bit)
-  """)
-  public void voidElement07() {
+  public void regularAttribute08() {
     final Markup subject;
     subject = Markup.of();
 
@@ -336,6 +331,31 @@ public class MarkupTest {
           opts.addInt8(3);
           opts.addInt8(0);
           opts.addInt8(6);
+        })
+    );
+  }
+
+  @Test(description = """
+  regular elem:
+  - no attrs
+  - no children
+  """)
+  public void regularElement01() {
+    final Markup subject;
+    subject = Markup.of();
+
+    subject.div();
+
+    assertEquals(
+        subject.compile(),
+
+        HtmlY.create(opts -> {
+          opts.addByte(HtmlBytes.ELEMSTR8);
+          opts.addInt8(ElementName.DIV.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(0);
+          opts.addByte(HtmlBytes.ELEMEND8);
+          opts.addInt8(ElementName.DIV.index());
         })
     );
   }

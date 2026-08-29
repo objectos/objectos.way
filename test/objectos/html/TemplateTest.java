@@ -28,6 +28,50 @@ import org.testng.annotations.Test;
 public class TemplateTest {
 
   @Test(description = """
+  boolean attr:
+  - count: 1
+  - object
+  - name (8 bit)
+  - reg elem
+  """)
+  public void booleanAttribute01() {
+    test(
+        new Template() {
+          @Override
+          protected final void render() {
+            span(autofocus);
+          }
+        },
+
+        """
+        <span autofocus></span>
+        """
+    );
+  }
+
+  @Test(description = """
+  boolean attr:
+  - count: 1
+  - object
+  - name (8 bit)
+  - void elem
+  """)
+  public void booleanAttribute02() {
+    test(
+        new Template() {
+          @Override
+          protected final void render() {
+            input(checked);
+          }
+        },
+
+        """
+        <input checked>
+        """
+    );
+  }
+
+  @Test(description = """
   document:
   - empty
   """)
@@ -41,6 +85,185 @@ public class TemplateTest {
         },
 
         ""
+    );
+  }
+
+  @Test(description = """
+  js action attr:
+  - count: 1
+  - markup
+  - name (8 bit)
+  - reg elem
+  """)
+  public void jsActionAttribute01() {
+    test(
+        new Template() {
+          @Override
+          protected final void render() {
+            div(onclick(Js.noop()));
+          }
+        },
+
+        """
+        <div onclick='["NO"]'></div>
+        """
+    );
+  }
+
+  @Test(description = """
+  reg attr:
+  - count: 1
+  - markup
+  - name (8 bit)
+  - reg elem
+  """)
+  public void regularAttribute01() {
+    test(
+        new Template() {
+          @Override
+          protected final void render() {
+            div(contenteditable("false"));
+          }
+        },
+
+        """
+        <div contenteditable="false"></div>
+        """
+    );
+  }
+
+  @Test(description = """
+  reg attr:
+  - count: 1
+  - markup
+  - name (8 bit)
+  - void elem
+  """)
+  public void regularAttribute02_8bit() {
+    test(
+        new Template() {
+          @Override
+          protected final void render() {
+            input(type("password"));
+          }
+        },
+
+        """
+        <input type="password">
+        """
+    );
+  }
+
+  @Test(description = """
+  reg attr:
+  - count: 1
+  - object
+  - name (8 bit)
+  - reg elem
+  """)
+  public void regularAttribute03() {
+    test(
+        new Template() {
+          @Override
+          protected final void render() {
+            div(Id.of("foo"));
+          }
+        },
+
+        """
+        <div id="foo"></div>
+        """
+    );
+  }
+
+  @Test(description = """
+  reg attr:
+  - count: 1
+  - object
+  - name (8 bit)
+  - void elem
+  """)
+  public void regularAttribute04() {
+    test(
+        new Template() {
+          @Override
+          protected final void render() {
+            input(Id.of("foo"));
+          }
+        },
+
+        """
+        <input id="foo">
+        """
+    );
+  }
+
+  @Test(description = """
+  reg attr:
+  - count: 2
+  - markup
+  - name (8 bit)
+  - reg elem
+  """)
+  public void regularAttribute05() {
+    test(
+        new Template() {
+          @Override
+          protected final void render() {
+            html(lang("pt-BR"), dir("auto"));
+          }
+        },
+
+        """
+        <html lang="pt-BR" dir="auto"></html>
+        """
+    );
+  }
+
+  @Test(description = """
+  reg attr:
+  - count: 2
+  - markup
+  - name (8 bit)
+  - void elem
+  """)
+  public void regularAttribute06() {
+    test(
+        new Template() {
+          @Override
+          protected final void render() {
+            input(
+                type("text"),
+                size("30")
+            );
+          }
+        },
+
+        """
+        <input type="text" size="30">
+        """
+    );
+  }
+
+  @Test(description = """
+  reg attr:
+  - count: 3
+  - object (class)
+  - name (8 bit)
+  - reg elem
+  """)
+  public void regularAttribute07() {
+    test(
+        new Template() {
+          @Override
+          protected final void render() {
+            span(className("c1"), ClassName.of("c2"), className("c3"));
+          }
+        },
+
+        """
+        <span class="c1 c2 c3"></span>
+        """
     );
   }
 
@@ -60,224 +283,6 @@ public class TemplateTest {
 
         """
         <div></div>
-        """
-    );
-  }
-
-  @Test(description = """
-  regular elem:
-  - 1 reg attr (markup) (8bit)
-  - no children
-  """)
-  public void regularElement02() {
-    test(
-        new Template() {
-          @Override
-          protected final void render() {
-            div(contenteditable("false"));
-          }
-        },
-
-        """
-        <div contenteditable="false"></div>
-        """
-    );
-  }
-
-  @Test(description = """
-  regular elem:
-  - 1 boolean attr (object) (8bit)
-  - no children
-  """)
-  public void regularElement03() {
-    test(
-        new Template() {
-          @Override
-          protected final void render() {
-            span(autofocus);
-          }
-        },
-
-        """
-        <span autofocus></span>
-        """
-    );
-  }
-
-  @Test(description = """
-  regular elem:
-  - 1 reg attr (object) (8bit)
-  - no children
-  """)
-  public void regularElement04() {
-    test(
-        new Template() {
-          @Override
-          protected final void render() {
-            div(Id.of("foo"));
-          }
-        },
-
-        """
-        <div id="foo"></div>
-        """
-    );
-  }
-
-  @Test(description = """
-  regular elem:
-  - 1 js action attr (object) (8bit)
-  - no children
-  """)
-  public void regularElement05() {
-    test(
-        new Template() {
-          @Override
-          protected final void render() {
-            div(onclick(Js.noop()));
-          }
-        },
-
-        """
-        <div onclick='["NO"]'></div>
-        """
-    );
-  }
-
-  @Test(description = """
-  regular elem:
-  - 2 reg attrs (markup) (8bit)
-  - no children
-  """)
-  public void regularElement06() {
-    test(
-        new Template() {
-          @Override
-          protected final void render() {
-            html(lang("pt-BR"), dir("auto"));
-          }
-        },
-
-        """
-        <html lang="pt-BR" dir="auto"></html>
-        """
-    );
-  }
-
-  @Test(description = """
-  regular elem:
-  - 3 reg attrs (class) (8bit)
-  - no children
-  """)
-  public void regularElement07() {
-    test(
-        new Template() {
-          @Override
-          protected final void render() {
-            span(className("c1"), ClassName.of("c2"), className("c3"));
-          }
-        },
-
-        """
-        <span class="c1 c2 c3"></span>
-        """
-    );
-  }
-
-  @Test(description = """
-  void elem:
-  - no attrs
-  """)
-  public void voidElement01() {
-    test(
-        new Template() {
-          @Override
-          protected final void render() {
-            hr();
-          }
-        },
-
-        """
-        <hr>
-        """
-    );
-  }
-
-  @Test(description = """
-  void elem:
-  - 1 reg attr (markup) (8bit)
-  """)
-  public void voidElement02_8bit() {
-    test(
-        new Template() {
-          @Override
-          protected final void render() {
-            input(type("password"));
-          }
-        },
-
-        """
-        <input type="password">
-        """
-    );
-  }
-
-  @Test(description = """
-  void elem:
-  - 1 boolean attr (object) (8bit)
-  """)
-  public void voidElement03() {
-    test(
-        new Template() {
-          @Override
-          protected final void render() {
-            input(checked);
-          }
-        },
-
-        """
-        <input checked>
-        """
-    );
-  }
-
-  @Test(description = """
-  void elem:
-  - 1 reg attr (object) (8bit)
-  """)
-  public void voidElement04() {
-    test(
-        new Template() {
-          @Override
-          protected final void render() {
-            input(Id.of("foo"));
-          }
-        },
-
-        """
-        <input id="foo">
-        """
-    );
-  }
-
-  @Test(description = """
-  void elem:
-  - 2 reg attrs (markup) (8bit)
-  """)
-  public void voidElement06() {
-    test(
-        new Template() {
-          @Override
-          protected final void render() {
-            input(
-                type("text"),
-                size("30")
-            );
-          }
-        },
-
-        """
-        <input type="text" size="30">
         """
     );
   }
@@ -1226,6 +1231,28 @@ public class TemplateTest {
     );
   }
 
+  @Test(description = """
+  HtmlTemplate TC47
+
+  - text at root
+  """)
+  public void testCase47() {
+    test(
+        new Template() {
+          @Override
+          protected final void render() {
+            span("foo");
+            text("bar");
+            span("zaz");
+          }
+        },
+
+        """
+        <span>foo</span>bar<span>zaz</span>
+        """
+    );
+  }
+
   /*
   @Test(description = """
   HtmlTemplate TC46 (A)
@@ -1280,28 +1307,6 @@ public class TemplateTest {
     );
   }
   */
-
-  @Test(description = """
-  HtmlTemplate TC47
-
-  - text at root
-  """)
-  public void testCase47() {
-    test(
-        new Template() {
-          @Override
-          protected final void render() {
-            span("foo");
-            text("bar");
-            span("zaz");
-          }
-        },
-
-        """
-        <span>foo</span>bar<span>zaz</span>
-        """
-    );
-  }
 
   @Test(description = """
   HtmlTemplate TC48
@@ -1570,6 +1575,38 @@ public class TemplateTest {
     );
   }
 
+  @Test(description = """
+  The Media.Text methods
+  """)
+  public void testCase70() throws IOException {
+    var template = new Template() {
+      @Override
+      protected final void render() {
+        doctype();
+        html();
+      }
+    };
+
+    final Content content;
+    content = template.toContent();
+
+    final ByteArrayOutputStream out;
+    out = new ByteArrayOutputStream();
+
+    content.binaryTo(out);
+
+    final byte[] bytes;
+    bytes = out.toByteArray();
+
+    final String result;
+    result = new String(bytes, StandardCharsets.UTF_8);
+
+    assertEquals(result, """
+    <!DOCTYPE html>
+    <html></html>
+    """);
+  }
+
   /*
   @Test(description = """
   Html.Template::renderComponent
@@ -1609,38 +1646,6 @@ public class TemplateTest {
     );
   }
   */
-
-  @Test(description = """
-  The Media.Text methods
-  """)
-  public void testCase70() throws IOException {
-    var template = new Template() {
-      @Override
-      protected final void render() {
-        doctype();
-        html();
-      }
-    };
-
-    final Content content;
-    content = template.toContent();
-
-    final ByteArrayOutputStream out;
-    out = new ByteArrayOutputStream();
-
-    content.binaryTo(out);
-
-    final byte[] bytes;
-    bytes = out.toByteArray();
-
-    final String result;
-    result = new String(bytes, StandardCharsets.UTF_8);
-
-    assertEquals(result, """
-    <!DOCTYPE html>
-    <html></html>
-    """);
-  }
 
   @Test(description = "root fragment 01: one")
   public void testCase73() {
@@ -1774,6 +1779,25 @@ public class TemplateTest {
         },
 
         """
+        """
+    );
+  }
+
+  @Test(description = """
+  void elem:
+  - no attrs
+  """)
+  public void voidElement01() {
+    test(
+        new Template() {
+          @Override
+          protected final void render() {
+            hr();
+          }
+        },
+
+        """
+        <hr>
         """
     );
   }

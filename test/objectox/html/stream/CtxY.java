@@ -44,16 +44,16 @@ final class CtxY {
     return sink.addByte(value);
   }
 
-  public final void addInt8(int value) {
-    sink.addInt8(value);
-  }
-
   public final void addInt16(int value) {
     sink.addInt16(value);
   }
 
   public final void addInt24(int value) {
     sink.addInt24(value);
+  }
+
+  public final void addInt8(int value) {
+    sink.addInt8(value);
   }
 
   public final int addObject(Object value) {
@@ -64,10 +64,6 @@ final class CtxY {
     sink.objectsIndex(value);
   }
 
-  public final void result(Event value) {
-    result = value;
-  }
-
   public final void push(Frame value) {
     final int index;
     index = ++stackIndex;
@@ -75,6 +71,10 @@ final class CtxY {
     stack = Util.growIfNecessary(stack, index);
 
     stack[index] = value;
+  }
+
+  public final void result(Event value) {
+    result = value;
   }
 
   public final void sink(Ctx ctx) {

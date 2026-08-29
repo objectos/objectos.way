@@ -27,57 +27,24 @@ import org.testng.annotations.Test;
 public class BeginVoidElementContentsStateTest {
 
   @Test(description = """
-  void elem:
-  - no attrs
+  boolean attr:
+  - count: 1
+  - object
+  - name (8 bit)
+  - void elem
   """)
-  public void voidElement01() {
+  public void booleanAttribute02() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.ELEMVOID8);
-      opts.addInt8(ElementName.HR.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(0);
-
-      opts.push(new ScanDocumentNodeFrame(2));
-    });
-
-    final BeginVoidElementContentsState subject;
-    subject = new BeginVoidElementContentsState(ctx);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res, new ScanVoidElementAttributeState(ctx));
-
-    assertEquals(
-        ctx,
-
-        CtxY.create(opts -> {
-          opts.sink(ctx);
-
-          opts.push(new ScanDocumentNodeFrame(4));
-          opts.push(new ScanVoidElementAttributeFrame(4, IntSize.BIT8, 0));
-        })
-    );
-  }
-
-  @Test(description = """
-  void elem:
-  - 1 reg attr (markup) (8bit)
-  """)
-  public void voidElement02_8bit() {
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.TYPE.index());
-      opts.addInt8(opts.addObject("password"));
+      opts.addByte(HtmlBytes.xBOOLEAN8);
+      opts.addInt8(AttributeName.CHECKED.index());
       opts.addByte(HtmlBytes.ELEMVOID8);
       opts.addInt8(ElementName.INPUT.index());
       opts.addByte(HtmlBytes.VALUES8);
       opts.addInt8(1);
       opts.addInt8(0);
 
-      opts.push(new ScanDocumentNodeFrame(5));
+      opts.push(new ScanDocumentNodeFrame(4));
     });
 
     final BeginVoidElementContentsState subject;
@@ -94,17 +61,20 @@ public class BeginVoidElementContentsStateTest {
         CtxY.create(opts -> {
           opts.sink(ctx);
 
-          opts.push(new ScanDocumentNodeFrame(7));
-          opts.push(new ScanVoidElementAttributeFrame(7, IntSize.BIT8, 1));
+          opts.push(new ScanDocumentNodeFrame(6));
+          opts.push(new ScanVoidElementAttributeFrame(6, IntSize.BIT8, 1));
         })
     );
   }
 
   @Test(description = """
-  void elem:
-  - 1 reg attr (markup) (16bit)
+  reg attr:
+  - count: 1
+  - markup
+  - name (16 bit)
+  - void elem
   """)
-  public void voidElement02_16bit() {
+  public void regularAttribute02_16bit() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
@@ -142,10 +112,13 @@ public class BeginVoidElementContentsStateTest {
   }
 
   @Test(description = """
-  void elem:
-  - 1 reg attr (markup) (24bit)
+  reg attr:
+  - count: 1
+  - markup
+  - name (24 bit)
+  - void elem
   """)
-  public void voidElement02_24bit() {
+  public void regularAttribute02_24bit() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
@@ -183,21 +156,25 @@ public class BeginVoidElementContentsStateTest {
   }
 
   @Test(description = """
-  void elem:
-  - 1 boolean attr (object) (8bit)
+  reg attr:
+  - count: 1
+  - markup
+  - name (8 bit)
+  - void elem
   """)
-  public void voidElement03() {
+  public void regularAttribute02_8bit() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.xBOOLEAN8);
-      opts.addInt8(AttributeName.CHECKED.index());
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.TYPE.index());
+      opts.addInt8(opts.addObject("password"));
       opts.addByte(HtmlBytes.ELEMVOID8);
       opts.addInt8(ElementName.INPUT.index());
       opts.addByte(HtmlBytes.VALUES8);
       opts.addInt8(1);
       opts.addInt8(0);
 
-      opts.push(new ScanDocumentNodeFrame(4));
+      opts.push(new ScanDocumentNodeFrame(5));
     });
 
     final BeginVoidElementContentsState subject;
@@ -214,17 +191,20 @@ public class BeginVoidElementContentsStateTest {
         CtxY.create(opts -> {
           opts.sink(ctx);
 
-          opts.push(new ScanDocumentNodeFrame(6));
-          opts.push(new ScanVoidElementAttributeFrame(6, IntSize.BIT8, 1));
+          opts.push(new ScanDocumentNodeFrame(7));
+          opts.push(new ScanVoidElementAttributeFrame(7, IntSize.BIT8, 1));
         })
     );
   }
 
   @Test(description = """
-  void elem:
-  - 1 reg attr (object) (8bit)
+  reg attr:
+  - count: 1
+  - object
+  - name (8 bit)
+  - void elem
   """)
-  public void voidElement04() {
+  public void regularAttribute04() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.xATTRIBUTE88);
@@ -255,6 +235,41 @@ public class BeginVoidElementContentsStateTest {
 
           opts.push(new ScanDocumentNodeFrame(7));
           opts.push(new ScanVoidElementAttributeFrame(7, IntSize.BIT8, 1));
+        })
+    );
+  }
+
+  @Test(description = """
+  void elem:
+  - no attrs
+  """)
+  public void voidElement01() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.ELEMVOID8);
+      opts.addInt8(ElementName.HR.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(0);
+
+      opts.push(new ScanDocumentNodeFrame(2));
+    });
+
+    final BeginVoidElementContentsState subject;
+    subject = new BeginVoidElementContentsState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new ScanVoidElementAttributeState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(new ScanDocumentNodeFrame(4));
+          opts.push(new ScanVoidElementAttributeFrame(4, IntSize.BIT8, 0));
         })
     );
   }

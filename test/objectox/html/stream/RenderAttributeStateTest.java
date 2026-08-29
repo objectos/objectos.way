@@ -27,11 +27,13 @@ import org.testng.annotations.Test;
 public class RenderAttributeStateTest {
 
   @Test(description = """
-  regular elem:
-  - 1 reg attr (markup) (8bit)
-  - no children
+  reg attr:
+  - count: 1
+  - markup
+  - name (8 bit)
+  - reg elem
   """)
-  public void regularElement02_08bit() {
+  public void regularAttribute01_08bit() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.xATTRIBUTE88);
@@ -70,11 +72,13 @@ public class RenderAttributeStateTest {
   }
 
   @Test(description = """
-  regular elem:
-  - 1 reg attr (markup) (16bit)
-  - no children
+  reg attr:
+  - count: 1
+  - markup
+  - name (16 bit)
+  - reg elem
   """)
-  public void regularElement02_16bit() {
+  public void regularAttribute01_16bit() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
@@ -115,11 +119,13 @@ public class RenderAttributeStateTest {
   }
 
   @Test(description = """
-  regular elem:
-  - 1 reg attr (markup) (24bit)
-  - no children
+  reg attr:
+  - count: 1
+  - markup
+  - name (24 bit)
+  - reg elem
   """)
-  public void regularElement02_24bit() {
+  public void regularAttribute01_24bit() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
@@ -160,11 +166,146 @@ public class RenderAttributeStateTest {
   }
 
   @Test(description = """
-  regular elem:
-  - 1 reg attr (object) (8bit)
-  - no children
+  reg attr:
+  - count: 1
+  - markup
+  - name (8 bit)
+  - void elem
   """)
-  public void regularElement04() {
+  public void regularAttribute02_08bit() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.TYPE.index());
+      opts.addInt8(opts.addObject("password"));
+      opts.addByte(HtmlBytes.ELEMVOID8);
+      opts.addInt8(ElementName.INPUT.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+
+      opts.push(new ScanDocumentNodeFrame(7));
+      opts.push(new ScanVoidElementAttributeFrame(8, IntSize.BIT8, 1, 1));
+      opts.push(new JumpFrame(1));
+    });
+
+    final RenderAttributeState subject;
+    subject = new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT8);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new MergeAttributeState(ctx, IntSize.BIT8, AttributeName.TYPE, "password"));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+          opts.push(new ScanDocumentNodeFrame(7));
+          opts.push(new ScanVoidElementAttributeFrame(8, IntSize.BIT8, 1, 1));
+        })
+    );
+  }
+
+  @Test(description = """
+  reg attr:
+  - count: 1
+  - markup
+  - name (16 bit)
+  - void elem
+  """)
+  public void regularAttribute02_16bit() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
+
+      opts.addByte(HtmlBytes.xATTRIBUTE816);
+      opts.addInt8(AttributeName.TYPE.index());
+      opts.addInt16(opts.addObject("password"));
+      opts.addByte(HtmlBytes.ELEMVOID8);
+      opts.addInt8(ElementName.INPUT.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+
+      opts.push(new ScanDocumentNodeFrame(8));
+      opts.push(new ScanVoidElementAttributeFrame(9, IntSize.BIT8, 1, 1));
+      opts.push(new JumpFrame(1));
+    });
+
+    final RenderAttributeState subject;
+    subject = new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT16);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new MergeAttributeState(ctx, IntSize.BIT8, AttributeName.TYPE, "password"));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+          opts.push(new ScanDocumentNodeFrame(8));
+          opts.push(new ScanVoidElementAttributeFrame(9, IntSize.BIT8, 1, 1));
+        })
+    );
+  }
+
+  @Test(description = """
+  reg attr:
+  - count: 1
+  - markup
+  - name (24 bit)
+  - void elem
+  """)
+  public void regularAttribute02_24bit() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
+
+      opts.addByte(HtmlBytes.xATTRIBUTE824);
+      opts.addInt8(AttributeName.TYPE.index());
+      opts.addInt24(opts.addObject("password"));
+      opts.addByte(HtmlBytes.ELEMVOID8);
+      opts.addInt8(ElementName.INPUT.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+
+      opts.push(new ScanDocumentNodeFrame(9));
+      opts.push(new ScanVoidElementAttributeFrame(10, IntSize.BIT8, 1, 1));
+      opts.push(new JumpFrame(1));
+    });
+
+    final RenderAttributeState subject;
+    subject = new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT24);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new MergeAttributeState(ctx, IntSize.BIT8, AttributeName.TYPE, "password"));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+          opts.push(new ScanDocumentNodeFrame(9));
+          opts.push(new ScanVoidElementAttributeFrame(10, IntSize.BIT8, 1, 1));
+        })
+    );
+  }
+
+  @Test(description = """
+  reg attr:
+  - count: 1
+  - object
+  - name (8 bit)
+  - reg elem
+  """)
+  public void regularAttribute03() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.xATTRIBUTE88);
@@ -203,11 +344,56 @@ public class RenderAttributeStateTest {
   }
 
   @Test(description = """
-  regular elem:
-  - 2 reg attrs (markup) (8bit)
-  - no children
+  reg attr:
+  - count: 1
+  - object
+  - name (8 bit)
+  - void elem
   """)
-  public void regularElement06() {
+  public void regularAttribute04() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.ID.index());
+      opts.addInt8(opts.addObject("foo"));
+      opts.addByte(HtmlBytes.ELEMVOID8);
+      opts.addInt8(ElementName.INPUT.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+
+      opts.push(new ScanDocumentNodeFrame(7));
+      opts.push(new ScanVoidElementAttributeFrame(8, IntSize.BIT8, 1, 1));
+      opts.push(new JumpFrame(1));
+    });
+
+    final RenderAttributeState subject;
+    subject = new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT8);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new MergeAttributeState(ctx, IntSize.BIT8, AttributeName.ID, "foo"));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+          opts.push(new ScanDocumentNodeFrame(7));
+          opts.push(new ScanVoidElementAttributeFrame(8, IntSize.BIT8, 1, 1));
+        })
+    );
+  }
+
+  @Test(description = """
+  reg attr:
+  - count: 2
+  - markup
+  - name (8 bit)
+  - reg elem
+  """)
+  public void regularAttribute05() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.xATTRIBUTE88);
@@ -250,11 +436,13 @@ public class RenderAttributeStateTest {
   }
 
   @Test(description = """
-  regular elem:
-  - 2 reg attrs (markup) (8bit)
-  - no children
+  reg attr:
+  - count: 2
+  - markup
+  - name (8 bit)
+  - reg elem
   """)
-  public void regularElement06b() {
+  public void regularAttribute05b() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.xATTRIBUTE88);
@@ -297,11 +485,13 @@ public class RenderAttributeStateTest {
   }
 
   @Test(description = """
-  regular elem:
-  - 3 reg attrs (class) (8bit)
-  - no children
+  reg attr:
+  - count: 3
+  - object (class)
+  - name (8 bit)
+  - reg elem
   """)
-  public void regularElement07() {
+  public void regularAttribute07() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.xATTRIBUTE88);
@@ -343,170 +533,6 @@ public class RenderAttributeStateTest {
           opts.sink(ctx);
           opts.push(new ScanDocumentNodeFrame(13));
           opts.push(new ScanRegularElementAttributeFrame(14, IntSize.BIT8, 3, 1));
-        })
-    );
-  }
-
-  @Test(description = """
-  void elem:
-  - 1 reg attr (markup) (8bit)
-  """)
-  public void voidElement02_08bit() {
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.TYPE.index());
-      opts.addInt8(opts.addObject("password"));
-      opts.addByte(HtmlBytes.ELEMVOID8);
-      opts.addInt8(ElementName.INPUT.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-
-      opts.push(new ScanDocumentNodeFrame(7));
-      opts.push(new ScanVoidElementAttributeFrame(8, IntSize.BIT8, 1, 1));
-      opts.push(new JumpFrame(1));
-    });
-
-    final RenderAttributeState subject;
-    subject = new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT8);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res, new MergeAttributeState(ctx, IntSize.BIT8, AttributeName.TYPE, "password"));
-
-    assertEquals(
-        ctx,
-
-        CtxY.create(opts -> {
-          opts.sink(ctx);
-          opts.push(new ScanDocumentNodeFrame(7));
-          opts.push(new ScanVoidElementAttributeFrame(8, IntSize.BIT8, 1, 1));
-        })
-    );
-  }
-
-  @Test(description = """
-  void elem:
-  - 1 reg attr (markup) (16bit)
-  """)
-  public void voidElement02_16bit() {
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
-
-      opts.addByte(HtmlBytes.xATTRIBUTE816);
-      opts.addInt8(AttributeName.TYPE.index());
-      opts.addInt16(opts.addObject("password"));
-      opts.addByte(HtmlBytes.ELEMVOID8);
-      opts.addInt8(ElementName.INPUT.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-
-      opts.push(new ScanDocumentNodeFrame(8));
-      opts.push(new ScanVoidElementAttributeFrame(9, IntSize.BIT8, 1, 1));
-      opts.push(new JumpFrame(1));
-    });
-
-    final RenderAttributeState subject;
-    subject = new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT16);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res, new MergeAttributeState(ctx, IntSize.BIT8, AttributeName.TYPE, "password"));
-
-    assertEquals(
-        ctx,
-
-        CtxY.create(opts -> {
-          opts.sink(ctx);
-          opts.push(new ScanDocumentNodeFrame(8));
-          opts.push(new ScanVoidElementAttributeFrame(9, IntSize.BIT8, 1, 1));
-        })
-    );
-  }
-
-  @Test(description = """
-  void elem:
-  - 1 reg attr (markup) (24bit)
-  """)
-  public void voidElement02_24bit() {
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
-
-      opts.addByte(HtmlBytes.xATTRIBUTE824);
-      opts.addInt8(AttributeName.TYPE.index());
-      opts.addInt24(opts.addObject("password"));
-      opts.addByte(HtmlBytes.ELEMVOID8);
-      opts.addInt8(ElementName.INPUT.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-
-      opts.push(new ScanDocumentNodeFrame(9));
-      opts.push(new ScanVoidElementAttributeFrame(10, IntSize.BIT8, 1, 1));
-      opts.push(new JumpFrame(1));
-    });
-
-    final RenderAttributeState subject;
-    subject = new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT24);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res, new MergeAttributeState(ctx, IntSize.BIT8, AttributeName.TYPE, "password"));
-
-    assertEquals(
-        ctx,
-
-        CtxY.create(opts -> {
-          opts.sink(ctx);
-          opts.push(new ScanDocumentNodeFrame(9));
-          opts.push(new ScanVoidElementAttributeFrame(10, IntSize.BIT8, 1, 1));
-        })
-    );
-  }
-
-  @Test(description = """
-  void elem:
-  - 1 reg attr (object) (8bit)
-  """)
-  public void voidElement04() {
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.ID.index());
-      opts.addInt8(opts.addObject("foo"));
-      opts.addByte(HtmlBytes.ELEMVOID8);
-      opts.addInt8(ElementName.INPUT.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-
-      opts.push(new ScanDocumentNodeFrame(7));
-      opts.push(new ScanVoidElementAttributeFrame(8, IntSize.BIT8, 1, 1));
-      opts.push(new JumpFrame(1));
-    });
-
-    final RenderAttributeState subject;
-    subject = new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT8);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res, new MergeAttributeState(ctx, IntSize.BIT8, AttributeName.ID, "foo"));
-
-    assertEquals(
-        ctx,
-
-        CtxY.create(opts -> {
-          opts.sink(ctx);
-          opts.push(new ScanDocumentNodeFrame(7));
-          opts.push(new ScanVoidElementAttributeFrame(8, IntSize.BIT8, 1, 1));
         })
     );
   }

@@ -33,51 +33,13 @@ import org.testng.annotations.Test;
 public class MarkupImplTest {
 
   @Test(description = """
-  document:
-  - empty
+  reg attr:
+  - count: 1
+  - markup
+  - name (8 bit)
+  - reg elem
   """)
-  public void document01() {
-    final MarkupImpl subject;
-    subject = MarkupImpl.create();
-
-    assertEquals(
-        subject.unwrap(),
-
-        HtmlSinkY.create(_ -> {})
-    );
-  }
-
-  @Test(description = """
-  regular elem:
-  - no attrs
-  - no children
-  """)
-  public void regularElement01() {
-    final MarkupImpl subject;
-    subject = MarkupImpl.create();
-
-    subject.div();
-
-    assertEquals(
-        subject.unwrap(),
-
-        HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.ELEMSTR8);
-          opts.addInt8(ElementName.DIV.index());
-          opts.addByte(HtmlBytes.VALUES8);
-          opts.addInt8(0);
-          opts.addByte(HtmlBytes.ELEMEND8);
-          opts.addInt8(ElementName.DIV.index());
-        })
-    );
-  }
-
-  @Test(description = """
-  regular elem:
-  - 1 reg attr (markup) (8bit)
-  - no children
-  """)
-  public void regularElement02_08bit() {
+  public void regularAttribute01_08bit() {
     final MarkupImpl subject;
     subject = MarkupImpl.create();
 
@@ -104,11 +66,13 @@ public class MarkupImplTest {
   }
 
   @Test(description = """
-  regular elem:
-  - 1 reg attr (markup) (16bit)
-  - no children
+  reg attr:
+  - count: 1
+  - markup
+  - name (16 bit)
+  - reg elem
   """)
-  public void regularElement02_16bit() {
+  public void regularAttribute01_16bit() {
     final MarkupImpl subject;
     subject = MarkupImplY.create(opts -> {
       opts.objects(IntSize.BIT16);
@@ -139,11 +103,13 @@ public class MarkupImplTest {
   }
 
   @Test(description = """
-  regular elem:
-  - 1 reg attr (markup) (24bit)
-  - no children
+  reg attr:
+  - count: 1
+  - markup
+  - name (24 bit)
+  - reg elem
   """)
-  public void regularElement02_24bit() {
+  public void regularAttribute01_24bit() {
     final MarkupImpl subject;
     subject = MarkupImplY.create(opts -> {
       opts.objects(IntSize.BIT24);
@@ -174,11 +140,13 @@ public class MarkupImplTest {
   }
 
   @Test(description = """
-  regular elem:
-  - 1 boolean attr (object) (8bit)
-  - no children
+  boolean attr:
+  - count: 1
+  - object
+  - name (8 bit)
+  - reg elem
   """)
-  public void regularElement03() {
+  public void booleanAttribute01() {
     final MarkupImpl subject;
     subject = MarkupImpl.create();
 
@@ -204,11 +172,13 @@ public class MarkupImplTest {
   }
 
   @Test(description = """
-  regular elem:
-  - 1 reg attr (object) (8bit)
-  - no children
+  reg attr:
+  - count: 1
+  - object
+  - name (8 bit)
+  - reg elem
   """)
-  public void regularElement04() {
+  public void regularAttribute03() {
     final MarkupImpl subject;
     subject = MarkupImpl.create();
 
@@ -235,11 +205,13 @@ public class MarkupImplTest {
   }
 
   @Test(description = """
-  regular elem:
-  - 1 js action attr (object) (8bit)
-  - no children
+  js action attr:
+  - count: 1
+  - markup
+  - name (8 bit)
+  - reg elem
   """)
-  public void regularElement05() {
+  public void jsActionAttribute01() {
     final MarkupImpl subject;
     subject = MarkupImpl.create();
 
@@ -269,11 +241,13 @@ public class MarkupImplTest {
   }
 
   @Test(description = """
-  regular elem:
-  - 2 reg attrs (markup) (8bit)
-  - no children
+  reg attr:
+  - count: 2
+  - markup
+  - name (8 bit)
+  - reg elem
   """)
-  public void regularElement06() {
+  public void regularAttribute05() {
     final MarkupImpl subject;
     subject = MarkupImpl.create();
 
@@ -305,11 +279,13 @@ public class MarkupImplTest {
   }
 
   @Test(description = """
-  regular elem:
-  - 3 reg attrs (class) (8bit)
-  - no children
+  reg attr:
+  - count: 3
+  - object (class)
+  - name (8 bit)
+  - reg elem
   """)
-  public void regularElement07() {
+  public void regularAttribute07() {
     final MarkupImpl subject;
     subject = MarkupImpl.create();
 
@@ -346,32 +322,13 @@ public class MarkupImplTest {
   }
 
   @Test(description = """
-  void elem:
-  - no attrs
+  reg attr:
+  - count: 1
+  - markup
+  - name (8 bit)
+  - void elem
   """)
-  public void voidElement01() {
-    final MarkupImpl subject;
-    subject = MarkupImpl.create();
-
-    subject.hr();
-
-    assertEquals(
-        subject.unwrap(),
-
-        HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.ELEMVOID8);
-          opts.addInt8(ElementName.HR.index());
-          opts.addByte(HtmlBytes.VALUES8);
-          opts.addInt8(0);
-        })
-    );
-  }
-
-  @Test(description = """
-  void elem:
-  - 1 reg attr (markup) (8bit)
-  """)
-  public void voidElement02_08bit() {
+  public void regularAttribute02_08bit() {
     final MarkupImpl subject;
     subject = MarkupImplY.create(opts -> {
       opts.objects(IntSize.BIT8);
@@ -400,10 +357,13 @@ public class MarkupImplTest {
   }
 
   @Test(description = """
-  void elem:
-  - 1 reg attr (markup) (16bit)
+  reg attr:
+  - count: 1
+  - markup
+  - name (16 bit)
+  - void elem
   """)
-  public void voidElement02_16bit() {
+  public void regularAttribute02_16bit() {
     final MarkupImpl subject;
     subject = MarkupImplY.create(opts -> {
       opts.objects(IntSize.BIT16);
@@ -432,10 +392,13 @@ public class MarkupImplTest {
   }
 
   @Test(description = """
-  void elem:
-  - 1 reg attr (markup) (24bit)
+  reg attr:
+  - count: 1
+  - markup
+  - name (24 bit)
+  - void elem
   """)
-  public void voidElement02_24bit() {
+  public void regularAttribute02_24bit() {
     final MarkupImpl subject;
     subject = MarkupImplY.create(opts -> {
       opts.objects(IntSize.BIT24);
@@ -464,10 +427,13 @@ public class MarkupImplTest {
   }
 
   @Test(description = """
-  void elem:
-  - 1 boolean attr (object) (8bit)
+  boolean attr:
+  - count: 1
+  - object
+  - name (8 bit)
+  - void elem
   """)
-  public void voidElement03() {
+  public void booleanAttribute02() {
     final MarkupImpl subject;
     subject = MarkupImpl.create();
 
@@ -491,10 +457,13 @@ public class MarkupImplTest {
   }
 
   @Test(description = """
-  void elem:
-  - 1 reg attr (object) (8bit)
+  reg attr:
+  - count: 1
+  - object
+  - name (8 bit)
+  - void elem
   """)
-  public void voidElement04() {
+  public void regularAttribute04() {
     final MarkupImpl subject;
     subject = MarkupImpl.create();
 
@@ -519,10 +488,13 @@ public class MarkupImplTest {
   }
 
   @Test(description = """
-  void elem:
-  - 1 js action attr (object) (8bit)
+  js action attr:
+  - count: 1
+  - markup
+  - name (8 bit)
+  - void elem
   """)
-  public void voidElement05() {
+  public void jsActionAttribute02() {
     final MarkupImpl subject;
     subject = MarkupImpl.create();
 
@@ -550,10 +522,13 @@ public class MarkupImplTest {
   }
 
   @Test(description = """
-  void elem:
-  - 2 reg attrs (markup) (8bit)
+  reg attr:
+  - count: 2
+  - markup
+  - name (8 bit)
+  - void elem
   """)
-  public void voidElement06() {
+  public void regularAttribute06() {
     final MarkupImpl subject;
     subject = MarkupImpl.create();
 
@@ -583,10 +558,13 @@ public class MarkupImplTest {
   }
 
   @Test(description = """
-  void elem:
-  - 3 reg attrs (class) (8bit)
+  reg attr:
+  - count: 3
+  - object (class)
+  - name (8 bit)
+  - void elem
   """)
-  public void voidElement07() {
+  public void regularAttribute08() {
     final MarkupImpl subject;
     subject = MarkupImpl.create();
 

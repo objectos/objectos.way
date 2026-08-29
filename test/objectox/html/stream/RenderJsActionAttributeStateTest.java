@@ -28,11 +28,13 @@ import org.testng.annotations.Test;
 public class RenderJsActionAttributeStateTest {
 
   @Test(description = """
-  regular elem:
-  - 1 js action attr (object) (8bit)
-  - no children
+  js action attr:
+  - count: 1
+  - markup
+  - name (8 bit)
+  - reg elem
   """)
-  public void regularElement05() {
+  public void jsActionAttribute01() {
     final JsAction action;
     action = Js.noop();
 

@@ -69,7 +69,7 @@ public class VoidElementRecorderTest {
   @Test(description = """
   Attribute object (savepoint rollback + pre-record)
   """)
-  public void voidElement04() {
+  public void regularAttribute04() {
     final HtmlSink sink;
     sink = HtmlSinkY.create(opts -> {
       opts.addInt24(HtmlSink.MAX_INT24);
@@ -104,10 +104,13 @@ public class VoidElementRecorderTest {
   }
 
   @Test(description = """
-  void elem:
-  - 2 reg attrs (markup) (8bit)
+  reg attr:
+  - count: 2
+  - markup
+  - name (8 bit)
+  - void elem
   """)
-  public void voidElement06() {
+  public void regularAttribute06() {
     final HtmlSink sink;
     sink = HtmlSinkY.create(opts -> {
       opts.addInt24(HtmlSink.MAX_INT24);
@@ -157,7 +160,7 @@ public class VoidElementRecorderTest {
   @Test(description = """
   Attribute jsaction (savepoint rollback + pre-record)
   """)
-  public void voidElement05() {
+  public void jsActionAttribute02() {
     final JsAction action;
     action = Js.noop();
 
