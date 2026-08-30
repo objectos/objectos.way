@@ -33,6 +33,138 @@ import org.testng.annotations.Test;
 public class MarkupImplTest {
 
   @Test(description = """
+  boolean attr:
+  - count: 1
+  - object
+  - name (8 bit)
+  - reg elem
+  """)
+  public void booleanAttribute01() {
+    final MarkupImpl subject;
+    subject = MarkupImpl.create();
+
+    subject.span(
+        Markup.autofocus
+    );
+
+    assertEquals(
+        subject.unwrap(),
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.xBOOLEAN8);
+          opts.addInt8(AttributeName.AUTOFOCUS.index());
+          opts.addByte(HtmlBytes.ELEMSTR8);
+          opts.addInt8(ElementName.SPAN.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(1);
+          opts.addInt8(0);
+          opts.addByte(HtmlBytes.ELEMEND8);
+          opts.addInt8(ElementName.SPAN.index());
+        })
+    );
+  }
+
+  @Test(description = """
+  boolean attr:
+  - count: 1
+  - object
+  - name (8 bit)
+  - void elem
+  """)
+  public void booleanAttribute02() {
+    final MarkupImpl subject;
+    subject = MarkupImpl.create();
+
+    subject.input(
+        Markup.checked
+    );
+
+    assertEquals(
+        subject.unwrap(),
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.xBOOLEAN8);
+          opts.addInt8(AttributeName.CHECKED.index());
+          opts.addByte(HtmlBytes.ELEMVOID8);
+          opts.addInt8(ElementName.INPUT.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(1);
+          opts.addInt8(0);
+        })
+    );
+  }
+
+  @Test(description = """
+  js action attr:
+  - count: 1
+  - markup
+  - name (8 bit)
+  - reg elem
+  """)
+  public void jsActionAttribute01() {
+    final MarkupImpl subject;
+    subject = MarkupImpl.create();
+
+    final JsAction action;
+    action = Js.noop();
+
+    subject.div(
+        subject.onclick(action)
+    );
+
+    assertEquals(
+        subject.unwrap(),
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.xJSACTION88);
+          opts.addInt8(AttributeName.ONCLICK.index());
+          opts.addInt8(opts.addObject(action));
+          opts.addByte(HtmlBytes.ELEMSTR8);
+          opts.addInt8(ElementName.DIV.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(1);
+          opts.addInt8(0);
+          opts.addByte(HtmlBytes.ELEMEND8);
+          opts.addInt8(ElementName.DIV.index());
+        })
+    );
+  }
+
+  @Test(description = """
+  js action attr:
+  - count: 1
+  - markup
+  - name (8 bit)
+  - void elem
+  """)
+  public void jsActionAttribute02() {
+    final MarkupImpl subject;
+    subject = MarkupImpl.create();
+
+    final JsAction action;
+    action = Js.noop();
+
+    subject.input(
+        subject.onclick(action)
+    );
+
+    assertEquals(
+        subject.compile(),
+
+        HtmlY.create(opts -> {
+          opts.addByte(HtmlBytes.xJSACTION88);
+          opts.addInt8(AttributeName.ONCLICK.index());
+          opts.addInt8(opts.addObject(action));
+          opts.addByte(HtmlBytes.ELEMVOID8);
+          opts.addInt8(ElementName.INPUT.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(1);
+          opts.addInt8(0);
+        })
+    );
+  }
+
+  @Test(description = """
   reg attr:
   - count: 1
   - markup
@@ -135,188 +267,6 @@ public class MarkupImplTest {
           opts.addInt8(0);
           opts.addByte(HtmlBytes.ELEMEND8);
           opts.addInt8(ElementName.DIV.index());
-        })
-    );
-  }
-
-  @Test(description = """
-  boolean attr:
-  - count: 1
-  - object
-  - name (8 bit)
-  - reg elem
-  """)
-  public void booleanAttribute01() {
-    final MarkupImpl subject;
-    subject = MarkupImpl.create();
-
-    subject.span(
-        Markup.autofocus
-    );
-
-    assertEquals(
-        subject.unwrap(),
-
-        HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.xBOOLEAN8);
-          opts.addInt8(AttributeName.AUTOFOCUS.index());
-          opts.addByte(HtmlBytes.ELEMSTR8);
-          opts.addInt8(ElementName.SPAN.index());
-          opts.addByte(HtmlBytes.VALUES8);
-          opts.addInt8(1);
-          opts.addInt8(0);
-          opts.addByte(HtmlBytes.ELEMEND8);
-          opts.addInt8(ElementName.SPAN.index());
-        })
-    );
-  }
-
-  @Test(description = """
-  reg attr:
-  - count: 1
-  - object
-  - name (8 bit)
-  - reg elem
-  """)
-  public void regularAttribute03() {
-    final MarkupImpl subject;
-    subject = MarkupImpl.create();
-
-    subject.div(
-        Id.of("foo")
-    );
-
-    assertEquals(
-        subject.unwrap(),
-
-        HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.xATTRIBUTE88);
-          opts.addInt8(AttributeName.ID.index());
-          opts.addInt8(opts.addObject("foo"));
-          opts.addByte(HtmlBytes.ELEMSTR8);
-          opts.addInt8(ElementName.DIV.index());
-          opts.addByte(HtmlBytes.VALUES8);
-          opts.addInt8(1);
-          opts.addInt8(0);
-          opts.addByte(HtmlBytes.ELEMEND8);
-          opts.addInt8(ElementName.DIV.index());
-        })
-    );
-  }
-
-  @Test(description = """
-  js action attr:
-  - count: 1
-  - markup
-  - name (8 bit)
-  - reg elem
-  """)
-  public void jsActionAttribute01() {
-    final MarkupImpl subject;
-    subject = MarkupImpl.create();
-
-    final JsAction action;
-    action = Js.noop();
-
-    subject.div(
-        subject.onclick(action)
-    );
-
-    assertEquals(
-        subject.unwrap(),
-
-        HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.xJSACTION88);
-          opts.addInt8(AttributeName.ONCLICK.index());
-          opts.addInt8(opts.addObject(action));
-          opts.addByte(HtmlBytes.ELEMSTR8);
-          opts.addInt8(ElementName.DIV.index());
-          opts.addByte(HtmlBytes.VALUES8);
-          opts.addInt8(1);
-          opts.addInt8(0);
-          opts.addByte(HtmlBytes.ELEMEND8);
-          opts.addInt8(ElementName.DIV.index());
-        })
-    );
-  }
-
-  @Test(description = """
-  reg attr:
-  - count: 2
-  - markup
-  - name (8 bit)
-  - reg elem
-  """)
-  public void regularAttribute05() {
-    final MarkupImpl subject;
-    subject = MarkupImpl.create();
-
-    subject.html(
-        subject.lang("pt-BR"),
-        subject.dir("auto")
-    );
-
-    assertEquals(
-        subject.unwrap(),
-
-        HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.xATTRIBUTE88);
-          opts.addInt8(AttributeName.LANG.index());
-          opts.addInt8(opts.addObject("pt-BR"));
-          opts.addByte(HtmlBytes.xATTRIBUTE88);
-          opts.addInt8(AttributeName.DIR.index());
-          opts.addInt8(opts.addObject("auto"));
-          opts.addByte(HtmlBytes.ELEMSTR8);
-          opts.addInt8(ElementName.HTML.index());
-          opts.addByte(HtmlBytes.VALUES8);
-          opts.addInt8(2);
-          opts.addInt8(0);
-          opts.addInt8(3);
-          opts.addByte(HtmlBytes.ELEMEND8);
-          opts.addInt8(ElementName.HTML.index());
-        })
-    );
-  }
-
-  @Test(description = """
-  reg attr:
-  - count: 3
-  - object (class)
-  - name (8 bit)
-  - reg elem
-  """)
-  public void regularAttribute07() {
-    final MarkupImpl subject;
-    subject = MarkupImpl.create();
-
-    subject.span(
-        subject.className("c1"),
-        ClassName.of("c2"),
-        subject.className("c3")
-    );
-
-    assertEquals(
-        subject.unwrap(),
-
-        HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.xATTRIBUTE88);
-          opts.addInt8(AttributeName.CLASS.index());
-          opts.addInt8(opts.addObject("c1"));
-          opts.addByte(HtmlBytes.xATTRIBUTE88);
-          opts.addInt8(AttributeName.CLASS.index());
-          opts.addInt8(opts.addObject("c3"));
-          opts.addByte(HtmlBytes.xATTRIBUTE88);
-          opts.addInt8(AttributeName.CLASS.index());
-          opts.addInt8(opts.addObject("c2"));
-          opts.addByte(HtmlBytes.ELEMSTR8);
-          opts.addInt8(ElementName.SPAN.index());
-          opts.addByte(HtmlBytes.VALUES8);
-          opts.addInt8(3);
-          opts.addInt8(0);
-          opts.addInt8(6);
-          opts.addInt8(3);
-          opts.addByte(HtmlBytes.ELEMEND8);
-          opts.addInt8(ElementName.SPAN.index());
         })
     );
   }
@@ -427,31 +377,34 @@ public class MarkupImplTest {
   }
 
   @Test(description = """
-  boolean attr:
+  reg attr:
   - count: 1
   - object
   - name (8 bit)
-  - void elem
+  - reg elem
   """)
-  public void booleanAttribute02() {
+  public void regularAttribute03() {
     final MarkupImpl subject;
     subject = MarkupImpl.create();
 
-    subject.input(
-        Markup.checked
+    subject.div(
+        Id.of("foo")
     );
 
     assertEquals(
         subject.unwrap(),
 
         HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.xBOOLEAN8);
-          opts.addInt8(AttributeName.CHECKED.index());
-          opts.addByte(HtmlBytes.ELEMVOID8);
-          opts.addInt8(ElementName.INPUT.index());
+          opts.addByte(HtmlBytes.xATTRIBUTE88);
+          opts.addInt8(AttributeName.ID.index());
+          opts.addInt8(opts.addObject("foo"));
+          opts.addByte(HtmlBytes.ELEMSTR8);
+          opts.addInt8(ElementName.DIV.index());
           opts.addByte(HtmlBytes.VALUES8);
           opts.addInt8(1);
           opts.addInt8(0);
+          opts.addByte(HtmlBytes.ELEMEND8);
+          opts.addInt8(ElementName.DIV.index());
         })
     );
   }
@@ -488,35 +441,39 @@ public class MarkupImplTest {
   }
 
   @Test(description = """
-  js action attr:
-  - count: 1
+  reg attr:
+  - count: 2
   - markup
   - name (8 bit)
-  - void elem
+  - reg elem
   """)
-  public void jsActionAttribute02() {
+  public void regularAttribute05() {
     final MarkupImpl subject;
     subject = MarkupImpl.create();
 
-    final JsAction action;
-    action = Js.noop();
-
-    subject.input(
-        subject.onclick(action)
+    subject.html(
+        subject.lang("pt-BR"),
+        subject.dir("auto")
     );
 
     assertEquals(
-        subject.compile(),
+        subject.unwrap(),
 
-        HtmlY.create(opts -> {
-          opts.addByte(HtmlBytes.xJSACTION88);
-          opts.addInt8(AttributeName.ONCLICK.index());
-          opts.addInt8(opts.addObject(action));
-          opts.addByte(HtmlBytes.ELEMVOID8);
-          opts.addInt8(ElementName.INPUT.index());
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.xATTRIBUTE88);
+          opts.addInt8(AttributeName.LANG.index());
+          opts.addInt8(opts.addObject("pt-BR"));
+          opts.addByte(HtmlBytes.xATTRIBUTE88);
+          opts.addInt8(AttributeName.DIR.index());
+          opts.addInt8(opts.addObject("auto"));
+          opts.addByte(HtmlBytes.ELEMSTR8);
+          opts.addInt8(ElementName.HTML.index());
           opts.addByte(HtmlBytes.VALUES8);
-          opts.addInt8(1);
+          opts.addInt8(2);
           opts.addInt8(0);
+          opts.addInt8(3);
+          opts.addByte(HtmlBytes.ELEMEND8);
+          opts.addInt8(ElementName.HTML.index());
         })
     );
   }
@@ -562,6 +519,49 @@ public class MarkupImplTest {
   - count: 3
   - object (class)
   - name (8 bit)
+  - reg elem
+  """)
+  public void regularAttribute07() {
+    final MarkupImpl subject;
+    subject = MarkupImpl.create();
+
+    subject.span(
+        subject.className("c1"),
+        ClassName.of("c2"),
+        subject.className("c3")
+    );
+
+    assertEquals(
+        subject.unwrap(),
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.xATTRIBUTE88);
+          opts.addInt8(AttributeName.CLASS.index());
+          opts.addInt8(opts.addObject("c1"));
+          opts.addByte(HtmlBytes.xATTRIBUTE88);
+          opts.addInt8(AttributeName.CLASS.index());
+          opts.addInt8(opts.addObject("c3"));
+          opts.addByte(HtmlBytes.xATTRIBUTE88);
+          opts.addInt8(AttributeName.CLASS.index());
+          opts.addInt8(opts.addObject("c2"));
+          opts.addByte(HtmlBytes.ELEMSTR8);
+          opts.addInt8(ElementName.SPAN.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(3);
+          opts.addInt8(0);
+          opts.addInt8(6);
+          opts.addInt8(3);
+          opts.addByte(HtmlBytes.ELEMEND8);
+          opts.addInt8(ElementName.SPAN.index());
+        })
+    );
+  }
+
+  @Test(description = """
+  reg attr:
+  - count: 3
+  - object (class)
+  - name (8 bit)
   - void elem
   """)
   public void regularAttribute08() {
@@ -594,6 +594,40 @@ public class MarkupImplTest {
           opts.addInt8(3);
           opts.addInt8(0);
           opts.addInt8(6);
+        })
+    );
+  }
+
+  @Test(description = """
+  regular elem:
+  - no attrs
+  - reg elem (no attrs / no children)
+  """)
+  public void regularElement02() {
+    final MarkupImpl subject;
+    subject = MarkupImpl.create();
+
+    subject.div(
+        subject.span()
+    );
+
+    assertEquals(
+        subject.unwrap(),
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.xELEMSTR8);
+          opts.addInt8(ElementName.SPAN.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(0);
+          opts.addByte(HtmlBytes.ELEMEND8);
+          opts.addInt8(ElementName.SPAN.index());
+          opts.addByte(HtmlBytes.ELEMSTR8);
+          opts.addInt8(ElementName.DIV.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(1);
+          opts.addInt8(0);
+          opts.addByte(HtmlBytes.ELEMEND8);
+          opts.addInt8(ElementName.DIV.index());
         })
     );
   }
