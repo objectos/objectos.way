@@ -22,12 +22,19 @@ final class SkipRegularElement {
 
   private final Ctx ctx;
 
-  SkipRegularElement(Ctx ctx) {
+  private final IntSize nameSize;
+
+  SkipRegularElement(Ctx ctx, IntSize nameSize) {
     this.ctx = ctx;
+
+    this.nameSize = nameSize;
   }
 
   public final void execute() {
-    ctx.skip(1 + 1);
+    final int tagSize;
+    tagSize = 1 + nameSize.bytes();
+
+    ctx.skip(tagSize);
 
     final IntSize size;
     size = valuesSize();
@@ -37,7 +44,7 @@ final class SkipRegularElement {
 
     ctx.skip(count * size.bytes());
 
-    ctx.skip(1 + 1);
+    ctx.skip(tagSize);
   }
 
   private IntSize valuesSize() {

@@ -17,6 +17,7 @@ package objectox.html.stream;
 
 import static org.testng.Assert.assertEquals;
 
+import objectox.html.IntSize;
 import objectox.html.elem.ElementName;
 import objectox.html.markup.HtmlBytes;
 import org.testng.annotations.Test;
@@ -49,7 +50,7 @@ public class SkipRegularElementTest {
     });
 
     final SkipRegularElement subject;
-    subject = new SkipRegularElement(ctx);
+    subject = new SkipRegularElement(ctx, IntSize.BIT8);
 
     subject.execute();
 

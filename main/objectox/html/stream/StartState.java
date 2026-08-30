@@ -15,6 +15,7 @@
  */
 package objectox.html.stream;
 
+import objectox.html.IntSize;
 import objectox.html.markup.HtmlBytes;
 
 final class StartState implements State {
@@ -50,6 +51,15 @@ final class StartState implements State {
         case HtmlBytes.xJSACTION816 -> { ctx.skip(1 + 1 + 2); continue; }
 
         case HtmlBytes.xJSACTION824 -> { ctx.skip(1 + 1 + 3); continue; }
+
+        case HtmlBytes.xELEMSTR8 -> {
+          final SkipRegularElement skip;
+          skip = new SkipRegularElement(ctx, IntSize.BIT8);
+
+          skip.execute();
+
+          continue;
+        }
       }
 
       break;
