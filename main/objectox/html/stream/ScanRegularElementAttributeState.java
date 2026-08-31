@@ -16,6 +16,8 @@
 package objectox.html.stream;
 
 import objectos.html.stream.EndStartTagKind;
+import objectox.html.IntSize;
+import objectox.html.markup.HtmlBytes;
 
 final class ScanRegularElementAttributeState extends AbstractScanElementAttributeState {
 
@@ -31,7 +33,11 @@ final class ScanRegularElementAttributeState extends AbstractScanElementAttribut
 
   @Override
   final State computeNonAttribute(byte code) {
-    throw State.implCode(code);
+    return switch (code) {
+      case HtmlBytes.xELEMSTR8 -> endTag(IntSize.BIT8);
+
+      default -> throw State.implCode(code);
+    };
   }
 
   @Override
@@ -42,6 +48,34 @@ final class ScanRegularElementAttributeState extends AbstractScanElementAttribut
   @Override
   final State endTagIsEmptyNextState() {
     return new RenderEndTagState(ctx);
+  }
+
+  private State endTag(IntSize nameSize) {
+    final Frame jmp;
+    jmp = ctx.pop();
+
+    final Frame f;
+    f = ctx.pop();
+
+    final ScanRegularElementAttributeFrame previous;
+    previous = f.as(ScanRegularElementAttributeFrame.class);
+
+    final ScanRegularElementNodeFrame next;
+    next = new ScanRegularElementNodeFrame(previous);
+
+    ctx.push(next);
+
+    ctx.push(jmp);
+
+    final EndStartTagKind kind;
+    kind = EndStartTagKind.ELEMENT;
+
+    final EndStartTagEvent event;
+    event = new EndStartTagEvent(kind);
+
+    ctx.result(event);
+
+    return new BeginStartTagState(ctx, ElementKind.REGULAR, nameSize);
   }
 
 }

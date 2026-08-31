@@ -17,7 +17,7 @@ package objectox.html.stream;
 
 import objectox.html.IntSize;
 
-final class ScanVoidElementAttributeFrame extends AbstractElementAttributeFrame {
+final class ScanVoidElementAttributeFrame extends AbstractElementFrame {
 
   ScanVoidElementAttributeFrame(int index, IntSize size, int length) {
     super(index, size, length);

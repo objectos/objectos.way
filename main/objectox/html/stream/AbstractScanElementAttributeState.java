@@ -37,8 +37,8 @@ sealed abstract class AbstractScanElementAttributeState
     final Frame f;
     f = ctx.peekFrame();
 
-    final AbstractElementAttributeFrame frame;
-    frame = f.as(AbstractElementAttributeFrame.class);
+    final AbstractElementFrame frame;
+    frame = f.as(AbstractElementFrame.class);
 
     if (frame.hasNext()) {
       return compute0(frame);
@@ -50,7 +50,7 @@ sealed abstract class AbstractScanElementAttributeState
   @Override
   public abstract boolean equals(Object obj);
 
-  private State compute0(AbstractElementAttributeFrame frame) {
+  private State compute0(AbstractElementFrame frame) {
     final int jmpIndex;
     jmpIndex = frame.nextInt(ctx);
 
@@ -87,8 +87,8 @@ sealed abstract class AbstractScanElementAttributeState
     final Frame f;
     f = ctx.pop();
 
-    final AbstractElementAttributeFrame previous;
-    previous = f.as(AbstractElementAttributeFrame.class);
+    final AbstractElementFrame previous;
+    previous = f.as(AbstractElementFrame.class);
 
     final Frame current;
     current = ctx.peekFrame();

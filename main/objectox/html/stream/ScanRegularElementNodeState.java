@@ -31,8 +31,8 @@ final class ScanRegularElementNodeState implements State {
     final Frame f;
     f = ctx.peekFrame();
 
-    final ScanElementNodeFrame frame;
-    frame = f.as(ScanElementNodeFrame.class);
+    final ScanRegularElementNodeFrame frame;
+    frame = f.as(ScanRegularElementNodeFrame.class);
 
     if (frame.hasNext()) {
       return compute0(frame);
@@ -47,7 +47,7 @@ final class ScanRegularElementNodeState implements State {
         && ctx.equals(that.ctx);
   }
 
-  private State compute0(ScanElementNodeFrame frame) {
+  private State compute0(ScanRegularElementNodeFrame frame) {
     final int jmpIndex;
     jmpIndex = frame.nextInt(ctx);
 

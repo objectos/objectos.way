@@ -30,7 +30,7 @@ final class BeginVoidElementContentsState extends AbstractBeginElementContentsSt
   }
 
   @Override
-  final AbstractElementAttributeFrame newFrame(int startIndex, IntSize size, int length) {
+  final AbstractElementFrame newFrame(int startIndex, IntSize size, int length) {
     return new ScanVoidElementAttributeFrame(startIndex, size, length);
   }
 

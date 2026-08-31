@@ -30,7 +30,7 @@ final class BeginRegularElementContentsState extends AbstractBeginElementContent
   }
 
   @Override
-  final AbstractElementAttributeFrame newFrame(int startIndex, IntSize size, int length) {
+  final AbstractElementFrame newFrame(int startIndex, IntSize size, int length) {
     return new ScanRegularElementAttributeFrame(startIndex, size, length);
   }
 

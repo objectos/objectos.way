@@ -60,7 +60,7 @@ sealed abstract class AbstractBeginElementContentsState
     final int startIndex;
     startIndex = currentFrame.index;
 
-    final AbstractElementAttributeFrame nextFrame;
+    final AbstractElementFrame nextFrame;
     nextFrame = newFrame(startIndex, size, length);
 
     ctx.push(nextFrame);
@@ -68,7 +68,7 @@ sealed abstract class AbstractBeginElementContentsState
     return nextState();
   }
 
-  abstract AbstractElementAttributeFrame newFrame(int startIndex, IntSize size, int length);
+  abstract AbstractElementFrame newFrame(int startIndex, IntSize size, int length);
 
   abstract State nextState();
 

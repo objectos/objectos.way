@@ -17,9 +17,10 @@ package objectox.html.stream;
 
 import objectox.html.IntSize;
 
-sealed abstract class AbstractElementAttributeFrame extends Frame
+sealed abstract class AbstractElementFrame extends Frame
     permits
     ScanRegularElementAttributeFrame,
+    ScanRegularElementNodeFrame,
     ScanVoidElementAttributeFrame {
 
   int current;
@@ -28,7 +29,7 @@ sealed abstract class AbstractElementAttributeFrame extends Frame
 
   final IntSize size;
 
-  AbstractElementAttributeFrame(int index, IntSize size, int length) {
+  AbstractElementFrame(int index, IntSize size, int length) {
     super(index);
 
     this.size = size;
@@ -36,7 +37,7 @@ sealed abstract class AbstractElementAttributeFrame extends Frame
     this.length = length;
   }
 
-  AbstractElementAttributeFrame(int index, IntSize size, int length, int current) {
+  AbstractElementFrame(int index, IntSize size, int length, int current) {
     super(index);
 
     this.current = current;

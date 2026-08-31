@@ -636,6 +636,98 @@ public class BeginStartTagStateTest {
   }
 
   @Test(description = """
+  regular elem:
+  - no attrs
+  - reg elem (no attrs / no children)
+  """)
+  public void regularElement02() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xELEMSTR8);
+      opts.addInt8(ElementName.SPAN.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.SPAN.index());
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.DIV.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.DIV.index());
+
+      opts.push(new ScanDocumentNodeFrame(7));
+    });
+
+    final BeginStartTagState subject;
+    subject = new BeginStartTagState(ctx, ElementKind.REGULAR, IntSize.BIT8);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new BeginRegularElementContentsState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+          opts.push(new ScanDocumentNodeFrame(8));
+          opts.result(BeginStartTagEvent.of(ElementName.DIV));
+        })
+    );
+  }
+
+  @Test(description = """
+  regular elem:
+  - no attrs
+  - reg elem (no attrs / no children)
+  """)
+  public void regularElement02b() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xELEMSTR8);
+      opts.addInt8(ElementName.SPAN.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.SPAN.index());
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.DIV.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.DIV.index());
+
+      opts.push(new ScanDocumentNodeFrame(10));
+      opts.push(new ScanRegularElementNodeFrame(11, IntSize.BIT8, 1, 1));
+      opts.push(new JumpFrame(1));
+    });
+
+    final BeginStartTagState subject;
+    subject = new BeginStartTagState(ctx, ElementKind.REGULAR, IntSize.BIT8);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new BeginRegularElementContentsState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+          opts.push(new ScanDocumentNodeFrame(10));
+          opts.push(new ScanRegularElementNodeFrame(11, IntSize.BIT8, 1, 1));
+          opts.push(new JumpFrame(2));
+          opts.result(BeginStartTagEvent.of(ElementName.SPAN));
+        })
+    );
+  }
+
+  @Test(description = """
   void elem:
   - no attrs
   """)

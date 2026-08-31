@@ -44,8 +44,8 @@ final class MergeAttributeState implements State {
     final Frame f;
     f = ctx.peekFrame();
 
-    final AbstractElementAttributeFrame current;
-    current = f.as(AbstractElementAttributeFrame.class);
+    final AbstractElementFrame current;
+    current = f.as(AbstractElementFrame.class);
 
     if (!current.hasNext()) {
       return toScan();
@@ -102,8 +102,8 @@ final class MergeAttributeState implements State {
     final Frame f;
     f = ctx.peekFrame();
 
-    final AbstractElementAttributeFrame current;
-    current = f.as(AbstractElementAttributeFrame.class);
+    final AbstractElementFrame current;
+    current = f.as(AbstractElementFrame.class);
 
     current.nextInt(ctx); // skip consumed attribute
 
