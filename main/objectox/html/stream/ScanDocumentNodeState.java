@@ -26,34 +26,67 @@ final class ScanDocumentNodeState implements State {
     this.ctx = ctx;
   }
 
+  public static ScanDocumentNodeState of(Ctx ctx) {
+    final ScanDocumentNodeFrame frame;
+    frame = new ScanDocumentNodeFrame(0);
+
+    ctx.push(frame);
+
+    return new ScanDocumentNodeState(ctx);
+  }
+
   @Override
   public final State compute() {
-    if (ctx.hasByte()) {
-      return compute0();
-    } else {
-      return new StopState(ctx);
+    while (ctx.hasByte()) {
+      final byte code;
+      code = ctx.nextByte();
+
+      switch (code) {
+        case HtmlBytes.DOCTYPE -> { return doctype(); }
+
+        case HtmlBytes.ELEMSTR8 -> { return new BeginStartTagState(ctx, ElementKind.REGULAR, IntSize.BIT8); }
+
+        case HtmlBytes.ELEMVOID8 -> { return new BeginStartTagState(ctx, ElementKind.VOID, IntSize.BIT8); }
+
+        case HtmlBytes.xATTRIBUTE88 -> ctx.skip(1 + 1);
+
+        case HtmlBytes.xATTRIBUTE816 -> ctx.skip(1 + 2);
+
+        case HtmlBytes.xATTRIBUTE824 -> ctx.skip(1 + 3);
+
+        case HtmlBytes.xBOOLEAN8 -> ctx.skip(1);
+
+        case HtmlBytes.xJSACTION88 -> ctx.skip(1 + 1);
+
+        case HtmlBytes.xJSACTION816 -> ctx.skip(1 + 2);
+
+        case HtmlBytes.xJSACTION824 -> ctx.skip(1 + 3);
+
+        case HtmlBytes.xELEMSTR8 -> {
+          final SkipRegularElement skip;
+          skip = new SkipRegularElement(ctx, IntSize.BIT8);
+
+          skip.execute();
+        }
+
+        case HtmlBytes.xELEMVOID8 -> {
+          final SkipVoidElement skip;
+          skip = new SkipVoidElement(ctx, IntSize.BIT8);
+
+          skip.execute();
+        }
+
+        default -> throw State.implCode(code);
+      }
     }
+
+    return new StopState(ctx);
   }
 
   @Override
   public final boolean equals(Object obj) {
     return obj instanceof ScanDocumentNodeState that
         && ctx.equals(that.ctx);
-  }
-
-  private State compute0() {
-    final byte code;
-    code = ctx.nextByte();
-
-    return switch (code) {
-      case HtmlBytes.DOCTYPE -> doctype();
-
-      case HtmlBytes.ELEMSTR8 -> new BeginStartTagState(ctx, ElementKind.REGULAR, IntSize.BIT8);
-
-      case HtmlBytes.ELEMVOID8 -> new BeginStartTagState(ctx, ElementKind.VOID, IntSize.BIT8);
-
-      default -> throw State.implCode(code);
-    };
   }
 
   private State doctype() {

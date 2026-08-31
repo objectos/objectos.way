@@ -31,10 +31,10 @@ final class SkipVoidElement {
   }
 
   public final void execute() {
-    final int tagSize;
-    tagSize = 1 + nameSize.bytes();
+    final int nameBytes;
+    nameBytes = nameSize.bytes();
 
-    ctx.skip(tagSize);
+    ctx.skip(nameBytes);
 
     final IntSize size;
     size = valuesSize();

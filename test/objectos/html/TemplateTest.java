@@ -632,7 +632,7 @@ public class TemplateTest {
 
         """
       <html id="foo">
-      <body id="bar"></body>
+        <body id="bar"></body>
       </html>
       """
     );
@@ -1303,7 +1303,7 @@ public class TemplateTest {
         },
 
         """
-      <div onclick="echo(&#34;a > b&#34;);"></div>
+      <div onclick="echo(&quot;a > b&quot;);"></div>
       """
     );
   }

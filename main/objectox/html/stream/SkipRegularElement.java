@@ -31,10 +31,10 @@ final class SkipRegularElement {
   }
 
   public final void execute() {
-    final int tagSize;
-    tagSize = 1 + nameSize.bytes();
+    final int nameBytes;
+    nameBytes = nameSize.bytes();
 
-    ctx.skip(tagSize);
+    ctx.skip(nameBytes);
 
     final IntSize size;
     size = valuesSize();
@@ -44,7 +44,7 @@ final class SkipRegularElement {
 
     ctx.skip(count * size.bytes());
 
-    ctx.skip(tagSize);
+    ctx.skip(1 + nameBytes);
   }
 
   private IntSize valuesSize() {
