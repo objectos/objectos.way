@@ -288,6 +288,30 @@ public class TemplateTest {
   }
 
   @Test(description = """
+  regular elem:
+  - no attrs
+  - reg elem (no attrs / no children)
+  """)
+  public void regularElement02() {
+    test(
+        new Template() {
+          @Override
+          protected final void render() {
+            div(
+                span()
+            );
+          }
+        },
+
+        """
+        <div>
+          <span></span>
+        </div>
+        """
+    );
+  }
+
+  @Test(description = """
   HtmlTemplate TC00
 
   - single html element

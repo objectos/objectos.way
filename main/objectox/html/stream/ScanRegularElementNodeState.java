@@ -37,7 +37,7 @@ final class ScanRegularElementNodeState implements State {
     if (frame.hasNext()) {
       return compute0(frame);
     } else {
-      return new RenderEndTagState(ctx);
+      return endTag();
     }
   }
 
@@ -77,6 +77,21 @@ final class ScanRegularElementNodeState implements State {
     ctx.pop(); // jmp frame
 
     return this;
+  }
+
+  private State endTag() {
+    final Frame f;
+    f = ctx.pop();
+
+    final ScanRegularElementNodeFrame previous;
+    previous = f.as(ScanRegularElementNodeFrame.class);
+
+    final Frame current;
+    current = ctx.peekFrame();
+
+    current.updateIfNecessary(previous);
+
+    return new RenderEndTagState(ctx);
   }
 
 }
