@@ -64,8 +64,8 @@ sealed abstract class Frame
     return "";
   }
 
-  public void updateIfNecessary(AbstractElementFrame previous) {
-    // noop
+  public final void updateIfNecessary(AbstractElementFrame previous) {
+    index = previous.index;
   }
 
 }

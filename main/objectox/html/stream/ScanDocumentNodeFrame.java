@@ -27,11 +27,6 @@ final class ScanDocumentNodeFrame extends Frame {
   }
 
   @Override
-  public final void updateIfNecessary(AbstractElementFrame previous) {
-    index = previous.index;
-  }
-
-  @Override
   final boolean equalsImpl(Frame that) {
     return that instanceof ScanDocumentNodeFrame;
   }

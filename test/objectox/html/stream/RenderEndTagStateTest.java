@@ -475,4 +475,58 @@ public class RenderEndTagStateTest {
     );
   }
 
+  @Test(description = """
+  regular elem:
+  - no attrs
+  - reg elem (no attrs / containing a void elem)
+  - void elem (no attrs)
+  """)
+  public void regularElement04() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xELEMVOID8);
+      opts.addInt8(ElementName.META.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.xELEMSTR8);
+      opts.addInt8(ElementName.HEAD.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.HEAD.index());
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.HTML.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(4);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.HTML.index());
+
+      opts.push(new ScanDocumentNodeFrame(15));
+      opts.push(new ScanRegularElementNodeFrame(16, IntSize.BIT8, 1, 1));
+      opts.push(new JumpFrame(9));
+    });
+
+    final RenderEndTagState subject;
+    subject = new RenderEndTagState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new EndElementState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+          opts.result(RenderEndTagEvent.of(ElementName.HEAD));
+          opts.push(new ScanDocumentNodeFrame(15));
+          opts.push(new ScanRegularElementNodeFrame(16, IntSize.BIT8, 1, 1));
+          opts.push(new JumpFrame(11));
+        })
+    );
+  }
+
 }
