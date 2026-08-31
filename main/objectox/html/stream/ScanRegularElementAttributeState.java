@@ -34,7 +34,9 @@ final class ScanRegularElementAttributeState extends AbstractScanElementAttribut
   @Override
   final State computeNonAttribute(byte code) {
     return switch (code) {
-      case HtmlBytes.xELEMSTR8 -> endTag(IntSize.BIT8);
+      case HtmlBytes.xELEMSTR8 -> endTag(ElementKind.REGULAR, IntSize.BIT8);
+
+      case HtmlBytes.xELEMVOID8 -> endTag(ElementKind.VOID, IntSize.BIT8);
 
       default -> throw State.implCode(code);
     };
@@ -50,7 +52,7 @@ final class ScanRegularElementAttributeState extends AbstractScanElementAttribut
     return new RenderEndTagState(ctx);
   }
 
-  private State endTag(IntSize nameSize) {
+  private State endTag(ElementKind elementKind, IntSize nameSize) {
     final Frame jmp;
     jmp = ctx.pop();
 
@@ -75,7 +77,7 @@ final class ScanRegularElementAttributeState extends AbstractScanElementAttribut
 
     ctx.result(event);
 
-    return new BeginStartTagState(ctx, ElementKind.REGULAR, nameSize);
+    return new BeginStartTagState(ctx, elementKind, nameSize);
   }
 
 }

@@ -632,4 +632,36 @@ public class MarkupImplTest {
     );
   }
 
+  @Test(description = """
+  regular elem:
+  - no attrs
+  - void elem (no attrs)
+  """)
+  public void regularElement03() {
+    final MarkupImpl subject;
+    subject = MarkupImpl.create();
+
+    subject.article(
+        subject.hr()
+    );
+
+    assertEquals(
+        subject.unwrap(),
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.xELEMVOID8);
+          opts.addInt8(ElementName.HR.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(0);
+          opts.addByte(HtmlBytes.ELEMSTR8);
+          opts.addInt8(ElementName.ARTICLE.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(1);
+          opts.addInt8(0);
+          opts.addByte(HtmlBytes.ELEMEND8);
+          opts.addInt8(ElementName.ARTICLE.index());
+        })
+    );
+  }
+
 }

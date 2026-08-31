@@ -433,4 +433,46 @@ public class RenderEndTagStateTest {
     );
   }
 
+  @Test(description = """
+  regular elem:
+  - no attrs
+  - void elem (no attrs)
+  """)
+  public void regularElement03() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xELEMVOID8);
+      opts.addInt8(ElementName.HR.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.ARTICLE.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ELEMEND8);
+      opts.addInt8(ElementName.ARTICLE.index());
+
+      opts.push(new ScanDocumentNodeFrame(9));
+    });
+
+    final RenderEndTagState subject;
+    subject = new RenderEndTagState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new EndElementState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+          opts.result(RenderEndTagEvent.of(ElementName.ARTICLE));
+          opts.push(new ScanDocumentNodeFrame(11));
+        })
+    );
+  }
+
 }

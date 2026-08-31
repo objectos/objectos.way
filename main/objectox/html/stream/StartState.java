@@ -60,6 +60,15 @@ final class StartState implements State {
 
           continue;
         }
+
+        case HtmlBytes.xELEMVOID8 -> {
+          final SkipVoidElement skip;
+          skip = new SkipVoidElement(ctx, IntSize.BIT8);
+
+          skip.execute();
+
+          continue;
+        }
       }
 
       break;
