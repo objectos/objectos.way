@@ -90,7 +90,10 @@ public class ScanDocumentNodeStateTest {
   public Object[][] testCase02Provider() {
     return new Object[][] {
         {HtmlBytes.ELEMSTR8, ElementName.DIV, ElementKind.REGULAR, IntSize.BIT8},
-        {HtmlBytes.ELEMVOID8, ElementName.HR, ElementKind.VOID, IntSize.BIT8}
+        {HtmlBytes.ELEMVOID8, ElementName.HR, ElementKind.VOID, IntSize.BIT8},
+        {HtmlBytes.ELEMTXT88, ElementName.SPAN, ElementKind.TEXT, IntSize.BIT8},
+        {HtmlBytes.ELEMTXT816, ElementName.SPAN, ElementKind.TEXT, IntSize.BIT8},
+        {HtmlBytes.ELEMTXT824, ElementName.SPAN, ElementKind.TEXT, IntSize.BIT8}
     };
   }
 
@@ -135,46 +138,46 @@ public class ScanDocumentNodeStateTest {
           opts.addByte(HtmlBytes.xATTRIBUTE88);
           opts.addInt8(AttributeName.CONTENTEDITABLE.index());
           opts.addInt8(opts.addObject("false"));
-        }), 4},
+        }), 4, "attribute 8/8"},
 
         {ctx(opts -> {
           opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
           opts.addByte(HtmlBytes.xATTRIBUTE816);
           opts.addInt8(AttributeName.CONTENTEDITABLE.index());
           opts.addInt16(opts.addObject("false"));
-        }), 5},
+        }), 5, "attribute 8/16"},
 
         {ctx(opts -> {
           opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
           opts.addByte(HtmlBytes.xATTRIBUTE824);
           opts.addInt8(AttributeName.CONTENTEDITABLE.index());
           opts.addInt24(opts.addObject("false"));
-        }), 6},
+        }), 6, "attribute 8/24"},
 
         {ctx(opts -> {
           opts.addByte(HtmlBytes.xBOOLEAN8);
           opts.addInt8(AttributeName.AUTOFOCUS.index());
-        }), 3},
+        }), 3, "boolean 8"},
 
         {ctx(opts -> {
           opts.addByte(HtmlBytes.xJSACTION88);
           opts.addInt8(AttributeName.ONCLICK.index());
           opts.addInt8(opts.addObject(action));
-        }), 4},
+        }), 4, "jsaction 8/8"},
 
         {ctx(opts -> {
           opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
           opts.addByte(HtmlBytes.xJSACTION816);
           opts.addInt8(AttributeName.ONCLICK.index());
           opts.addInt16(opts.addObject(action));
-        }), 5},
+        }), 5, "jsaction 8/16"},
 
         {ctx(opts -> {
           opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
           opts.addByte(HtmlBytes.xJSACTION824);
           opts.addInt8(AttributeName.ONCLICK.index());
           opts.addInt24(opts.addObject(action));
-        }), 6},
+        }), 6, "jsaction 8/24"},
 
         {ctx(opts -> {
           opts.addByte(HtmlBytes.xELEMSTR8);
@@ -183,21 +186,75 @@ public class ScanDocumentNodeStateTest {
           opts.addInt8(0);
           opts.addByte(HtmlBytes.ELEMEND8);
           opts.addInt8(ElementName.SPAN.index());
-        }), 7},
+        }), 7, "consumed element regular"},
 
         {ctx(opts -> {
           opts.addByte(HtmlBytes.xELEMVOID8);
           opts.addInt8(ElementName.HR.index());
           opts.addByte(HtmlBytes.VALUES8);
           opts.addInt8(0);
-        }), 5}
+        }), 5, "consumed element void"},
+
+        {ctx(opts -> {
+          opts.addByte(HtmlBytes.xELEMTXT88);
+          opts.addInt8(ElementName.SPAN.index());
+          opts.addInt8(opts.addObject("Ipsum"));
+        }), 4, "consumed text element 8"},
+
+        {ctx(opts -> {
+          opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
+          opts.addByte(HtmlBytes.xELEMTXT816);
+          opts.addInt8(ElementName.SPAN.index());
+          opts.addInt16(opts.addObject("Ipsum"));
+        }), 5, "consumed text element 8/16"},
+
+        {ctx(opts -> {
+          opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
+          opts.addByte(HtmlBytes.xELEMTXT824);
+          opts.addInt8(ElementName.SPAN.index());
+          opts.addInt24(opts.addObject("Ipsum"));
+        }), 6, "consumed text element 8/24"},
+
+        {ctx(opts -> {
+          opts.addByte(HtmlBytes.xTEXT8);
+          opts.addInt8(opts.addObject("Ipsum"));
+        }), 3, "text 8"},
+
+        {ctx(opts -> {
+          opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
+          opts.addByte(HtmlBytes.xTEXT16);
+          opts.addInt16(opts.addObject("Ipsum"));
+        }), 4, "text 16"},
+
+        {ctx(opts -> {
+          opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
+          opts.addByte(HtmlBytes.xTEXT24);
+          opts.addInt24(opts.addObject("Ipsum"));
+        }), 5, "text 24"},
+
+        {ctx(opts -> {
+          opts.addByte(HtmlBytes.xRAW8);
+          opts.addInt8(opts.addObject("Ipsum"));
+        }), 3, "raw 8"},
+
+        {ctx(opts -> {
+          opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
+          opts.addByte(HtmlBytes.xRAW16);
+          opts.addInt16(opts.addObject("Ipsum"));
+        }), 4, "raw 16"},
+
+        {ctx(opts -> {
+          opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
+          opts.addByte(HtmlBytes.xRAW24);
+          opts.addInt24(opts.addObject("Ipsum"));
+        }), 5, "raw 24"}
     };
   }
 
   @Test(dataProvider = "testCase03Provider", description = """
   Skip to element start
   """)
-  public void testCase03(Consumer<CtxY> prefix, int expectedIndex) {
+  public void testCase03(Consumer<CtxY> prefix, int expectedIndex, String description) {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.push(new ScanDocumentNodeFrame(0));

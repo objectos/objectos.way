@@ -48,6 +48,12 @@ final class ScanDocumentNodeState implements State {
 
         case HtmlBytes.ELEMVOID8 -> { return new BeginStartTagState(ctx, ElementKind.VOID, IntSize.BIT8); }
 
+        case HtmlBytes.ELEMTXT88 -> { return new BeginStartTagState(ctx, ElementKind.TEXT, IntSize.BIT8); }
+
+        case HtmlBytes.ELEMTXT816 -> { return new BeginStartTagState(ctx, ElementKind.TEXT, IntSize.BIT8); }
+
+        case HtmlBytes.ELEMTXT824 -> { return new BeginStartTagState(ctx, ElementKind.TEXT, IntSize.BIT8); }
+
         case HtmlBytes.xATTRIBUTE88 -> ctx.skip(1 + 1);
 
         case HtmlBytes.xATTRIBUTE816 -> ctx.skip(1 + 2);
@@ -75,6 +81,24 @@ final class ScanDocumentNodeState implements State {
 
           skip.execute();
         }
+
+        case HtmlBytes.xELEMTXT88 -> ctx.skip(1 + 1);
+
+        case HtmlBytes.xELEMTXT816 -> ctx.skip(1 + 2);
+
+        case HtmlBytes.xELEMTXT824 -> ctx.skip(1 + 3);
+
+        case HtmlBytes.xTEXT8 -> ctx.skip(1);
+
+        case HtmlBytes.xTEXT16 -> ctx.skip(2);
+
+        case HtmlBytes.xTEXT24 -> ctx.skip(3);
+
+        case HtmlBytes.xRAW8 -> ctx.skip(1);
+
+        case HtmlBytes.xRAW16 -> ctx.skip(2);
+
+        case HtmlBytes.xRAW24 -> ctx.skip(3);
 
         default -> throw State.implCode(code);
       }
