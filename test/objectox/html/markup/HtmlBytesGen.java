@@ -33,9 +33,6 @@ public class HtmlBytesGen {
 
     value("ELEMSTR8");
     value("ELEMEND8");
-    value("ELEMTXT88");
-    value("ELEMTXT816");
-    value("ELEMTXT824");
     value("ELEMVOID8");
 
     comment("attributes");
@@ -80,9 +77,6 @@ public class HtmlBytesGen {
     comment("xelement");
 
     value("xELEMSTR8");
-    value("xELEMTXT88");
-    value("xELEMTXT816");
-    value("xELEMTXT824");
     value("xELEMVOID8");
 
     comment("xattributes");

@@ -52,8 +52,6 @@ public final class Recorder {
 
   private final RegularElementRecorder regularElementRecorder;
 
-  private final TextElementRecorder textElementRecorder;
-
   private final TextRecorder textRecorder;
 
   private final VoidElementRecorder voidElementRecorder;
@@ -67,7 +65,6 @@ public final class Recorder {
       FragmentRecorder fragmentRecorder,
       RawRecorder rawRecorder,
       RegularElementRecorder regularElementRecorder,
-      TextElementRecorder textElementRecorder,
       TextRecorder textRecorder,
       VoidElementRecorder voidElementRecorder
   ) {
@@ -79,7 +76,6 @@ public final class Recorder {
     this.fragmentRecorder = fragmentRecorder;
     this.rawRecorder = rawRecorder;
     this.regularElementRecorder = regularElementRecorder;
-    this.textElementRecorder = textElementRecorder;
     this.textRecorder = textRecorder;
     this.voidElementRecorder = voidElementRecorder;
   }
@@ -146,8 +142,6 @@ public final class Recorder {
                 valueRecorder
             )
         ),
-
-        new TextElementRecorder(sink),
 
         new TextRecorder(sink),
 
@@ -231,8 +225,22 @@ public final class Recorder {
     return regularElementRecorder.record(name, values);
   }
 
+  public final ElementPointer regularElement(ElementName name, String text) {
+    final TextPointer pointer;
+    pointer = textRecorder.record(text);
+
+    return regularElementRecorder.record(name, pointer);
+  }
+
   public final ElementPointer regularElement(String name, RegularElementValue... values) {
     return regularElementRecorder.record(name, values);
+  }
+
+  public final ElementPointer regularElement(String name, String text) {
+    final TextPointer pointer;
+    pointer = textRecorder.record(text);
+
+    return regularElementRecorder.record(name, pointer);
   }
 
   public final String testableCell(String value, int width) {
@@ -281,14 +289,6 @@ public final class Recorder {
 
   public final TextMarkup text(String value) {
     return textRecorder.record(value);
-  }
-
-  public final ElementPointer textElement(ElementName name, String value) {
-    return textElementRecorder.record(name, value);
-  }
-
-  public final ElementPointer textElement(String name, String text) {
-    return textElementRecorder.record(name, text);
   }
 
   public final ElementPointer voidElement(ElementName name, VoidElementValue... values) {

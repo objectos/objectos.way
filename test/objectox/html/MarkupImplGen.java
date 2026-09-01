@@ -130,7 +130,7 @@ public class MarkupImplGen {
         /// @param text the text value of the element
         /// @return an object representing the encoded element
         public final ElementMarkup %2$s(String text) {
-          return recorder.textElement(ElementName.%3$s, text);
+          return recorder.regularElement(ElementName.%3$s, text);
         }
         """.formatted(elem.htmlName(), elem.htmlName(), elem.javaName()));
       }

@@ -45,10 +45,7 @@ final class RenderBooleanAttributeState implements State {
 
     ctx.pop(); // jmp frame
 
-    final Frame current;
-    current = ctx.peekFrame();
-
-    return current.newState(ctx);
+    return new ScanElementAttributeState(ctx);
   }
 
   @Override

@@ -45,7 +45,7 @@ final class EndElementState implements State {
       case ScanRegularElementNodeFrame f -> {
         ctx.push(f);
 
-        yield new ScanRegularElementNodeState(ctx);
+        yield new ScanElementNodeState(ctx);
       }
 
       default -> throw new UnsupportedOperationException("Implement me :: frame=" + frame);

@@ -25,92 +25,86 @@ public final class HtmlBytes {
 
   public static final byte ELEMSTR8 = -127;
   public static final byte ELEMEND8 = -126;
-  public static final byte ELEMTXT88 = -125;
-  public static final byte ELEMTXT816 = -124;
-  public static final byte ELEMTXT824 = -123;
-  public static final byte ELEMVOID8 = -122;
+  public static final byte ELEMVOID8 = -125;
 
   // attributes
 
-  public static final byte ATTRIBUTE88 = -121;
-  public static final byte ATTRIBUTE816 = -120;
-  public static final byte ATTRIBUTE824 = -119;
-  public static final byte BOOLEAN8 = -118;
-  public static final byte JSACTION88 = -117;
-  public static final byte JSACTION816 = -116;
-  public static final byte JSACTION824 = -115;
+  public static final byte ATTRIBUTE88 = -124;
+  public static final byte ATTRIBUTE816 = -123;
+  public static final byte ATTRIBUTE824 = -122;
+  public static final byte BOOLEAN8 = -121;
+  public static final byte JSACTION88 = -120;
+  public static final byte JSACTION816 = -119;
+  public static final byte JSACTION824 = -118;
 
   // ambiguous
 
-  public static final byte AMBIGUOUS88 = -114;
-  public static final byte AMBIGUOUS816 = -113;
-  public static final byte AMBIGUOUS824 = -112;
+  public static final byte AMBIGUOUS88 = -117;
+  public static final byte AMBIGUOUS816 = -116;
+  public static final byte AMBIGUOUS824 = -115;
 
   // fragment
 
-  public static final byte FRAGSTR = -111;
-  public static final byte FRAGEND = -110;
+  public static final byte FRAGSTR = -114;
+  public static final byte FRAGEND = -113;
 
   // text
 
-  public static final byte TEXT8 = -109;
-  public static final byte TEXT16 = -108;
-  public static final byte TEXT24 = -107;
+  public static final byte TEXT8 = -112;
+  public static final byte TEXT16 = -111;
+  public static final byte TEXT24 = -110;
 
   // raw
 
-  public static final byte RAW8 = -106;
-  public static final byte RAW16 = -105;
-  public static final byte RAW24 = -104;
+  public static final byte RAW8 = -109;
+  public static final byte RAW16 = -108;
+  public static final byte RAW24 = -107;
 
   // contents
 
-  public static final byte VALUES8 = -103;
-  public static final byte VALUES16 = -102;
-  public static final byte VALUES24 = -101;
+  public static final byte VALUES8 = -106;
+  public static final byte VALUES16 = -105;
+  public static final byte VALUES24 = -104;
 
   // xelement
 
-  public static final byte xELEMSTR8 = -100;
-  public static final byte xELEMTXT88 = -99;
-  public static final byte xELEMTXT816 = -98;
-  public static final byte xELEMTXT824 = -97;
-  public static final byte xELEMVOID8 = -96;
+  public static final byte xELEMSTR8 = -103;
+  public static final byte xELEMVOID8 = -102;
 
   // xattributes
 
-  public static final byte xATTRIBUTE88 = -95;
-  public static final byte xATTRIBUTE816 = -94;
-  public static final byte xATTRIBUTE824 = -93;
-  public static final byte xBOOLEAN8 = -92;
-  public static final byte xJSACTION88 = -91;
-  public static final byte xJSACTION816 = -90;
-  public static final byte xJSACTION824 = -89;
+  public static final byte xATTRIBUTE88 = -101;
+  public static final byte xATTRIBUTE816 = -100;
+  public static final byte xATTRIBUTE824 = -99;
+  public static final byte xBOOLEAN8 = -98;
+  public static final byte xJSACTION88 = -97;
+  public static final byte xJSACTION816 = -96;
+  public static final byte xJSACTION824 = -95;
 
   // xambiguous
 
-  public static final byte aAMBIGUOUS88 = -88;
-  public static final byte aAMBIGUOUS816 = -87;
-  public static final byte aAMBIGUOUS824 = -86;
-  public static final byte eAMBIGUOUS88 = -85;
-  public static final byte eAMBIGUOUS816 = -84;
-  public static final byte eAMBIGUOUS824 = -83;
+  public static final byte aAMBIGUOUS88 = -94;
+  public static final byte aAMBIGUOUS816 = -93;
+  public static final byte aAMBIGUOUS824 = -92;
+  public static final byte eAMBIGUOUS88 = -91;
+  public static final byte eAMBIGUOUS816 = -90;
+  public static final byte eAMBIGUOUS824 = -89;
 
   // xfragment
 
-  public static final byte xFRAGSTR = -82;
+  public static final byte xFRAGSTR = -88;
 
   // xtext
 
-  public static final byte xTEXT8 = -81;
-  public static final byte xTEXT16 = -80;
-  public static final byte xTEXT24 = -79;
+  public static final byte xTEXT8 = -87;
+  public static final byte xTEXT16 = -86;
+  public static final byte xTEXT24 = -85;
 
   // xraw
 
-  public static final byte xRAW8 = -78;
-  public static final byte xRAW16 = -77;
-  public static final byte xRAW24 = -76;
+  public static final byte xRAW8 = -84;
+  public static final byte xRAW16 = -83;
+  public static final byte xRAW24 = -82;
 
   private HtmlBytes() {}
 
@@ -129,12 +123,6 @@ public final class HtmlBytes {
   public static byte consume(byte source) {
     return switch (source) {
       case ELEMSTR8 -> xELEMSTR8;
-
-      case ELEMTXT88 -> xELEMTXT88;
-
-      case ELEMTXT816 -> xELEMTXT816;
-
-      case ELEMTXT824 -> xELEMTXT824;
 
       case ELEMVOID8 -> xELEMVOID8;
 
@@ -165,12 +153,6 @@ public final class HtmlBytes {
       case RAW24 -> xRAW24;
 
       case xELEMSTR8 -> xELEMSTR8;
-
-      case xELEMTXT88 -> xELEMTXT88;
-
-      case xELEMTXT816 -> xELEMTXT816;
-
-      case xELEMTXT824 -> xELEMTXT824;
 
       case xELEMVOID8 -> xELEMVOID8;
 

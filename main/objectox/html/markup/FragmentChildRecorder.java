@@ -74,10 +74,7 @@ final class FragmentChildRecorder {
            HtmlBytes.AMBIGUOUS816,
            HtmlBytes.AMBIGUOUS824 -> ambiguousChildRecorder.record(size, value);
 
-      case HtmlBytes.ELEMSTR8,
-           HtmlBytes.ELEMTXT88,
-           HtmlBytes.ELEMTXT816,
-           HtmlBytes.ELEMTXT824 -> valueRecorder.record(size, value);
+      case HtmlBytes.ELEMSTR8 -> valueRecorder.record(size, value);
 
       case HtmlBytes.FRAGSTR -> record(size, value);
 

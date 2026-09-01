@@ -17,6 +17,7 @@ package objectox.html.stream;
 
 import objectox.html.IntSize;
 import objectox.html.elem.ElementName;
+import objectox.html.markup.HtmlBytes;
 
 final class BeginStartTagState implements State {
 
@@ -47,13 +48,24 @@ final class BeginStartTagState implements State {
 
     ctx.result(event);
 
-    return switch (elementKind) {
-      case REGULAR -> new BeginRegularElementContentsState(ctx);
+    final byte values;
+    values = ctx.nextByte();
 
-      case VOID -> new BeginVoidElementContentsState(ctx);
+    final IntSize valueSize;
+    valueSize = valueSize(values);
 
-      case TEXT -> throw new UnsupportedOperationException("Implement me");
-    };
+    final int valueLength;
+    valueLength = ctx.nextInt(valueSize);
+
+    final Frame current;
+    current = ctx.peekFrame();
+
+    final ElementFrame elem;
+    elem = new ElementFrame(elementKind, elementName, valueLength, valueSize);
+
+    current.set(elem);
+
+    return new ScanElementAttributeState(ctx);
   }
 
   @Override
@@ -62,6 +74,18 @@ final class BeginStartTagState implements State {
         && ctx.equals(that.ctx)
         && elementKind.equals(that.elementKind)
         && nameSize.equals(that.nameSize);
+  }
+
+  private IntSize valueSize(byte values) {
+    return switch (values) {
+      case HtmlBytes.VALUES8 -> IntSize.BIT8;
+
+      case HtmlBytes.VALUES16 -> IntSize.BIT16;
+
+      case HtmlBytes.VALUES24 -> IntSize.BIT24;
+
+      default -> throw State.malformed();
+    };
   }
 
 }

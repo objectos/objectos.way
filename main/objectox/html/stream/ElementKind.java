@@ -19,8 +19,6 @@ enum ElementKind {
 
   REGULAR,
 
-  VOID,
-
-  TEXT;
+  VOID;
 
 }

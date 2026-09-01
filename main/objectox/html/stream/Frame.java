@@ -15,11 +15,11 @@
  */
 package objectox.html.stream;
 
-sealed abstract class Frame
-    permits
-    AbstractElementFrame,
-    JumpFrame,
-    ScanDocumentNodeFrame {
+import java.util.Objects;
+
+final class Frame {
+
+  ElementFrame elementFrame;
 
   int index;
 
@@ -27,27 +27,29 @@ sealed abstract class Frame
     this.index = index;
   }
 
-  public final <T extends Frame> T as(Class<T> type) {
-    return type.cast(this);
+  Frame(int index, ElementFrame elementFrame) {
+    this.index = index;
+
+    this.elementFrame = elementFrame;
   }
 
   @Override
   public final boolean equals(Object obj) {
     return obj == this || obj instanceof Frame that
-        && index == that.index
-        && equalsImpl(that);
+        && Objects.equals(elementFrame, that.elementFrame)
+        && index == that.index;
   }
 
-  abstract boolean equalsImpl(Frame that);
+  public final void set(ElementFrame value) {
+    if (elementFrame != null) {
+      final String msg;
+      msg = "ElementFrame already set";
 
-  public final IllegalStateException expected(Class<?> expectedType) {
-    final String msg;
-    msg = "Expected frame %s but got %s".formatted(expectedType.getSimpleName(), getClass().getSimpleName());
+      throw new IllegalStateException(msg);
+    }
 
-    return new IllegalStateException(msg);
+    elementFrame = value;
   }
-
-  public abstract State newState(Ctx ctx);
 
   @Override
   public final String toString() {
@@ -57,15 +59,7 @@ sealed abstract class Frame
     final String simpleName;
     simpleName = c.getSimpleName();
 
-    return simpleName + "(" + index + toStringImpl() + ")";
-  }
-
-  String toStringImpl() {
-    return "";
-  }
-
-  public final void updateIfNecessary(AbstractElementFrame previous) {
-    index = previous.index;
+    return simpleName + "(" + elementFrame + ", " + index + ")";
   }
 
 }

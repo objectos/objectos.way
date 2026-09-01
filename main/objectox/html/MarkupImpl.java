@@ -109,7 +109,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup elem(String name, String text) {
-    return recorder.textElement(name, text);
+    return recorder.regularElement(name, text);
   }
 
   /// Encodes an HTML void element with the specified name and values.
@@ -170,7 +170,7 @@ public final class MarkupImpl implements Markup {
   /// @param value the text block containing class names, possibly spread across multiple lines
   /// @return an object representing the encoded attribute.
   @Override
-  public final AttributeMarkup css(String value) {
+  public final AttributeMarkup css(String value){
     return recorder.css(value);
   }
 
@@ -435,7 +435,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup a(String text) {
-    return recorder.textElement(ElementName.A, text);
+    return recorder.regularElement(ElementName.A, text);
   }
 
   /// Encodes the `abbr` element with the specified values.
@@ -455,7 +455,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup abbr(String text) {
-    return recorder.textElement(ElementName.ABBR, text);
+    return recorder.regularElement(ElementName.ABBR, text);
   }
 
   /// Encodes the `article` element with the specified values.
@@ -475,7 +475,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup article(String text) {
-    return recorder.textElement(ElementName.ARTICLE, text);
+    return recorder.regularElement(ElementName.ARTICLE, text);
   }
 
   /// Encodes the `aside` element with the specified values.
@@ -495,7 +495,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup aside(String text) {
-    return recorder.textElement(ElementName.ASIDE, text);
+    return recorder.regularElement(ElementName.ASIDE, text);
   }
 
   /// Encodes the `b` element with the specified values.
@@ -515,7 +515,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup b(String text) {
-    return recorder.textElement(ElementName.B, text);
+    return recorder.regularElement(ElementName.B, text);
   }
 
   /// Encodes the `blockquote` element with the specified values.
@@ -535,7 +535,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup blockquote(String text) {
-    return recorder.textElement(ElementName.BLOCKQUOTE, text);
+    return recorder.regularElement(ElementName.BLOCKQUOTE, text);
   }
 
   /// Encodes the `body` element with the specified values.
@@ -555,7 +555,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup body(String text) {
-    return recorder.textElement(ElementName.BODY, text);
+    return recorder.regularElement(ElementName.BODY, text);
   }
 
   /// Encodes the `br` element with the specified content.
@@ -585,7 +585,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup button(String text) {
-    return recorder.textElement(ElementName.BUTTON, text);
+    return recorder.regularElement(ElementName.BUTTON, text);
   }
 
   /// Encodes the `clipPath` element with the specified values.
@@ -615,7 +615,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup code(String text) {
-    return recorder.textElement(ElementName.CODE, text);
+    return recorder.regularElement(ElementName.CODE, text);
   }
 
   /// Encodes the `dd` element with the specified values.
@@ -635,7 +635,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup dd(String text) {
-    return recorder.textElement(ElementName.DD, text);
+    return recorder.regularElement(ElementName.DD, text);
   }
 
   /// Encodes the `defs` element with the specified values.
@@ -655,7 +655,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup defs(String text) {
-    return recorder.textElement(ElementName.DEFS, text);
+    return recorder.regularElement(ElementName.DEFS, text);
   }
 
   /// Encodes the `details` element with the specified values.
@@ -675,7 +675,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup details(String text) {
-    return recorder.textElement(ElementName.DETAILS, text);
+    return recorder.regularElement(ElementName.DETAILS, text);
   }
 
   /// Encodes the `dialog` element with the specified values.
@@ -695,7 +695,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup dialog(String text) {
-    return recorder.textElement(ElementName.DIALOG, text);
+    return recorder.regularElement(ElementName.DIALOG, text);
   }
 
   /// Encodes the `div` element with the specified values.
@@ -715,7 +715,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup div(String text) {
-    return recorder.textElement(ElementName.DIV, text);
+    return recorder.regularElement(ElementName.DIV, text);
   }
 
   /// Encodes the `dl` element with the specified values.
@@ -735,7 +735,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup dl(String text) {
-    return recorder.textElement(ElementName.DL, text);
+    return recorder.regularElement(ElementName.DL, text);
   }
 
   /// Encodes the `dt` element with the specified values.
@@ -755,7 +755,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup dt(String text) {
-    return recorder.textElement(ElementName.DT, text);
+    return recorder.regularElement(ElementName.DT, text);
   }
 
   /// Encodes the `em` element with the specified values.
@@ -775,7 +775,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup em(String text) {
-    return recorder.textElement(ElementName.EM, text);
+    return recorder.regularElement(ElementName.EM, text);
   }
 
   /// Encodes the `fieldset` element with the specified values.
@@ -795,7 +795,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup fieldset(String text) {
-    return recorder.textElement(ElementName.FIELDSET, text);
+    return recorder.regularElement(ElementName.FIELDSET, text);
   }
 
   /// Encodes the `figure` element with the specified values.
@@ -815,7 +815,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup figure(String text) {
-    return recorder.textElement(ElementName.FIGURE, text);
+    return recorder.regularElement(ElementName.FIGURE, text);
   }
 
   /// Encodes the `footer` element with the specified values.
@@ -835,7 +835,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup footer(String text) {
-    return recorder.textElement(ElementName.FOOTER, text);
+    return recorder.regularElement(ElementName.FOOTER, text);
   }
 
   /// Encodes the `form` element with the specified values.
@@ -865,7 +865,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup g(String text) {
-    return recorder.textElement(ElementName.G, text);
+    return recorder.regularElement(ElementName.G, text);
   }
 
   /// Encodes the `h1` element with the specified values.
@@ -885,7 +885,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup h1(String text) {
-    return recorder.textElement(ElementName.H1, text);
+    return recorder.regularElement(ElementName.H1, text);
   }
 
   /// Encodes the `h2` element with the specified values.
@@ -905,7 +905,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup h2(String text) {
-    return recorder.textElement(ElementName.H2, text);
+    return recorder.regularElement(ElementName.H2, text);
   }
 
   /// Encodes the `h3` element with the specified values.
@@ -925,7 +925,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup h3(String text) {
-    return recorder.textElement(ElementName.H3, text);
+    return recorder.regularElement(ElementName.H3, text);
   }
 
   /// Encodes the `h4` element with the specified values.
@@ -945,7 +945,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup h4(String text) {
-    return recorder.textElement(ElementName.H4, text);
+    return recorder.regularElement(ElementName.H4, text);
   }
 
   /// Encodes the `h5` element with the specified values.
@@ -965,7 +965,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup h5(String text) {
-    return recorder.textElement(ElementName.H5, text);
+    return recorder.regularElement(ElementName.H5, text);
   }
 
   /// Encodes the `h6` element with the specified values.
@@ -985,7 +985,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup h6(String text) {
-    return recorder.textElement(ElementName.H6, text);
+    return recorder.regularElement(ElementName.H6, text);
   }
 
   /// Encodes the `head` element with the specified values.
@@ -1005,7 +1005,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup head(String text) {
-    return recorder.textElement(ElementName.HEAD, text);
+    return recorder.regularElement(ElementName.HEAD, text);
   }
 
   /// Encodes the `header` element with the specified values.
@@ -1025,7 +1025,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup header(String text) {
-    return recorder.textElement(ElementName.HEADER, text);
+    return recorder.regularElement(ElementName.HEADER, text);
   }
 
   /// Encodes the `hgroup` element with the specified values.
@@ -1045,7 +1045,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup hgroup(String text) {
-    return recorder.textElement(ElementName.HGROUP, text);
+    return recorder.regularElement(ElementName.HGROUP, text);
   }
 
   /// Encodes the `hr` element with the specified content.
@@ -1075,7 +1075,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup html(String text) {
-    return recorder.textElement(ElementName.HTML, text);
+    return recorder.regularElement(ElementName.HTML, text);
   }
 
   /// Encodes the `img` element with the specified content.
@@ -1115,7 +1115,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup kbd(String text) {
-    return recorder.textElement(ElementName.KBD, text);
+    return recorder.regularElement(ElementName.KBD, text);
   }
 
   /// Encodes the `label` element with the specified values.
@@ -1145,7 +1145,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup legend(String text) {
-    return recorder.textElement(ElementName.LEGEND, text);
+    return recorder.regularElement(ElementName.LEGEND, text);
   }
 
   /// Encodes the `li` element with the specified values.
@@ -1165,7 +1165,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup li(String text) {
-    return recorder.textElement(ElementName.LI, text);
+    return recorder.regularElement(ElementName.LI, text);
   }
 
   /// Encodes the `link` element with the specified content.
@@ -1195,7 +1195,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup main(String text) {
-    return recorder.textElement(ElementName.MAIN, text);
+    return recorder.regularElement(ElementName.MAIN, text);
   }
 
   /// Encodes the `menu` element with the specified values.
@@ -1215,7 +1215,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup menu(String text) {
-    return recorder.textElement(ElementName.MENU, text);
+    return recorder.regularElement(ElementName.MENU, text);
   }
 
   /// Encodes the `meta` element with the specified content.
@@ -1245,7 +1245,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup nav(String text) {
-    return recorder.textElement(ElementName.NAV, text);
+    return recorder.regularElement(ElementName.NAV, text);
   }
 
   /// Encodes the `noscript` element with the specified values.
@@ -1265,7 +1265,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup noscript(String text) {
-    return recorder.textElement(ElementName.NOSCRIPT, text);
+    return recorder.regularElement(ElementName.NOSCRIPT, text);
   }
 
   /// Encodes the `ol` element with the specified values.
@@ -1285,7 +1285,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup ol(String text) {
-    return recorder.textElement(ElementName.OL, text);
+    return recorder.regularElement(ElementName.OL, text);
   }
 
   /// Encodes the `optgroup` element with the specified values.
@@ -1305,7 +1305,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup optgroup(String text) {
-    return recorder.textElement(ElementName.OPTGROUP, text);
+    return recorder.regularElement(ElementName.OPTGROUP, text);
   }
 
   /// Encodes the `option` element with the specified values.
@@ -1325,7 +1325,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup option(String text) {
-    return recorder.textElement(ElementName.OPTION, text);
+    return recorder.regularElement(ElementName.OPTION, text);
   }
 
   /// Encodes the `p` element with the specified values.
@@ -1345,7 +1345,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup p(String text) {
-    return recorder.textElement(ElementName.P, text);
+    return recorder.regularElement(ElementName.P, text);
   }
 
   /// Encodes the `path` element with the specified values.
@@ -1365,7 +1365,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup path(String text) {
-    return recorder.textElement(ElementName.PATH, text);
+    return recorder.regularElement(ElementName.PATH, text);
   }
 
   /// Encodes the `pre` element with the specified values.
@@ -1385,7 +1385,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup pre(String text) {
-    return recorder.textElement(ElementName.PRE, text);
+    return recorder.regularElement(ElementName.PRE, text);
   }
 
   /// Encodes the `progress` element with the specified values.
@@ -1405,7 +1405,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup progress(String text) {
-    return recorder.textElement(ElementName.PROGRESS, text);
+    return recorder.regularElement(ElementName.PROGRESS, text);
   }
 
   /// Encodes the `samp` element with the specified values.
@@ -1425,7 +1425,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup samp(String text) {
-    return recorder.textElement(ElementName.SAMP, text);
+    return recorder.regularElement(ElementName.SAMP, text);
   }
 
   /// Encodes the `script` element with the specified values.
@@ -1445,7 +1445,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup script(String text) {
-    return recorder.textElement(ElementName.SCRIPT, text);
+    return recorder.regularElement(ElementName.SCRIPT, text);
   }
 
   /// Encodes the `section` element with the specified values.
@@ -1465,7 +1465,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup section(String text) {
-    return recorder.textElement(ElementName.SECTION, text);
+    return recorder.regularElement(ElementName.SECTION, text);
   }
 
   /// Encodes the `select` element with the specified values.
@@ -1485,7 +1485,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup select(String text) {
-    return recorder.textElement(ElementName.SELECT, text);
+    return recorder.regularElement(ElementName.SELECT, text);
   }
 
   /// Encodes the `small` element with the specified values.
@@ -1505,7 +1505,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup small(String text) {
-    return recorder.textElement(ElementName.SMALL, text);
+    return recorder.regularElement(ElementName.SMALL, text);
   }
 
   /// Encodes the `span` element with the specified values.
@@ -1525,7 +1525,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup span(String text) {
-    return recorder.textElement(ElementName.SPAN, text);
+    return recorder.regularElement(ElementName.SPAN, text);
   }
 
   /// Encodes the `strong` element with the specified values.
@@ -1545,7 +1545,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup strong(String text) {
-    return recorder.textElement(ElementName.STRONG, text);
+    return recorder.regularElement(ElementName.STRONG, text);
   }
 
   /// Encodes the `style` element with the specified values.
@@ -1575,7 +1575,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup sub(String text) {
-    return recorder.textElement(ElementName.SUB, text);
+    return recorder.regularElement(ElementName.SUB, text);
   }
 
   /// Encodes the `summary` element with the specified values.
@@ -1595,7 +1595,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup summary(String text) {
-    return recorder.textElement(ElementName.SUMMARY, text);
+    return recorder.regularElement(ElementName.SUMMARY, text);
   }
 
   /// Encodes the `sup` element with the specified values.
@@ -1615,7 +1615,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup sup(String text) {
-    return recorder.textElement(ElementName.SUP, text);
+    return recorder.regularElement(ElementName.SUP, text);
   }
 
   /// Encodes the `svg` element with the specified values.
@@ -1635,7 +1635,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup svg(String text) {
-    return recorder.textElement(ElementName.SVG, text);
+    return recorder.regularElement(ElementName.SVG, text);
   }
 
   /// Encodes the `table` element with the specified values.
@@ -1655,7 +1655,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup table(String text) {
-    return recorder.textElement(ElementName.TABLE, text);
+    return recorder.regularElement(ElementName.TABLE, text);
   }
 
   /// Encodes the `tbody` element with the specified values.
@@ -1675,7 +1675,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup tbody(String text) {
-    return recorder.textElement(ElementName.TBODY, text);
+    return recorder.regularElement(ElementName.TBODY, text);
   }
 
   /// Encodes the `td` element with the specified values.
@@ -1695,7 +1695,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup td(String text) {
-    return recorder.textElement(ElementName.TD, text);
+    return recorder.regularElement(ElementName.TD, text);
   }
 
   /// Encodes the `template` element with the specified values.
@@ -1715,7 +1715,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup template(String text) {
-    return recorder.textElement(ElementName.TEMPLATE, text);
+    return recorder.regularElement(ElementName.TEMPLATE, text);
   }
 
   /// Encodes the `textarea` element with the specified values.
@@ -1735,7 +1735,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup textarea(String text) {
-    return recorder.textElement(ElementName.TEXTAREA, text);
+    return recorder.regularElement(ElementName.TEXTAREA, text);
   }
 
   /// Encodes the `th` element with the specified values.
@@ -1755,7 +1755,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup th(String text) {
-    return recorder.textElement(ElementName.TH, text);
+    return recorder.regularElement(ElementName.TH, text);
   }
 
   /// Encodes the `thead` element with the specified values.
@@ -1775,7 +1775,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup thead(String text) {
-    return recorder.textElement(ElementName.THEAD, text);
+    return recorder.regularElement(ElementName.THEAD, text);
   }
 
   /// Encodes the `title` element with the specified values.
@@ -1805,7 +1805,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup tr(String text) {
-    return recorder.textElement(ElementName.TR, text);
+    return recorder.regularElement(ElementName.TR, text);
   }
 
   /// Encodes the `ul` element with the specified values.
@@ -1825,7 +1825,7 @@ public final class MarkupImpl implements Markup {
   /// @return an object representing the encoded element
   @Override
   public final ElementMarkup ul(String text) {
-    return recorder.textElement(ElementName.UL, text);
+    return recorder.regularElement(ElementName.UL, text);
   }
 
   //

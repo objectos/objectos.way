@@ -44,7 +44,7 @@ final class RenderTextState implements State {
 
     ctx.pop(); // jmp frame
 
-    return new ScanRegularElementNodeState(ctx);
+    return new ScanElementNodeState(ctx);
   }
 
   @Override

@@ -26,9 +26,6 @@ public class HtmlBytesTest {
   public Object[][] consumeProvider() {
     return new Object[][] {
         {HtmlBytes.ELEMSTR8, HtmlBytes.xELEMSTR8},
-        {HtmlBytes.ELEMTXT88, HtmlBytes.xELEMTXT88},
-        {HtmlBytes.ELEMTXT816, HtmlBytes.xELEMTXT816},
-        {HtmlBytes.ELEMTXT824, HtmlBytes.xELEMTXT824},
         {HtmlBytes.ELEMVOID8, HtmlBytes.xELEMVOID8},
 
         {HtmlBytes.ATTRIBUTE88, HtmlBytes.xATTRIBUTE88},
@@ -49,9 +46,6 @@ public class HtmlBytesTest {
         {HtmlBytes.RAW24, HtmlBytes.xRAW24},
 
         {HtmlBytes.xELEMSTR8, HtmlBytes.xELEMSTR8},
-        {HtmlBytes.xELEMTXT88, HtmlBytes.xELEMTXT88},
-        {HtmlBytes.xELEMTXT816, HtmlBytes.xELEMTXT816},
-        {HtmlBytes.xELEMTXT824, HtmlBytes.xELEMTXT824},
         {HtmlBytes.xELEMVOID8, HtmlBytes.xELEMVOID8},
 
         {HtmlBytes.xATTRIBUTE88, HtmlBytes.xATTRIBUTE88},

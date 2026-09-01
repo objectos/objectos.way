@@ -44,18 +44,18 @@ final class MergeAttributeState implements State {
     final Frame f;
     f = ctx.peekFrame();
 
-    final AbstractElementFrame current;
-    current = f.as(AbstractElementFrame.class);
+    final ElementFrame elem;
+    elem = f.elementFrame;
 
-    if (!current.hasNext()) {
+    if (!elem.hasValue()) {
       return toScan();
     }
 
     final int jmpIndex;
-    jmpIndex = current.peekInt(ctx);
+    jmpIndex = elem.peekValue(ctx);
 
-    final JumpFrame jmp;
-    jmp = new JumpFrame(jmpIndex);
+    final Frame jmp;
+    jmp = new Frame(jmpIndex);
 
     ctx.push(jmp);
 
@@ -102,10 +102,10 @@ final class MergeAttributeState implements State {
     final Frame f;
     f = ctx.peekFrame();
 
-    final AbstractElementFrame current;
-    current = f.as(AbstractElementFrame.class);
+    final ElementFrame elem;
+    elem = f.elementFrame;
 
-    current.nextInt(ctx); // skip consumed attribute
+    elem.nextValue(ctx); // skip consumed attribute
 
     return new MergeAttributeState(ctx, nameSize, attributeName, merged);
   }
@@ -122,10 +122,7 @@ final class MergeAttributeState implements State {
 
     ctx.result(event);
 
-    final Frame current;
-    current = ctx.peekFrame();
-
-    return current.newState(ctx);
+    return new ScanElementAttributeState(ctx);
   }
 
   @Override

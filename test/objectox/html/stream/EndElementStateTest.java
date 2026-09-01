@@ -530,7 +530,7 @@ public class EndElementStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new ScanRegularElementNodeState(ctx));
+    assertEquals(res, new ScanElementNodeState(ctx));
 
     assertEquals(
         ctx,
@@ -574,7 +574,7 @@ public class EndElementStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new ScanRegularElementNodeState(ctx));
+    assertEquals(res, new ScanElementNodeState(ctx));
 
     assertEquals(
         ctx,
@@ -659,7 +659,7 @@ public class EndElementStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new ScanRegularElementNodeState(ctx));
+    assertEquals(res, new ScanElementNodeState(ctx));
 
     assertEquals(
         ctx,

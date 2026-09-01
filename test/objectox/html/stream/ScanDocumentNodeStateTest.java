@@ -36,7 +36,7 @@ public class ScanDocumentNodeStateTest {
   public void testCase00() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
-      opts.push(new ScanDocumentNodeFrame(0));
+      opts.push(new Frame(0));
     });
 
     final ScanDocumentNodeState subject;
@@ -51,7 +51,7 @@ public class ScanDocumentNodeStateTest {
         ctx,
 
         CtxY.create(opts -> {
-          opts.push(new ScanDocumentNodeFrame(0));
+          opts.push(new Frame(0));
         })
     );
   }
@@ -62,7 +62,7 @@ public class ScanDocumentNodeStateTest {
   public void testCase01() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
-      opts.push(new ScanDocumentNodeFrame(0));
+      opts.push(new Frame(0));
 
       opts.addByte(HtmlBytes.DOCTYPE);
     });
@@ -81,7 +81,7 @@ public class ScanDocumentNodeStateTest {
         CtxY.create(opts -> {
           opts.sink(ctx);
           opts.result(RenderDoctypeEvent.of());
-          opts.push(new ScanDocumentNodeFrame(1));
+          opts.push(new Frame(1));
         })
     );
   }
@@ -90,10 +90,7 @@ public class ScanDocumentNodeStateTest {
   public Object[][] testCase02Provider() {
     return new Object[][] {
         {HtmlBytes.ELEMSTR8, ElementName.DIV, ElementKind.REGULAR, IntSize.BIT8},
-        {HtmlBytes.ELEMVOID8, ElementName.HR, ElementKind.VOID, IntSize.BIT8},
-        {HtmlBytes.ELEMTXT88, ElementName.SPAN, ElementKind.TEXT, IntSize.BIT8},
-        {HtmlBytes.ELEMTXT816, ElementName.SPAN, ElementKind.TEXT, IntSize.BIT8},
-        {HtmlBytes.ELEMTXT824, ElementName.SPAN, ElementKind.TEXT, IntSize.BIT8}
+        {HtmlBytes.ELEMVOID8, ElementName.HR, ElementKind.VOID, IntSize.BIT8}
     };
   }
 
@@ -103,7 +100,7 @@ public class ScanDocumentNodeStateTest {
   public void testCase02(byte proto, ElementName elementName, ElementKind elementKind, IntSize nameSize) {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
-      opts.push(new ScanDocumentNodeFrame(0));
+      opts.push(new Frame(0));
 
       opts.addByte(proto);
       opts.addInt8(elementName.index());
@@ -123,7 +120,7 @@ public class ScanDocumentNodeStateTest {
         CtxY.create(opts -> {
           opts.sink(ctx);
 
-          opts.push(new ScanDocumentNodeFrame(1));
+          opts.push(new Frame(1));
         })
     );
   }
@@ -196,26 +193,6 @@ public class ScanDocumentNodeStateTest {
         }), 5, "consumed element void"},
 
         {ctx(opts -> {
-          opts.addByte(HtmlBytes.xELEMTXT88);
-          opts.addInt8(ElementName.SPAN.index());
-          opts.addInt8(opts.addObject("Ipsum"));
-        }), 4, "consumed text element 8"},
-
-        {ctx(opts -> {
-          opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
-          opts.addByte(HtmlBytes.xELEMTXT816);
-          opts.addInt8(ElementName.SPAN.index());
-          opts.addInt16(opts.addObject("Ipsum"));
-        }), 5, "consumed text element 8/16"},
-
-        {ctx(opts -> {
-          opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
-          opts.addByte(HtmlBytes.xELEMTXT824);
-          opts.addInt8(ElementName.SPAN.index());
-          opts.addInt24(opts.addObject("Ipsum"));
-        }), 6, "consumed text element 8/24"},
-
-        {ctx(opts -> {
           opts.addByte(HtmlBytes.xTEXT8);
           opts.addInt8(opts.addObject("Ipsum"));
         }), 3, "text 8"},
@@ -257,7 +234,7 @@ public class ScanDocumentNodeStateTest {
   public void testCase03(Consumer<CtxY> prefix, int expectedIndex, String description) {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
-      opts.push(new ScanDocumentNodeFrame(0));
+      opts.push(new Frame(0));
 
       prefix.accept(opts);
 
@@ -283,8 +260,7 @@ public class ScanDocumentNodeStateTest {
 
         CtxY.create(opts -> {
           opts.sink(ctx);
-
-          opts.push(new ScanDocumentNodeFrame(expectedIndex));
+          opts.push(new Frame(expectedIndex));
         })
     );
   }
@@ -306,7 +282,7 @@ public class ScanDocumentNodeStateTest {
         ctx,
 
         CtxY.create(opts -> {
-          opts.push(new ScanDocumentNodeFrame(0));
+          opts.push(new Frame(0));
         })
     );
   }
