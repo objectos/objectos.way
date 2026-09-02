@@ -43,8 +43,6 @@ final class SkipRegularElement {
     count = ctx.nextInt(size);
 
     ctx.skip(count * size.bytes());
-
-    ctx.skip(1 + nameBytes);
   }
 
   private IntSize valuesSize() {

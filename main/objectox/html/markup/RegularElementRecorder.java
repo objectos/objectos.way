@@ -92,8 +92,6 @@ final class RegularElementRecorder {
 
     sink.setInt(valuesSize, valuesIndex, size);
 
-    endTag(nameIndex, nameSize);
-
     return new ElementPointer(startIndex);
   }
 
@@ -127,20 +125,6 @@ final class RegularElementRecorder {
     sink.addByte(values);
 
     return sink.addInt(size, 0);
-  }
-
-  private void endTag(int nameIndex, IntSize nameSize) {
-    switch (nameSize) {
-      case BIT8 -> endTag8(nameIndex);
-
-      case BIT16, BIT24 -> throw new UnsupportedOperationException();
-    }
-  }
-
-  private void endTag8(int nameIndex) {
-    sink.addByte(HtmlBytes.ELEMEND8);
-
-    sink.addInt8(nameIndex);
   }
 
 }

@@ -33,9 +33,6 @@ public class ScanElementAttributeStateTest {
   public void regular01() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.SPAN.index());
-
       opts.push(FrameY.create(f -> {
         f.index = 0;
 

@@ -40,10 +40,8 @@ public class SkipVoidElementTest {
       opts.addByte(HtmlBytes.VALUES8);
       opts.addInt8(1);
       opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.ARTICLE.index());
 
-      opts.push(new Frame(0));
+      opts.push(new Frame(1));
     });
 
     final SkipVoidElement subject;

@@ -60,8 +60,6 @@ public class RegularElementRecorderTest {
           opts.addByte(HtmlBytes.VALUES8);
           opts.addInt8(1);
           opts.addInt8(3);
-          opts.addByte(HtmlBytes.ELEMEND8);
-          opts.addInt8(ElementName.DIV.index());
         })
     );
   }
@@ -114,8 +112,6 @@ public class RegularElementRecorderTest {
           opts.addInt8(2);
           opts.addInt8(7);
           opts.addInt8(3);
-          opts.addByte(HtmlBytes.ELEMEND8);
-          opts.addInt8(ElementName.DIV.index());
         })
     );
   }
@@ -153,8 +149,6 @@ public class RegularElementRecorderTest {
           opts.addByte(HtmlBytes.VALUES8);
           opts.addInt8(1);
           opts.addInt8(3);
-          opts.addByte(HtmlBytes.ELEMEND8);
-          opts.addInt8(ElementName.DIV.index());
         })
     );
   }
@@ -197,8 +191,6 @@ public class RegularElementRecorderTest {
           opts.addByte(HtmlBytes.VALUES8);
           opts.addInt8(1);
           opts.addInt8(3);
-          opts.addByte(HtmlBytes.ELEMEND8);
-          opts.addInt8(ElementName.DIV.index());
         })
     );
   }

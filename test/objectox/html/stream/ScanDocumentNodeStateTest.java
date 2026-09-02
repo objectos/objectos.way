@@ -181,9 +181,7 @@ public class ScanDocumentNodeStateTest {
           opts.addInt8(ElementName.SPAN.index());
           opts.addByte(HtmlBytes.VALUES8);
           opts.addInt8(0);
-          opts.addByte(HtmlBytes.ELEMEND8);
-          opts.addInt8(ElementName.SPAN.index());
-        }), 7, "consumed element regular"},
+        }), 5, "consumed element regular"},
 
         {ctx(opts -> {
           opts.addByte(HtmlBytes.xELEMVOID8);
@@ -243,8 +241,6 @@ public class ScanDocumentNodeStateTest {
       opts.addByte(HtmlBytes.VALUES8);
       opts.addInt8(1);
       opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.DIV.index());
     });
 
     final ScanDocumentNodeState subject;

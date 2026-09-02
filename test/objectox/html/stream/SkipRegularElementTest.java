@@ -36,17 +36,13 @@ public class SkipRegularElementTest {
       opts.addInt8(ElementName.SPAN.index());
       opts.addByte(HtmlBytes.VALUES8);
       opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.SPAN.index());
       opts.addByte(HtmlBytes.ELEMSTR8);
       opts.addInt8(ElementName.DIV.index());
       opts.addByte(HtmlBytes.VALUES8);
       opts.addInt8(1);
       opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.DIV.index());
 
-      opts.push(new Frame(0));
+      opts.push(new Frame(1));
     });
 
     final SkipRegularElement subject;
@@ -60,7 +56,7 @@ public class SkipRegularElementTest {
         CtxY.create(opts -> {
           opts.sink(ctx);
 
-          opts.push(new Frame(6));
+          opts.push(new Frame(4));
         })
     );
   }

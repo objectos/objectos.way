@@ -68,6 +68,14 @@ final class BeginStartTagState implements State {
     return new ScanElementAttributeState(ctx);
   }
 
+  @Override
+  public final boolean equals(Object obj) {
+    return obj instanceof BeginStartTagState that
+        && ctx.equals(that.ctx)
+        && elementKind.equals(that.elementKind)
+        && nameSize.equals(that.nameSize);
+  }
+
   private IntSize valueSize(byte values) {
     return switch (values) {
       case HtmlBytes.VALUES8 -> IntSize.BIT8;

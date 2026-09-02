@@ -45,8 +45,6 @@ public class PlayerTest {
       opts.addByte(HtmlBytes.VALUES8);
       opts.addInt8(1);
       opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.SPAN.index());
     });
 
     assertEquals(subject.hasNext(), true);
@@ -122,8 +120,6 @@ public class PlayerTest {
       opts.addByte(HtmlBytes.VALUES8);
       opts.addInt8(1);
       opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.DIV.index());
     });
 
     assertEquals(subject.hasNext(), true);
@@ -155,8 +151,6 @@ public class PlayerTest {
       opts.addByte(HtmlBytes.VALUES8);
       opts.addInt8(1);
       opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.DIV.index());
     });
 
     assertEquals(subject.hasNext(), true);
@@ -190,8 +184,6 @@ public class PlayerTest {
       opts.addByte(HtmlBytes.VALUES8);
       opts.addInt8(1);
       opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.DIV.index());
     });
 
     assertEquals(subject.hasNext(), true);
@@ -225,8 +217,6 @@ public class PlayerTest {
       opts.addByte(HtmlBytes.VALUES8);
       opts.addInt8(1);
       opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.DIV.index());
     });
 
     assertEquals(subject.hasNext(), true);
@@ -349,8 +339,6 @@ public class PlayerTest {
       opts.addByte(HtmlBytes.VALUES8);
       opts.addInt8(1);
       opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.DIV.index());
     });
 
     assertEquals(subject.hasNext(), true);
@@ -415,8 +403,6 @@ public class PlayerTest {
       opts.addInt8(2);
       opts.addInt8(0);
       opts.addInt8(3);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.HTML.index());
     });
 
     assertEquals(subject.hasNext(), true);
@@ -444,8 +430,6 @@ public class PlayerTest {
       opts.addInt8(ElementName.DIV.index());
       opts.addByte(HtmlBytes.VALUES8);
       opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.DIV.index());
     });
 
     assertEquals(subject.hasNext(), true);
@@ -469,15 +453,11 @@ public class PlayerTest {
       opts.addInt8(ElementName.SPAN.index());
       opts.addByte(HtmlBytes.VALUES8);
       opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.SPAN.index());
       opts.addByte(HtmlBytes.ELEMSTR8);
       opts.addInt8(ElementName.DIV.index());
       opts.addByte(HtmlBytes.VALUES8);
       opts.addInt8(1);
       opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.DIV.index());
     });
 
     assertEquals(subject.hasNext(), true);
@@ -512,8 +492,6 @@ public class PlayerTest {
       opts.addByte(HtmlBytes.VALUES8);
       opts.addInt8(1);
       opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.ARTICLE.index());
     });
 
     assertEquals(subject.hasNext(), true);
@@ -547,15 +525,11 @@ public class PlayerTest {
       opts.addByte(HtmlBytes.VALUES8);
       opts.addInt8(1);
       opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.HEAD.index());
       opts.addByte(HtmlBytes.ELEMSTR8);
       opts.addInt8(ElementName.HTML.index());
       opts.addByte(HtmlBytes.VALUES8);
       opts.addInt8(1);
       opts.addInt8(4);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.HTML.index());
     });
 
     assertEquals(subject.hasNext(), true);

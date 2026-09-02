@@ -147,8 +147,6 @@ public class ElementChildrenRecorderTest {
       opts.addInt8(ElementName.HEAD.index());
       opts.addByte(HtmlBytes.VALUES8);
       opts.addInt24(0);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.HEAD.index());
     });
 
     final ElementChildrenRecorder subject;
@@ -174,8 +172,6 @@ public class ElementChildrenRecorderTest {
           opts.addInt8(ElementName.HEAD.index());
           opts.addByte(HtmlBytes.VALUES8);
           opts.addInt24(0);
-          opts.addByte(HtmlBytes.ELEMEND8);
-          opts.addInt8(ElementName.HEAD.index());
           opts.addInt8(3);
         })
     );

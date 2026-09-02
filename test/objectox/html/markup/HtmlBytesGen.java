@@ -32,7 +32,6 @@ public class HtmlBytesGen {
     comment("element");
 
     value("ELEMSTR8");
-    value("ELEMEND8");
     value("ELEMVOID8");
 
     comment("attributes");

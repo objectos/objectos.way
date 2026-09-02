@@ -73,8 +73,6 @@ public class MarkupTest {
           opts.addByte(HtmlBytes.VALUES8);
           opts.addInt8(1);
           opts.addInt8(0);
-          opts.addByte(HtmlBytes.ELEMEND8);
-          opts.addInt8(ElementName.DIV.index());
         })
     );
   }
@@ -140,8 +138,6 @@ public class MarkupTest {
           opts.addByte(HtmlBytes.VALUES8);
           opts.addInt8(1);
           opts.addInt8(0);
-          opts.addByte(HtmlBytes.ELEMEND8);
-          opts.addInt8(ElementName.DIV.index());
         })
     );
   }
@@ -209,8 +205,6 @@ public class MarkupTest {
           opts.addInt8(2);
           opts.addInt8(0);
           opts.addInt8(3);
-          opts.addByte(HtmlBytes.ELEMEND8);
-          opts.addInt8(ElementName.HTML.index());
         })
     );
   }
@@ -288,8 +282,6 @@ public class MarkupTest {
           opts.addInt8(0);
           opts.addInt8(6);
           opts.addInt8(3);
-          opts.addByte(HtmlBytes.ELEMEND8);
-          opts.addInt8(ElementName.SPAN.index());
         })
     );
   }
@@ -354,8 +346,6 @@ public class MarkupTest {
           opts.addInt8(ElementName.DIV.index());
           opts.addByte(HtmlBytes.VALUES8);
           opts.addInt8(0);
-          opts.addByte(HtmlBytes.ELEMEND8);
-          opts.addInt8(ElementName.DIV.index());
         })
     );
   }
