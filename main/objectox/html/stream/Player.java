@@ -24,7 +24,7 @@ public final class Player extends Ctx implements Iterator<Event> {
   private State state;
 
   Player(byte[] code, Object[] objects) {
-    this(code, objects, EMPTY_STACK, 0);
+    this(code, objects, EMPTY_STACK, -1);
   }
 
   Player(byte[] code, Object[] objects, Frame[] stack, int stackIndex) {
@@ -37,11 +37,7 @@ public final class Player extends Ctx implements Iterator<Event> {
     return new Player(
         code,
 
-        objects,
-
-        EMPTY_STACK,
-
-        0
+        objects
     );
   }
 
