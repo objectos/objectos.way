@@ -19,35 +19,23 @@ import static org.testng.Assert.assertEquals;
 
 import objectox.html.IntSize;
 import objectox.html.attr.AttributeName;
-import objectox.html.elem.ElementName;
-import objectox.html.markup.HtmlBytes;
 import org.testng.annotations.Test;
 
 public class RenderBooleanAttributeStateTest {
 
-  @Test(description = """
-  boolean attr:
-  - count: 1
-  - object
-  - name (8 bit)
-  - reg elem
-  """)
-  public void booleanAttribute01() {
+  @Test
+  public void testCase01() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.xBOOLEAN8);
       opts.addInt8(AttributeName.AUTOFOCUS.index());
-      opts.addByte(HtmlBytes.ELEMSTR8);
-      opts.addInt8(ElementName.SPAN.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.SPAN.index());
 
-      opts.push(new ScanDocumentNodeFrame(6));
-      opts.push(new ScanRegularElementAttributeFrame(7, IntSize.BIT8, 1, 1));
-      opts.push(new JumpFrame(1));
+      opts.push(FrameY.create(f -> {
+        f.index = 1;
+      }));
+
+      opts.push(FrameY.create(f -> {
+        f.index = 0;
+      }));
     });
 
     final RenderBooleanAttributeState subject;
@@ -56,7 +44,7 @@ public class RenderBooleanAttributeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new ScanRegularElementAttributeState(ctx));
+    assertEquals(res, new ScanElementAttributeState(ctx));
 
     assertEquals(
         ctx,
@@ -64,53 +52,11 @@ public class RenderBooleanAttributeStateTest {
         CtxY.create(opts -> {
           opts.sink(ctx);
 
-          opts.push(new ScanDocumentNodeFrame(6));
-          opts.push(new ScanRegularElementAttributeFrame(7, IntSize.BIT8, 1, 1));
+          opts.push(FrameY.create(f -> {
+            f.index = 1;
+          }));
+
           opts.result(RenderBooleanAttributeEvent.of(AttributeName.AUTOFOCUS));
-        })
-    );
-  }
-
-  @Test(description = """
-  boolean attr:
-  - count: 1
-  - object
-  - name (8 bit)
-  - void elem
-  """)
-  public void booleanAttribute02() {
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.xBOOLEAN8);
-      opts.addInt8(AttributeName.CHECKED.index());
-      opts.addByte(HtmlBytes.ELEMVOID8);
-      opts.addInt8(ElementName.INPUT.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-
-      opts.push(new ScanDocumentNodeFrame(6));
-      opts.push(new ScanVoidElementAttributeFrame(7, IntSize.BIT8, 1, 1));
-      opts.push(new JumpFrame(1));
-    });
-
-    final RenderBooleanAttributeState subject;
-    subject = new RenderBooleanAttributeState(ctx, IntSize.BIT8);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res, new ScanVoidElementAttributeState(ctx));
-
-    assertEquals(
-        ctx,
-
-        CtxY.create(opts -> {
-          opts.sink(ctx);
-
-          opts.push(new ScanDocumentNodeFrame(6));
-          opts.push(new ScanVoidElementAttributeFrame(7, IntSize.BIT8, 1, 1));
-          opts.result(RenderBooleanAttributeEvent.of(AttributeName.CHECKED));
         })
     );
   }

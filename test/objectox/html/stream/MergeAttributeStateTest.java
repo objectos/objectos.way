@@ -26,54 +26,139 @@ import org.testng.annotations.Test;
 public class MergeAttributeStateTest {
 
   @Test(description = """
-  reg attr:
-  - count: 3
-  - object (class)
-  - name (8 bit)
-  - reg elem
+  single value
   """)
-  public void regularAttribute07() {
+  public void testCase01() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.CLASS.index());
-      opts.addInt8(opts.addObject("c1"));
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.CLASS.index());
-      opts.addInt8(opts.addObject("c3"));
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.CLASS.index());
-      opts.addInt8(opts.addObject("c2"));
-      opts.addByte(HtmlBytes.ELEMSTR8);
-      opts.addInt8(ElementName.SPAN.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(3);
-      opts.addInt8(0);
-      opts.addInt8(6);
-      opts.addInt8(3);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.SPAN.index());
+      opts.push(FrameY.create(f -> {
+        f.index = 0;
 
-      opts.push(new ScanDocumentNodeFrame(13));
-      opts.push(new ScanRegularElementAttributeFrame(16, IntSize.BIT8, 3, 3));
+        f.regular(ElementName.DIV);
+
+        f.values8(1, 1);
+      }));
     });
 
     final MergeAttributeState subject;
-    subject = new MergeAttributeState(ctx, IntSize.BIT8, AttributeName.CLASS, "c1 c2 c3");
+    subject = new MergeAttributeState(ctx, IntSize.BIT8, AttributeName.CLASS, "c1");
 
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new ScanRegularElementAttributeState(ctx));
+    assertEquals(res, new ScanElementAttributeState(ctx));
 
     assertEquals(
         ctx,
 
         CtxY.create(opts -> {
           opts.sink(ctx);
-          opts.result(RenderAttributeEvent.of(AttributeName.CLASS, "c1 c2 c3"));
-          opts.push(new ScanDocumentNodeFrame(13));
-          opts.push(new ScanRegularElementAttributeFrame(16, IntSize.BIT8, 3, 3));
+
+          opts.push(FrameY.create(f -> {
+            f.index = 0;
+
+            f.regular(ElementName.DIV);
+
+            f.values8(1, 1);
+          }));
+
+          opts.result(RenderAttributeEvent.of(AttributeName.CLASS, "c1"));
+        })
+    );
+  }
+
+  @Test(description = """
+  another attribute but with different name
+  """)
+  public void testCase02() {
+    final int frameIndex = 3, valueIndex = 0;
+
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.HREF.index());
+      opts.addInt8(opts.addObject("#"));
+      opts.addInt8(valueIndex);
+
+      opts.push(FrameY.create(f -> {
+        f.index = frameIndex;
+
+        f.regular(ElementName.DIV);
+
+        f.values8(1, 2);
+      }));
+    });
+
+    final MergeAttributeState subject;
+    subject = new MergeAttributeState(ctx, IntSize.BIT8, AttributeName.CLASS, "c1");
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new ScanElementAttributeState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(FrameY.create(f -> {
+            f.index = frameIndex;
+
+            f.regular(ElementName.DIV);
+
+            f.values8(1, 2);
+          }));
+
+          opts.result(RenderAttributeEvent.of(AttributeName.CLASS, "c1"));
+        })
+    );
+  }
+
+  @Test(description = """
+  another attribute but with same name
+  """)
+  public void testCase03() {
+    final int frameIndex = 3, valueIndex = 0;
+
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.CLASS.index());
+      opts.addInt8(opts.addObject("c2"));
+      opts.addInt8(valueIndex);
+
+      opts.push(FrameY.create(f -> {
+        f.index = frameIndex;
+
+        f.regular(ElementName.DIV);
+
+        f.values8(1, 2);
+      }));
+    });
+
+    final MergeAttributeState subject;
+    subject = new MergeAttributeState(ctx, IntSize.BIT8, AttributeName.CLASS, "c1");
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new MergeAttributeState(ctx, IntSize.BIT8, AttributeName.CLASS, "c1 c2"));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(FrameY.create(f -> {
+            f.index = frameIndex + 1;
+
+            f.regular(ElementName.DIV);
+
+            f.values8(2, 2);
+          }));
         })
     );
   }

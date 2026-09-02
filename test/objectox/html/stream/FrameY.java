@@ -56,6 +56,22 @@ final class FrameY {
     valueSize = IntSize.BIT8;
   }
 
+  public final void values16(int index, int length) {
+    valueIndex = index;
+
+    valueLength = length;
+
+    valueSize = IntSize.BIT16;
+  }
+
+  public final void values24(int index, int length) {
+    valueIndex = index;
+
+    valueLength = length;
+
+    valueSize = IntSize.BIT24;
+  }
+
   public final void voidElem(ElementName name) {
     elementKind = ElementKind.VOID;
 
@@ -63,21 +79,27 @@ final class FrameY {
   }
 
   private Frame build() {
-    return new Frame(
-        index,
+    final Frame frame;
+    frame = new Frame(index);
 
-        new ElementFrame(
-            elementKind,
+    if (elementKind != null) {
+      final ElementFrame elem;
+      elem = new ElementFrame(
+          elementKind,
 
-            elementName,
+          elementName,
 
-            valueIndex,
+          valueIndex,
 
-            valueLength,
+          valueLength,
 
-            valueSize
-        )
-    );
+          valueSize
+      );
+
+      frame.set(elem);
+    }
+
+    return frame;
   }
 
 }

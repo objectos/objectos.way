@@ -21,39 +21,27 @@ import objectos.script.Js;
 import objectos.script.JsAction;
 import objectox.html.IntSize;
 import objectox.html.attr.AttributeName;
-import objectox.html.elem.ElementName;
-import objectox.html.markup.HtmlBytes;
 import org.testng.annotations.Test;
 
 public class RenderJsActionAttributeStateTest {
 
-  @Test(description = """
-  js action attr:
-  - count: 1
-  - markup
-  - name (8 bit)
-  - reg elem
-  """)
+  @Test
   public void jsActionAttribute01() {
     final JsAction action;
     action = Js.noop();
 
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.xJSACTION88);
       opts.addInt8(AttributeName.ONCLICK.index());
       opts.addInt8(opts.addObject(action));
-      opts.addByte(HtmlBytes.ELEMSTR8);
-      opts.addInt8(ElementName.DIV.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMEND8);
-      opts.addInt8(ElementName.DIV.index());
 
-      opts.push(new ScanDocumentNodeFrame(7));
-      opts.push(new ScanRegularElementAttributeFrame(8, IntSize.BIT8, 1, 1));
-      opts.push(new JumpFrame(1));
+      opts.push(FrameY.create(f -> {
+        f.index = 2;
+      }));
+
+      opts.push(FrameY.create(f -> {
+        f.index = 0;
+      }));
     });
 
     final RenderJsActionAttributeState subject;
@@ -62,16 +50,19 @@ public class RenderJsActionAttributeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new ScanRegularElementAttributeState(ctx));
+    assertEquals(res, new ScanElementAttributeState(ctx));
 
     assertEquals(
         ctx,
 
         CtxY.create(opts -> {
           opts.sink(ctx);
+
+          opts.push(FrameY.create(f -> {
+            f.index = 2;
+          }));
+
           opts.result(RenderJsActionAttributeEvent.of(AttributeName.ONCLICK, action));
-          opts.push(new ScanDocumentNodeFrame(7));
-          opts.push(new ScanRegularElementAttributeFrame(8, IntSize.BIT8, 1, 1));
         })
     );
   }
