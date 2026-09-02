@@ -15,6 +15,7 @@
  */
 package objectox.html.stream;
 
+import objectox.html.AmbiguousName;
 import objectox.html.IntSize;
 import objectox.html.attr.AttributeName;
 import objectox.html.markup.HtmlBytes;
@@ -63,28 +64,54 @@ final class MergeAttributeState implements State {
     code = ctx.nextByte();
 
     return switch (code) {
-      case HtmlBytes.xATTRIBUTE88 -> compute0(IntSize.BIT8, IntSize.BIT8);
+      case HtmlBytes.xATTRIBUTE88 -> compute0Attr(IntSize.BIT8, IntSize.BIT8);
 
-      case HtmlBytes.xATTRIBUTE816 -> compute0(IntSize.BIT8, IntSize.BIT16);
+      case HtmlBytes.xATTRIBUTE816 -> compute0Attr(IntSize.BIT8, IntSize.BIT16);
 
-      case HtmlBytes.xATTRIBUTE824 -> compute0(IntSize.BIT8, IntSize.BIT24);
+      case HtmlBytes.xATTRIBUTE824 -> compute0Attr(IntSize.BIT8, IntSize.BIT24);
+
+      case HtmlBytes.aAMBIGUOUS88 -> compute1Ambi(IntSize.BIT8, IntSize.BIT8);
+
+      case HtmlBytes.aAMBIGUOUS816 -> compute1Ambi(IntSize.BIT8, IntSize.BIT16);
+
+      case HtmlBytes.aAMBIGUOUS824 -> compute1Ambi(IntSize.BIT8, IntSize.BIT24);
 
       default -> popAndToScan();
     };
   }
 
-  private State compute0(IntSize nextNameSize, IntSize nextValueSize) {
+  private State compute0Attr(IntSize nextNameSize, IntSize nextValueSize) {
     if (!nextNameSize.equals(nameSize)) {
       return popAndToScan();
     }
 
-    final int nameIndex;
-    nameIndex = attributeName.index();
-
     final int nextNameIndex;
     nextNameIndex = ctx.nextInt(nameSize);
 
-    if (nameIndex != nextNameIndex) {
+    return computeCommon(nextNameIndex, nextValueSize);
+  }
+
+  private State compute1Ambi(IntSize ambiSize, IntSize nextValueSize) {
+    final int nameIndex;
+    nameIndex = ctx.nextInt(ambiSize);
+
+    final AmbiguousName ambiName;
+    ambiName = AmbiguousName.get(nameIndex);
+
+    final AttributeName nextName;
+    nextName = ambiName.attribute;
+
+    final int nextNameIndex;
+    nextNameIndex = nextName.index();
+
+    return computeCommon(nextNameIndex, nextValueSize);
+  }
+
+  private State computeCommon(int nextNameIndex, IntSize nextValueSize) {
+    final int nameIndex;
+    nameIndex = attributeName.index();
+
+    if (nextNameIndex != nameIndex) {
       return popAndToScan();
     }
 

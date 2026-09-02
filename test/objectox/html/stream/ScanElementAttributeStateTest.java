@@ -30,7 +30,7 @@ public class ScanElementAttributeStateTest {
   @Test(description = """
   element:
   """)
-  public void regular01() {
+  public void testCase01() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.push(FrameY.create(f -> {
@@ -69,8 +69,50 @@ public class ScanElementAttributeStateTest {
     );
   }
 
+  @Test(description = """
+  void element w/ 0 values
+  """)
+  public void testCase02() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.push(FrameY.create(f -> {
+        f.index = 0;
+
+        f.voidElem(ElementName.INPUT);
+
+        f.values8(0, 0);
+      }));
+    });
+
+    final ScanElementAttributeState subject;
+    subject = new ScanElementAttributeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new EndElementState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(FrameY.create(f -> {
+            f.index = 0;
+
+            f.voidElem(ElementName.INPUT);
+
+            f.values8(0, 0);
+          }));
+
+          opts.result(new EndStartTagEvent(EndStartTagKind.VOID_ELEMENT));
+        })
+    );
+  }
+
   @DataProvider
-  public Object[][] regular02Provider() {
+  public Object[][] testCase03Provider() {
     return new Object[][] {
         {HtmlBytes.xATTRIBUTE88, IntSize.BIT8, IntSize.BIT8},
         {HtmlBytes.xATTRIBUTE816, IntSize.BIT8, IntSize.BIT16},
@@ -78,12 +120,12 @@ public class ScanElementAttributeStateTest {
     };
   }
 
-  @Test(dataProvider = "regular02Provider", description = """
+  @Test(dataProvider = "testCase03Provider", description = """
   regular element:
   - values8
   - attribute
   """)
-  public void regular02(byte proto, IntSize nameSize, IntSize valueSize) {
+  public void testCase03(byte proto, IntSize nameSize, IntSize valueSize) {
     final int frameIndex = 1, valueIndex = 0;
 
     final Ctx ctx;
@@ -129,12 +171,12 @@ public class ScanElementAttributeStateTest {
     );
   }
 
-  @Test(dataProvider = "regular02Provider", description = """
+  @Test(dataProvider = "testCase03Provider", description = """
   regular element:
   - values16
   - attribute
   """)
-  public void regular03(byte proto, IntSize nameSize, IntSize valueSize) {
+  public void testCase04(byte proto, IntSize nameSize, IntSize valueSize) {
     final int offset = HtmlSink.MAX_INT8 + 1;
 
     final int frameIndex = offset + 1, valueIndex = offset;
@@ -183,12 +225,12 @@ public class ScanElementAttributeStateTest {
     );
   }
 
-  @Test(dataProvider = "regular02Provider", description = """
+  @Test(dataProvider = "testCase03Provider", description = """
   regular element:
   - values16
   - attribute
   """)
-  public void regular04(byte proto, IntSize nameSize, IntSize valueSize) {
+  public void testCase05(byte proto, IntSize nameSize, IntSize valueSize) {
     final int offset = HtmlSink.MAX_INT16 + 1;
 
     final int frameIndex = offset + 1, valueIndex = offset;
@@ -242,7 +284,7 @@ public class ScanElementAttributeStateTest {
   - values8
   - boolean attribute
   """)
-  public void regular05() {
+  public void testCase06() {
     final int frameIndex = 1, valueIndex = 0;
 
     final Ctx ctx;
@@ -289,7 +331,7 @@ public class ScanElementAttributeStateTest {
   }
 
   @DataProvider
-  public Object[][] regular06Provider() {
+  public Object[][] testCase07Provider() {
     return new Object[][] {
         {HtmlBytes.xJSACTION88, IntSize.BIT8, IntSize.BIT8},
         {HtmlBytes.xJSACTION816, IntSize.BIT8, IntSize.BIT16},
@@ -297,12 +339,12 @@ public class ScanElementAttributeStateTest {
     };
   }
 
-  @Test(dataProvider = "regular06Provider", description = """
+  @Test(dataProvider = "testCase07Provider", description = """
   regular element:
   - values8
   - js action attribute
   """)
-  public void regular06(byte proto, IntSize nameSize, IntSize valueSize) {
+  public void testCase07(byte proto, IntSize nameSize, IntSize valueSize) {
     final int frameIndex = 1, valueIndex = 0;
 
     final Ctx ctx;
@@ -349,7 +391,7 @@ public class ScanElementAttributeStateTest {
   }
 
   @DataProvider
-  public Object[][] regular07Provider() {
+  public Object[][] testCase08Provider() {
     return new Object[][] {
         {HtmlBytes.xTEXT8, IntSize.BIT8},
         {HtmlBytes.xTEXT16, IntSize.BIT16},
@@ -357,12 +399,12 @@ public class ScanElementAttributeStateTest {
     };
   }
 
-  @Test(dataProvider = "regular07Provider", description = """
+  @Test(dataProvider = "testCase08Provider", description = """
   regular element:
   - values8
   - text node
   """)
-  public void regular07(byte proto, IntSize textSize) {
+  public void testCase08(byte proto, IntSize textSize) {
     final int frameIndex = 1, valueIndex = 0;
 
     final Ctx ctx;
@@ -413,18 +455,34 @@ public class ScanElementAttributeStateTest {
     );
   }
 
-  @Test(description = """
-  element w/ 0 values
+  @DataProvider
+  public Object[][] testCase09Provider() {
+    return new Object[][] {
+        {HtmlBytes.aAMBIGUOUS88, IntSize.BIT8, IntSize.BIT8},
+        {HtmlBytes.aAMBIGUOUS816, IntSize.BIT8, IntSize.BIT16},
+        {HtmlBytes.aAMBIGUOUS824, IntSize.BIT8, IntSize.BIT24}
+    };
+  }
+
+  @Test(dataProvider = "testCase09Provider", description = """
+  regular element:
+  - values8
+  - ambiguous attribute
   """)
-  public void void01() {
+  public void testCase09(byte proto, IntSize nameSize, IntSize valueSize) {
+    final int frameIndex = 1, valueIndex = 0;
+
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
+      opts.addByte(proto);
+      opts.addInt8(valueIndex);
+
       opts.push(FrameY.create(f -> {
-        f.index = 0;
+        f.index = frameIndex;
 
-        f.voidElem(ElementName.INPUT);
+        f.regular(ElementName.SPAN);
 
-        f.values8(0, 0);
+        f.values8(0, 1);
       }));
     });
 
@@ -434,7 +492,7 @@ public class ScanElementAttributeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new EndElementState(ctx));
+    assertEquals(res, new RenderAmbiguousAttributeState(ctx, nameSize, valueSize));
 
     assertEquals(
         ctx,
@@ -443,14 +501,16 @@ public class ScanElementAttributeStateTest {
           opts.sink(ctx);
 
           opts.push(FrameY.create(f -> {
-            f.index = 0;
+            f.index = frameIndex + 1;
 
-            f.voidElem(ElementName.INPUT);
+            f.regular(ElementName.SPAN);
 
-            f.values8(0, 0);
+            f.values8(1, 1);
           }));
 
-          opts.result(new EndStartTagEvent(EndStartTagKind.VOID_ELEMENT));
+          opts.push(FrameY.create(f -> {
+            f.index = valueIndex + 1;
+          }));
         })
     );
   }

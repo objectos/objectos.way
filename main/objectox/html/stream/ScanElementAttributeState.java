@@ -68,6 +68,7 @@ final class ScanElementAttributeState implements State {
     code = ctx.nextByte();
 
     return switch (code) {
+
       case HtmlBytes.xATTRIBUTE88 -> new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT8);
 
       case HtmlBytes.xATTRIBUTE816 -> new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT16);
@@ -81,6 +82,12 @@ final class ScanElementAttributeState implements State {
       case HtmlBytes.xJSACTION816 -> new RenderJsActionAttributeState(ctx, IntSize.BIT8, IntSize.BIT16);
 
       case HtmlBytes.xJSACTION824 -> new RenderJsActionAttributeState(ctx, IntSize.BIT8, IntSize.BIT24);
+
+      case HtmlBytes.aAMBIGUOUS88 -> new RenderAmbiguousAttributeState(ctx, IntSize.BIT8, IntSize.BIT8);
+
+      case HtmlBytes.aAMBIGUOUS816 -> new RenderAmbiguousAttributeState(ctx, IntSize.BIT8, IntSize.BIT16);
+
+      case HtmlBytes.aAMBIGUOUS824 -> new RenderAmbiguousAttributeState(ctx, IntSize.BIT8, IntSize.BIT24);
 
       case HtmlBytes.xELEMSTR8 -> { nodes(elem); yield new BeginStartTagState(ctx, ElementKind.REGULAR, IntSize.BIT8); }
 

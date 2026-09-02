@@ -48,6 +48,20 @@ final class ScanDocumentNodeState implements State {
 
         case HtmlBytes.ELEMVOID8 -> { return new BeginStartTagState(ctx, ElementKind.VOID, IntSize.BIT8); }
 
+        case HtmlBytes.xELEMSTR8 -> {
+          final SkipRegularElement skip;
+          skip = new SkipRegularElement(ctx, IntSize.BIT8);
+
+          skip.execute();
+        }
+
+        case HtmlBytes.xELEMVOID8 -> {
+          final SkipVoidElement skip;
+          skip = new SkipVoidElement(ctx, IntSize.BIT8);
+
+          skip.execute();
+        }
+
         case HtmlBytes.xATTRIBUTE88 -> ctx.skip(1 + 1);
 
         case HtmlBytes.xATTRIBUTE816 -> ctx.skip(1 + 2);
@@ -62,19 +76,17 @@ final class ScanDocumentNodeState implements State {
 
         case HtmlBytes.xJSACTION824 -> ctx.skip(1 + 3);
 
-        case HtmlBytes.xELEMSTR8 -> {
-          final SkipRegularElement skip;
-          skip = new SkipRegularElement(ctx, IntSize.BIT8);
+        case HtmlBytes.aAMBIGUOUS88 -> ctx.skip(1 + 1);
 
-          skip.execute();
-        }
+        case HtmlBytes.aAMBIGUOUS816 -> ctx.skip(1 + 2);
 
-        case HtmlBytes.xELEMVOID8 -> {
-          final SkipVoidElement skip;
-          skip = new SkipVoidElement(ctx, IntSize.BIT8);
+        case HtmlBytes.aAMBIGUOUS824 -> ctx.skip(1 + 3);
 
-          skip.execute();
-        }
+        case HtmlBytes.eAMBIGUOUS88 -> ctx.skip(1 + 1);
+
+        case HtmlBytes.eAMBIGUOUS816 -> ctx.skip(1 + 2);
+
+        case HtmlBytes.eAMBIGUOUS824 -> ctx.skip(1 + 3);
 
         case HtmlBytes.xTEXT8 -> ctx.skip(1);
 
