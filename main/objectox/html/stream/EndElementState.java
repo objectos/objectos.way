@@ -26,21 +26,23 @@ final class EndElementState implements State {
   @Override
   public final State compute() {
     final Frame top;
-    top = ctx.peekFrame();
+    top = ctx.pop();
 
     top.elementFrame = null;
 
     final int size;
     size = ctx.frames();
 
-    if (size < 1) {
+    if (size < 0) {
       final String msg;
       msg = "Invalid stack state: size=%d".formatted(size);
 
       throw new IllegalStateException(msg);
     }
 
-    else if (size == 1) {
+    else if (size == 0) {
+      ctx.push(top);
+
       return new ScanDocumentNodeState(ctx);
     }
 
