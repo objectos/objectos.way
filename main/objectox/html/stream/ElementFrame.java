@@ -22,7 +22,7 @@ final class ElementFrame {
 
   final ElementKind elementKind;
 
-  private final ElementName elementName;
+  final ElementName elementName;
 
   private int valueIndex;
 
@@ -31,9 +31,15 @@ final class ElementFrame {
   private final IntSize valueSize;
 
   ElementFrame(ElementKind elementKind, ElementName elementName, int valueLength, IntSize valueSize) {
+    this(elementKind, elementName, 0, valueLength, valueSize);
+  }
+
+  ElementFrame(ElementKind elementKind, ElementName elementName, int valueIndex, int valueLength, IntSize valueSize) {
     this.elementKind = elementKind;
 
     this.elementName = elementName;
+
+    this.valueIndex = valueIndex;
 
     this.valueLength = valueLength;
 
@@ -62,6 +68,11 @@ final class ElementFrame {
 
   public final int peekValue(Ctx ctx) {
     return ctx.peekInt(valueSize);
+  }
+
+  @Override
+  public final String toString() {
+    return "ElementFrame(%s, %d, %d, %s)".formatted(elementName, valueIndex, valueLength, valueSize);
   }
 
 }

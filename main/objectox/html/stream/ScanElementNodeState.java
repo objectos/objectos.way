@@ -16,6 +16,7 @@
 package objectox.html.stream;
 
 import objectox.html.IntSize;
+import objectox.html.elem.ElementName;
 import objectox.html.markup.HtmlBytes;
 
 final class ScanElementNodeState implements State {
@@ -31,13 +32,19 @@ final class ScanElementNodeState implements State {
     final Frame f;
     f = ctx.peekFrame();
 
-    final ScanRegularElementNodeFrame frame;
-    frame = f.as(ScanRegularElementNodeFrame.class);
+    final ElementFrame elem;
+    elem = f.elementFrame;
 
-    if (frame.hasNext()) {
-      return compute0(frame);
+    if (elem.hasValue()) {
+      return compute0(elem);
     } else {
-      return endTag();
+      final ElementName elementName;
+      elementName = elem.elementName;
+
+      final ElementKind elementKind;
+      elementKind = elem.elementKind;
+
+      return elementKind.endStartTagStateEmpty(ctx, elementName);
     }
   }
 
@@ -47,14 +54,14 @@ final class ScanElementNodeState implements State {
         && ctx.equals(that.ctx);
   }
 
-  private State compute0(ScanRegularElementNodeFrame frame) {
-    final int jmpIndex;
-    jmpIndex = frame.nextInt(ctx);
+  private State compute0(ElementFrame elem) {
+    final int jmp;
+    jmp = elem.nextValue(ctx);
 
-    final JumpFrame jmpFrame;
-    jmpFrame = new JumpFrame(jmpIndex);
+    final Frame frame;
+    frame = new Frame(jmp);
 
-    ctx.push(jmpFrame);
+    ctx.push(frame);
 
     final byte code;
     code = ctx.nextByte();
@@ -66,32 +73,8 @@ final class ScanElementNodeState implements State {
 
       case HtmlBytes.xTEXT24 -> new RenderTextState(ctx, IntSize.BIT24);
 
-      case HtmlBytes.xATTRIBUTE88,
-           HtmlBytes.xBOOLEAN8 -> skip();
-
       default -> throw State.implCode(code);
     };
-  }
-
-  private State skip() {
-    ctx.pop(); // jmp frame
-
-    return this;
-  }
-
-  private State endTag() {
-    final Frame f;
-    f = ctx.pop();
-
-    final ScanRegularElementNodeFrame previous;
-    previous = f.as(ScanRegularElementNodeFrame.class);
-
-    final Frame current;
-    current = ctx.peekFrame();
-
-    current.updateIfNecessary(previous);
-
-    return new RenderEndTagState(ctx);
   }
 
 }

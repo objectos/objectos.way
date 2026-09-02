@@ -46,7 +46,7 @@ public class SkipRegularElementTest {
       opts.addByte(HtmlBytes.ELEMEND8);
       opts.addInt8(ElementName.DIV.index());
 
-      opts.push(new ScanDocumentNodeFrame(0));
+      opts.push(new Frame(0));
     });
 
     final SkipRegularElement subject;
@@ -60,7 +60,7 @@ public class SkipRegularElementTest {
         CtxY.create(opts -> {
           opts.sink(ctx);
 
-          opts.push(new ScanDocumentNodeFrame(6));
+          opts.push(new Frame(6));
         })
     );
   }

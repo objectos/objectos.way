@@ -17,6 +17,7 @@ package objectox.html.stream;
 
 import objectos.html.stream.EndStartTagKind;
 import objectox.html.IntSize;
+import objectox.html.elem.ElementName;
 import objectox.html.markup.HtmlBytes;
 
 final class ScanElementAttributeState implements State {
@@ -36,9 +37,15 @@ final class ScanElementAttributeState implements State {
     elem = frame.elementFrame;
 
     if (elem.hasValue()) {
-      return compute0(elem);
+      return compute0Value(elem);
     } else {
-      return emptyElement(elem);
+      final ElementName elementName;
+      elementName = elem.elementName;
+
+      final ElementKind elementKind;
+      elementKind = elem.elementKind;
+
+      return elementKind.endStartTagStateEmpty(ctx, elementName);
     }
   }
 
@@ -48,7 +55,7 @@ final class ScanElementAttributeState implements State {
         && ctx.equals(that.ctx);
   }
 
-  private State compute0(ElementFrame elem) {
+  private State compute0Value(ElementFrame elem) {
     final int jmp;
     jmp = elem.nextValue(ctx);
 
@@ -75,29 +82,15 @@ final class ScanElementAttributeState implements State {
 
       case HtmlBytes.xJSACTION824 -> new RenderJsActionAttributeState(ctx, IntSize.BIT8, IntSize.BIT24);
 
-      default -> compute1NonAttr(elem.elementKind, code);
-    };
-  }
+      case HtmlBytes.xELEMSTR8 -> { nodes(elem); yield compute0Value1Child(ElementKind.REGULAR, IntSize.BIT8); }
 
-  private State compute1NonAttr(ElementKind kind, byte code) {
-    return switch (kind) {
-      case REGULAR -> compute2RegularElem(code);
-
-      case VOID -> throw State.malformed();
-    };
-  }
-
-  private State compute2RegularElem(byte code) {
-    return switch (code) {
-      case HtmlBytes.xELEMSTR8 -> compute3Child(ElementKind.REGULAR, IntSize.BIT8);
-
-      case HtmlBytes.xELEMVOID8 -> compute3Child(ElementKind.VOID, IntSize.BIT8);
+      case HtmlBytes.xELEMVOID8 -> { nodes(elem); yield compute0Value1Child(ElementKind.VOID, IntSize.BIT8); }
 
       default -> throw State.implCode(code);
     };
   }
 
-  private State compute3Child(ElementKind elementKind, IntSize nameSize) {
+  private State compute0Value1Child(ElementKind nestedKind, IntSize nameSize) {
     final EndStartTagKind kind;
     kind = EndStartTagKind.ELEMENT;
 
@@ -106,42 +99,16 @@ final class ScanElementAttributeState implements State {
 
     ctx.result(event);
 
-    return new BeginStartTagState(ctx, elementKind, nameSize);
+    return new BeginStartTagState(ctx, nestedKind, nameSize);
   }
 
-  private State emptyElement(ElementFrame elem) {
-    final ElementKind kind;
-    kind = elem.elementKind;
+  private void nodes(ElementFrame elem) {
+    final ElementKind elementKind;
+    elementKind = elem.elementKind;
 
-    return switch (kind) {
-      case REGULAR -> emptyElement0Regular();
-
-      case VOID -> endElement1Void();
-    };
-  }
-
-  private State emptyElement0Regular() {
-    final EndStartTagKind kind;
-    kind = EndStartTagKind.EMPTY_ELEMENT;
-
-    final EndStartTagEvent event;
-    event = new EndStartTagEvent(kind);
-
-    ctx.result(event);
-
-    return new RenderEndTagState(ctx);
-  }
-
-  private State endElement1Void() {
-    final EndStartTagKind kind;
-    kind = EndStartTagKind.VOID_ELEMENT;
-
-    final EndStartTagEvent event;
-    event = new EndStartTagEvent(kind);
-
-    ctx.result(event);
-
-    return new EndElementState(ctx);
+    if (elementKind != ElementKind.REGULAR) {
+      throw State.malformed();
+    }
   }
 
 }

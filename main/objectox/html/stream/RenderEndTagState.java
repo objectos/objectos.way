@@ -15,49 +15,35 @@
  */
 package objectox.html.stream;
 
-import objectox.html.IntSize;
 import objectox.html.elem.ElementName;
-import objectox.html.markup.HtmlBytes;
 
 final class RenderEndTagState implements State {
 
   private final Ctx ctx;
 
-  RenderEndTagState(Ctx ctx) {
+  private final ElementName elementName;
+
+  RenderEndTagState(Ctx ctx, ElementName elementName) {
     this.ctx = ctx;
+
+    this.elementName = elementName;
   }
 
   @Override
   public final State compute() {
-    final byte code;
-    code = ctx.nextByte();
-
-    return switch (code) {
-      case HtmlBytes.ELEMEND8 -> renderEndTag(IntSize.BIT8);
-
-      default -> throw State.implCode(code);
-    };
-  }
-
-  @Override
-  public final boolean equals(Object obj) {
-    return obj instanceof RenderEndTagState that
-        && ctx.equals(that.ctx);
-  }
-
-  private State renderEndTag(IntSize size) {
-    final int nameIndex;
-    nameIndex = ctx.nextInt(size);
-
-    final ElementName elementName;
-    elementName = ElementName.get(nameIndex);
-
     final RenderEndTagEvent event;
     event = new RenderEndTagEvent(elementName);
 
     ctx.result(event);
 
     return new EndElementState(ctx);
+  }
+
+  @Override
+  public final boolean equals(Object obj) {
+    return obj instanceof RenderEndTagState that
+        && ctx.equals(that.ctx)
+        && elementName.equals(that.elementName);
   }
 
 }

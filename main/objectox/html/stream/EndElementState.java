@@ -25,31 +25,28 @@ final class EndElementState implements State {
 
   @Override
   public final State compute() {
-    final Frame frame;
-    frame = ctx.pop();
+    final Frame top;
+    top = ctx.peekFrame();
 
-    return switch (frame) {
-      case JumpFrame _ -> {
-        final Frame current;
-        current = ctx.peekFrame();
+    top.elementFrame = null;
 
-        yield current.newState(ctx);
-      }
+    final int size;
+    size = ctx.frames();
 
-      case ScanDocumentNodeFrame f -> {
-        ctx.push(f);
+    if (size < 1) {
+      final String msg;
+      msg = "Invalid stack state: size=%d".formatted(size);
 
-        yield new ScanDocumentNodeState(ctx);
-      }
+      throw new IllegalStateException(msg);
+    }
 
-      case ScanRegularElementNodeFrame f -> {
-        ctx.push(f);
+    else if (size == 1) {
+      return new ScanDocumentNodeState(ctx);
+    }
 
-        yield new ScanElementNodeState(ctx);
-      }
-
-      default -> throw new UnsupportedOperationException("Implement me :: frame=" + frame);
-    };
+    else {
+      return new ScanElementNodeState(ctx);
+    }
   }
 
   @Override

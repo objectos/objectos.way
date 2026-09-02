@@ -43,7 +43,7 @@ public class SkipVoidElementTest {
       opts.addByte(HtmlBytes.ELEMEND8);
       opts.addInt8(ElementName.ARTICLE.index());
 
-      opts.push(new ScanDocumentNodeFrame(0));
+      opts.push(new Frame(0));
     });
 
     final SkipVoidElement subject;
@@ -57,7 +57,7 @@ public class SkipVoidElementTest {
         CtxY.create(opts -> {
           opts.sink(ctx);
 
-          opts.push(new ScanDocumentNodeFrame(4));
+          opts.push(new Frame(4));
         })
     );
   }

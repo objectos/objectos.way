@@ -58,6 +58,10 @@ class Ctx {
         && Arrays.equals(stack, 0, stackIndex + 1, that.stack, 0, that.stackIndex + 1);
   }
 
+  public final int frames() {
+    return stackIndex + 1;
+  }
+
   public final boolean hasByte() {
     final Frame frame;
     frame = stack[stackIndex];

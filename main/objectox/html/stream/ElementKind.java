@@ -15,10 +15,41 @@
  */
 package objectox.html.stream;
 
+import objectos.html.stream.EndStartTagKind;
+import objectox.html.elem.ElementName;
+
 enum ElementKind {
 
   REGULAR,
 
   VOID;
+
+  public final State endStartTagStateEmpty(Ctx ctx, ElementName elementName) {
+    return switch (this) {
+      case REGULAR -> {
+        final EndStartTagKind kind;
+        kind = EndStartTagKind.EMPTY_ELEMENT;
+
+        final EndStartTagEvent event;
+        event = new EndStartTagEvent(kind);
+
+        ctx.result(event);
+
+        yield new RenderEndTagState(ctx, elementName);
+      }
+
+      case VOID -> {
+        final EndStartTagKind kind;
+        kind = EndStartTagKind.VOID_ELEMENT;
+
+        final EndStartTagEvent event;
+        event = new EndStartTagEvent(kind);
+
+        ctx.result(event);
+
+        yield new EndElementState(ctx);
+      }
+    };
+  }
 
 }
