@@ -348,6 +348,71 @@ public class ScanElementAttributeStateTest {
     );
   }
 
+  @DataProvider
+  public Object[][] regular07Provider() {
+    return new Object[][] {
+        {HtmlBytes.xTEXT8, IntSize.BIT8},
+        {HtmlBytes.xTEXT16, IntSize.BIT16},
+        {HtmlBytes.xTEXT24, IntSize.BIT24}
+    };
+  }
+
+  @Test(dataProvider = "regular07Provider", description = """
+  regular element:
+  - values8
+  - text node
+  """)
+  public void regular07(byte proto, IntSize textSize) {
+    final int frameIndex = 1, valueIndex = 0;
+
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(proto);
+      opts.addInt8(valueIndex);
+
+      opts.push(FrameY.create(f -> {
+        f.index = frameIndex;
+
+        f.regular(ElementName.SPAN);
+
+        f.values8(0, 1);
+      }));
+    });
+
+    final ScanElementAttributeState subject;
+    subject = new ScanElementAttributeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new RenderTextState(ctx, textSize));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(FrameY.create(f -> {
+            f.index = frameIndex + 1;
+
+            f.regular(ElementName.SPAN);
+
+            f.values8(1, 1);
+          }));
+
+          opts.push(FrameY.create(f -> {
+            f.index = valueIndex + 1;
+          }));
+
+          final EndStartTagEvent event;
+          event = new EndStartTagEvent(EndStartTagKind.ELEMENT);
+
+          opts.result(event);
+        })
+    );
+  }
+
   @Test(description = """
   element w/ 0 values
   """)

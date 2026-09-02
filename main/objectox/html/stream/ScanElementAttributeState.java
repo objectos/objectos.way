@@ -82,24 +82,18 @@ final class ScanElementAttributeState implements State {
 
       case HtmlBytes.xJSACTION824 -> new RenderJsActionAttributeState(ctx, IntSize.BIT8, IntSize.BIT24);
 
-      case HtmlBytes.xELEMSTR8 -> { nodes(elem); yield compute0Value1Child(ElementKind.REGULAR, IntSize.BIT8); }
+      case HtmlBytes.xELEMSTR8 -> { nodes(elem); yield new BeginStartTagState(ctx, ElementKind.REGULAR, IntSize.BIT8); }
 
-      case HtmlBytes.xELEMVOID8 -> { nodes(elem); yield compute0Value1Child(ElementKind.VOID, IntSize.BIT8); }
+      case HtmlBytes.xELEMVOID8 -> { nodes(elem); yield new BeginStartTagState(ctx, ElementKind.VOID, IntSize.BIT8); }
+
+      case HtmlBytes.xTEXT8 -> { nodes(elem); yield new RenderTextState(ctx, IntSize.BIT8); }
+
+      case HtmlBytes.xTEXT16 -> { nodes(elem); yield new RenderTextState(ctx, IntSize.BIT16); }
+
+      case HtmlBytes.xTEXT24 -> { nodes(elem); yield new RenderTextState(ctx, IntSize.BIT24); }
 
       default -> throw State.implCode(code);
     };
-  }
-
-  private State compute0Value1Child(ElementKind nestedKind, IntSize nameSize) {
-    final EndStartTagKind kind;
-    kind = EndStartTagKind.ELEMENT;
-
-    final EndStartTagEvent event;
-    event = new EndStartTagEvent(kind);
-
-    ctx.result(event);
-
-    return new BeginStartTagState(ctx, nestedKind, nameSize);
   }
 
   private void nodes(ElementFrame elem) {
@@ -109,6 +103,14 @@ final class ScanElementAttributeState implements State {
     if (elementKind != ElementKind.REGULAR) {
       throw State.malformed();
     }
+
+    final EndStartTagKind kind;
+    kind = EndStartTagKind.ELEMENT;
+
+    final EndStartTagEvent event;
+    event = new EndStartTagEvent(kind);
+
+    ctx.result(event);
   }
 
 }
