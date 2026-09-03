@@ -515,4 +515,69 @@ public class ScanElementAttributeStateTest {
     );
   }
 
+  @DataProvider
+  public Object[][] testCase10Provider() {
+    return new Object[][] {
+        {HtmlBytes.eAMBIGUOUS88, IntSize.BIT8, IntSize.BIT8},
+        {HtmlBytes.eAMBIGUOUS816, IntSize.BIT8, IntSize.BIT16},
+        {HtmlBytes.eAMBIGUOUS824, IntSize.BIT8, IntSize.BIT24}
+    };
+  }
+
+  @Test(dataProvider = "testCase10Provider", description = """
+  regular element:
+  - values8
+  - ambiguous element
+  """)
+  public void testCase10(byte proto, IntSize nameSize, IntSize valueSize) {
+    final int frameIndex = 1, valueIndex = 0;
+
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(proto);
+      opts.addInt8(valueIndex);
+
+      opts.push(FrameY.create(f -> {
+        f.index = frameIndex;
+
+        f.regular(ElementName.SPAN);
+
+        f.values8(0, 1);
+      }));
+    });
+
+    final ScanElementAttributeState subject;
+    subject = new ScanElementAttributeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new RenderAmbiguousElementStartTagState(ctx, nameSize, valueSize));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(FrameY.create(f -> {
+            f.index = frameIndex + 1;
+
+            f.regular(ElementName.SPAN);
+
+            f.values8(1, 1);
+          }));
+
+          opts.push(FrameY.create(f -> {
+            f.index = valueIndex + 1;
+          }));
+
+          final EndStartTagEvent event;
+          event = new EndStartTagEvent(EndStartTagKind.ELEMENT);
+
+          opts.result(event);
+        })
+    );
+  }
+
 }
