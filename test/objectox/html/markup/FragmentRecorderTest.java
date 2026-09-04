@@ -24,7 +24,7 @@ import org.testng.annotations.Test;
 public class FragmentRecorderTest {
 
   @Test
-  public void record01() {
+  public void testCase01() {
     final HtmlSink sink;
     sink = new HtmlSink();
 
@@ -53,7 +53,7 @@ public class FragmentRecorderTest {
   }
 
   @Test
-  public void record02() {
+  public void testCase02() {
     final HtmlSink sink;
     sink = new HtmlSink();
 

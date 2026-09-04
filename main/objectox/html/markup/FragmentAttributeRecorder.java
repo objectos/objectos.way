@@ -37,7 +37,7 @@ final class FragmentAttributeRecorder {
   public final int record(ElementName elementName, IntSize size, int fragValue) {
     int sum = 0;
 
-    int cursor = fragValue + 3;
+    int cursor = fragValue + 4;
 
     while (sink.hasByte(cursor)) {
       final int value;

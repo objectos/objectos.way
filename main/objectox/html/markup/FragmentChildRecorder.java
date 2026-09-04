@@ -42,7 +42,7 @@ final class FragmentChildRecorder {
   public final int record(IntSize size, int fragValue) {
     int sum = 0;
 
-    int cursor = fragValue + 3;
+    int cursor = fragValue + 4;
 
     while (sink.hasByte(cursor)) {
       final int value;
@@ -74,7 +74,8 @@ final class FragmentChildRecorder {
            HtmlBytes.AMBIGUOUS816,
            HtmlBytes.AMBIGUOUS824 -> ambiguousChildRecorder.record(size, value);
 
-      case HtmlBytes.ELEMSTR8 -> valueRecorder.record(size, value);
+      case HtmlBytes.ELEMSTR8,
+           HtmlBytes.ELEMVOID8 -> valueRecorder.record(size, value);
 
       case HtmlBytes.FRAGSTR -> record(size, value);
 

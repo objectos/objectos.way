@@ -232,6 +232,21 @@ public class ScanDocumentNodeStateTest {
         }), 5, "consumed element void"},
 
         {ctx(opts -> {
+          opts.addByte(HtmlBytes.xFRAGSTR);
+          opts.addInt24(5);
+          opts.addByte(HtmlBytes.FRAGEND);
+        }), 6, "consumed fragment empty"},
+
+        {ctx(opts -> {
+          opts.addByte(HtmlBytes.xFRAGSTR);
+          opts.addInt24(8);
+          opts.addByte(HtmlBytes.xATTRIBUTE88);
+          opts.addInt8(AttributeName.CONTENTEDITABLE.index());
+          opts.addInt8(opts.addObject("false"));
+          opts.addByte(HtmlBytes.FRAGEND);
+        }), 9, "consumed fragment one child"},
+
+        {ctx(opts -> {
           opts.addByte(HtmlBytes.xTEXT8);
           opts.addInt8(opts.addObject("Ipsum"));
         }), 3, "text 8"},
@@ -297,7 +312,10 @@ public class ScanDocumentNodeStateTest {
 
         CtxY.create(opts -> {
           opts.sink(ctx);
-          opts.push(new Frame(expectedIndex));
+
+          opts.push(FrameY.create(f -> {
+            f.index = expectedIndex;
+          }));
         })
     );
   }
