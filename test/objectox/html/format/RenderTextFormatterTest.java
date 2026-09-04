@@ -26,12 +26,16 @@ import org.testng.annotations.Test;
 public class RenderTextFormatterTest {
 
   private String format(RenderTextFormatter subject) {
-    return format(subject, "");
+    return format(subject, "ipsum", "");
   }
 
   private String format(RenderTextFormatter subject, String text) {
+    return format(subject, "ipsum", text);
+  }
+
+  private String format(RenderTextFormatter subject, String value, String text) {
     final RenderText event;
-    event = RenderTextEvent.of("ipsum");
+    event = RenderTextEvent.of(value);
 
     final Output out;
     out = OutputY.create(opts -> {
@@ -201,6 +205,144 @@ public class RenderTextFormatterTest {
         format(subject),
 
         "ipsum"
+    );
+  }
+
+  @Test(description = "ampersand is escaped")
+  public void escape01() {
+    final Indentation indentation;
+    indentation = new Indentation(1, "  ");
+
+    final RenderTextFormatter subject;
+    subject = new RenderTextFormatter(
+        indentation,
+
+        IndentationStyle.never(),
+
+        NewLine.LF,
+
+        NewLineStyle.never()
+    );
+
+    assertEquals(
+        format(subject, "A&B", ""),
+
+        "A&amp;B"
+    );
+  }
+
+  @Test(description = "less-than sign is escaped")
+  public void escape02() {
+    final Indentation indentation;
+    indentation = new Indentation(1, "  ");
+
+    final RenderTextFormatter subject;
+    subject = new RenderTextFormatter(
+        indentation,
+
+        IndentationStyle.never(),
+
+        NewLine.LF,
+
+        NewLineStyle.never()
+    );
+
+    assertEquals(
+        format(subject, "A<B", ""),
+
+        "A&lt;B"
+    );
+  }
+
+  @Test(description = "greater-than sign is escaped")
+  public void escape03() {
+    final Indentation indentation;
+    indentation = new Indentation(1, "  ");
+
+    final RenderTextFormatter subject;
+    subject = new RenderTextFormatter(
+        indentation,
+
+        IndentationStyle.never(),
+
+        NewLine.LF,
+
+        NewLineStyle.never()
+    );
+
+    assertEquals(
+        format(subject, "A>C", ""),
+
+        "A&gt;C"
+    );
+  }
+
+  @Test(description = "all escapable characters are escaped")
+  public void escape04() {
+    final Indentation indentation;
+    indentation = new Indentation(1, "  ");
+
+    final RenderTextFormatter subject;
+    subject = new RenderTextFormatter(
+        indentation,
+
+        IndentationStyle.never(),
+
+        NewLine.LF,
+
+        NewLineStyle.never()
+    );
+
+    assertEquals(
+        format(subject, "A&B<C>D", ""),
+
+        "A&amp;B&lt;C&gt;D"
+    );
+  }
+
+  @Test(description = "quotation marks are not escaped in text content")
+  public void escape05() {
+    final Indentation indentation;
+    indentation = new Indentation(1, "  ");
+
+    final RenderTextFormatter subject;
+    subject = new RenderTextFormatter(
+        indentation,
+
+        IndentationStyle.never(),
+
+        NewLine.LF,
+
+        NewLineStyle.never()
+    );
+
+    assertEquals(
+        format(subject, "A\"B'C", ""),
+
+        "A\"B'C"
+    );
+  }
+
+  @Test(description = "already-escaped entity is escaped again")
+  public void escape06() {
+    final Indentation indentation;
+    indentation = new Indentation(1, "  ");
+
+    final RenderTextFormatter subject;
+    subject = new RenderTextFormatter(
+        indentation,
+
+        IndentationStyle.never(),
+
+        NewLine.LF,
+
+        NewLineStyle.never()
+    );
+
+    assertEquals(
+        format(subject, "&amp;", ""),
+
+        "&amp;amp;"
     );
   }
 

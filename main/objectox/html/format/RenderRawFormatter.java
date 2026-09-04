@@ -42,7 +42,10 @@ final class RenderRawFormatter {
   public final void format(RenderRaw event, Output out) {
     indentation.format(indentationStyle, out);
 
-    out.append(event.value());
+    final String value;
+    value = event.value();
+
+    out.append(value);
 
     newLine.notEmpty(newLineStyle, out);
   }

@@ -18,8 +18,15 @@ package objectox.html.format;
 import objectos.html.format.IndentationStyle;
 import objectos.html.format.NewLineStyle;
 import objectos.html.stream.RenderText;
+import objectox.html.markup.CommonEscaper;
 
 final class RenderTextFormatter {
+
+  private static final CommonEscaper ESCAPER = CommonEscaper.create(opts -> {
+    opts.add('&', "&amp;");
+    opts.add('<', "&lt;");
+    opts.add('>', "&gt;");
+  });
 
   private final Indentation indentation;
 
@@ -42,7 +49,13 @@ final class RenderTextFormatter {
   public final void format(RenderText event, Output out) {
     indentation.format(indentationStyle, out);
 
-    out.append(event.value());
+    final String value;
+    value = event.value();
+
+    final String escaped;
+    escaped = ESCAPER.escape(value);
+
+    out.append(escaped);
 
     newLine.notEmpty(newLineStyle, out);
   }

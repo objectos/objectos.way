@@ -127,30 +127,4 @@ public class TextRecorderTest {
     );
   }
 
-  @Test(description = "TEXT8 escaped")
-  public void textEscaper() {
-    final HtmlSink sink;
-    sink = new HtmlSink();
-
-    final TextRecorder subject;
-    subject = new TextRecorder(sink);
-
-    final String value;
-    value = "A&B";
-
-    final String escaped;
-    escaped = "A&amp;B";
-
-    subject.record(value);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.TEXT8);
-          opts.addInt8(opts.addObject(escaped));
-        })
-    );
-  }
-
 }
