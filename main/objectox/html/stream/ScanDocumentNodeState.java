@@ -48,6 +48,16 @@ final class ScanDocumentNodeState implements State {
 
         case HtmlBytes.ELEMVOID8 -> { return new BeginStartTagState(ctx, ElementKind.VOID, IntSize.BIT8); }
 
+        case HtmlBytes.FRAGSTR -> { ctx.skip(3); }
+
+        case HtmlBytes.FRAGEND -> {}
+
+        case HtmlBytes.TEXT8 -> { return new RenderTextState(ctx, IntSize.BIT8); }
+
+        case HtmlBytes.TEXT16 -> { return new RenderTextState(ctx, IntSize.BIT16); }
+
+        case HtmlBytes.TEXT24 -> { return new RenderTextState(ctx, IntSize.BIT24); }
+
         case HtmlBytes.xELEMSTR8 -> {
           final SkipRegularElement skip;
           skip = new SkipRegularElement(ctx, IntSize.BIT8);

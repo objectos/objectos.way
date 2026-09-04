@@ -30,25 +30,10 @@ final class EndElementState implements State {
 
     top.elementFrame = null;
 
-    final int size;
-    size = ctx.frames();
+    final EndNode endNode;
+    endNode = new EndNode(ctx);
 
-    if (size < 0) {
-      final String msg;
-      msg = "Invalid stack state: size=%d".formatted(size);
-
-      throw new IllegalStateException(msg);
-    }
-
-    else if (size == 0) {
-      ctx.push(top);
-
-      return new ScanDocumentNodeState(ctx);
-    }
-
-    else {
-      return new ScanElementNodeState(ctx);
-    }
+    return endNode.execute(top);
   }
 
   @Override

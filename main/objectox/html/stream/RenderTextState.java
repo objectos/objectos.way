@@ -42,9 +42,13 @@ final class RenderTextState implements State {
 
     ctx.result(event);
 
-    ctx.pop(); // jmp frame
+    final Frame top;
+    top = ctx.pop();
 
-    return new ScanElementNodeState(ctx);
+    final EndNode endNode;
+    endNode = new EndNode(ctx);
+
+    return endNode.execute(top);
   }
 
   @Override
