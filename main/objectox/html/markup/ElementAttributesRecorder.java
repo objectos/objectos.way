@@ -16,6 +16,7 @@
 package objectox.html.markup;
 
 import objectos.html.ClassName;
+import objectos.html.Component;
 import objectos.html.Id;
 import objectos.html.markup.BooleanAttribute;
 import objectos.html.markup.ElementMarkup;
@@ -76,6 +77,8 @@ final class ElementAttributesRecorder {
       case BooleanAttribute _ -> throw new ObjectAttributeDetected();
 
       case ClassName _ -> throw new ObjectAttributeDetected();
+
+      case Component _ -> throw new ObjectAttributeDetected();
 
       case ElementMarkup _ -> 0;
 

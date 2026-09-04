@@ -25,7 +25,7 @@ import objectox.html.attr.AttributeName;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class ElementAttributesPreRecorderTest {
+public class ElementPreRecorderTest {
 
   @Test(description = "AttributeRecorder delegation")
   public void attribute01() {
@@ -38,8 +38,11 @@ public class ElementAttributesPreRecorderTest {
     final BooleanAttributeRecorder booleanAttributeRecorder;
     booleanAttributeRecorder = new BooleanAttributeRecorder(sink);
 
-    final ElementAttributesPreRecorder subject;
-    subject = new ElementAttributesPreRecorder(attributeRecorder, booleanAttributeRecorder);
+    final FragmentRecorder fragmentRecorder;
+    fragmentRecorder = new FragmentRecorder(sink);
+
+    final ElementPreRecorder subject;
+    subject = new ElementPreRecorder(attributeRecorder, booleanAttributeRecorder, fragmentRecorder);
 
     final ClassName attr;
     attr = ClassName.of("block");
@@ -73,8 +76,11 @@ public class ElementAttributesPreRecorderTest {
     final BooleanAttributeRecorder booleanAttributeRecorder;
     booleanAttributeRecorder = new BooleanAttributeRecorder(sink);
 
-    final ElementAttributesPreRecorder subject;
-    subject = new ElementAttributesPreRecorder(attributeRecorder, booleanAttributeRecorder);
+    final FragmentRecorder fragmentRecorder;
+    fragmentRecorder = new FragmentRecorder(sink);
+
+    final ElementPreRecorder subject;
+    subject = new ElementPreRecorder(attributeRecorder, booleanAttributeRecorder, fragmentRecorder);
 
     final Id attr;
     attr = Id.of("foo");
@@ -108,8 +114,11 @@ public class ElementAttributesPreRecorderTest {
     final BooleanAttributeRecorder booleanAttributeRecorder;
     booleanAttributeRecorder = new BooleanAttributeRecorder(sink);
 
-    final ElementAttributesPreRecorder subject;
-    subject = new ElementAttributesPreRecorder(attributeRecorder, booleanAttributeRecorder);
+    final FragmentRecorder fragmentRecorder;
+    fragmentRecorder = new FragmentRecorder(sink);
+
+    final ElementPreRecorder subject;
+    subject = new ElementPreRecorder(attributeRecorder, booleanAttributeRecorder, fragmentRecorder);
 
     final BooleanAttribute checked;
     checked = Markup.checked;
@@ -155,8 +164,11 @@ public class ElementAttributesPreRecorderTest {
     final BooleanAttributeRecorder booleanAttributeRecorder;
     booleanAttributeRecorder = new BooleanAttributeRecorder(sink);
 
-    final ElementAttributesPreRecorder subject;
-    subject = new ElementAttributesPreRecorder(attributeRecorder, booleanAttributeRecorder);
+    final FragmentRecorder fragmentRecorder;
+    fragmentRecorder = new FragmentRecorder(sink);
+
+    final ElementPreRecorder subject;
+    subject = new ElementPreRecorder(attributeRecorder, booleanAttributeRecorder, fragmentRecorder);
 
     final ElementValue[] values;
     values = new ElementValue[] {value};

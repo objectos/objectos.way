@@ -16,6 +16,7 @@
 package objectos.html;
 
 import objectos.dev.Testable;
+import objectos.html.markup.RegularElementValue;
 import objectos.http.Content;
 import objectos.http.ContentProvider;
 import objectos.http.MediaType;
@@ -23,7 +24,11 @@ import objectox.html.MarkupImpl;
 
 /// An object that renders HTML on its own or as part of a larger HTML document.
 @FunctionalInterface
-public interface Component extends ContentProvider, Testable {
+public non-sealed interface Component
+    extends
+    ContentProvider,
+    RegularElementValue,
+    Testable {
 
   /// Returns the markup instance to be used by this component.
   ///

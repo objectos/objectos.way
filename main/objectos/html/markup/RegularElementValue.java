@@ -16,6 +16,7 @@
 package objectos.html.markup;
 
 import objectos.html.ClassName;
+import objectos.html.Component;
 import objectos.html.Id;
 import objectox.html.markup.ElementValue;
 
@@ -29,6 +30,7 @@ public sealed interface RegularElementValue
     AttributeMarkup,
     BooleanAttribute,
     ClassName,
+    Component,
     ElementMarkup,
     FragmentMarkup,
     Id,

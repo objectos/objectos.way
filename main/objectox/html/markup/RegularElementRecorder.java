@@ -26,18 +26,18 @@ final class RegularElementRecorder {
 
   private final ElementAttributesRecorder attributesRecorder;
 
-  private final ElementAttributesPreRecorder elementAttributesPreRecorder;
-
   private final ElementChildrenRecorder childrenRecorder;
 
-  RegularElementRecorder(HtmlSink sink, ElementAttributesRecorder attributesRecorder, ElementAttributesPreRecorder elementAttributesPreRecorder, ElementChildrenRecorder childrenRecorder) {
+  private final ElementPreRecorder preRecorder;
+
+  RegularElementRecorder(HtmlSink sink, ElementAttributesRecorder attributesRecorder, ElementChildrenRecorder childrenRecorder, ElementPreRecorder preRecorder) {
     this.sink = sink;
 
     this.attributesRecorder = attributesRecorder;
 
-    this.elementAttributesPreRecorder = elementAttributesPreRecorder;
-
     this.childrenRecorder = childrenRecorder;
+
+    this.preRecorder = preRecorder;
   }
 
   public final ElementPointer record(String name, RegularElementValue... values) {
@@ -59,7 +59,7 @@ final class RegularElementRecorder {
     } catch (ObjectAttributeDetected e) {
       sink.codeIndex(savepoint);
 
-      elementAttributesPreRecorder.record(values);
+      preRecorder.record(values);
 
       return record0(name, values);
     }

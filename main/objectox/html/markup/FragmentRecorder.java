@@ -16,18 +16,47 @@
 package objectox.html.markup;
 
 import java.util.Objects;
+import objectos.html.Component;
+import objectos.html.Markup;
 import objectos.html.markup.Fragment0;
 import objectos.html.markup.Fragment1;
 import objectos.html.markup.Fragment2;
 import objectos.html.markup.Fragment3;
 import objectos.html.markup.Fragment4;
+import objectox.html.MarkupImpl;
 
 final class FragmentRecorder {
+
+  private Markup componentMarkup;
 
   private final HtmlSink sink;
 
   FragmentRecorder(HtmlSink sink) {
     this.sink = sink;
+  }
+
+  public final FragmentPointer record(Component component) {
+    final Component c;
+    c = Objects.requireNonNull(component, "component == null");
+
+    final int startIndex;
+    startIndex = sink.addByte(HtmlBytes.FRAGSTR);
+
+    final int jmpIndex;
+    jmpIndex = sink.addInt24(0);
+
+    if (componentMarkup == null) {
+      componentMarkup = MarkupImpl.of(sink);
+    }
+
+    c.renderHtml(componentMarkup);
+
+    final int endIndex;
+    endIndex = sink.addByte(HtmlBytes.FRAGEND);
+
+    sink.setInt24(jmpIndex, endIndex + 1);
+
+    return new FragmentPointer(startIndex);
   }
 
   public final FragmentPointer record(Fragment0 fragment) {

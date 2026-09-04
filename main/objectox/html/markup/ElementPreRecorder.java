@@ -16,19 +16,24 @@
 package objectox.html.markup;
 
 import objectos.html.ClassName;
+import objectos.html.Component;
 import objectos.html.Id;
 import objectos.html.markup.BooleanAttribute;
 
-final class ElementAttributesPreRecorder {
+final class ElementPreRecorder {
 
   private final AttributeRecorder attributeRecorder;
 
   private final BooleanAttributeRecorder booleanAttributeRecorder;
 
-  ElementAttributesPreRecorder(AttributeRecorder attributeRecorder, BooleanAttributeRecorder booleanAttributeRecorder) {
+  private final FragmentRecorder fragmentRecorder;
+
+  ElementPreRecorder(AttributeRecorder attributeRecorder, BooleanAttributeRecorder booleanAttributeRecorder, FragmentRecorder fragmentRecorder) {
     this.attributeRecorder = attributeRecorder;
 
     this.booleanAttributeRecorder = booleanAttributeRecorder;
+
+    this.fragmentRecorder = fragmentRecorder;
   }
 
   public final void record(ElementValue... values) {
@@ -52,6 +57,8 @@ final class ElementAttributesPreRecorder {
       case BooleanAttribute a -> booleanAttributeRecorder.record(a);
 
       case ClassName attr -> attributeRecorder.record(attr);
+
+      case Component c -> fragmentRecorder.record(c);
 
       case Id attr -> attributeRecorder.record(attr);
 

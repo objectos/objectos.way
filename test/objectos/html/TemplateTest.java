@@ -1765,7 +1765,6 @@ public class TemplateTest {
     """);
   }
 
-  /*
   @Test(description = """
   Html.Template::renderComponent
   """)
@@ -1775,35 +1774,46 @@ public class TemplateTest {
           @Override
           protected final void render() {
             div(
-                c(html -> html.span("as child"))
+                (Component) html -> html.span("as child")
             );
-  
-            div(f(this::fragment0));
-  
+
+            f(this::fragment0);
+
             div(f(this::fragment1));
           }
-  
+
           private void fragment0() {
-            c(html -> html.span("fragment root"));
+            div((Component) html -> html.span("fragment root"));
           }
-  
+
           private void fragment1() {
             div(
-                c(html -> html.span("fragment child"))
+                (Component) html -> html.span("fragment child")
             );
           }
         },
-  
+
         """
-        <div><span>as child</span></div>
-        <div><span>fragment root</span></div>
         <div>
-        <div><span>fragment child</span></div>
+          <span>
+            as child
+          </span>
+        </div>
+        <div>
+          <span>
+            fragment root
+          </span>
+        </div>
+        <div>
+          <div>
+            <span>
+              fragment child
+            </span>
+          </div>
         </div>
         """
     );
   }
-  */
 
   @Test(description = "root fragment 01: one")
   public void testCase73() {
