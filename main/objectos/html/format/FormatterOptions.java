@@ -23,6 +23,7 @@ import objectos.html.stream.RenderBooleanAttribute;
 import objectos.html.stream.RenderDoctype;
 import objectos.html.stream.RenderEndTag;
 import objectos.html.stream.RenderJsActionAttribute;
+import objectos.html.stream.RenderRaw;
 import objectos.html.stream.RenderText;
 import objectox.html.format.FormatterBuilder;
 
@@ -75,6 +76,11 @@ public sealed interface FormatterOptions
   ///
   /// @param opts allows for setting the options
   void renderJsActionAttribute(Consumer<? super RenderJsActionAttributeOptions> opts);
+
+  /// Sets the [RenderRaw] options.
+  ///
+  /// @param opts allows for setting the options
+  void renderRaw(Consumer<? super RenderRawOptions> opts);
 
   /// Sets the [RenderText] options.
   ///

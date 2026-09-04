@@ -23,6 +23,7 @@ import objectos.script.Js;
 import objectos.script.JsAction;
 import objectox.html.attr.AttributeName;
 import objectox.html.stream.RenderJsActionAttributeEvent;
+import objectox.html.stream.RenderRawEvent;
 import org.testng.annotations.Test;
 
 public class FormatterImplTest {
@@ -47,6 +48,26 @@ public class FormatterImplTest {
         out.toString(),
 
         " onclick='[\"NO\"]'"
+    );
+  }
+
+  @Test(description = "RenderRaw events are formatted via the default options")
+  public void renderRaw01() {
+    final Event event;
+    event = new RenderRawEvent("<br/>");
+
+    final FormatterImpl subject;
+    subject = (FormatterImpl) Formatter.standard();
+
+    final Output out;
+    out = OutputY.create();
+
+    subject.formatTo(event, out);
+
+    assertEquals(
+        out.toString(),
+
+        "  <br/>\n"
     );
   }
 

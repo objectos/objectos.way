@@ -192,6 +192,66 @@ public class ScanElementNodeStateTest {
   }
 
   @DataProvider
+  public Object[][] rawCase03Provider() {
+    return new Object[][] {
+        {HtmlBytes.xRAW8, IntSize.BIT8},
+        {HtmlBytes.xRAW16, IntSize.BIT16},
+        {HtmlBytes.xRAW24, IntSize.BIT24}
+    };
+  }
+
+  @Test(dataProvider = "rawCase03Provider", description = """
+  element:
+  - element
+  - raw node
+  """)
+  public void rawCase03(byte proto, IntSize rawSize) {
+    final int frameIndex = 1, valueIndex = 0;
+
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(proto);
+      opts.addInt8(valueIndex);
+
+      opts.push(FrameY.create(f -> {
+        f.index = frameIndex;
+
+        f.regular(ElementName.DIV);
+
+        f.values8(1, 2);
+      }));
+    });
+
+    final ScanElementNodeState subject;
+    subject = new ScanElementNodeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new RenderRawState(ctx, rawSize));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(FrameY.create(f -> {
+            f.index = frameIndex + 1;
+
+            f.regular(ElementName.DIV);
+
+            f.values8(2, 2);
+          }));
+
+          opts.push(FrameY.create(f -> {
+            f.index = valueIndex + 1;
+          }));
+        })
+    );
+  }
+
+  @DataProvider
   public Object[][] testCase04Provider() {
     return new Object[][] {
         {HtmlBytes.eAMBIGUOUS88, IntSize.BIT8, IntSize.BIT8},

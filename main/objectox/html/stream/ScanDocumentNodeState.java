@@ -58,6 +58,12 @@ final class ScanDocumentNodeState implements State {
 
         case HtmlBytes.TEXT24 -> { return new RenderTextState(ctx, IntSize.BIT24); }
 
+        case HtmlBytes.RAW8 -> { return new RenderRawState(ctx, IntSize.BIT8); }
+
+        case HtmlBytes.RAW16 -> { return new RenderRawState(ctx, IntSize.BIT16); }
+
+        case HtmlBytes.RAW24 -> { return new RenderRawState(ctx, IntSize.BIT24); }
+
         case HtmlBytes.xELEMSTR8 -> {
           final SkipRegularElement skip;
           skip = new SkipRegularElement(ctx, IntSize.BIT8);

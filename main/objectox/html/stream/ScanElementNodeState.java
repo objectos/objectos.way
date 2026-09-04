@@ -83,6 +83,12 @@ final class ScanElementNodeState implements State {
 
       case HtmlBytes.xTEXT24 -> new RenderTextState(ctx, IntSize.BIT24);
 
+      case HtmlBytes.xRAW8 -> new RenderRawState(ctx, IntSize.BIT8);
+
+      case HtmlBytes.xRAW16 -> new RenderRawState(ctx, IntSize.BIT16);
+
+      case HtmlBytes.xRAW24 -> new RenderRawState(ctx, IntSize.BIT24);
+
       default -> throw State.malformed();
     };
   }

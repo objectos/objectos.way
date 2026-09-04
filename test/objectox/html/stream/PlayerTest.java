@@ -134,6 +134,89 @@ public class PlayerTest {
   }
 
   @Test(description = """
+  raw text:
+  - document level
+  - 8 bit
+  """)
+  public void raw01() {
+    final Player subject;
+    subject = PlayerY.create(opts -> {
+      opts.addByte(HtmlBytes.RAW8);
+      opts.addInt8(opts.addObject("<br/>"));
+    });
+
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new RenderRawEvent("<br/>"));
+    assertEquals(subject.hasNext(), false);
+  }
+
+  @Test(description = """
+  raw text:
+  - reg elem (no attrs)
+  - 8 bit
+  """)
+  public void raw02() {
+    final Player subject;
+    subject = PlayerY.create(opts -> {
+      opts.addByte(HtmlBytes.xRAW8);
+      opts.addInt8(opts.addObject("<br/>"));
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.DIV.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+    });
+
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new BeginStartTagEvent(ElementName.DIV));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EndStartTagEvent(EndStartTagKind.ELEMENT));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new RenderRawEvent("<br/>"));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new RenderEndTagEvent(ElementName.DIV));
+    assertEquals(subject.hasNext(), false);
+  }
+
+  @Test(description = """
+  raw text:
+  - document level
+  - 16 bit
+  """)
+  public void raw03() {
+    final Player subject;
+    subject = PlayerY.create(opts -> {
+      opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
+
+      opts.addByte(HtmlBytes.RAW16);
+      opts.addInt16(opts.addObject("Ipsum"));
+    });
+
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new RenderRawEvent("Ipsum"));
+    assertEquals(subject.hasNext(), false);
+  }
+
+  @Test(description = """
+  raw text:
+  - document level
+  - 24 bit
+  """)
+  public void raw04() {
+    final Player subject;
+    subject = PlayerY.create(opts -> {
+      opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
+
+      opts.addByte(HtmlBytes.RAW24);
+      opts.addInt24(opts.addObject("Ipsum"));
+    });
+
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new RenderRawEvent("Ipsum"));
+    assertEquals(subject.hasNext(), false);
+  }
+
+  @Test(description = """
   reg attr:
   - count: 1
   - markup

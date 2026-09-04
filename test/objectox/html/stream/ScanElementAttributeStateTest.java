@@ -456,6 +456,71 @@ public class ScanElementAttributeStateTest {
   }
 
   @DataProvider
+  public Object[][] rawCase08Provider() {
+    return new Object[][] {
+        {HtmlBytes.xRAW8, IntSize.BIT8},
+        {HtmlBytes.xRAW16, IntSize.BIT16},
+        {HtmlBytes.xRAW24, IntSize.BIT24}
+    };
+  }
+
+  @Test(dataProvider = "rawCase08Provider", description = """
+  regular element:
+  - values8
+  - raw node
+  """)
+  public void rawCase08(byte proto, IntSize rawSize) {
+    final int frameIndex = 1, valueIndex = 0;
+
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(proto);
+      opts.addInt8(valueIndex);
+
+      opts.push(FrameY.create(f -> {
+        f.index = frameIndex;
+
+        f.regular(ElementName.SPAN);
+
+        f.values8(0, 1);
+      }));
+    });
+
+    final ScanElementAttributeState subject;
+    subject = new ScanElementAttributeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new RenderRawState(ctx, rawSize));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(FrameY.create(f -> {
+            f.index = frameIndex + 1;
+
+            f.regular(ElementName.SPAN);
+
+            f.values8(1, 1);
+          }));
+
+          opts.push(FrameY.create(f -> {
+            f.index = valueIndex + 1;
+          }));
+
+          final EndStartTagEvent event;
+          event = new EndStartTagEvent(EndStartTagKind.ELEMENT);
+
+          opts.result(event);
+        })
+    );
+  }
+
+  @DataProvider
   public Object[][] testCase09Provider() {
     return new Object[][] {
         {HtmlBytes.aAMBIGUOUS88, IntSize.BIT8, IntSize.BIT8},

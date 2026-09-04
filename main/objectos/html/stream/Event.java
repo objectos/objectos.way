@@ -25,4 +25,5 @@ public sealed interface Event
     RenderDoctype,
     RenderEndTag,
     RenderJsActionAttribute,
+    RenderRaw,
     RenderText {}

@@ -24,6 +24,7 @@ import objectos.html.stream.RenderBooleanAttribute;
 import objectos.html.stream.RenderDoctype;
 import objectos.html.stream.RenderEndTag;
 import objectos.html.stream.RenderJsActionAttribute;
+import objectos.html.stream.RenderRaw;
 import objectos.html.stream.RenderText;
 
 public final class FormatterImpl implements Formatter {
@@ -42,6 +43,8 @@ public final class FormatterImpl implements Formatter {
 
   private final RenderJsActionAttributeFormatter renderJsActionAttributeFormatter;
 
+  private final RenderRawFormatter renderRawFormatter;
+
   private final RenderTextFormatter renderTextFormatter;
 
   FormatterImpl(
@@ -59,6 +62,8 @@ public final class FormatterImpl implements Formatter {
 
       RenderJsActionAttributeFormatter renderJsActionAttributeFormatter,
 
+      RenderRawFormatter renderRawFormatter,
+
       RenderTextFormatter renderTextFormatter
   ) {
     this.beginStartTagFormatter = beginStartTagFormatter;
@@ -74,6 +79,8 @@ public final class FormatterImpl implements Formatter {
     this.renderEndTagFormatter = renderEndTagFormatter;
 
     this.renderJsActionAttributeFormatter = renderJsActionAttributeFormatter;
+
+    this.renderRawFormatter = renderRawFormatter;
 
     this.renderTextFormatter = renderTextFormatter;
   }
@@ -93,6 +100,8 @@ public final class FormatterImpl implements Formatter {
       case RenderDoctype doctype -> renderDoctypeFormatter.format(doctype, out);
 
       case RenderEndTag endTag -> renderEndTagFormatter.format(endTag, out);
+
+      case RenderRaw raw -> renderRawFormatter.format(raw, out);
 
       case RenderText text -> renderTextFormatter.format(text, out);
     }

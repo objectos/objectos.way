@@ -26,6 +26,7 @@ import objectos.html.format.RenderBooleanAttributeOptions;
 import objectos.html.format.RenderDoctypeOptions;
 import objectos.html.format.RenderEndTagOptions;
 import objectos.html.format.RenderJsActionAttributeOptions;
+import objectos.html.format.RenderRawOptions;
 import objectos.html.format.RenderTextOptions;
 
 public final class FormatterBuilder implements FormatterOptions {
@@ -43,6 +44,8 @@ public final class FormatterBuilder implements FormatterOptions {
   private final RenderEndTagFormatterBuilder renderEndTagFormatterBuilder = new RenderEndTagFormatterBuilder();
 
   private final RenderJsActionAttributeFormatterBuilder renderJsActionAttributeFormatterBuilder = new RenderJsActionAttributeFormatterBuilder();
+
+  private final RenderRawFormatterBuilder renderRawFormatterBuilder = new RenderRawFormatterBuilder();
 
   private final RenderTextFormatterBuilder renderTextFormatterBuilder = new RenderTextFormatterBuilder();
 
@@ -73,6 +76,8 @@ public final class FormatterBuilder implements FormatterOptions {
         renderEndTagFormatterBuilder.build(indentation, newLine),
 
         renderJsActionAttributeFormatterBuilder.build(),
+
+        renderRawFormatterBuilder.build(indentation, newLine),
 
         renderTextFormatterBuilder.build(indentation, newLine)
     );
@@ -131,6 +136,11 @@ public final class FormatterBuilder implements FormatterOptions {
   @Override
   public final void renderJsActionAttribute(Consumer<? super RenderJsActionAttributeOptions> opts) {
     opts.accept(renderJsActionAttributeFormatterBuilder);
+  }
+
+  @Override
+  public final void renderRaw(Consumer<? super RenderRawOptions> opts) {
+    opts.accept(renderRawFormatterBuilder);
   }
 
   @Override

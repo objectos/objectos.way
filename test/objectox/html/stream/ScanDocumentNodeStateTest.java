@@ -320,6 +320,50 @@ public class ScanDocumentNodeStateTest {
     );
   }
 
+  @DataProvider
+  public Object[][] testCase04Provider() {
+    return new Object[][] {
+        {HtmlBytes.RAW8, IntSize.BIT8, "raw 8"},
+        {HtmlBytes.RAW16, IntSize.BIT16, "raw 16"},
+        {HtmlBytes.RAW24, IntSize.BIT24, "raw 24"}
+    };
+  }
+
+  @Test(dataProvider = "testCase04Provider", description = """
+  Render raw node
+  """)
+  public void testCase04(byte proto, IntSize rawSize, String description) {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(proto);
+      opts.addInt8(opts.addObject("Ipsum"));
+
+      opts.push(FrameY.create(f -> {
+        f.index = 0;
+      }));
+    });
+
+    final ScanDocumentNodeState subject;
+    subject = new ScanDocumentNodeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new RenderRawState(ctx, rawSize));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(FrameY.create(f -> {
+            f.index = 1;
+          }));
+        })
+    );
+  }
+
   @Test(description = """
   factory:
   - pushes a scan document node frame
