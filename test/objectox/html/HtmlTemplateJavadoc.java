@@ -47,16 +47,20 @@ public class HtmlTemplateJavadoc {
         new HelloWorld().toString(),
 
         """
-      <!DOCTYPE html>
-      <html>
-      <head>
-      <title>Objectos HTML</title>
-      </head>
-      <body>
-      <p>Hello world!</p>
-      </body>
-      </html>
-      """
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <title>
+              Objectos HTML
+            </title>
+          </head>
+          <body>
+            <p>
+              Hello world!
+            </p>
+          </body>
+        </html>
+        """
     );
   }
 
@@ -86,13 +90,21 @@ public class HtmlTemplateJavadoc {
         new HelloWorld().toString(),
 
         """
-      <ul>
-      <li>Java</li>
-      <li>Scala</li>
-      <li>Clojure</li>
-      <li>Kotlin</li>
-      </ul>
-      """
+        <ul>
+          <li>
+            Java
+          </li>
+          <li>
+            Scala
+          </li>
+          <li>
+            Clojure
+          </li>
+          <li>
+            Kotlin
+          </li>
+        </ul>
+        """
     );
   }
 
@@ -126,10 +138,18 @@ public class HtmlTemplateJavadoc {
         new HelloWorld().toString(),
 
         """
-      <div>
-      <h1>Actions</h1>
-      <button>Read</button><button>Write</button></div>
-      """
+        <div>
+          <h1>
+            Actions
+          </h1>
+          <button>
+            Read
+          </button>
+          <button>
+            Write
+          </button>
+        </div>
+        """
     );
   }
 
@@ -156,12 +176,22 @@ public class HtmlTemplateJavadoc {
         new HelloWorld().toString(),
 
         """
-      <div>
-      <h1>Actions</h1>
-      <div><button>Read</button></div>
-      <div><button>Write</button></div>
-      </div>
-      """
+        <div>
+          <h1>
+            Actions
+          </h1>
+          <div>
+            <button>
+              Read
+            </button>
+          </div>
+          <div>
+            <button>
+              Write
+            </button>
+          </div>
+        </div>
+        """
     );
   }
 

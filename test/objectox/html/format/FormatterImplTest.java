@@ -67,7 +67,7 @@ public class FormatterImplTest {
     assertEquals(
         out.toString(),
 
-        "  <br/>\n"
+        "<br/>\n"
     );
   }
 

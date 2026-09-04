@@ -43,10 +43,10 @@ public final class Output {
   }
 
   public final void append(char c) {
-    written += 1;
-
     if (index < limit) {
       buffer[index++] = c;
+
+      written += 1;
     } else {
       sb.append(c);
     }
@@ -59,8 +59,6 @@ public final class Output {
     final int len;
     len = s.length();
 
-    written += len;
-
     final int remaining;
     remaining = limit - index;
 
@@ -68,10 +66,14 @@ public final class Output {
       s.getChars(0, len, buffer, index);
 
       index += len;
+
+      written += len;
     } else {
       s.getChars(0, remaining, buffer, index);
 
       index = limit;
+
+      written += remaining;
 
       sb.append(s, remaining, len);
     }
@@ -117,17 +119,17 @@ public final class Output {
 
   @Override
   public final String toString() {
-    final int overflowLen;
-    overflowLen = sb.length();
-
     final int bufferLen;
-    bufferLen = written - overflowLen;
+    bufferLen = written;
 
     final int startIndex;
     startIndex = index - bufferLen;
 
     final String fromBuffer;
     fromBuffer = new String(buffer, startIndex, bufferLen);
+
+    final int overflowLen;
+    overflowLen = sb.length();
 
     if (overflowLen == 0) {
       return fromBuffer;

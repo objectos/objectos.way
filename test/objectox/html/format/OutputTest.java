@@ -34,6 +34,35 @@ public class OutputTest {
     assertEquals(subject.written(), -1);
   }
 
+  @Test(description = "written does not count chars diverted to the overflow")
+  public void written02() {
+    final char[] buf;
+    buf = new char[0];
+
+    final Output subject;
+    subject = Output.wrap(buf, 0, 0);
+
+    subject.append("world");
+
+    assertEquals(subject.overflow(), "world");
+    assertEquals(subject.written(), -1);
+  }
+
+  @Test(description = "written counts only the chars stored in the buffer")
+  public void written03() {
+    final char[] buf;
+    buf = new char[5];
+
+    final Output subject;
+    subject = Output.wrap(buf, 0, 5);
+
+    subject.append("hello world");
+
+    assertEquals(new String(buf, 0, 5), "hello");
+    assertEquals(subject.overflow(), " world");
+    assertEquals(subject.written(), 5);
+  }
+
   @Test(description = "append single char")
   public void appendChar01() {
     final char[] buf;
@@ -122,7 +151,7 @@ public class OutputTest {
     subject.append("abcd");
 
     assertEquals(new String(buf, 0, 3), "abc");
-    assertEquals(subject.written(), 4);
+    assertEquals(subject.written(), 3);
     assertTrue(subject.exhausted());
     assertEquals(subject.overflow(), "d");
   }
@@ -138,7 +167,7 @@ public class OutputTest {
     subject.append("abcdef");
 
     assertEquals(new String(buf, 0, 3), "abc");
-    assertEquals(subject.written(), 6);
+    assertEquals(subject.written(), 3);
     assertTrue(subject.exhausted());
     assertEquals(subject.overflow(), "def");
   }
@@ -155,7 +184,7 @@ public class OutputTest {
 
     assertEquals(buf[8], 'a');
     assertEquals(buf[9], 'b');
-    assertEquals(subject.written(), 5);
+    assertEquals(subject.written(), 2);
     assertTrue(subject.exhausted());
     assertEquals(subject.overflow(), "cde");
   }
@@ -172,7 +201,7 @@ public class OutputTest {
     subject.append('b');
 
     assertEquals(buf[0], 'a');
-    assertEquals(subject.written(), 2);
+    assertEquals(subject.written(), 1);
     assertTrue(subject.exhausted());
     assertEquals(subject.overflow(), "b");
   }
@@ -207,7 +236,7 @@ public class OutputTest {
     subject.append("ef");
 
     assertEquals(new String(buf, 0, 4), "abcd");
-    assertEquals(subject.written(), 6);
+    assertEquals(subject.written(), 4);
     assertTrue(subject.exhausted());
     assertEquals(subject.overflow(), "ef");
   }
@@ -252,7 +281,7 @@ public class OutputTest {
     subject.append('c');
 
     assertEquals(new String(buf, 0, 2), "ab");
-    assertEquals(subject.written(), 3);
+    assertEquals(subject.written(), 2);
     assertTrue(subject.exhausted());
     assertEquals(subject.overflow(), "c");
   }
@@ -270,7 +299,7 @@ public class OutputTest {
     subject.append("de");
 
     assertEquals(new String(buf, 0, 2), "ab");
-    assertEquals(subject.written(), 5);
+    assertEquals(subject.written(), 2);
     assertTrue(subject.exhausted());
     assertEquals(subject.overflow(), "cde");
   }
@@ -441,6 +470,48 @@ public class OutputTest {
     subject.append("hello\r");
 
     assertEquals(subject.startOfLine(), true);
+  }
+
+  @Test(description = "startOfLine returns true when the overflow ends with a newline")
+  public void startOfLine08() {
+    final char[] buf;
+    buf = new char[2];
+
+    final Output subject;
+    subject = Output.wrap(buf, 0, 2);
+
+    subject.append("ab");
+    subject.append("c\n");
+
+    assertEquals(subject.startOfLine(), true);
+  }
+
+  @Test(description = "startOfLine returns false when the overflow ends with a regular char")
+  public void startOfLine09() {
+    final char[] buf;
+    buf = new char[2];
+
+    final Output subject;
+    subject = Output.wrap(buf, 0, 2);
+
+    subject.append("ab");
+    subject.append("cd");
+
+    assertEquals(subject.startOfLine(), false);
+  }
+
+  @Test(description = "startOfLine checks the overflow after the buffer is exhausted")
+  public void startOfLine10() {
+    final char[] buf;
+    buf = new char[4];
+
+    final Output subject;
+    subject = Output.wrap(buf, 0, 4);
+
+    subject.append("a\nb\n");
+    subject.append("xy");
+
+    assertEquals(subject.startOfLine(), false);
   }
 
 }
