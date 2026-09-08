@@ -44,51 +44,48 @@ final class FragmentChildRecorder {
 
     int cursor = fragValue + 4;
 
-    while (sink.hasByte(cursor)) {
+    loop: while (sink.hasByte(cursor)) {
       final int value;
       value = cursor++;
 
       final byte b;
       b = sink.getByte(value);
 
-      final int res;
-      res = record0(size, value, b);
+      switch (b) {
+        case HtmlBytes.FRAGEND -> {
+          break loop;
+        }
 
-      if (res == -1) {
-        break;
+        case HtmlBytes.FRAGSTR -> {
+          cursor = sink.getInt24(value + 1);
+
+          sum += record(size, value);
+        }
+
+        case HtmlBytes.xFRAGSTR -> {
+          cursor = sink.getInt24(value + 1);
+        }
+
+        case HtmlBytes.AMBIGUOUS88,
+             HtmlBytes.AMBIGUOUS816,
+             HtmlBytes.AMBIGUOUS824 -> sum += ambiguousChildRecorder.record(size, value);
+
+        case HtmlBytes.ELEMSTR8,
+             HtmlBytes.ELEMVOID8 -> sum += valueRecorder.record(size, value);
+
+        case HtmlBytes.RAW8,
+             HtmlBytes.RAW16,
+             HtmlBytes.RAW24 -> sum += valueRecorder.record(size, value);
+
+        case HtmlBytes.TEXT8,
+             HtmlBytes.TEXT16,
+             HtmlBytes.TEXT24 -> sum += valueRecorder.record(size, value);
       }
-
-      sum += res;
     }
 
     sink.setByte(fragValue, HtmlBytes.xFRAGSTR);
 
     return sum;
-  }
-
-  private int record0(IntSize size, int value, byte b) {
-    return switch (b) {
-      case HtmlBytes.FRAGEND -> -1;
-
-      case HtmlBytes.AMBIGUOUS88,
-           HtmlBytes.AMBIGUOUS816,
-           HtmlBytes.AMBIGUOUS824 -> ambiguousChildRecorder.record(size, value);
-
-      case HtmlBytes.ELEMSTR8,
-           HtmlBytes.ELEMVOID8 -> valueRecorder.record(size, value);
-
-      case HtmlBytes.FRAGSTR -> record(size, value);
-
-      case HtmlBytes.RAW8,
-           HtmlBytes.RAW16,
-           HtmlBytes.RAW24 -> valueRecorder.record(size, value);
-
-      case HtmlBytes.TEXT8,
-           HtmlBytes.TEXT16,
-           HtmlBytes.TEXT24 -> valueRecorder.record(size, value);
-
-      default -> 0;
-    };
   }
 
 }

@@ -39,46 +39,43 @@ final class FragmentAttributeRecorder {
 
     int cursor = fragValue + 4;
 
-    while (sink.hasByte(cursor)) {
+    loop: while (sink.hasByte(cursor)) {
       final int value;
       value = cursor++;
 
       final byte b;
       b = sink.getByte(value);
 
-      final int res;
-      res = record0(elementName, size, value, b);
+      switch (b) {
+        case HtmlBytes.FRAGEND -> {
+          break loop;
+        }
 
-      if (res == -1) {
-        break;
+        case HtmlBytes.FRAGSTR -> {
+          cursor = sink.getInt24(value + 1);
+
+          sum += record(elementName, size, value);
+        }
+
+        case HtmlBytes.xFRAGSTR -> {
+          cursor = sink.getInt24(value + 1);
+        }
+
+        case HtmlBytes.AMBIGUOUS88,
+             HtmlBytes.AMBIGUOUS816,
+             HtmlBytes.AMBIGUOUS824 -> sum += ambiguousAttributeRecorder.record(elementName, size, value);
+
+        case HtmlBytes.ATTRIBUTE88,
+             HtmlBytes.ATTRIBUTE816,
+             HtmlBytes.ATTRIBUTE824,
+             HtmlBytes.JSACTION88,
+             HtmlBytes.JSACTION816,
+             HtmlBytes.JSACTION824,
+             HtmlBytes.BOOLEAN8 -> sum += valueRecorder.record(size, value);
       }
-
-      sum += res;
     }
 
     return sum;
-  }
-
-  private int record0(ElementName elementName, IntSize size, int value, byte b) {
-    return switch (b) {
-      case HtmlBytes.FRAGEND -> -1;
-
-      case HtmlBytes.AMBIGUOUS88,
-           HtmlBytes.AMBIGUOUS816,
-           HtmlBytes.AMBIGUOUS824 -> ambiguousAttributeRecorder.record(elementName, size, value);
-
-      case HtmlBytes.ATTRIBUTE88,
-           HtmlBytes.ATTRIBUTE816,
-           HtmlBytes.ATTRIBUTE824,
-           HtmlBytes.JSACTION88,
-           HtmlBytes.JSACTION816,
-           HtmlBytes.JSACTION824,
-           HtmlBytes.BOOLEAN8 -> valueRecorder.record(size, value);
-
-      case HtmlBytes.FRAGSTR -> record(elementName, size, value);
-
-      default -> 0;
-    };
   }
 
 }

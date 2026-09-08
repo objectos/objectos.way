@@ -16,6 +16,7 @@
 package objectox.html.markup;
 
 import objectos.html.ClassName;
+import objectos.html.Component;
 import objectos.html.Id;
 import objectos.html.markup.BooleanAttribute;
 import objectos.html.markup.NoOpMarkup;
@@ -62,6 +63,8 @@ final class ElementChildrenRecorder {
       case BooleanAttribute _ -> 0;
 
       case ClassName _ -> 0;
+
+      case Component _ -> 0;
 
       case ElementPointer(int v) -> valueRecorder.record(size, v);
 

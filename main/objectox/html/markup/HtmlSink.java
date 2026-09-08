@@ -151,6 +151,10 @@ public final class HtmlSink {
     return code[index];
   }
 
+  public final int getInt24(int index) {
+    return toInt(index, 16) | toInt(index + 1, 8) | toInt(index + 2, 0);
+  }
+
   public final int getInt8(int index) {
     return toInt(index, 0);
   }

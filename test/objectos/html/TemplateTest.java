@@ -1952,6 +1952,41 @@ public class TemplateTest {
   }
 
   @Test(description = """
+  fragment containing a fragment as element child
+  """)
+  public void testCase79() {
+    test(
+        new Template() {
+          @Override
+          protected final void render() {
+            div(f(this::outer));
+          }
+
+          private void outer() {
+            f(this::inner);
+
+            span("x");
+          }
+
+          private void inner() {
+            span("y");
+          }
+        },
+
+        """
+        <div>
+          <span>
+            y
+          </span>
+          <span>
+            x
+          </span>
+        </div>
+        """
+    );
+  }
+
+  @Test(description = """
   void elem:
   - no attrs
   """)
