@@ -127,7 +127,7 @@ public class HtmlTest {
         subject.toString(),
 
         """
-        <div onclick='["NO"]'></div>
+        <div onclick='way.on(event,["NO"])'></div>
         """
     );
   }
@@ -159,7 +159,7 @@ public class HtmlTest {
         subject.toString(),
 
         """
-        <input onclick='["NO"]'>
+        <input onclick='way.on(event,["NO"])'>
         """
     );
   }

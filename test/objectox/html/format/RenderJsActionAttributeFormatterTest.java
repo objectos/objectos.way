@@ -70,7 +70,7 @@ public class RenderJsActionAttributeFormatterTest {
     assertEquals(
         format(subject),
 
-        " onclick='[\"NO\"]'"
+        " onclick='way.on(event,[\"NO\"])'"
     );
   }
 
@@ -85,7 +85,7 @@ public class RenderJsActionAttributeFormatterTest {
     assertEquals(
         format(subject),
 
-        " onclick=\"[&quot;NO&quot;]\""
+        " onclick=\"way.on(event,[&quot;NO&quot;])\""
     );
   }
 
@@ -100,7 +100,7 @@ public class RenderJsActionAttributeFormatterTest {
     assertEquals(
         format(subject, "text"),
 
-        "text onclick='[\"NO\"]'"
+        "text onclick='way.on(event,[\"NO\"])'"
     );
   }
 

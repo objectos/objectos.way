@@ -105,7 +105,7 @@ public class TemplateTest {
         },
 
         """
-        <div onclick='["NO"]'></div>
+        <div onclick='way.on(event,["NO"])'></div>
         """
     );
   }
@@ -1398,7 +1398,7 @@ public class TemplateTest {
   /*
   @Test(description = """
   HtmlTemplate TC46 (A)
-
+  
   - flatten instruction
   """)
   public void testCase46a() {
@@ -1415,16 +1415,16 @@ public class TemplateTest {
             );
           }
         },
-
+  
         """
         <form disabled><label></label><input></form>
         """
     );
   }
-
+  
   @Test(description = """
   HtmlTemplate TC46 (B)
-
+  
   - flatten instruction
   """)
   public void testCase46b() {
@@ -1434,7 +1434,7 @@ public class TemplateTest {
               ClassName.of("cn1"),
               ClassName.of("cn2")
           );
-
+  
           @Override
           protected final void render() {
             div(
@@ -1442,7 +1442,7 @@ public class TemplateTest {
             );
           }
         },
-
+  
         """
         <div class="cn1 cn2"></div>
         """

@@ -33,7 +33,7 @@ public record RenderJsActionAttributeEvent(AttributeName attributeName, JsAction
 
   @Override
   public final String value() {
-    return action.toString();
+    return "way.on(event," + action.toString() + ")";
   }
 
   @Override

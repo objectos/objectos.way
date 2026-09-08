@@ -47,7 +47,7 @@ public class FormatterImplTest {
     assertEquals(
         out.toString(),
 
-        " onclick='[\"NO\"]'"
+        " onclick='way.on(event,[\"NO\"])'"
     );
   }
 
