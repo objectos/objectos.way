@@ -1398,7 +1398,7 @@ public class TemplateTest {
   /*
   @Test(description = """
   HtmlTemplate TC46 (A)
-  
+
   - flatten instruction
   """)
   public void testCase46a() {
@@ -1415,16 +1415,16 @@ public class TemplateTest {
             );
           }
         },
-  
+
         """
         <form disabled><label></label><input></form>
         """
     );
   }
-  
+
   @Test(description = """
   HtmlTemplate TC46 (B)
-  
+
   - flatten instruction
   """)
   public void testCase46b() {
@@ -1434,7 +1434,7 @@ public class TemplateTest {
               ClassName.of("cn1"),
               ClassName.of("cn2")
           );
-  
+
           @Override
           protected final void render() {
             div(
@@ -1442,7 +1442,7 @@ public class TemplateTest {
             );
           }
         },
-  
+
         """
         <div class="cn1 cn2"></div>
         """
@@ -1982,6 +1982,34 @@ public class TemplateTest {
             x
           </span>
         </div>
+        """
+    );
+  }
+
+  @Test
+  public void testCase80() {
+    test(
+        new Template() {
+          @Override
+          protected final void render() {
+            html(
+                head(f(this::renderHead))
+            );
+          }
+
+          private void renderHead() {
+            link(
+                type("text/css")
+            );
+          }
+        },
+
+        """
+        <html>
+          <head>
+            <link type="text/css">
+          </head>
+        </html>
         """
     );
   }

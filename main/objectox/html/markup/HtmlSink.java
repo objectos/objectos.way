@@ -151,6 +151,20 @@ public final class HtmlSink {
     return code[index];
   }
 
+  public final int getInt(IntSize size, int index) {
+    return switch (size) {
+      case BIT8 -> getInt8(index);
+
+      case BIT16 -> getInt16(index);
+
+      case BIT24 -> getInt24(index);
+    };
+  }
+
+  public final int getInt16(int index) {
+    return toInt(index, 8) | toInt(index + 1, 0);
+  }
+
   public final int getInt24(int index) {
     return toInt(index, 16) | toInt(index + 1, 8) | toInt(index + 2, 0);
   }

@@ -21,7 +21,7 @@ import org.testng.annotations.Test;
 
 public class Script000Test {
 
-  @Test(enabled = false)
+  @Test
   public void toHtml() {
     final Script000 html;
     html = new Script000();

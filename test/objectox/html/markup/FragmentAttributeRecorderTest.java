@@ -314,7 +314,7 @@ public class FragmentAttributeRecorderTest {
         {new byte[] {HtmlBytes.RAW16, 0x7F, 0x7F}, "RAW16"},
         {new byte[] {HtmlBytes.RAW24, 0x7F, 0x7F, 0x7F}, "RAW24"},
         {new byte[] {HtmlBytes.ELEMSTR8, 3, HtmlBytes.VALUES8, 1, 9}, "ELEMSTR8"},
-        {new byte[] {HtmlBytes.ELEMVOID8, 4}, "ELEMVOID8"},
+        {new byte[] {HtmlBytes.ELEMVOID8, 4, HtmlBytes.VALUES8, 0}, "ELEMVOID8"},
         {new byte[] {HtmlBytes.xELEMSTR8, 3, HtmlBytes.VALUES8, 1, 9}, "xELEMSTR8"},
         {new byte[] {HtmlBytes.xTEXT8, 0x7F}, "xTEXT8"},
         {new byte[] {HtmlBytes.xRAW8, 0x7F}, "xRAW8"},
@@ -527,6 +527,64 @@ public class FragmentAttributeRecorderTest {
           opts.addInt8(0);
           opts.addByte(HtmlBytes.FRAGEND);
           opts.addInt8(15);
+        })
+    );
+  }
+
+  @Test(description = """
+  operand byte equal to the ATTRIBUTE88 opcode is not scanned as an instruction
+
+  The name operand of the ATTRIBUTE88 instruction at index 7 is 131, the index
+  of AttributeName::TYPE. As a byte, 131 equals HtmlBytes::ATTRIBUTE88. This
+  reproduces TemplateTest::testCase80.
+  """)
+  public void testCase11() {
+    final HtmlSink sink;
+    sink = HtmlSinkY.create(opts -> {
+      opts.addInt24(HtmlSink.MAX_INT24);
+      opts.addByte(HtmlBytes.FRAGSTR);
+      opts.addInt24(0);
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(131);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ELEMVOID8);
+      opts.addInt8(4);
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(7);
+      opts.addByte(HtmlBytes.FRAGEND);
+    });
+
+    final FragmentAttributeRecorder subject;
+    subject = create(sink);
+
+    final ElementName elementName;
+    elementName = ElementName.DIV;
+
+    final IntSize size;
+    size = IntSize.BIT8;
+
+    final int res;
+    res = subject.record(elementName, size, 3);
+
+    assertEquals(res, 0);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addInt24(HtmlSink.MAX_INT24);
+          opts.addByte(HtmlBytes.FRAGSTR);
+          opts.addInt24(0);
+          opts.addByte(HtmlBytes.xATTRIBUTE88);
+          opts.addInt8(131);
+          opts.addInt8(0);
+          opts.addByte(HtmlBytes.ELEMVOID8);
+          opts.addInt8(4);
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(1);
+          opts.addInt8(7);
+          opts.addByte(HtmlBytes.FRAGEND);
         })
     );
   }

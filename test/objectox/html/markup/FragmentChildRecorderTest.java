@@ -115,25 +115,30 @@ public class FragmentChildRecorderTest {
   @DataProvider
   public Object[][] testCase03Provider() {
     return new Object[][] {
-        {HtmlBytes.ELEMSTR8, HtmlBytes.xELEMSTR8, "ELEMSTR8"},
-        {HtmlBytes.ELEMVOID8, HtmlBytes.xELEMVOID8, "ELEMVOID8"},
-        {HtmlBytes.TEXT8, HtmlBytes.xTEXT8, "TEXT8"},
-        {HtmlBytes.TEXT16, HtmlBytes.xTEXT16, "TEXT16"},
-        {HtmlBytes.TEXT24, HtmlBytes.xTEXT24, "TEXT24"},
-        {HtmlBytes.RAW8, HtmlBytes.xRAW8, "RAW8"},
-        {HtmlBytes.RAW16, HtmlBytes.xRAW16, "RAW16"},
-        {HtmlBytes.RAW24, HtmlBytes.xRAW24, "RAW24"}
+        {HtmlBytes.ELEMSTR8, HtmlBytes.xELEMSTR8, "ELEMSTR8", new byte[] {2, HtmlBytes.VALUES8, 0}},
+        {HtmlBytes.ELEMVOID8, HtmlBytes.xELEMVOID8, "ELEMVOID8", new byte[] {4, HtmlBytes.VALUES8, 0}},
+        {HtmlBytes.TEXT8, HtmlBytes.xTEXT8, "TEXT8", new byte[0]},
+        {HtmlBytes.TEXT16, HtmlBytes.xTEXT16, "TEXT16", new byte[0]},
+        {HtmlBytes.TEXT24, HtmlBytes.xTEXT24, "TEXT24", new byte[0]},
+        {HtmlBytes.RAW8, HtmlBytes.xRAW8, "RAW8", new byte[0]},
+        {HtmlBytes.RAW16, HtmlBytes.xRAW16, "RAW16", new byte[0]},
+        {HtmlBytes.RAW24, HtmlBytes.xRAW24, "RAW24", new byte[0]}
     };
   }
 
   @Test(dataProvider = "testCase03Provider", description = "ValueRecorder delegation (all widths)")
-  public void testCase03(byte opcode, byte xOpcode, String description) {
+  public void testCase03(byte opcode, byte xOpcode, String description, byte[] suffix) {
     final HtmlSink sink;
     sink = HtmlSinkY.create(opts -> {
       opts.addInt24(HtmlSink.MAX_INT24);
       opts.addByte(HtmlBytes.FRAGSTR);
       opts.addInt24(0);
       opts.addByte(opcode);
+
+      for (byte b : suffix) {
+        opts.addByte(b);
+      }
+
       opts.addByte(HtmlBytes.FRAGEND);
     });
 
@@ -156,6 +161,11 @@ public class FragmentChildRecorderTest {
           opts.addByte(HtmlBytes.xFRAGSTR);
           opts.addInt24(0);
           opts.addByte(xOpcode);
+
+          for (byte b : suffix) {
+            opts.addByte(b);
+          }
+
           opts.addByte(HtmlBytes.FRAGEND);
           opts.addInt8(7);
         })
@@ -179,6 +189,9 @@ public class FragmentChildRecorderTest {
       opts.addByte(HtmlBytes.FRAGSTR);
       opts.addInt24(0);
       opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(2);
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(0);
       opts.addByte(HtmlBytes.FRAGEND);
     });
 
@@ -198,6 +211,9 @@ public class FragmentChildRecorderTest {
           opts.addByte(HtmlBytes.xFRAGSTR);
           opts.addInt24(0);
           opts.addByte(HtmlBytes.xELEMSTR8);
+          opts.addInt8(2);
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(0);
           opts.addByte(HtmlBytes.FRAGEND);
 
           switch (size) {
@@ -252,6 +268,9 @@ public class FragmentChildRecorderTest {
       opts.addByte(HtmlBytes.FRAGSTR);
       opts.addInt24(0);
       opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(2);
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(0);
     });
 
     final FragmentChildRecorder subject;
@@ -273,6 +292,9 @@ public class FragmentChildRecorderTest {
           opts.addByte(HtmlBytes.xFRAGSTR);
           opts.addInt24(0);
           opts.addByte(HtmlBytes.xELEMSTR8);
+          opts.addInt8(2);
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(0);
           opts.addInt8(7);
         })
     );
@@ -286,7 +308,7 @@ public class FragmentChildRecorderTest {
         {new byte[] {HtmlBytes.BOOLEAN8, 2}, "BOOLEAN8"},
         {new byte[] {HtmlBytes.xATTRIBUTE88, 2, 0}, "xATTRIBUTE88"},
         {new byte[] {HtmlBytes.xELEMSTR8, 3, HtmlBytes.VALUES8, 1, 9}, "xELEMSTR8"},
-        {new byte[] {HtmlBytes.xELEMVOID8, 4}, "xELEMVOID8"},
+        {new byte[] {HtmlBytes.xELEMVOID8, 4, HtmlBytes.VALUES8, 0}, "xELEMVOID8"},
         {new byte[] {HtmlBytes.xTEXT8, 0x7F}, "xTEXT8"},
         {new byte[] {HtmlBytes.xTEXT16, 0x7F, 0x7F}, "xTEXT16"},
         {new byte[] {HtmlBytes.xRAW8, 0x7F}, "xRAW8"},
@@ -348,13 +370,17 @@ public class FragmentChildRecorderTest {
       opts.addInt24(0);
       opts.addByte(HtmlBytes.ELEMSTR8);
       opts.addInt8(2);
+      opts.addByte(HtmlBytes.VALUES8);
       opts.addInt8(0);
       opts.addByte(HtmlBytes.FRAGSTR);
-      opts.addInt24(17);
+      opts.addInt24(18);
       opts.addByte(HtmlBytes.TEXT8);
       opts.addInt8(0);
       opts.addByte(HtmlBytes.FRAGEND);
       opts.addByte(HtmlBytes.ELEMVOID8);
+      opts.addInt8(4);
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(0);
       opts.addByte(HtmlBytes.FRAGEND);
     });
 
@@ -378,17 +404,21 @@ public class FragmentChildRecorderTest {
           opts.addInt24(0);
           opts.addByte(HtmlBytes.xELEMSTR8);
           opts.addInt8(2);
+          opts.addByte(HtmlBytes.VALUES8);
           opts.addInt8(0);
           opts.addByte(HtmlBytes.xFRAGSTR);
-          opts.addInt24(17);
+          opts.addInt24(18);
           opts.addByte(HtmlBytes.xTEXT8);
           opts.addInt8(0);
           opts.addByte(HtmlBytes.FRAGEND);
           opts.addByte(HtmlBytes.xELEMVOID8);
+          opts.addInt8(4);
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(0);
           opts.addByte(HtmlBytes.FRAGEND);
           opts.addInt8(7);
-          opts.addInt8(14);
-          opts.addInt8(17);
+          opts.addInt8(15);
+          opts.addInt8(18);
         })
     );
   }
@@ -437,6 +467,61 @@ public class FragmentChildRecorderTest {
           opts.addInt8(0);
           opts.addByte(HtmlBytes.FRAGEND);
           opts.addInt8(14);
+        })
+    );
+  }
+
+  @Test(description = """
+  operand byte equal to the ELEMVOID8 opcode is not scanned as an instruction
+
+  The name operand of the xATTRIBUTE88 instruction at index 7 is 130, the index
+  of AttributeName::TRANSLATE. As a byte, 130 equals HtmlBytes::ELEMVOID8.
+  """)
+  public void testCase10() {
+    final HtmlSink sink;
+    sink = HtmlSinkY.create(opts -> {
+      opts.addInt24(HtmlSink.MAX_INT24);
+      opts.addByte(HtmlBytes.FRAGSTR);
+      opts.addInt24(0);
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(130);
+      opts.addInt8(0);
+      opts.addByte(HtmlBytes.ELEMVOID8);
+      opts.addInt8(4);
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(7);
+      opts.addByte(HtmlBytes.FRAGEND);
+    });
+
+    final FragmentChildRecorder subject;
+    subject = create(sink);
+
+    final IntSize size;
+    size = IntSize.BIT8;
+
+    final int res;
+    res = subject.record(size, 3);
+
+    assertEquals(res, 1);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addInt24(HtmlSink.MAX_INT24);
+          opts.addByte(HtmlBytes.xFRAGSTR);
+          opts.addInt24(0);
+          opts.addByte(HtmlBytes.xATTRIBUTE88);
+          opts.addInt8(130);
+          opts.addInt8(0);
+          opts.addByte(HtmlBytes.xELEMVOID8);
+          opts.addInt8(4);
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(1);
+          opts.addInt8(7);
+          opts.addByte(HtmlBytes.FRAGEND);
+          opts.addInt8(10);
         })
     );
   }
