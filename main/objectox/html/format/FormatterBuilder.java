@@ -65,7 +65,7 @@ public final class FormatterBuilder implements FormatterOptions {
     return new FormatterImpl(
         beginStartTagFormatterBuilder.build(indentation),
 
-        endStartTagFormatterBuilder.build(indentation, newLine),
+        endStartTagFormatterBuilder.build(newLine),
 
         renderAttributeFormatterBuilder.build(),
 

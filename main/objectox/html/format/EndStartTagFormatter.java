@@ -20,15 +20,11 @@ import objectos.html.stream.EndStartTag;
 
 final class EndStartTagFormatter {
 
-  private final Indentation indentation;
-
   private final NewLine newLine;
 
   final NewLineStyle newLineStyle;
 
-  EndStartTagFormatter(Indentation indentation, NewLine newLine, NewLineStyle newLineStyle) {
-    this.indentation = indentation;
-
+  EndStartTagFormatter(NewLine newLine, NewLineStyle newLineStyle) {
     this.newLine = newLine;
 
     this.newLineStyle = newLineStyle;
@@ -45,13 +41,13 @@ final class EndStartTagFormatter {
       case ELEMENT -> {
         newLine.notEmpty(newLineStyle, out);
 
-        indentation.inc();
+        out.inc();
       }
 
       case EMPTY_ELEMENT -> {
         newLine.empty(newLineStyle, out);
 
-        indentation.inc();
+        out.inc();
       }
     }
   }

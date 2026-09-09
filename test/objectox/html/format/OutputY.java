@@ -21,6 +21,8 @@ final class OutputY {
 
   int bufferSize = 256;
 
+  int level = 0;
+
   String text = "";
 
   public static Output create() {
@@ -41,7 +43,11 @@ final class OutputY {
     buf = new char[bufferSize];
 
     final Output out;
-    out = Output.wrap(buf, 0, buf.length);
+    out = new Output(buf);
+
+    for (int i = 0; i < level; i++) {
+      out.inc();
+    }
 
     if (!text.isEmpty()) {
       out.append(text);

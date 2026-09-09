@@ -39,6 +39,8 @@ public class RenderTextFormatterTest {
 
     final Output out;
     out = OutputY.create(opts -> {
+      opts.level = 1;
+
       opts.text = text;
     });
 
@@ -50,7 +52,7 @@ public class RenderTextFormatterTest {
   @Test(description = "startOfLine indentation + always new line emits indented text followed by new line")
   public void format01() {
     final Indentation indentation;
-    indentation = new Indentation(1, "  ");
+    indentation = new Indentation("  ");
 
     final RenderTextFormatter subject;
     subject = new RenderTextFormatter(
@@ -73,7 +75,7 @@ public class RenderTextFormatterTest {
   @Test(description = "startOfLine indentation + ifNotEmpty new line emits indented text followed by new line")
   public void format02() {
     final Indentation indentation;
-    indentation = new Indentation(1, "  ");
+    indentation = new Indentation("  ");
 
     final RenderTextFormatter subject;
     subject = new RenderTextFormatter(
@@ -96,7 +98,7 @@ public class RenderTextFormatterTest {
   @Test(description = "startOfLine indentation + never new line emits indented text without new line")
   public void format03() {
     final Indentation indentation;
-    indentation = new Indentation(1, "  ");
+    indentation = new Indentation("  ");
 
     final RenderTextFormatter subject;
     subject = new RenderTextFormatter(
@@ -119,7 +121,7 @@ public class RenderTextFormatterTest {
   @Test(description = "startOfLine indentation does not emit indentation when not at start of line")
   public void format04() {
     final Indentation indentation;
-    indentation = new Indentation(1, "  ");
+    indentation = new Indentation("  ");
 
     final RenderTextFormatter subject;
     subject = new RenderTextFormatter(
@@ -142,7 +144,7 @@ public class RenderTextFormatterTest {
   @Test(description = "never indentation + always new line emits text followed by new line")
   public void format05() {
     final Indentation indentation;
-    indentation = new Indentation(1, "  ");
+    indentation = new Indentation("  ");
 
     final RenderTextFormatter subject;
     subject = new RenderTextFormatter(
@@ -165,7 +167,7 @@ public class RenderTextFormatterTest {
   @Test(description = "never indentation + ifNotEmpty new line emits text followed by new line")
   public void format06() {
     final Indentation indentation;
-    indentation = new Indentation(1, "  ");
+    indentation = new Indentation("  ");
 
     final RenderTextFormatter subject;
     subject = new RenderTextFormatter(
@@ -188,7 +190,7 @@ public class RenderTextFormatterTest {
   @Test(description = "never indentation + never new line emits text without indentation or new line")
   public void format07() {
     final Indentation indentation;
-    indentation = new Indentation(1, "  ");
+    indentation = new Indentation("  ");
 
     final RenderTextFormatter subject;
     subject = new RenderTextFormatter(
@@ -211,7 +213,7 @@ public class RenderTextFormatterTest {
   @Test(description = "ampersand is escaped")
   public void escape01() {
     final Indentation indentation;
-    indentation = new Indentation(1, "  ");
+    indentation = new Indentation("  ");
 
     final RenderTextFormatter subject;
     subject = new RenderTextFormatter(
@@ -234,7 +236,7 @@ public class RenderTextFormatterTest {
   @Test(description = "less-than sign is escaped")
   public void escape02() {
     final Indentation indentation;
-    indentation = new Indentation(1, "  ");
+    indentation = new Indentation("  ");
 
     final RenderTextFormatter subject;
     subject = new RenderTextFormatter(
@@ -257,7 +259,7 @@ public class RenderTextFormatterTest {
   @Test(description = "greater-than sign is escaped")
   public void escape03() {
     final Indentation indentation;
-    indentation = new Indentation(1, "  ");
+    indentation = new Indentation("  ");
 
     final RenderTextFormatter subject;
     subject = new RenderTextFormatter(
@@ -280,7 +282,7 @@ public class RenderTextFormatterTest {
   @Test(description = "all escapable characters are escaped")
   public void escape04() {
     final Indentation indentation;
-    indentation = new Indentation(1, "  ");
+    indentation = new Indentation("  ");
 
     final RenderTextFormatter subject;
     subject = new RenderTextFormatter(
@@ -303,7 +305,7 @@ public class RenderTextFormatterTest {
   @Test(description = "quotation marks are not escaped in text content")
   public void escape05() {
     final Indentation indentation;
-    indentation = new Indentation(1, "  ");
+    indentation = new Indentation("  ");
 
     final RenderTextFormatter subject;
     subject = new RenderTextFormatter(
@@ -326,7 +328,7 @@ public class RenderTextFormatterTest {
   @Test(description = "already-escaped entity is escaped again")
   public void escape06() {
     final Indentation indentation;
-    indentation = new Indentation(1, "  ");
+    indentation = new Indentation("  ");
 
     final RenderTextFormatter subject;
     subject = new RenderTextFormatter(

@@ -17,29 +17,24 @@ package objectox.html.format;
 
 public final class Output {
 
-  private final char[] buffer;
+  private char[] buffer;
 
   private int index;
 
-  private final int limit;
+  private int limit;
+
+  private int level;
 
   private final StringBuilder sb = new StringBuilder();
 
   private int written;
 
-  private Output(char[] buffer, int index, int limit) {
+  public Output() {}
+
+  public Output(char[] buffer) {
     this.buffer = buffer;
 
-    this.index = index;
-
-    this.limit = limit;
-  }
-
-  public static Output wrap(char[] cbuf, int off, int len) {
-    final int limit;
-    limit = off + len;
-
-    return new Output(cbuf, off, limit);
+    limit = buffer.length;
   }
 
   public final void append(char c) {
@@ -53,38 +48,50 @@ public final class Output {
   }
 
   public final void append(CharSequence csq) {
-    final CharSequence s;
-    s = normalize(csq);
-
     final int len;
-    len = s.length();
+    len = csq.length();
 
     final int remaining;
     remaining = limit - index;
 
     if (len <= remaining) {
-      s.getChars(0, len, buffer, index);
+      csq.getChars(0, len, buffer, index);
 
       index += len;
 
       written += len;
     } else {
-      s.getChars(0, remaining, buffer, index);
+      csq.getChars(0, remaining, buffer, index);
 
       index = limit;
 
       written += remaining;
 
-      sb.append(s, remaining, len);
+      sb.append(csq, remaining, len);
     }
   }
 
-  private CharSequence normalize(CharSequence csq) {
-    return csq != null ? csq : "null";
+  public final void dec() {
+    if (level == 0) {
+      final String msg;
+      msg = "Cannot decrement indentation level below zero";
+
+      throw new IllegalStateException(msg);
+    }
+
+    level--;
   }
 
   public final boolean exhausted() {
     return index == limit;
+  }
+
+  public final void inc() {
+    level++;
+  }
+
+  public final int level() {
+    return level;
   }
 
   public final boolean startOfLine() {
@@ -111,6 +118,23 @@ public final class Output {
 
   public final String overflow() {
     return sb.toString();
+  }
+
+  public final void rewrap(char[] cbuf, int off, int len) {
+    final String overflow;
+    overflow = sb.toString();
+
+    sb.setLength(0);
+
+    buffer = cbuf;
+
+    index = off;
+
+    limit = off + len;
+
+    written = 0;
+
+    append(overflow);
   }
 
   public final int written() {

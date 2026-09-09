@@ -27,7 +27,7 @@ public class NewLineTest {
     buf = new char[256];
 
     final Output out;
-    out = Output.wrap(buf, 0, buf.length);
+    out = new Output(buf);
 
     subject.empty(style, out);
 
@@ -39,7 +39,7 @@ public class NewLineTest {
     buf = new char[256];
 
     final Output out;
-    out = Output.wrap(buf, 0, buf.length);
+    out = new Output(buf);
 
     subject.notEmpty(style, out);
 

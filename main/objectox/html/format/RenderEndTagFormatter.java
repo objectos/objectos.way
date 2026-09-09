@@ -40,7 +40,7 @@ final class RenderEndTagFormatter {
   }
 
   public final void format(RenderEndTag event, Output out) {
-    indentation.dec();
+    out.dec();
 
     indentation.format(indentationStyle, out);
 

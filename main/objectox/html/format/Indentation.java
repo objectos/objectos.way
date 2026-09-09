@@ -19,33 +19,10 @@ import objectos.html.format.IndentationStyle;
 
 final class Indentation {
 
-  private int level;
-
   private final String text;
 
   Indentation(String text) {
     this.text = text;
-  }
-
-  Indentation(int level, String text) {
-    this.level = level;
-
-    this.text = text;
-  }
-
-  public final void inc() {
-    level++;
-  }
-
-  public final void dec() {
-    if (level == 0) {
-      final String msg;
-      msg = "Cannot decrement indentation level below zero";
-
-      throw new IllegalStateException(msg);
-    }
-
-    level--;
   }
 
   public final void format(IndentationStyle style, Output out) {
@@ -54,15 +31,16 @@ final class Indentation {
 
       case IndentationOption.START_OF_LINE -> {
         if (out.startOfLine()) {
-          out.append(toString());
+          final int level;
+          level = out.level();
+
+          final String indentation;
+          indentation = text.repeat(level);
+
+          out.append(indentation);
         }
       }
     }
-  }
-
-  @Override
-  public final String toString() {
-    return text.repeat(level);
   }
 
 }

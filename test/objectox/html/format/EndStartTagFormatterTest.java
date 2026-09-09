@@ -25,20 +25,17 @@ import org.testng.annotations.Test;
 
 public class EndStartTagFormatterTest {
 
-  private String format(EndStartTagFormatter subject, EndStartTag event) {
+  private Output format(EndStartTagFormatter subject, EndStartTag event) {
     final Output out;
     out = OutputY.create();
 
     subject.format(event, out);
 
-    return out.toString();
+    return out;
   }
 
   @Test(description = "always with element kind emits newline and increments indentation")
   public void always01() {
-    final Indentation indentation;
-    indentation = new Indentation("  ");
-
     final NewLine newLine;
     newLine = NewLine.LF;
 
@@ -46,25 +43,25 @@ public class EndStartTagFormatterTest {
     newLineStyle = NewLineStyle.always();
 
     final EndStartTagFormatter subject;
-    subject = new EndStartTagFormatter(indentation, newLine, newLineStyle);
+    subject = new EndStartTagFormatter(newLine, newLineStyle);
 
     final EndStartTag event;
     event = new EndStartTagEvent(EndStartTagKind.ELEMENT);
 
+    final Output out;
+    out = format(subject, event);
+
     assertEquals(
-        format(subject, event),
+        out.toString(),
 
         ">\n"
     );
 
-    assertEquals(indentation.toString(), "  ");
+    assertEquals(out.level(), 1);
   }
 
   @Test(description = "always with void element emits newline and does not change indentation")
   public void always02() {
-    final Indentation indentation;
-    indentation = new Indentation("  ");
-
     final NewLine newLine;
     newLine = NewLine.LF;
 
@@ -72,25 +69,25 @@ public class EndStartTagFormatterTest {
     newLineStyle = NewLineStyle.always();
 
     final EndStartTagFormatter subject;
-    subject = new EndStartTagFormatter(indentation, newLine, newLineStyle);
+    subject = new EndStartTagFormatter(newLine, newLineStyle);
 
     final EndStartTag event;
     event = new EndStartTagEvent(EndStartTagKind.VOID_ELEMENT);
 
+    final Output out;
+    out = format(subject, event);
+
     assertEquals(
-        format(subject, event),
+        out.toString(),
 
         ">\n"
     );
 
-    assertEquals(indentation.toString(), "");
+    assertEquals(out.level(), 0);
   }
 
   @Test(description = "always with empty element emits newline and increments indentation")
   public void always03() {
-    final Indentation indentation;
-    indentation = new Indentation("  ");
-
     final NewLine newLine;
     newLine = NewLine.LF;
 
@@ -98,25 +95,25 @@ public class EndStartTagFormatterTest {
     newLineStyle = NewLineStyle.always();
 
     final EndStartTagFormatter subject;
-    subject = new EndStartTagFormatter(indentation, newLine, newLineStyle);
+    subject = new EndStartTagFormatter(newLine, newLineStyle);
 
     final EndStartTag event;
     event = new EndStartTagEvent(EndStartTagKind.EMPTY_ELEMENT);
 
+    final Output out;
+    out = format(subject, event);
+
     assertEquals(
-        format(subject, event),
+        out.toString(),
 
         ">\n"
     );
 
-    assertEquals(indentation.toString(), "  ");
+    assertEquals(out.level(), 1);
   }
 
   @Test(description = "never with element kind emits no newline and increments indentation")
   public void never01() {
-    final Indentation indentation;
-    indentation = new Indentation("  ");
-
     final NewLine newLine;
     newLine = NewLine.LF;
 
@@ -124,25 +121,25 @@ public class EndStartTagFormatterTest {
     newLineStyle = NewLineStyle.never();
 
     final EndStartTagFormatter subject;
-    subject = new EndStartTagFormatter(indentation, newLine, newLineStyle);
+    subject = new EndStartTagFormatter(newLine, newLineStyle);
 
     final EndStartTag event;
     event = new EndStartTagEvent(EndStartTagKind.ELEMENT);
 
+    final Output out;
+    out = format(subject, event);
+
     assertEquals(
-        format(subject, event),
+        out.toString(),
 
         ">"
     );
 
-    assertEquals(indentation.toString(), "  ");
+    assertEquals(out.level(), 1);
   }
 
   @Test(description = "never with void element emits no newline and does not change indentation")
   public void never02() {
-    final Indentation indentation;
-    indentation = new Indentation("  ");
-
     final NewLine newLine;
     newLine = NewLine.LF;
 
@@ -150,25 +147,25 @@ public class EndStartTagFormatterTest {
     newLineStyle = NewLineStyle.never();
 
     final EndStartTagFormatter subject;
-    subject = new EndStartTagFormatter(indentation, newLine, newLineStyle);
+    subject = new EndStartTagFormatter(newLine, newLineStyle);
 
     final EndStartTag event;
     event = new EndStartTagEvent(EndStartTagKind.VOID_ELEMENT);
 
+    final Output out;
+    out = format(subject, event);
+
     assertEquals(
-        format(subject, event),
+        out.toString(),
 
         ">"
     );
 
-    assertEquals(indentation.toString(), "");
+    assertEquals(out.level(), 0);
   }
 
   @Test(description = "never with empty element emits no newline and increments indentation")
   public void never03() {
-    final Indentation indentation;
-    indentation = new Indentation("  ");
-
     final NewLine newLine;
     newLine = NewLine.LF;
 
@@ -176,25 +173,25 @@ public class EndStartTagFormatterTest {
     newLineStyle = NewLineStyle.never();
 
     final EndStartTagFormatter subject;
-    subject = new EndStartTagFormatter(indentation, newLine, newLineStyle);
+    subject = new EndStartTagFormatter(newLine, newLineStyle);
 
     final EndStartTag event;
     event = new EndStartTagEvent(EndStartTagKind.EMPTY_ELEMENT);
 
+    final Output out;
+    out = format(subject, event);
+
     assertEquals(
-        format(subject, event),
+        out.toString(),
 
         ">"
     );
 
-    assertEquals(indentation.toString(), "  ");
+    assertEquals(out.level(), 1);
   }
 
   @Test(description = "ifNotEmpty with element kind emits newline and increments indentation")
   public void ifNotEmpty01() {
-    final Indentation indentation;
-    indentation = new Indentation("  ");
-
     final NewLine newLine;
     newLine = NewLine.LF;
 
@@ -202,25 +199,25 @@ public class EndStartTagFormatterTest {
     newLineStyle = NewLineStyle.ifNotEmpty();
 
     final EndStartTagFormatter subject;
-    subject = new EndStartTagFormatter(indentation, newLine, newLineStyle);
+    subject = new EndStartTagFormatter(newLine, newLineStyle);
 
     final EndStartTag event;
     event = new EndStartTagEvent(EndStartTagKind.ELEMENT);
 
+    final Output out;
+    out = format(subject, event);
+
     assertEquals(
-        format(subject, event),
+        out.toString(),
 
         ">\n"
     );
 
-    assertEquals(indentation.toString(), "  ");
+    assertEquals(out.level(), 1);
   }
 
   @Test(description = "ifNotEmpty with void element emits newline and does not change indentation")
   public void ifNotEmpty02() {
-    final Indentation indentation;
-    indentation = new Indentation("  ");
-
     final NewLine newLine;
     newLine = NewLine.LF;
 
@@ -228,25 +225,25 @@ public class EndStartTagFormatterTest {
     newLineStyle = NewLineStyle.ifNotEmpty();
 
     final EndStartTagFormatter subject;
-    subject = new EndStartTagFormatter(indentation, newLine, newLineStyle);
+    subject = new EndStartTagFormatter(newLine, newLineStyle);
 
     final EndStartTag event;
     event = new EndStartTagEvent(EndStartTagKind.VOID_ELEMENT);
 
+    final Output out;
+    out = format(subject, event);
+
     assertEquals(
-        format(subject, event),
+        out.toString(),
 
         ">\n"
     );
 
-    assertEquals(indentation.toString(), "");
+    assertEquals(out.level(), 0);
   }
 
   @Test(description = "ifNotEmpty with empty element emits no newline and increments indentation")
   public void ifNotEmpty03() {
-    final Indentation indentation;
-    indentation = new Indentation("  ");
-
     final NewLine newLine;
     newLine = NewLine.LF;
 
@@ -254,18 +251,21 @@ public class EndStartTagFormatterTest {
     newLineStyle = NewLineStyle.ifNotEmpty();
 
     final EndStartTagFormatter subject;
-    subject = new EndStartTagFormatter(indentation, newLine, newLineStyle);
+    subject = new EndStartTagFormatter(newLine, newLineStyle);
 
     final EndStartTag event;
     event = new EndStartTagEvent(EndStartTagKind.EMPTY_ELEMENT);
 
+    final Output out;
+    out = format(subject, event);
+
     assertEquals(
-        format(subject, event),
+        out.toString(),
 
         ">"
     );
 
-    assertEquals(indentation.toString(), "  ");
+    assertEquals(out.level(), 1);
   }
 
 }

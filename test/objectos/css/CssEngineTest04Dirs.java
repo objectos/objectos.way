@@ -47,7 +47,7 @@ public class CssEngineTest04Dirs {
           package test;
 
           @objectos.css.CssSource
-          public class Subject extends objectos.way.Html.Template {
+          public class Subject extends objectos.html.Template {
             @Override
             protected final void render() {
               div(className("margin:0"));
@@ -83,7 +83,7 @@ public class CssEngineTest04Dirs {
           package test;
 
           @objectos.css.CssSource
-          public class Subject extends objectos.way.Html.Template {
+          public class Subject extends objectos.html.Template {
             @Override
             protected final void render() {
               div(className("margin:0"));
@@ -98,7 +98,7 @@ public class CssEngineTest04Dirs {
           """
           package test;
 
-          public class Ignore extends objectos.way.Html.Template {
+          public class Ignore extends objectos.html.Template {
             @Override
             protected final void render() {
               div(className("display:block"));

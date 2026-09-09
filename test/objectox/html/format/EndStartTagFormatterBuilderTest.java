@@ -39,11 +39,8 @@ public class EndStartTagFormatterBuilderTest {
     final EndStartTagFormatterBuilder subject;
     subject = new EndStartTagFormatterBuilder();
 
-    final Indentation indentation;
-    indentation = new Indentation("  ");
-
     final EndStartTagFormatter res;
-    res = subject.build(indentation, NewLine.LF);
+    res = subject.build(NewLine.LF);
 
     assertEquals(res.newLineStyle, NewLineOption.IF_NOT_EMPTY);
   }
@@ -55,11 +52,8 @@ public class EndStartTagFormatterBuilderTest {
 
     subject.newLineStyle(NewLineStyle.always());
 
-    final Indentation indentation;
-    indentation = new Indentation("  ");
-
     final EndStartTagFormatter res;
-    res = subject.build(indentation, NewLine.LF);
+    res = subject.build(NewLine.LF);
 
     assertEquals(res.newLineStyle, NewLineOption.ALWAYS);
   }

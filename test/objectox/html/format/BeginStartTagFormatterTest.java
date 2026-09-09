@@ -17,6 +17,7 @@ package objectox.html.format;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.function.Consumer;
 import objectos.html.format.IndentationStyle;
 import objectos.html.stream.BeginStartTag;
 import objectox.html.elem.ElementName;
@@ -26,25 +27,15 @@ import org.testng.annotations.Test;
 public class BeginStartTagFormatterTest {
 
   private String format(BeginStartTagFormatter subject) {
-    final BeginStartTag event;
-    event = new BeginStartTagEvent(ElementName.DIV);
-
-    final Output out;
-    out = OutputY.create();
-
-    subject.format(event, out);
-
-    return out.toString();
+    return format(subject, _ -> {});
   }
 
-  private String format(BeginStartTagFormatter subject, String text) {
+  private String format(BeginStartTagFormatter subject, Consumer<? super OutputY> opts) {
     final BeginStartTag event;
     event = new BeginStartTagEvent(ElementName.DIV);
 
     final Output out;
-    out = OutputY.create(opts -> {
-      opts.text = text;
-    });
+    out = OutputY.create(opts);
 
     subject.format(event, out);
 
@@ -74,8 +65,6 @@ public class BeginStartTagFormatterTest {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
-    indentation.inc();
-
     final IndentationStyle indentationStyle;
     indentationStyle = IndentationStyle.startOfLine();
 
@@ -83,7 +72,7 @@ public class BeginStartTagFormatterTest {
     subject = new BeginStartTagFormatter(indentation, indentationStyle);
 
     assertEquals(
-        format(subject),
+        format(subject, y -> y.level = 1),
 
         "  <div"
     );
@@ -94,8 +83,6 @@ public class BeginStartTagFormatterTest {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
-    indentation.inc();
-
     final IndentationStyle indentationStyle;
     indentationStyle = IndentationStyle.startOfLine();
 
@@ -103,7 +90,11 @@ public class BeginStartTagFormatterTest {
     subject = new BeginStartTagFormatter(indentation, indentationStyle);
 
     assertEquals(
-        format(subject, "text"),
+        format(subject, y -> {
+          y.level = 1;
+
+          y.text = "text";
+        }),
 
         "text<div"
     );
@@ -114,10 +105,6 @@ public class BeginStartTagFormatterTest {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
-    indentation.inc();
-
-    indentation.inc();
-
     final IndentationStyle indentationStyle;
     indentationStyle = IndentationStyle.startOfLine();
 
@@ -125,7 +112,7 @@ public class BeginStartTagFormatterTest {
     subject = new BeginStartTagFormatter(indentation, indentationStyle);
 
     assertEquals(
-        format(subject),
+        format(subject, y -> y.level = 2),
 
         "    <div"
     );

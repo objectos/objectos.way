@@ -23,10 +23,8 @@ public final class EndStartTagFormatterBuilder implements EndStartTagOptions {
 
   private NewLineStyle newLineStyle = NewLineStyle.ifNotEmpty();
 
-  public final EndStartTagFormatter build(Indentation indentation, NewLine newLine) {
+  public final EndStartTagFormatter build(NewLine newLine) {
     return new EndStartTagFormatter(
-        indentation,
-
         newLine,
 
         newLineStyle

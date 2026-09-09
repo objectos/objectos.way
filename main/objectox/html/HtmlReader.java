@@ -31,9 +31,9 @@ public final class HtmlReader extends Reader {
 
   private final FormatterImpl formatter;
 
-  private String overflow = "";
+  private final Output output = new Output();
 
-  HtmlReader(Iterator<Event> events, FormatterImpl formatter) {
+  public HtmlReader(Iterator<Event> events, FormatterImpl formatter) {
     this.events = events;
 
     this.formatter = formatter;
@@ -54,21 +54,16 @@ public final class HtmlReader extends Reader {
       return 0;
     }
 
-    final Output out;
-    out = Output.wrap(cbuf, off, len);
+    output.rewrap(cbuf, off, len);
 
-    out.append(overflow);
-
-    while (!out.exhausted() && events.hasNext()) {
+    while (!output.exhausted() && events.hasNext()) {
       final Event event;
       event = events.next();
 
-      formatter.formatTo(event, out);
+      formatter.formatTo(event, output);
     }
 
-    overflow = out.overflow();
-
-    return out.written();
+    return output.written();
   }
 
   private void ensureOpen() throws IOException {

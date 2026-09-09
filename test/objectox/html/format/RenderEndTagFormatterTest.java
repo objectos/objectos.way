@@ -17,6 +17,7 @@ package objectox.html.format;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.function.Consumer;
 import objectos.html.format.IndentationStyle;
 import objectos.html.format.NewLineStyle;
 import objectos.html.stream.RenderEndTag;
@@ -26,36 +27,22 @@ import org.testng.annotations.Test;
 
 public class RenderEndTagFormatterTest {
 
-  private String format(RenderEndTagFormatter subject) {
+  private Output format(RenderEndTagFormatter subject, Consumer<? super OutputY> opts) {
     final RenderEndTag event;
     event = RenderEndTagEvent.of(ElementName.DIV);
 
     final Output out;
-    out = OutputY.create();
+    out = OutputY.create(opts);
 
     subject.format(event, out);
 
-    return out.toString();
-  }
-
-  private String format(RenderEndTagFormatter subject, String text) {
-    final RenderEndTag event;
-    event = RenderEndTagEvent.of(ElementName.DIV);
-
-    final Output out;
-    out = OutputY.create(opts -> {
-      opts.text = text;
-    });
-
-    subject.format(event, out);
-
-    return out.toString();
+    return out;
   }
 
   @Test(description = "never indentation style emits tag without indentation")
   public void indentationStyle01() {
     final Indentation indentation;
-    indentation = new Indentation(1, "  ");
+    indentation = new Indentation("  ");
 
     final IndentationStyle indentationStyle;
     indentationStyle = IndentationStyle.never();
@@ -69,8 +56,11 @@ public class RenderEndTagFormatterTest {
     final RenderEndTagFormatter subject;
     subject = new RenderEndTagFormatter(indentation, indentationStyle, newLine, newLineStyle);
 
+    final Output out;
+    out = format(subject, y -> y.level = 1);
+
     assertEquals(
-        format(subject),
+        out.toString(),
 
         "</div>"
     );
@@ -79,7 +69,7 @@ public class RenderEndTagFormatterTest {
   @Test(description = "startOfLine indentation style emits tag with indentation at start of line")
   public void indentationStyle02() {
     final Indentation indentation;
-    indentation = new Indentation(2, "  ");
+    indentation = new Indentation("  ");
 
     final IndentationStyle indentationStyle;
     indentationStyle = IndentationStyle.startOfLine();
@@ -93,8 +83,11 @@ public class RenderEndTagFormatterTest {
     final RenderEndTagFormatter subject;
     subject = new RenderEndTagFormatter(indentation, indentationStyle, newLine, newLineStyle);
 
+    final Output out;
+    out = format(subject, y -> y.level = 2);
+
     assertEquals(
-        format(subject),
+        out.toString(),
 
         "  </div>"
     );
@@ -103,7 +96,7 @@ public class RenderEndTagFormatterTest {
   @Test(description = "startOfLine indentation style emits tag without indentation when not at start of line")
   public void indentationStyle03() {
     final Indentation indentation;
-    indentation = new Indentation(1, "  ");
+    indentation = new Indentation("  ");
 
     final IndentationStyle indentationStyle;
     indentationStyle = IndentationStyle.startOfLine();
@@ -117,8 +110,15 @@ public class RenderEndTagFormatterTest {
     final RenderEndTagFormatter subject;
     subject = new RenderEndTagFormatter(indentation, indentationStyle, newLine, newLineStyle);
 
+    final Output out;
+    out = format(subject, y -> {
+      y.level = 1;
+
+      y.text = "text";
+    });
+
     assertEquals(
-        format(subject, "text"),
+        out.toString(),
 
         "text</div>"
     );
@@ -127,7 +127,7 @@ public class RenderEndTagFormatterTest {
   @Test(description = "multiple indentation levels")
   public void indentationStyle04() {
     final Indentation indentation;
-    indentation = new Indentation(3, "  ");
+    indentation = new Indentation("  ");
 
     final IndentationStyle indentationStyle;
     indentationStyle = IndentationStyle.startOfLine();
@@ -141,8 +141,11 @@ public class RenderEndTagFormatterTest {
     final RenderEndTagFormatter subject;
     subject = new RenderEndTagFormatter(indentation, indentationStyle, newLine, newLineStyle);
 
+    final Output out;
+    out = format(subject, y -> y.level = 3);
+
     assertEquals(
-        format(subject),
+        out.toString(),
 
         "    </div>"
     );
@@ -152,8 +155,6 @@ public class RenderEndTagFormatterTest {
   public void newLineStyle01() {
     final Indentation indentation;
     indentation = new Indentation("  ");
-
-    indentation.inc();
 
     final IndentationStyle indentationStyle;
     indentationStyle = IndentationStyle.never();
@@ -167,21 +168,22 @@ public class RenderEndTagFormatterTest {
     final RenderEndTagFormatter subject;
     subject = new RenderEndTagFormatter(indentation, indentationStyle, newLine, newLineStyle);
 
+    final Output out;
+    out = format(subject, y -> y.level = 1);
+
     assertEquals(
-        format(subject),
+        out.toString(),
 
         "</div>\n"
     );
 
-    assertEquals(indentation.toString(), "");
+    assertEquals(out.level(), 0);
   }
 
   @Test(description = "ifNotEmpty emits newline and decrements indentation")
   public void newLineStyle02() {
     final Indentation indentation;
     indentation = new Indentation("  ");
-
-    indentation.inc();
 
     final IndentationStyle indentationStyle;
     indentationStyle = IndentationStyle.never();
@@ -195,21 +197,22 @@ public class RenderEndTagFormatterTest {
     final RenderEndTagFormatter subject;
     subject = new RenderEndTagFormatter(indentation, indentationStyle, newLine, newLineStyle);
 
+    final Output out;
+    out = format(subject, y -> y.level = 1);
+
     assertEquals(
-        format(subject),
+        out.toString(),
 
         "</div>\n"
     );
 
-    assertEquals(indentation.toString(), "");
+    assertEquals(out.level(), 0);
   }
 
   @Test(description = "never emits no newline and decrements indentation")
   public void newLineStyle03() {
     final Indentation indentation;
     indentation = new Indentation("  ");
-
-    indentation.inc();
 
     final IndentationStyle indentationStyle;
     indentationStyle = IndentationStyle.never();
@@ -223,13 +226,16 @@ public class RenderEndTagFormatterTest {
     final RenderEndTagFormatter subject;
     subject = new RenderEndTagFormatter(indentation, indentationStyle, newLine, newLineStyle);
 
+    final Output out;
+    out = format(subject, y -> y.level = 1);
+
     assertEquals(
-        format(subject),
+        out.toString(),
 
         "</div>"
     );
 
-    assertEquals(indentation.toString(), "");
+    assertEquals(out.level(), 0);
   }
 
 }

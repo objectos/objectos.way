@@ -35,6 +35,8 @@ public class RenderRawFormatterTest {
 
     final Output out;
     out = OutputY.create(opts -> {
+      opts.level = 1;
+
       opts.text = text;
     });
 
@@ -46,7 +48,7 @@ public class RenderRawFormatterTest {
   @Test(description = "startOfLine indentation + always new line emits indented raw text followed by new line")
   public void format01() {
     final Indentation indentation;
-    indentation = new Indentation(1, "  ");
+    indentation = new Indentation("  ");
 
     final RenderRawFormatter subject;
     subject = new RenderRawFormatter(
@@ -69,7 +71,7 @@ public class RenderRawFormatterTest {
   @Test(description = "startOfLine indentation + ifNotEmpty new line emits indented raw text followed by new line")
   public void format02() {
     final Indentation indentation;
-    indentation = new Indentation(1, "  ");
+    indentation = new Indentation("  ");
 
     final RenderRawFormatter subject;
     subject = new RenderRawFormatter(
@@ -92,7 +94,7 @@ public class RenderRawFormatterTest {
   @Test(description = "startOfLine indentation + never new line emits indented raw text without new line")
   public void format03() {
     final Indentation indentation;
-    indentation = new Indentation(1, "  ");
+    indentation = new Indentation("  ");
 
     final RenderRawFormatter subject;
     subject = new RenderRawFormatter(
@@ -115,7 +117,7 @@ public class RenderRawFormatterTest {
   @Test(description = "startOfLine indentation does not emit indentation when not at start of line")
   public void format04() {
     final Indentation indentation;
-    indentation = new Indentation(1, "  ");
+    indentation = new Indentation("  ");
 
     final RenderRawFormatter subject;
     subject = new RenderRawFormatter(
@@ -138,7 +140,7 @@ public class RenderRawFormatterTest {
   @Test(description = "never indentation + always new line emits raw text followed by new line")
   public void format05() {
     final Indentation indentation;
-    indentation = new Indentation(1, "  ");
+    indentation = new Indentation("  ");
 
     final RenderRawFormatter subject;
     subject = new RenderRawFormatter(
@@ -161,7 +163,7 @@ public class RenderRawFormatterTest {
   @Test(description = "never indentation + ifNotEmpty new line emits raw text followed by new line")
   public void format06() {
     final Indentation indentation;
-    indentation = new Indentation(1, "  ");
+    indentation = new Indentation("  ");
 
     final RenderRawFormatter subject;
     subject = new RenderRawFormatter(
@@ -184,7 +186,7 @@ public class RenderRawFormatterTest {
   @Test(description = "never indentation + never new line emits raw text without indentation or new line")
   public void format07() {
     final Indentation indentation;
-    indentation = new Indentation(1, "  ");
+    indentation = new Indentation("  ");
 
     final RenderRawFormatter subject;
     subject = new RenderRawFormatter(
@@ -207,7 +209,7 @@ public class RenderRawFormatterTest {
   @Test(description = "raw value is emitted verbatim, i.e., it is not escaped")
   public void format08() {
     final Indentation indentation;
-    indentation = new Indentation(1, "  ");
+    indentation = new Indentation("  ");
 
     final RenderRawFormatter subject;
     subject = new RenderRawFormatter(
@@ -224,7 +226,7 @@ public class RenderRawFormatterTest {
     event = RenderRawEvent.of("<br/> & <script>");
 
     final Output out;
-    out = OutputY.create();
+    out = OutputY.create(y -> y.level = 1);
 
     subject.format(event, out);
 

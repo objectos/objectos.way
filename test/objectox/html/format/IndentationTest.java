@@ -22,72 +22,19 @@ import org.testng.annotations.Test;
 
 public class IndentationTest {
 
-  @Test(description = "initial level is 0")
-  public void toString01() {
-    final Indentation subject;
-    subject = new Indentation("  ");
-
-    assertEquals(subject.toString(), "");
-  }
-
-  @Test(description = "inc() increases level to 1")
-  public void inc01() {
-    final Indentation subject;
-    subject = new Indentation("  ");
-
-    subject.inc();
-
-    assertEquals(subject.toString(), "  ");
-  }
-
-  @Test(description = "multiple inc() calls increase level")
-  public void inc02() {
-    final Indentation subject;
-    subject = new Indentation("  ");
-
-    subject.inc();
-    subject.inc();
-
-    assertEquals(subject.toString(), "    ");
-  }
-
-  @Test(description = "dec() decreases level")
-  public void dec01() {
-    final Indentation subject;
-    subject = new Indentation("  ");
-
-    subject.inc();
-    subject.inc();
-    subject.dec();
-
-    assertEquals(subject.toString(), "  ");
-  }
-
-  @Test(
-      description = "dec() throws when level is 0",
-      expectedExceptions = IllegalStateException.class,
-      expectedExceptionsMessageRegExp = "Cannot decrement indentation level below zero"
-  )
-  public void dec02() {
-    final Indentation subject;
-    subject = new Indentation("  ");
-
-    subject.dec();
-  }
-
   @Test(description = "format with NEVER does not append anything")
   public void format01() {
     final Indentation subject;
     subject = new Indentation("  ");
 
-    subject.inc();
-    subject.inc();
-
     final char[] buf;
     buf = new char[10];
 
     final Output out;
-    out = Output.wrap(buf, 0, buf.length);
+    out = new Output(buf);
+
+    out.inc();
+    out.inc();
 
     subject.format(IndentationStyle.never(), out);
 
@@ -99,14 +46,14 @@ public class IndentationTest {
     final Indentation subject;
     subject = new Indentation("  ");
 
-    subject.inc();
-    subject.inc();
-
     final char[] buf;
     buf = new char[10];
 
     final Output out;
-    out = Output.wrap(buf, 0, buf.length);
+    out = new Output(buf);
+
+    out.inc();
+    out.inc();
 
     subject.format(IndentationStyle.startOfLine(), out);
 
@@ -118,13 +65,13 @@ public class IndentationTest {
     final Indentation subject;
     subject = new Indentation("  ");
 
-    subject.inc();
-
     final char[] buf;
     buf = new char[10];
 
     final Output out;
-    out = Output.wrap(buf, 0, buf.length);
+    out = new Output(buf);
+
+    out.inc();
 
     out.append("hello\n");
 
@@ -138,13 +85,13 @@ public class IndentationTest {
     final Indentation subject;
     subject = new Indentation("  ");
 
-    subject.inc();
-
     final char[] buf;
     buf = new char[10];
 
     final Output out;
-    out = Output.wrap(buf, 0, buf.length);
+    out = new Output(buf);
+
+    out.inc();
 
     out.append("hello");
 

@@ -29,7 +29,7 @@ public class OutputTest {
     buf = new char[10];
 
     final Output subject;
-    subject = Output.wrap(buf, 0, 10);
+    subject = new Output(buf);
 
     assertEquals(subject.written(), -1);
   }
@@ -40,7 +40,7 @@ public class OutputTest {
     buf = new char[0];
 
     final Output subject;
-    subject = Output.wrap(buf, 0, 0);
+    subject = new Output(buf);
 
     subject.append("world");
 
@@ -54,7 +54,7 @@ public class OutputTest {
     buf = new char[5];
 
     final Output subject;
-    subject = Output.wrap(buf, 0, 5);
+    subject = new Output(buf);
 
     subject.append("hello world");
 
@@ -69,7 +69,7 @@ public class OutputTest {
     buf = new char[10];
 
     final Output subject;
-    subject = Output.wrap(buf, 0, 10);
+    subject = new Output(buf);
 
     subject.append('a');
 
@@ -84,7 +84,9 @@ public class OutputTest {
     buf = new char[10];
 
     final Output subject;
-    subject = Output.wrap(buf, 3, 5);
+    subject = new Output();
+
+    subject.rewrap(buf, 3, 5);
 
     subject.append('x');
 
@@ -99,7 +101,7 @@ public class OutputTest {
     buf = new char[20];
 
     final Output subject;
-    subject = Output.wrap(buf, 0, 20);
+    subject = new Output(buf);
 
     subject.append("hello");
 
@@ -114,7 +116,9 @@ public class OutputTest {
     buf = new char[20];
 
     final Output subject;
-    subject = Output.wrap(buf, 2, 10);
+    subject = new Output();
+
+    subject.rewrap(buf, 2, 10);
 
     subject.append("abc");
 
@@ -130,7 +134,7 @@ public class OutputTest {
     buf = new char[5];
 
     final Output subject;
-    subject = Output.wrap(buf, 0, 5);
+    subject = new Output(buf);
 
     subject.append("abcde");
 
@@ -146,7 +150,7 @@ public class OutputTest {
     buf = new char[3];
 
     final Output subject;
-    subject = Output.wrap(buf, 0, 3);
+    subject = new Output(buf);
 
     subject.append("abcd");
 
@@ -162,7 +166,7 @@ public class OutputTest {
     buf = new char[3];
 
     final Output subject;
-    subject = Output.wrap(buf, 0, 3);
+    subject = new Output(buf);
 
     subject.append("abcdef");
 
@@ -178,7 +182,9 @@ public class OutputTest {
     buf = new char[10];
 
     final Output subject;
-    subject = Output.wrap(buf, 8, 2);
+    subject = new Output();
+
+    subject.rewrap(buf, 8, 2);
 
     subject.append("abcde");
 
@@ -195,7 +201,7 @@ public class OutputTest {
     buf = new char[1];
 
     final Output subject;
-    subject = Output.wrap(buf, 0, 1);
+    subject = new Output(buf);
 
     subject.append('a');
     subject.append('b');
@@ -212,7 +218,7 @@ public class OutputTest {
     buf = new char[10];
 
     final Output subject;
-    subject = Output.wrap(buf, 0, 10);
+    subject = new Output(buf);
 
     subject.append('a');
     subject.append("bc");
@@ -229,7 +235,7 @@ public class OutputTest {
     buf = new char[4];
 
     final Output subject;
-    subject = Output.wrap(buf, 0, 4);
+    subject = new Output(buf);
 
     subject.append("ab");
     subject.append("cd");
@@ -241,27 +247,13 @@ public class OutputTest {
     assertEquals(subject.overflow(), "ef");
   }
 
-  @Test(description = "append null char sequence")
-  public void appendNull01() {
-    final char[] buf;
-    buf = new char[10];
-
-    final Output subject;
-    subject = Output.wrap(buf, 0, 10);
-
-    subject.append((CharSequence) null);
-
-    assertEquals(new String(buf, 0, 4), "null");
-    assertEquals(subject.written(), 4);
-  }
-
   @Test(description = "append empty char sequence")
   public void appendEmpty01() {
     final char[] buf;
     buf = new char[10];
 
     final Output subject;
-    subject = Output.wrap(buf, 0, 10);
+    subject = new Output(buf);
 
     subject.append("");
 
@@ -275,7 +267,7 @@ public class OutputTest {
     buf = new char[2];
 
     final Output subject;
-    subject = Output.wrap(buf, 0, 2);
+    subject = new Output(buf);
 
     subject.append("ab");
     subject.append('c');
@@ -292,7 +284,7 @@ public class OutputTest {
     buf = new char[2];
 
     final Output subject;
-    subject = Output.wrap(buf, 0, 2);
+    subject = new Output(buf);
 
     subject.append("ab");
     subject.append('c');
@@ -310,7 +302,7 @@ public class OutputTest {
     buf = new char[10];
 
     final Output subject;
-    subject = Output.wrap(buf, 0, 10);
+    subject = new Output(buf);
 
     assertEquals(subject.toString(), "");
   }
@@ -321,7 +313,7 @@ public class OutputTest {
     buf = new char[10];
 
     final Output subject;
-    subject = Output.wrap(buf, 0, 10);
+    subject = new Output(buf);
 
     subject.append("hello");
 
@@ -334,7 +326,7 @@ public class OutputTest {
     buf = new char[0];
 
     final Output subject;
-    subject = Output.wrap(buf, 0, 0);
+    subject = new Output(buf);
 
     subject.append("world");
 
@@ -347,7 +339,7 @@ public class OutputTest {
     buf = new char[5];
 
     final Output subject;
-    subject = Output.wrap(buf, 0, 5);
+    subject = new Output(buf);
 
     subject.append("hello world");
 
@@ -360,7 +352,9 @@ public class OutputTest {
     buf = new char[10];
 
     final Output subject;
-    subject = Output.wrap(buf, 3, 5);
+    subject = new Output();
+
+    subject.rewrap(buf, 3, 5);
 
     subject.append("abc");
     subject.append("defgh");
@@ -374,7 +368,7 @@ public class OutputTest {
     buf = new char[4];
 
     final Output subject;
-    subject = Output.wrap(buf, 0, 4);
+    subject = new Output(buf);
 
     subject.append('a');
     subject.append("bc");
@@ -389,7 +383,7 @@ public class OutputTest {
     buf = new char[10];
 
     final Output subject;
-    subject = Output.wrap(buf, 0, 10);
+    subject = new Output(buf);
 
     assertEquals(subject.startOfLine(), true);
   }
@@ -400,7 +394,7 @@ public class OutputTest {
     buf = new char[10];
 
     final Output subject;
-    subject = Output.wrap(buf, 0, 10);
+    subject = new Output(buf);
 
     subject.append('a');
 
@@ -413,7 +407,7 @@ public class OutputTest {
     buf = new char[10];
 
     final Output subject;
-    subject = Output.wrap(buf, 0, 10);
+    subject = new Output(buf);
 
     subject.append('\n');
 
@@ -426,7 +420,7 @@ public class OutputTest {
     buf = new char[10];
 
     final Output subject;
-    subject = Output.wrap(buf, 0, 10);
+    subject = new Output(buf);
 
     subject.append('\r');
 
@@ -439,7 +433,7 @@ public class OutputTest {
     buf = new char[10];
 
     final Output subject;
-    subject = Output.wrap(buf, 0, 10);
+    subject = new Output(buf);
 
     subject.append("hello\n");
 
@@ -452,7 +446,7 @@ public class OutputTest {
     buf = new char[10];
 
     final Output subject;
-    subject = Output.wrap(buf, 0, 10);
+    subject = new Output(buf);
 
     subject.append("hello");
 
@@ -465,7 +459,7 @@ public class OutputTest {
     buf = new char[10];
 
     final Output subject;
-    subject = Output.wrap(buf, 0, 10);
+    subject = new Output(buf);
 
     subject.append("hello\r");
 
@@ -478,7 +472,7 @@ public class OutputTest {
     buf = new char[2];
 
     final Output subject;
-    subject = Output.wrap(buf, 0, 2);
+    subject = new Output(buf);
 
     subject.append("ab");
     subject.append("c\n");
@@ -492,7 +486,7 @@ public class OutputTest {
     buf = new char[2];
 
     final Output subject;
-    subject = Output.wrap(buf, 0, 2);
+    subject = new Output(buf);
 
     subject.append("ab");
     subject.append("cd");
@@ -506,12 +500,187 @@ public class OutputTest {
     buf = new char[4];
 
     final Output subject;
-    subject = Output.wrap(buf, 0, 4);
+    subject = new Output(buf);
 
     subject.append("a\nb\n");
     subject.append("xy");
 
     assertEquals(subject.startOfLine(), false);
+  }
+
+  @Test(description = "initial level is 0")
+  public void level01() {
+    final char[] buf;
+    buf = new char[10];
+
+    final Output subject;
+    subject = new Output(buf);
+
+    assertEquals(subject.level(), 0);
+  }
+
+  @Test(description = "inc increases the level")
+  public void inc01() {
+    final char[] buf;
+    buf = new char[10];
+
+    final Output subject;
+    subject = new Output(buf);
+
+    subject.inc();
+
+    assertEquals(subject.level(), 1);
+  }
+
+  @Test(description = "multiple inc calls increase the level")
+  public void inc02() {
+    final char[] buf;
+    buf = new char[10];
+
+    final Output subject;
+    subject = new Output(buf);
+
+    subject.inc();
+    subject.inc();
+    subject.inc();
+
+    assertEquals(subject.level(), 3);
+  }
+
+  @Test(description = "dec decreases the level")
+  public void dec01() {
+    final char[] buf;
+    buf = new char[10];
+
+    final Output subject;
+    subject = new Output(buf);
+
+    subject.inc();
+    subject.inc();
+
+    subject.dec();
+
+    assertEquals(subject.level(), 1);
+  }
+
+  @Test(
+      description = "dec throws when level is 0",
+      expectedExceptions = IllegalStateException.class,
+      expectedExceptionsMessageRegExp = "Cannot decrement indentation level below zero"
+  )
+  public void dec02() {
+    final char[] buf;
+    buf = new char[10];
+
+    final Output subject;
+    subject = new Output(buf);
+
+    subject.dec();
+  }
+
+  @Test(description = "rewrap delivers the pending overflow into the new buffer")
+  public void rewrap01() {
+    final char[] buf1;
+    buf1 = new char[2];
+
+    final Output subject;
+    subject = new Output(buf1);
+
+    subject.append("abcde");
+
+    assertEquals(subject.written(), 2);
+    assertEquals(subject.overflow(), "cde");
+
+    final char[] buf2;
+    buf2 = new char[5];
+
+    subject.rewrap(buf2, 0, 5);
+
+    assertEquals(new String(buf2, 0, 3), "cde");
+    assertEquals(subject.written(), 3);
+    assertEquals(subject.overflow(), "");
+  }
+
+  @Test(description = "rewrap with a smaller buffer keeps the tail in the overflow")
+  public void rewrap02() {
+    final char[] buf1;
+    buf1 = new char[2];
+
+    final Output subject;
+    subject = new Output(buf1);
+
+    subject.append("abcde");
+
+    final char[] buf2;
+    buf2 = new char[2];
+
+    subject.rewrap(buf2, 0, 2);
+
+    assertEquals(new String(buf2, 0, 2), "cd");
+    assertEquals(subject.written(), 2);
+    assertEquals(subject.overflow(), "e");
+  }
+
+  @Test(description = "rewrap preserves the indentation level")
+  public void rewrap03() {
+    final char[] buf1;
+    buf1 = new char[2];
+
+    final Output subject;
+    subject = new Output(buf1);
+
+    subject.inc();
+    subject.inc();
+    subject.inc();
+
+    final char[] buf2;
+    buf2 = new char[5];
+
+    subject.rewrap(buf2, 0, 5);
+
+    assertEquals(subject.level(), 3);
+  }
+
+  @Test(description = "rewrap resets the written count")
+  public void rewrap04() {
+    final char[] buf1;
+    buf1 = new char[10];
+
+    final Output subject;
+    subject = new Output(buf1);
+
+    subject.append("hello");
+
+    assertEquals(subject.written(), 5);
+
+    final char[] buf2;
+    buf2 = new char[10];
+
+    subject.rewrap(buf2, 0, 10);
+
+    assertEquals(subject.written(), -1);
+  }
+
+  @Test(description = "startOfLine after rewrap checks the drained content")
+  public void rewrap05() {
+    final char[] buf1;
+    buf1 = new char[2];
+
+    final Output subject;
+    subject = new Output(buf1);
+
+    subject.append("a\nb");
+
+    final char[] buf2;
+    buf2 = new char[5];
+
+    subject.rewrap(buf2, 0, 5);
+
+    assertEquals(subject.startOfLine(), false);
+
+    subject.append('\n');
+
+    assertEquals(subject.startOfLine(), true);
   }
 
 }
