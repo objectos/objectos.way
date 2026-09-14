@@ -15,6 +15,7 @@
  */
 package objectox.html.format;
 
+import java.io.IOException;
 import java.util.function.Consumer;
 
 final class OutputY {
@@ -25,11 +26,11 @@ final class OutputY {
 
   String text = "";
 
-  public static Output create() {
+  public static Output create() throws IOException {
     return create(_ -> {});
   }
 
-  public static Output create(Consumer<? super OutputY> opts) {
+  public static Output create(Consumer<? super OutputY> opts) throws IOException {
     final OutputY y;
     y = new OutputY();
 
@@ -38,7 +39,7 @@ final class OutputY {
     return y.build();
   }
 
-  private Output build() {
+  private Output build() throws IOException {
     final char[] buf;
     buf = new char[bufferSize];
 

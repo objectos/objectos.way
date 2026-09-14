@@ -15,6 +15,7 @@
  */
 package objectox.html.format;
 
+import java.io.IOException;
 import objectos.html.format.NewLineStyle;
 import objectos.html.stream.EndStartTag;
 
@@ -30,7 +31,7 @@ final class EndStartTagFormatter {
     this.newLineStyle = newLineStyle;
   }
 
-  public final void format(EndStartTag event, Output out) {
+  public final void format(EndStartTag event, Output out) throws IOException {
     out.append('>');
 
     switch (event.kind()) {

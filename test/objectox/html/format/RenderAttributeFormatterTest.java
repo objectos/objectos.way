@@ -17,6 +17,7 @@ package objectox.html.format;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.IOException;
 import objectos.html.format.QuotationMarkStyle;
 import objectos.html.stream.RenderAttribute;
 import objectox.html.attr.AttributeName;
@@ -25,7 +26,7 @@ import org.testng.annotations.Test;
 
 public class RenderAttributeFormatterTest {
 
-  private String format(RenderAttributeFormatter subject) {
+  private String format(RenderAttributeFormatter subject) throws IOException {
     final RenderAttribute attr;
     attr = RenderAttributeEvent.of(AttributeName.ID, "value");
 
@@ -37,11 +38,11 @@ public class RenderAttributeFormatterTest {
     return out.toString();
   }
 
-  private String format(RenderAttributeFormatter subject, String text) {
+  private String format(RenderAttributeFormatter subject, String text) throws IOException {
     return format(subject, "value", text);
   }
 
-  private String format(RenderAttributeFormatter subject, String attrValue, String text) {
+  private String format(RenderAttributeFormatter subject, String attrValue, String text) throws IOException {
     final RenderAttribute attr;
     attr = RenderAttributeEvent.of(AttributeName.ID, attrValue);
 
@@ -56,7 +57,7 @@ public class RenderAttributeFormatterTest {
   }
 
   @Test(description = "double quotation mark wraps the attribute value")
-  public void quotationMark01() {
+  public void quotationMark01() throws IOException {
     final QuotationMarkStyle quotationMark;
     quotationMark = QuotationMarkStyle.doubleMark();
 
@@ -71,7 +72,7 @@ public class RenderAttributeFormatterTest {
   }
 
   @Test(description = "single quotation mark wraps the attribute value")
-  public void quotationMark02() {
+  public void quotationMark02() throws IOException {
     final QuotationMarkStyle quotationMark;
     quotationMark = QuotationMarkStyle.single();
 
@@ -86,7 +87,7 @@ public class RenderAttributeFormatterTest {
   }
 
   @Test(description = "writes the leading space even when not at start of line")
-  public void format01() {
+  public void format01() throws IOException {
     final QuotationMarkStyle quotationMark;
     quotationMark = QuotationMarkStyle.doubleMark();
 
@@ -101,7 +102,7 @@ public class RenderAttributeFormatterTest {
   }
 
   @Test(description = "double quotation mark escapes the attribute value")
-  public void escape01() {
+  public void escape01() throws IOException {
     final QuotationMarkStyle quotationMark;
     quotationMark = QuotationMarkStyle.doubleMark();
 
@@ -116,7 +117,7 @@ public class RenderAttributeFormatterTest {
   }
 
   @Test(description = "double quotation mark escapes double quotes in the attribute value")
-  public void escape02() {
+  public void escape02() throws IOException {
     final QuotationMarkStyle quotationMark;
     quotationMark = QuotationMarkStyle.doubleMark();
 
@@ -131,7 +132,7 @@ public class RenderAttributeFormatterTest {
   }
 
   @Test(description = "single quotation mark escapes single quotes in the attribute value")
-  public void escape03() {
+  public void escape03() throws IOException {
     final QuotationMarkStyle quotationMark;
     quotationMark = QuotationMarkStyle.single();
 

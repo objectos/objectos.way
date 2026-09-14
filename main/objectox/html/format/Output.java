@@ -15,7 +15,9 @@
  */
 package objectox.html.format;
 
-public final class Output {
+import java.io.IOException;
+
+public final class Output implements Appendable {
 
   private char[] buffer;
 
@@ -37,7 +39,8 @@ public final class Output {
     limit = buffer.length;
   }
 
-  public final void append(char c) {
+  @Override
+  public final Output append(char c) throws IOException {
     if (index < limit) {
       buffer[index++] = c;
 
@@ -45,9 +48,12 @@ public final class Output {
     } else {
       sb.append(c);
     }
+
+    return this;
   }
 
-  public final void append(CharSequence csq) {
+  @Override
+  public final Output append(CharSequence csq) throws IOException {
     final int len;
     len = csq.length();
 
@@ -69,6 +75,38 @@ public final class Output {
 
       sb.append(csq, remaining, len);
     }
+
+    return this;
+  }
+
+  @Override
+  public final Output append(CharSequence csq, int start, int end) throws IOException {
+    final int len;
+    len = end - start;
+
+    final int remaining;
+    remaining = limit - index;
+
+    if (len <= remaining) {
+      csq.getChars(start, end, buffer, index);
+
+      index += len;
+
+      written += len;
+    } else {
+      final int mid;
+      mid = start + remaining;
+
+      csq.getChars(start, mid, buffer, index);
+
+      index = limit;
+
+      written += remaining;
+
+      sb.append(csq, mid, end);
+    }
+
+    return this;
   }
 
   public final void dec() {
@@ -120,7 +158,7 @@ public final class Output {
     return sb.toString();
   }
 
-  public final void rewrap(char[] cbuf, int off, int len) {
+  public final void rewrap(char[] cbuf, int off, int len) throws IOException {
     final String overflow;
     overflow = sb.toString();
 

@@ -17,6 +17,7 @@ package objectox.html.format;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.IOException;
 import objectos.html.format.IndentationStyle;
 import objectos.html.format.NewLineStyle;
 import objectos.html.stream.RenderRaw;
@@ -25,11 +26,11 @@ import org.testng.annotations.Test;
 
 public class RenderRawFormatterTest {
 
-  private String format(RenderRawFormatter subject) {
+  private String format(RenderRawFormatter subject) throws IOException {
     return format(subject, "");
   }
 
-  private String format(RenderRawFormatter subject, String text) {
+  private String format(RenderRawFormatter subject, String text) throws IOException {
     final RenderRaw event;
     event = RenderRawEvent.of("ipsum");
 
@@ -46,7 +47,7 @@ public class RenderRawFormatterTest {
   }
 
   @Test(description = "startOfLine indentation + always new line emits indented raw text followed by new line")
-  public void format01() {
+  public void format01() throws IOException {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
@@ -69,7 +70,7 @@ public class RenderRawFormatterTest {
   }
 
   @Test(description = "startOfLine indentation + ifNotEmpty new line emits indented raw text followed by new line")
-  public void format02() {
+  public void format02() throws IOException {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
@@ -92,7 +93,7 @@ public class RenderRawFormatterTest {
   }
 
   @Test(description = "startOfLine indentation + never new line emits indented raw text without new line")
-  public void format03() {
+  public void format03() throws IOException {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
@@ -115,7 +116,7 @@ public class RenderRawFormatterTest {
   }
 
   @Test(description = "startOfLine indentation does not emit indentation when not at start of line")
-  public void format04() {
+  public void format04() throws IOException {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
@@ -138,7 +139,7 @@ public class RenderRawFormatterTest {
   }
 
   @Test(description = "never indentation + always new line emits raw text followed by new line")
-  public void format05() {
+  public void format05() throws IOException {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
@@ -161,7 +162,7 @@ public class RenderRawFormatterTest {
   }
 
   @Test(description = "never indentation + ifNotEmpty new line emits raw text followed by new line")
-  public void format06() {
+  public void format06() throws IOException {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
@@ -184,7 +185,7 @@ public class RenderRawFormatterTest {
   }
 
   @Test(description = "never indentation + never new line emits raw text without indentation or new line")
-  public void format07() {
+  public void format07() throws IOException {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
@@ -207,7 +208,7 @@ public class RenderRawFormatterTest {
   }
 
   @Test(description = "raw value is emitted verbatim, i.e., it is not escaped")
-  public void format08() {
+  public void format08() throws IOException {
     final Indentation indentation;
     indentation = new Indentation("  ");
 

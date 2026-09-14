@@ -15,6 +15,7 @@
  */
 package objectox.html.format;
 
+import java.io.IOException;
 import objectos.html.format.BooleanAttributeValueStyle;
 import objectos.html.format.QuotationMarkStyle;
 import objectos.html.stream.RenderBooleanAttribute;
@@ -31,7 +32,7 @@ final class RenderBooleanAttributeFormatter {
     this.quotationMarkStyle = quotationMarkStyle;
   }
 
-  public final void format(RenderBooleanAttribute attr, Output out) {
+  public final void format(RenderBooleanAttribute attr, Output out) throws IOException {
     out.append(' ');
 
     out.append(attr.name());
@@ -49,7 +50,7 @@ final class RenderBooleanAttributeFormatter {
     }
   }
 
-  private void emitValue(String value, Output out) {
+  private void emitValue(String value, Output out) throws IOException {
     out.append('=');
 
     switch (quotationMarkStyle) {

@@ -17,6 +17,7 @@ package objectox.html.format;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.IOException;
 import objectos.html.format.QuotationMarkStyle;
 import objectos.html.stream.RenderJsActionAttribute;
 import objectos.script.Js;
@@ -27,7 +28,7 @@ import org.testng.annotations.Test;
 
 public class RenderJsActionAttributeFormatterTest {
 
-  private String format(RenderJsActionAttributeFormatter subject) {
+  private String format(RenderJsActionAttributeFormatter subject) throws IOException {
     final JsAction action;
     action = Js.noop();
 
@@ -42,7 +43,7 @@ public class RenderJsActionAttributeFormatterTest {
     return out.toString();
   }
 
-  private String format(RenderJsActionAttributeFormatter subject, String text) {
+  private String format(RenderJsActionAttributeFormatter subject, String text) throws IOException {
     final JsAction action;
     action = Js.noop();
 
@@ -60,7 +61,7 @@ public class RenderJsActionAttributeFormatterTest {
   }
 
   @Test(description = "single quotation mark wraps the JS action value")
-  public void format01() {
+  public void format01() throws IOException {
     final QuotationMarkStyle quotationMark;
     quotationMark = QuotationMarkStyle.single();
 
@@ -75,7 +76,7 @@ public class RenderJsActionAttributeFormatterTest {
   }
 
   @Test(description = "double quotation mark wraps the JS action value when configured")
-  public void format02() {
+  public void format02() throws IOException {
     final QuotationMarkStyle quotationMark;
     quotationMark = QuotationMarkStyle.doubleMark();
 
@@ -90,7 +91,7 @@ public class RenderJsActionAttributeFormatterTest {
   }
 
   @Test(description = "writes the leading space even when not at start of line")
-  public void format03() {
+  public void format03() throws IOException {
     final QuotationMarkStyle quotationMark;
     quotationMark = QuotationMarkStyle.single();
 

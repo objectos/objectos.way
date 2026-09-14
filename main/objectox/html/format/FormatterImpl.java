@@ -15,6 +15,7 @@
  */
 package objectox.html.format;
 
+import java.io.IOException;
 import objectos.html.format.Formatter;
 import objectos.html.stream.BeginStartTag;
 import objectos.html.stream.EndStartTag;
@@ -85,7 +86,7 @@ public final class FormatterImpl implements Formatter {
     this.renderTextFormatter = renderTextFormatter;
   }
 
-  public final void formatTo(Event event, Output out) {
+  public final void formatTo(Event event, Output out) throws IOException {
     switch (event) {
       case BeginStartTag begin -> beginStartTagFormatter.format(begin, out);
 

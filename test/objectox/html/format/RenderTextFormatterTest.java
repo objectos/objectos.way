@@ -17,6 +17,7 @@ package objectox.html.format;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.IOException;
 import objectos.html.format.IndentationStyle;
 import objectos.html.format.NewLineStyle;
 import objectos.html.stream.RenderText;
@@ -25,15 +26,15 @@ import org.testng.annotations.Test;
 
 public class RenderTextFormatterTest {
 
-  private String format(RenderTextFormatter subject) {
+  private String format(RenderTextFormatter subject) throws IOException {
     return format(subject, "ipsum", "");
   }
 
-  private String format(RenderTextFormatter subject, String text) {
+  private String format(RenderTextFormatter subject, String text) throws IOException {
     return format(subject, "ipsum", text);
   }
 
-  private String format(RenderTextFormatter subject, String value, String text) {
+  private String format(RenderTextFormatter subject, String value, String text) throws IOException {
     final RenderText event;
     event = RenderTextEvent.of(value);
 
@@ -50,7 +51,7 @@ public class RenderTextFormatterTest {
   }
 
   @Test(description = "startOfLine indentation + always new line emits indented text followed by new line")
-  public void format01() {
+  public void format01() throws IOException {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
@@ -73,7 +74,7 @@ public class RenderTextFormatterTest {
   }
 
   @Test(description = "startOfLine indentation + ifNotEmpty new line emits indented text followed by new line")
-  public void format02() {
+  public void format02() throws IOException {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
@@ -96,7 +97,7 @@ public class RenderTextFormatterTest {
   }
 
   @Test(description = "startOfLine indentation + never new line emits indented text without new line")
-  public void format03() {
+  public void format03() throws IOException {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
@@ -119,7 +120,7 @@ public class RenderTextFormatterTest {
   }
 
   @Test(description = "startOfLine indentation does not emit indentation when not at start of line")
-  public void format04() {
+  public void format04() throws IOException {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
@@ -142,7 +143,7 @@ public class RenderTextFormatterTest {
   }
 
   @Test(description = "never indentation + always new line emits text followed by new line")
-  public void format05() {
+  public void format05() throws IOException {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
@@ -165,7 +166,7 @@ public class RenderTextFormatterTest {
   }
 
   @Test(description = "never indentation + ifNotEmpty new line emits text followed by new line")
-  public void format06() {
+  public void format06() throws IOException {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
@@ -188,7 +189,7 @@ public class RenderTextFormatterTest {
   }
 
   @Test(description = "never indentation + never new line emits text without indentation or new line")
-  public void format07() {
+  public void format07() throws IOException {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
@@ -211,7 +212,7 @@ public class RenderTextFormatterTest {
   }
 
   @Test(description = "ampersand is escaped")
-  public void escape01() {
+  public void escape01() throws IOException {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
@@ -234,7 +235,7 @@ public class RenderTextFormatterTest {
   }
 
   @Test(description = "less-than sign is escaped")
-  public void escape02() {
+  public void escape02() throws IOException {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
@@ -257,7 +258,7 @@ public class RenderTextFormatterTest {
   }
 
   @Test(description = "greater-than sign is escaped")
-  public void escape03() {
+  public void escape03() throws IOException {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
@@ -280,7 +281,7 @@ public class RenderTextFormatterTest {
   }
 
   @Test(description = "all escapable characters are escaped")
-  public void escape04() {
+  public void escape04() throws IOException {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
@@ -303,7 +304,7 @@ public class RenderTextFormatterTest {
   }
 
   @Test(description = "quotation marks are not escaped in text content")
-  public void escape05() {
+  public void escape05() throws IOException {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
@@ -326,7 +327,7 @@ public class RenderTextFormatterTest {
   }
 
   @Test(description = "already-escaped entity is escaped again")
-  public void escape06() {
+  public void escape06() throws IOException {
     final Indentation indentation;
     indentation = new Indentation("  ");
 

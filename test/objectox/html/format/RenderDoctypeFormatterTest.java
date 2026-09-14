@@ -17,6 +17,7 @@ package objectox.html.format;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.IOException;
 import objectos.html.format.NewLineStyle;
 import objectos.html.format.TextCaseStyle;
 import objectos.html.stream.RenderDoctype;
@@ -25,7 +26,7 @@ import org.testng.annotations.Test;
 
 public class RenderDoctypeFormatterTest {
 
-  private String format(RenderDoctypeFormatter subject) {
+  private String format(RenderDoctypeFormatter subject) throws IOException {
     final RenderDoctype event;
     event = RenderDoctypeEvent.of();
 
@@ -38,7 +39,7 @@ public class RenderDoctypeFormatterTest {
   }
 
   @Test(description = "default text case and new line settings emit <!DOCTYPE html> followed by new line")
-  public void format01() {
+  public void format01() throws IOException {
     final RenderDoctypeFormatter subject;
     subject = new RenderDoctypeFormatter(
         NewLine.LF,
@@ -56,7 +57,7 @@ public class RenderDoctypeFormatterTest {
   }
 
   @Test(description = "lower case text case setting emits <!doctype html> followed by new line")
-  public void format02() {
+  public void format02() throws IOException {
     final RenderDoctypeFormatter subject;
     subject = new RenderDoctypeFormatter(
         NewLine.LF,
@@ -74,7 +75,7 @@ public class RenderDoctypeFormatterTest {
   }
 
   @Test(description = "upper case text case and never new line settings emit <!DOCTYPE html> without new line")
-  public void format03() {
+  public void format03() throws IOException {
     final RenderDoctypeFormatter subject;
     subject = new RenderDoctypeFormatter(
         NewLine.LF,
@@ -92,7 +93,7 @@ public class RenderDoctypeFormatterTest {
   }
 
   @Test(description = "lower case text case and never new line settings emit <!doctype html> without new line")
-  public void format04() {
+  public void format04() throws IOException {
     final RenderDoctypeFormatter subject;
     subject = new RenderDoctypeFormatter(
         NewLine.LF,

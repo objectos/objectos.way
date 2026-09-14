@@ -15,6 +15,7 @@
  */
 package objectox.html.format;
 
+import java.io.IOException;
 import objectos.html.format.NewLineStyle;
 import objectos.html.format.TextCaseStyle;
 import objectos.html.stream.RenderDoctype;
@@ -35,7 +36,7 @@ final class RenderDoctypeFormatter {
     this.newLineStyle = newLineStyle;
   }
 
-  public final void format(RenderDoctype event, Output out) {
+  public final void format(RenderDoctype event, Output out) throws IOException {
     final String value;
     value = doctype(doctypeTextCaseStyle);
 

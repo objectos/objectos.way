@@ -39,6 +39,8 @@ When writing tests, you may assume TDD is being used.
 
 ## Code style
 
+### Class declarations
+
 When adding methods to a class, keep them sorted. First, by access level:
 
 - public
@@ -47,6 +49,27 @@ When adding methods to a class, keep them sorted. First, by access level:
 - private
 
 Then sorted alphabetically.
+
+### Method invocations
+
+Avoid having more than one method invocation in the same statement or sub-statement.
+
+The following should be avoided:
+
+```java
+return append(s.subSequence(start, end));
+```
+
+The innermost method invocation should be declared as a local variable instead:
+
+```java
+final CharSequence sub;
+sub = s.subSequence(start, end);
+
+return append(sub);
+```
+
+Also, the use of method chaining should be minimized.
 
 ## Notes
 

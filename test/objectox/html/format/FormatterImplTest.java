@@ -17,6 +17,7 @@ package objectox.html.format;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.IOException;
 import objectos.html.format.Formatter;
 import objectos.html.stream.Event;
 import objectos.script.Js;
@@ -29,7 +30,7 @@ import org.testng.annotations.Test;
 public class FormatterImplTest {
 
   @Test(description = "RenderJsActionAttribute events are formatted via the default options")
-  public void renderJsActionAttribute01() {
+  public void renderJsActionAttribute01() throws IOException {
     final JsAction action;
     action = Js.noop();
 
@@ -52,7 +53,7 @@ public class FormatterImplTest {
   }
 
   @Test(description = "RenderRaw events are formatted via the default options")
-  public void renderRaw01() {
+  public void renderRaw01() throws IOException {
     final Event event;
     event = new RenderRawEvent("<br/>");
 

@@ -15,6 +15,7 @@
  */
 package objectox.html.format;
 
+import java.io.IOException;
 import objectos.html.format.NewLineStyle;
 
 final class NewLine {
@@ -27,7 +28,7 @@ final class NewLine {
     this.value = value;
   }
 
-  public final void empty(NewLineStyle style, Output out) {
+  public final void empty(NewLineStyle style, Output out) throws IOException {
     switch (style) {
       case NewLineOption.ALWAYS -> out.append(value);
 
@@ -36,7 +37,7 @@ final class NewLine {
     }
   }
 
-  public final void notEmpty(NewLineStyle style, Output out) {
+  public final void notEmpty(NewLineStyle style, Output out) throws IOException {
     switch (style) {
       case NewLineOption.ALWAYS,
            NewLineOption.IF_NOT_EMPTY -> out.append(value);

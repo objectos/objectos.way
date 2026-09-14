@@ -15,6 +15,7 @@
  */
 package objectox.html.format;
 
+import java.io.IOException;
 import objectos.html.format.QuotationMarkStyle;
 import objectos.html.stream.RenderJsActionAttribute;
 
@@ -26,7 +27,7 @@ final class RenderJsActionAttributeFormatter {
     this.quotationMarkStyle = quotationMarkStyle;
   }
 
-  public final void format(RenderJsActionAttribute attr, Output out) {
+  public final void format(RenderJsActionAttribute attr, Output out) throws IOException {
     out.append(' ');
 
     out.append(attr.name());

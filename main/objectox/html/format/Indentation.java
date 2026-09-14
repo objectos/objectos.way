@@ -15,6 +15,7 @@
  */
 package objectox.html.format;
 
+import java.io.IOException;
 import objectos.html.format.IndentationStyle;
 
 final class Indentation {
@@ -25,7 +26,7 @@ final class Indentation {
     this.text = text;
   }
 
-  public final void format(IndentationStyle style, Output out) {
+  public final void format(IndentationStyle style, Output out) throws IOException {
     switch (style) {
       case IndentationOption.NEVER -> {}
 

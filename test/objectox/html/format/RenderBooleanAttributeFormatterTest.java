@@ -17,6 +17,7 @@ package objectox.html.format;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.IOException;
 import objectos.html.format.BooleanAttributeValueStyle;
 import objectos.html.format.QuotationMarkStyle;
 import objectos.html.stream.RenderBooleanAttribute;
@@ -26,7 +27,7 @@ import org.testng.annotations.Test;
 
 public class RenderBooleanAttributeFormatterTest {
 
-  private String format(RenderBooleanAttributeFormatter subject) {
+  private String format(RenderBooleanAttributeFormatter subject) throws IOException {
     final RenderBooleanAttribute attr;
     attr = new RenderBooleanAttributeEvent(AttributeName.CHECKED);
 
@@ -38,7 +39,7 @@ public class RenderBooleanAttributeFormatterTest {
     return out.toString();
   }
 
-  private String format(RenderBooleanAttributeFormatter subject, String text) {
+  private String format(RenderBooleanAttributeFormatter subject, String text) throws IOException {
     final RenderBooleanAttribute attr;
     attr = new RenderBooleanAttributeEvent(AttributeName.CHECKED);
 
@@ -53,7 +54,7 @@ public class RenderBooleanAttributeFormatterTest {
   }
 
   @Test(description = "noValue style emits the attribute name without a value")
-  public void valueStyle01() {
+  public void valueStyle01() throws IOException {
     final RenderBooleanAttributeFormatter subject;
     subject = new RenderBooleanAttributeFormatter(
         BooleanAttributeValueStyle.noValue(),
@@ -69,7 +70,7 @@ public class RenderBooleanAttributeFormatterTest {
   }
 
   @Test(description = "emptyString style emits an empty value wrapped in quotation marks")
-  public void valueStyle02() {
+  public void valueStyle02() throws IOException {
     final RenderBooleanAttributeFormatter subject;
     subject = new RenderBooleanAttributeFormatter(
         BooleanAttributeValueStyle.emptyString(),
@@ -85,7 +86,7 @@ public class RenderBooleanAttributeFormatterTest {
   }
 
   @Test(description = "emptyString style emits single quotation marks when configured")
-  public void valueStyle03() {
+  public void valueStyle03() throws IOException {
     final RenderBooleanAttributeFormatter subject;
     subject = new RenderBooleanAttributeFormatter(
         BooleanAttributeValueStyle.emptyString(),
@@ -101,7 +102,7 @@ public class RenderBooleanAttributeFormatterTest {
   }
 
   @Test(description = "attributeName style emits the attribute name as the value")
-  public void valueStyle04() {
+  public void valueStyle04() throws IOException {
     final RenderBooleanAttributeFormatter subject;
     subject = new RenderBooleanAttributeFormatter(
         BooleanAttributeValueStyle.attributeName(),
@@ -117,7 +118,7 @@ public class RenderBooleanAttributeFormatterTest {
   }
 
   @Test(description = "attributeName style emits single quotation marks when configured")
-  public void valueStyle05() {
+  public void valueStyle05() throws IOException {
     final RenderBooleanAttributeFormatter subject;
     subject = new RenderBooleanAttributeFormatter(
         BooleanAttributeValueStyle.attributeName(),
@@ -133,7 +134,7 @@ public class RenderBooleanAttributeFormatterTest {
   }
 
   @Test(description = "writes the leading space even when not at start of line")
-  public void format01() {
+  public void format01() throws IOException {
     final RenderBooleanAttributeFormatter subject;
     subject = new RenderBooleanAttributeFormatter(
         BooleanAttributeValueStyle.attributeName(),

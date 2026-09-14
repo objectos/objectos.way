@@ -17,6 +17,7 @@ package objectox.html.format;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.IOException;
 import java.util.function.Consumer;
 import objectos.html.format.IndentationStyle;
 import objectos.html.format.NewLineStyle;
@@ -27,7 +28,7 @@ import org.testng.annotations.Test;
 
 public class RenderEndTagFormatterTest {
 
-  private Output format(RenderEndTagFormatter subject, Consumer<? super OutputY> opts) {
+  private Output format(RenderEndTagFormatter subject, Consumer<? super OutputY> opts) throws IOException {
     final RenderEndTag event;
     event = RenderEndTagEvent.of(ElementName.DIV);
 
@@ -40,7 +41,7 @@ public class RenderEndTagFormatterTest {
   }
 
   @Test(description = "never indentation style emits tag without indentation")
-  public void indentationStyle01() {
+  public void indentationStyle01() throws IOException {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
@@ -67,7 +68,7 @@ public class RenderEndTagFormatterTest {
   }
 
   @Test(description = "startOfLine indentation style emits tag with indentation at start of line")
-  public void indentationStyle02() {
+  public void indentationStyle02() throws IOException {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
@@ -94,7 +95,7 @@ public class RenderEndTagFormatterTest {
   }
 
   @Test(description = "startOfLine indentation style emits tag without indentation when not at start of line")
-  public void indentationStyle03() {
+  public void indentationStyle03() throws IOException {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
@@ -125,7 +126,7 @@ public class RenderEndTagFormatterTest {
   }
 
   @Test(description = "multiple indentation levels")
-  public void indentationStyle04() {
+  public void indentationStyle04() throws IOException {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
@@ -152,7 +153,7 @@ public class RenderEndTagFormatterTest {
   }
 
   @Test(description = "always emits newline and decrements indentation")
-  public void newLineStyle01() {
+  public void newLineStyle01() throws IOException {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
@@ -181,7 +182,7 @@ public class RenderEndTagFormatterTest {
   }
 
   @Test(description = "ifNotEmpty emits newline and decrements indentation")
-  public void newLineStyle02() {
+  public void newLineStyle02() throws IOException {
     final Indentation indentation;
     indentation = new Indentation("  ");
 
@@ -210,7 +211,7 @@ public class RenderEndTagFormatterTest {
   }
 
   @Test(description = "never emits no newline and decrements indentation")
-  public void newLineStyle03() {
+  public void newLineStyle03() throws IOException {
     final Indentation indentation;
     indentation = new Indentation("  ");
 

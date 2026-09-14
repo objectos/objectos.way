@@ -17,13 +17,14 @@ package objectox.html.format;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.IOException;
 import objectos.html.format.IndentationStyle;
 import org.testng.annotations.Test;
 
 public class IndentationTest {
 
   @Test(description = "format with NEVER does not append anything")
-  public void format01() {
+  public void format01() throws IOException {
     final Indentation subject;
     subject = new Indentation("  ");
 
@@ -42,7 +43,7 @@ public class IndentationTest {
   }
 
   @Test(description = "format with START_OF_LINE appends when output is empty")
-  public void format02() {
+  public void format02() throws IOException {
     final Indentation subject;
     subject = new Indentation("  ");
 
@@ -61,7 +62,7 @@ public class IndentationTest {
   }
 
   @Test(description = "format with START_OF_LINE appends after newline")
-  public void format03() {
+  public void format03() throws IOException {
     final Indentation subject;
     subject = new Indentation("  ");
 
@@ -81,7 +82,7 @@ public class IndentationTest {
   }
 
   @Test(description = "format with START_OF_LINE does not append when not at start of line")
-  public void format04() {
+  public void format04() throws IOException {
     final Indentation subject;
     subject = new Indentation("  ");
 

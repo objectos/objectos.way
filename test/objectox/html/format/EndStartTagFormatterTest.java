@@ -17,6 +17,7 @@ package objectox.html.format;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.IOException;
 import objectos.html.format.NewLineStyle;
 import objectos.html.stream.EndStartTag;
 import objectos.html.stream.EndStartTagKind;
@@ -25,7 +26,7 @@ import org.testng.annotations.Test;
 
 public class EndStartTagFormatterTest {
 
-  private Output format(EndStartTagFormatter subject, EndStartTag event) {
+  private Output format(EndStartTagFormatter subject, EndStartTag event) throws IOException {
     final Output out;
     out = OutputY.create();
 
@@ -35,7 +36,7 @@ public class EndStartTagFormatterTest {
   }
 
   @Test(description = "always with element kind emits newline and increments indentation")
-  public void always01() {
+  public void always01() throws IOException {
     final NewLine newLine;
     newLine = NewLine.LF;
 
@@ -61,7 +62,7 @@ public class EndStartTagFormatterTest {
   }
 
   @Test(description = "always with void element emits newline and does not change indentation")
-  public void always02() {
+  public void always02() throws IOException {
     final NewLine newLine;
     newLine = NewLine.LF;
 
@@ -87,7 +88,7 @@ public class EndStartTagFormatterTest {
   }
 
   @Test(description = "always with empty element emits newline and increments indentation")
-  public void always03() {
+  public void always03() throws IOException {
     final NewLine newLine;
     newLine = NewLine.LF;
 
@@ -113,7 +114,7 @@ public class EndStartTagFormatterTest {
   }
 
   @Test(description = "never with element kind emits no newline and increments indentation")
-  public void never01() {
+  public void never01() throws IOException {
     final NewLine newLine;
     newLine = NewLine.LF;
 
@@ -139,7 +140,7 @@ public class EndStartTagFormatterTest {
   }
 
   @Test(description = "never with void element emits no newline and does not change indentation")
-  public void never02() {
+  public void never02() throws IOException {
     final NewLine newLine;
     newLine = NewLine.LF;
 
@@ -165,7 +166,7 @@ public class EndStartTagFormatterTest {
   }
 
   @Test(description = "never with empty element emits no newline and increments indentation")
-  public void never03() {
+  public void never03() throws IOException {
     final NewLine newLine;
     newLine = NewLine.LF;
 
@@ -191,7 +192,7 @@ public class EndStartTagFormatterTest {
   }
 
   @Test(description = "ifNotEmpty with element kind emits newline and increments indentation")
-  public void ifNotEmpty01() {
+  public void ifNotEmpty01() throws IOException {
     final NewLine newLine;
     newLine = NewLine.LF;
 
@@ -217,7 +218,7 @@ public class EndStartTagFormatterTest {
   }
 
   @Test(description = "ifNotEmpty with void element emits newline and does not change indentation")
-  public void ifNotEmpty02() {
+  public void ifNotEmpty02() throws IOException {
     final NewLine newLine;
     newLine = NewLine.LF;
 
@@ -243,7 +244,7 @@ public class EndStartTagFormatterTest {
   }
 
   @Test(description = "ifNotEmpty with empty element emits no newline and increments indentation")
-  public void ifNotEmpty03() {
+  public void ifNotEmpty03() throws IOException {
     final NewLine newLine;
     newLine = NewLine.LF;
 

@@ -15,6 +15,7 @@
  */
 package objectox.html.format;
 
+import java.io.IOException;
 import objectos.html.format.IndentationStyle;
 import objectos.html.stream.BeginStartTag;
 
@@ -30,7 +31,7 @@ final class BeginStartTagFormatter {
     this.indentationStyle = indentationStyle;
   }
 
-  public final void format(BeginStartTag event, Output out) {
+  public final void format(BeginStartTag event, Output out) throws IOException {
     indentation.format(indentationStyle, out);
 
     out.append('<');

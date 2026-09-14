@@ -17,12 +17,13 @@ package objectox.html.format;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.IOException;
 import objectos.html.format.NewLineStyle;
 import org.testng.annotations.Test;
 
 public class NewLineTest {
 
-  private String empty(NewLine subject, NewLineStyle style) {
+  private String empty(NewLine subject, NewLineStyle style) throws IOException {
     final char[] buf;
     buf = new char[256];
 
@@ -34,7 +35,7 @@ public class NewLineTest {
     return out.toString();
   }
 
-  private String notEmpty(NewLine subject, NewLineStyle style) {
+  private String notEmpty(NewLine subject, NewLineStyle style) throws IOException {
     final char[] buf;
     buf = new char[256];
 
@@ -47,7 +48,7 @@ public class NewLineTest {
   }
 
   @Test(description = "ALWAYS emits newline")
-  public void empty01() {
+  public void empty01() throws IOException {
     final NewLine subject;
     subject = NewLine.LF;
 
@@ -59,7 +60,7 @@ public class NewLineTest {
   }
 
   @Test(description = "IF_NOT_EMPTY does not emit newline")
-  public void empty02() {
+  public void empty02() throws IOException {
     final NewLine subject;
     subject = NewLine.LF;
 
@@ -71,7 +72,7 @@ public class NewLineTest {
   }
 
   @Test(description = "NEVER does not emit newline")
-  public void empty03() {
+  public void empty03() throws IOException {
     final NewLine subject;
     subject = NewLine.LF;
 
@@ -83,7 +84,7 @@ public class NewLineTest {
   }
 
   @Test(description = "ALWAYS emits newline")
-  public void notEmpty01() {
+  public void notEmpty01() throws IOException {
     final NewLine subject;
     subject = NewLine.LF;
 
@@ -95,7 +96,7 @@ public class NewLineTest {
   }
 
   @Test(description = "IF_NOT_EMPTY emits newline")
-  public void notEmpty02() {
+  public void notEmpty02() throws IOException {
     final NewLine subject;
     subject = NewLine.LF;
 
@@ -107,7 +108,7 @@ public class NewLineTest {
   }
 
   @Test(description = "NEVER does not emit newline")
-  public void notEmpty03() {
+  public void notEmpty03() throws IOException {
     final NewLine subject;
     subject = NewLine.LF;
 

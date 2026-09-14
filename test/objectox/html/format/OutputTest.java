@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
+import java.io.IOException;
 import org.testng.annotations.Test;
 
 public class OutputTest {
@@ -35,7 +36,7 @@ public class OutputTest {
   }
 
   @Test(description = "written does not count chars diverted to the overflow")
-  public void written02() {
+  public void written02() throws IOException {
     final char[] buf;
     buf = new char[0];
 
@@ -49,7 +50,7 @@ public class OutputTest {
   }
 
   @Test(description = "written counts only the chars stored in the buffer")
-  public void written03() {
+  public void written03() throws IOException {
     final char[] buf;
     buf = new char[5];
 
@@ -64,7 +65,7 @@ public class OutputTest {
   }
 
   @Test(description = "append single char")
-  public void appendChar01() {
+  public void appendChar01() throws IOException {
     final char[] buf;
     buf = new char[10];
 
@@ -79,7 +80,7 @@ public class OutputTest {
   }
 
   @Test(description = "append single char with offset")
-  public void appendChar02() {
+  public void appendChar02() throws IOException {
     final char[] buf;
     buf = new char[10];
 
@@ -96,7 +97,7 @@ public class OutputTest {
   }
 
   @Test(description = "append char sequence")
-  public void appendCharSequence01() {
+  public void appendCharSequence01() throws IOException {
     final char[] buf;
     buf = new char[20];
 
@@ -111,7 +112,7 @@ public class OutputTest {
   }
 
   @Test(description = "append char sequence with offset")
-  public void appendCharSequence02() {
+  public void appendCharSequence02() throws IOException {
     final char[] buf;
     buf = new char[20];
 
@@ -129,7 +130,7 @@ public class OutputTest {
   }
 
   @Test(description = "fill buffer exactly")
-  public void exhausted01() {
+  public void exhausted01() throws IOException {
     final char[] buf;
     buf = new char[5];
 
@@ -145,7 +146,7 @@ public class OutputTest {
   }
 
   @Test(description = "overflow one char")
-  public void overflow01() {
+  public void overflow01() throws IOException {
     final char[] buf;
     buf = new char[3];
 
@@ -161,7 +162,7 @@ public class OutputTest {
   }
 
   @Test(description = "overflow multiple chars")
-  public void overflow02() {
+  public void overflow02() throws IOException {
     final char[] buf;
     buf = new char[3];
 
@@ -177,7 +178,7 @@ public class OutputTest {
   }
 
   @Test(description = "overflow with offset")
-  public void overflow03() {
+  public void overflow03() throws IOException {
     final char[] buf;
     buf = new char[10];
 
@@ -196,7 +197,7 @@ public class OutputTest {
   }
 
   @Test(description = "overflow append char")
-  public void overflow04() {
+  public void overflow04() throws IOException {
     final char[] buf;
     buf = new char[1];
 
@@ -213,7 +214,7 @@ public class OutputTest {
   }
 
   @Test(description = "multiple appends")
-  public void append01() {
+  public void append01() throws IOException {
     final char[] buf;
     buf = new char[10];
 
@@ -230,7 +231,7 @@ public class OutputTest {
   }
 
   @Test(description = "multiple appends with overflow")
-  public void append02() {
+  public void append02() throws IOException {
     final char[] buf;
     buf = new char[4];
 
@@ -248,7 +249,7 @@ public class OutputTest {
   }
 
   @Test(description = "append empty char sequence")
-  public void appendEmpty01() {
+  public void appendEmpty01() throws IOException {
     final char[] buf;
     buf = new char[10];
 
@@ -262,7 +263,7 @@ public class OutputTest {
   }
 
   @Test(description = "overflow then append char")
-  public void overflowAppend01() {
+  public void overflowAppend01() throws IOException {
     final char[] buf;
     buf = new char[2];
 
@@ -279,7 +280,7 @@ public class OutputTest {
   }
 
   @Test(description = "overflow then append more")
-  public void overflowAppend02() {
+  public void overflowAppend02() throws IOException {
     final char[] buf;
     buf = new char[2];
 
@@ -308,7 +309,7 @@ public class OutputTest {
   }
 
   @Test(description = "toString with buffer only")
-  public void toString02() {
+  public void toString02() throws IOException {
     final char[] buf;
     buf = new char[10];
 
@@ -321,7 +322,7 @@ public class OutputTest {
   }
 
   @Test(description = "toString with overflow only")
-  public void toString03() {
+  public void toString03() throws IOException {
     final char[] buf;
     buf = new char[0];
 
@@ -334,7 +335,7 @@ public class OutputTest {
   }
 
   @Test(description = "toString with buffer and overflow")
-  public void toString04() {
+  public void toString04() throws IOException {
     final char[] buf;
     buf = new char[5];
 
@@ -347,7 +348,7 @@ public class OutputTest {
   }
 
   @Test(description = "toString with offset")
-  public void toString05() {
+  public void toString05() throws IOException {
     final char[] buf;
     buf = new char[10];
 
@@ -363,7 +364,7 @@ public class OutputTest {
   }
 
   @Test(description = "toString with mixed appends")
-  public void toString06() {
+  public void toString06() throws IOException {
     final char[] buf;
     buf = new char[4];
 
@@ -389,7 +390,7 @@ public class OutputTest {
   }
 
   @Test(description = "startOfLine returns false after appending regular char")
-  public void startOfLine02() {
+  public void startOfLine02() throws IOException {
     final char[] buf;
     buf = new char[10];
 
@@ -402,7 +403,7 @@ public class OutputTest {
   }
 
   @Test(description = "startOfLine returns true after appending newline")
-  public void startOfLine03() {
+  public void startOfLine03() throws IOException {
     final char[] buf;
     buf = new char[10];
 
@@ -415,7 +416,7 @@ public class OutputTest {
   }
 
   @Test(description = "startOfLine returns true after appending carriage return")
-  public void startOfLine04() {
+  public void startOfLine04() throws IOException {
     final char[] buf;
     buf = new char[10];
 
@@ -428,7 +429,7 @@ public class OutputTest {
   }
 
   @Test(description = "startOfLine returns true after appending string ending with newline")
-  public void startOfLine05() {
+  public void startOfLine05() throws IOException {
     final char[] buf;
     buf = new char[10];
 
@@ -441,7 +442,7 @@ public class OutputTest {
   }
 
   @Test(description = "startOfLine returns false after appending string not ending with newline")
-  public void startOfLine06() {
+  public void startOfLine06() throws IOException {
     final char[] buf;
     buf = new char[10];
 
@@ -454,7 +455,7 @@ public class OutputTest {
   }
 
   @Test(description = "startOfLine returns true after appending string ending with carriage return")
-  public void startOfLine07() {
+  public void startOfLine07() throws IOException {
     final char[] buf;
     buf = new char[10];
 
@@ -467,7 +468,7 @@ public class OutputTest {
   }
 
   @Test(description = "startOfLine returns true when the overflow ends with a newline")
-  public void startOfLine08() {
+  public void startOfLine08() throws IOException {
     final char[] buf;
     buf = new char[2];
 
@@ -481,7 +482,7 @@ public class OutputTest {
   }
 
   @Test(description = "startOfLine returns false when the overflow ends with a regular char")
-  public void startOfLine09() {
+  public void startOfLine09() throws IOException {
     final char[] buf;
     buf = new char[2];
 
@@ -495,7 +496,7 @@ public class OutputTest {
   }
 
   @Test(description = "startOfLine checks the overflow after the buffer is exhausted")
-  public void startOfLine10() {
+  public void startOfLine10() throws IOException {
     final char[] buf;
     buf = new char[4];
 
@@ -579,7 +580,7 @@ public class OutputTest {
   }
 
   @Test(description = "rewrap delivers the pending overflow into the new buffer")
-  public void rewrap01() {
+  public void rewrap01() throws IOException {
     final char[] buf1;
     buf1 = new char[2];
 
@@ -602,7 +603,7 @@ public class OutputTest {
   }
 
   @Test(description = "rewrap with a smaller buffer keeps the tail in the overflow")
-  public void rewrap02() {
+  public void rewrap02() throws IOException {
     final char[] buf1;
     buf1 = new char[2];
 
@@ -622,7 +623,7 @@ public class OutputTest {
   }
 
   @Test(description = "rewrap preserves the indentation level")
-  public void rewrap03() {
+  public void rewrap03() throws IOException {
     final char[] buf1;
     buf1 = new char[2];
 
@@ -642,7 +643,7 @@ public class OutputTest {
   }
 
   @Test(description = "rewrap resets the written count")
-  public void rewrap04() {
+  public void rewrap04() throws IOException {
     final char[] buf1;
     buf1 = new char[10];
 
@@ -662,7 +663,7 @@ public class OutputTest {
   }
 
   @Test(description = "startOfLine after rewrap checks the drained content")
-  public void rewrap05() {
+  public void rewrap05() throws IOException {
     final char[] buf1;
     buf1 = new char[2];
 

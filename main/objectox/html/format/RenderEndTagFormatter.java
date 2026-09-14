@@ -15,6 +15,7 @@
  */
 package objectox.html.format;
 
+import java.io.IOException;
 import objectos.html.format.IndentationStyle;
 import objectos.html.format.NewLineStyle;
 import objectos.html.stream.RenderEndTag;
@@ -39,7 +40,7 @@ final class RenderEndTagFormatter {
     this.newLineStyle = newLineStyle;
   }
 
-  public final void format(RenderEndTag event, Output out) {
+  public final void format(RenderEndTag event, Output out) throws IOException {
     out.dec();
 
     indentation.format(indentationStyle, out);
