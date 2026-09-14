@@ -348,9 +348,9 @@ public class PlayerLevelTest {
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new EndStartTagEvent(1, EndStartTagKind.ELEMENT));
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new RenderTextEvent(1, "Ipsum"));
+    assertEquals(subject.next(), new RenderTextEvent(2, "Ipsum"));
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new RenderEndTagEvent(0, ElementName.TITLE));
+    assertEquals(subject.next(), new RenderEndTagEvent(1, ElementName.TITLE));
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new RenderEndTagEvent(0, ElementName.DIV));
     assertEquals(subject.hasNext(), false);

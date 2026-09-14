@@ -31,12 +31,15 @@ final class RenderAmbiguousElementEndTagState implements State {
 
   @Override
   public final State compute() {
-    ctx.pop(); // jmp frame
+    final int level;
+    level = ctx.level();
 
     final RenderEndTagEvent event;
-    event = new RenderEndTagEvent(ctx.level(), elementName);
+    event = new RenderEndTagEvent(level, elementName);
 
     ctx.result(event);
+
+    ctx.pop(); // jmp frame
 
     return new ScanElementNodeState(ctx);
   }
