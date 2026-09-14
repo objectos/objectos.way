@@ -29,11 +29,7 @@ public class RenderAmbiguousElementTextStateTest {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.push(FrameY.create(f -> {
-        f.index = 5;
-
-        f.regular(ElementName.DIV);
-
-        f.values8(0, 1);
+        f.index = 0;
       }));
     });
 
@@ -52,15 +48,11 @@ public class RenderAmbiguousElementTextStateTest {
           opts.sink(ctx);
 
           opts.push(FrameY.create(f -> {
-            f.index = 5;
-
-            f.regular(ElementName.DIV);
-
-            f.values8(0, 1);
+            f.index = 0;
           }));
 
           final RenderTextEvent event;
-          event = new RenderTextEvent(1, "Ipsum");
+          event = new RenderTextEvent("Ipsum");
 
           opts.result(event);
         })

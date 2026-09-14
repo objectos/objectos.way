@@ -31,9 +31,6 @@ final class RenderTextState implements State {
 
   @Override
   public final State compute() {
-    final int level;
-    level = ctx.level();
-
     final int textIndex;
     textIndex = ctx.nextInt(textSize);
 
@@ -41,7 +38,7 @@ final class RenderTextState implements State {
     text = ctx.objString(textIndex);
 
     final RenderTextEvent event;
-    event = RenderTextEvent.of(level, text);
+    event = RenderTextEvent.of(text);
 
     ctx.result(event);
 

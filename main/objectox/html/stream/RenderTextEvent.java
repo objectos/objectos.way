@@ -17,10 +17,10 @@ package objectox.html.stream;
 
 import objectos.html.stream.RenderText;
 
-public record RenderTextEvent(int level, String value) implements RenderText {
+public record RenderTextEvent(String value) implements RenderText {
 
-  public static RenderTextEvent of(int level, String value) {
-    return new RenderTextEvent(level, value);
+  public static RenderTextEvent of(String value) {
+    return new RenderTextEvent(value);
   }
 
   @Override

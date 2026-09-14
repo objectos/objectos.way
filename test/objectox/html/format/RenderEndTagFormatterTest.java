@@ -29,7 +29,7 @@ public class RenderEndTagFormatterTest {
 
   private Output format(RenderEndTagFormatter subject, Consumer<? super OutputY> opts) {
     final RenderEndTag event;
-    event = RenderEndTagEvent.of(0, ElementName.DIV);
+    event = RenderEndTagEvent.of(ElementName.DIV);
 
     final Output out;
     out = OutputY.create(opts);

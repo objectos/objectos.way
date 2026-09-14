@@ -73,10 +73,6 @@ class Ctx {
     return result != null;
   }
 
-  public final int level() {
-    return stackIndex;
-  }
-
   public final byte nextByte() {
     final Frame frame;
     frame = stack[stackIndex];

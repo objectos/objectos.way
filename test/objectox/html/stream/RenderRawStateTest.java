@@ -57,7 +57,7 @@ public class RenderRawStateTest {
             f.index = 1;
           }));
 
-          opts.result(RenderRawEvent.of(0, "Ipsum"));
+          opts.result(RenderRawEvent.of("Ipsum"));
         })
     );
   }
@@ -97,7 +97,7 @@ public class RenderRawStateTest {
             f.index = 2;
           }));
 
-          opts.result(RenderRawEvent.of(0, "Ipsum"));
+          opts.result(RenderRawEvent.of("Ipsum"));
         })
     );
   }
@@ -137,7 +137,7 @@ public class RenderRawStateTest {
             f.index = 3;
           }));
 
-          opts.result(RenderRawEvent.of(0, "Ipsum"));
+          opts.result(RenderRawEvent.of("Ipsum"));
         })
     );
   }
@@ -187,7 +187,7 @@ public class RenderRawStateTest {
             f.values8(0, 1);
           }));
 
-          opts.result(RenderRawEvent.of(1, "Ipsum"));
+          opts.result(RenderRawEvent.of("Ipsum"));
         })
     );
   }

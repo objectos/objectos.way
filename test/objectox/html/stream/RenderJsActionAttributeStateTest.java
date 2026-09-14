@@ -62,7 +62,7 @@ public class RenderJsActionAttributeStateTest {
             f.index = 2;
           }));
 
-          opts.result(RenderJsActionAttributeEvent.of(0, AttributeName.ONCLICK, action));
+          opts.result(RenderJsActionAttributeEvent.of(AttributeName.ONCLICK, action));
         })
     );
   }

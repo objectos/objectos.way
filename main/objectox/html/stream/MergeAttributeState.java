@@ -144,11 +144,8 @@ final class MergeAttributeState implements State {
   }
 
   private State toScan() {
-    final int level;
-    level = ctx.level();
-
     final RenderAttributeEvent event;
-    event = new RenderAttributeEvent(level, attributeName, value);
+    event = new RenderAttributeEvent(attributeName, value);
 
     ctx.result(event);
 

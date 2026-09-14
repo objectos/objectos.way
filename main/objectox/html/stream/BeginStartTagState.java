@@ -37,9 +37,6 @@ final class BeginStartTagState implements State {
 
   @Override
   public final State compute() {
-    final int level;
-    level = ctx.level();
-
     final int nameIndex;
     nameIndex = ctx.nextInt(nameSize);
 
@@ -47,7 +44,7 @@ final class BeginStartTagState implements State {
     elementName = ElementName.get(nameIndex);
 
     final BeginStartTagEvent event;
-    event = new BeginStartTagEvent(level, elementName);
+    event = new BeginStartTagEvent(elementName);
 
     ctx.result(event);
 

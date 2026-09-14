@@ -53,7 +53,7 @@ public class RenderAmbiguousElementEndStartStateTest {
           }));
 
           final EndStartTagEvent event;
-          event = new EndStartTagEvent(0, EndStartTagKind.ELEMENT);
+          event = new EndStartTagEvent(EndStartTagKind.ELEMENT);
 
           opts.result(event);
         })

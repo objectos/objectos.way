@@ -137,13 +137,7 @@ final class ScanDocumentNodeState implements State {
   }
 
   private State doctype() {
-    final int level;
-    level = ctx.level();
-
-    final RenderDoctypeEvent event;
-    event = RenderDoctypeEvent.of(level);
-
-    ctx.result(event);
+    ctx.result(RenderDoctypeEvent.of());
 
     return this;
   }

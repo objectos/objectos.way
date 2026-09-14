@@ -67,15 +67,8 @@ final class ScanElementAttributeState implements State {
     final byte code;
     code = ctx.nextByte();
 
-    if (isNode(code)) {
-      ctx.pop(); // jmp frame
-
-      nodes(elem);
-
-      ctx.push(frame);
-    }
-
     return switch (code) {
+
       case HtmlBytes.xATTRIBUTE88 -> new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT8);
 
       case HtmlBytes.xATTRIBUTE816 -> new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT16);
@@ -96,47 +89,29 @@ final class ScanElementAttributeState implements State {
 
       case HtmlBytes.aAMBIGUOUS824 -> new RenderAmbiguousAttributeState(ctx, IntSize.BIT8, IntSize.BIT24);
 
-      case HtmlBytes.eAMBIGUOUS88 -> new RenderAmbiguousElementStartTagState(ctx, IntSize.BIT8, IntSize.BIT8);
+      case HtmlBytes.eAMBIGUOUS88 -> { nodes(elem); yield new RenderAmbiguousElementStartTagState(ctx, IntSize.BIT8, IntSize.BIT8); }
 
-      case HtmlBytes.eAMBIGUOUS816 -> new RenderAmbiguousElementStartTagState(ctx, IntSize.BIT8, IntSize.BIT16);
+      case HtmlBytes.eAMBIGUOUS816 -> { nodes(elem); yield new RenderAmbiguousElementStartTagState(ctx, IntSize.BIT8, IntSize.BIT16); }
 
-      case HtmlBytes.eAMBIGUOUS824 -> new RenderAmbiguousElementStartTagState(ctx, IntSize.BIT8, IntSize.BIT24);
+      case HtmlBytes.eAMBIGUOUS824 -> { nodes(elem); yield new RenderAmbiguousElementStartTagState(ctx, IntSize.BIT8, IntSize.BIT24); }
 
-      case HtmlBytes.xELEMSTR8 -> new BeginStartTagState(ctx, ElementKind.REGULAR, IntSize.BIT8);
+      case HtmlBytes.xELEMSTR8 -> { nodes(elem); yield new BeginStartTagState(ctx, ElementKind.REGULAR, IntSize.BIT8); }
 
-      case HtmlBytes.xELEMVOID8 -> new BeginStartTagState(ctx, ElementKind.VOID, IntSize.BIT8);
+      case HtmlBytes.xELEMVOID8 -> { nodes(elem); yield new BeginStartTagState(ctx, ElementKind.VOID, IntSize.BIT8); }
 
-      case HtmlBytes.xTEXT8 -> new RenderTextState(ctx, IntSize.BIT8);
+      case HtmlBytes.xTEXT8 -> { nodes(elem); yield new RenderTextState(ctx, IntSize.BIT8); }
 
-      case HtmlBytes.xTEXT16 -> new RenderTextState(ctx, IntSize.BIT16);
+      case HtmlBytes.xTEXT16 -> { nodes(elem); yield new RenderTextState(ctx, IntSize.BIT16); }
 
-      case HtmlBytes.xTEXT24 -> new RenderTextState(ctx, IntSize.BIT24);
+      case HtmlBytes.xTEXT24 -> { nodes(elem); yield new RenderTextState(ctx, IntSize.BIT24); }
 
-      case HtmlBytes.xRAW8 -> new RenderRawState(ctx, IntSize.BIT8);
+      case HtmlBytes.xRAW8 -> { nodes(elem); yield new RenderRawState(ctx, IntSize.BIT8); }
 
-      case HtmlBytes.xRAW16 -> new RenderRawState(ctx, IntSize.BIT16);
+      case HtmlBytes.xRAW16 -> { nodes(elem); yield new RenderRawState(ctx, IntSize.BIT16); }
 
-      case HtmlBytes.xRAW24 -> new RenderRawState(ctx, IntSize.BIT24);
+      case HtmlBytes.xRAW24 -> { nodes(elem); yield new RenderRawState(ctx, IntSize.BIT24); }
 
       default -> throw State.implCode(code);
-    };
-  }
-
-  private boolean isNode(byte code) {
-    return switch (code) {
-      case HtmlBytes.eAMBIGUOUS88,
-           HtmlBytes.eAMBIGUOUS816,
-           HtmlBytes.eAMBIGUOUS824,
-           HtmlBytes.xELEMSTR8,
-           HtmlBytes.xELEMVOID8,
-           HtmlBytes.xTEXT8,
-           HtmlBytes.xTEXT16,
-           HtmlBytes.xTEXT24,
-           HtmlBytes.xRAW8,
-           HtmlBytes.xRAW16,
-           HtmlBytes.xRAW24 -> true;
-
-      default -> false;
     };
   }
 
@@ -148,14 +123,11 @@ final class ScanElementAttributeState implements State {
       throw State.malformed();
     }
 
-    final int level;
-    level = ctx.level();
-
     final EndStartTagKind kind;
     kind = EndStartTagKind.ELEMENT;
 
     final EndStartTagEvent event;
-    event = new EndStartTagEvent(level, kind);
+    event = new EndStartTagEvent(kind);
 
     ctx.result(event);
   }

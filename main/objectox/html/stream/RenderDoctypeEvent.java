@@ -17,10 +17,14 @@ package objectox.html.stream;
 
 import objectos.html.stream.RenderDoctype;
 
-public record RenderDoctypeEvent(int level) implements RenderDoctype {
+public final class RenderDoctypeEvent implements RenderDoctype {
 
-  public static RenderDoctypeEvent of(int level) {
-    return new RenderDoctypeEvent(level);
+  private static final RenderDoctypeEvent INSTANCE = new RenderDoctypeEvent();
+
+  private RenderDoctypeEvent() {}
+
+  public static RenderDoctypeEvent of() {
+    return INSTANCE;
   }
 
   @Override

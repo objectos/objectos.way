@@ -38,15 +38,12 @@ final class RenderBooleanAttributeState implements State {
     final AttributeName attributeName;
     attributeName = AttributeName.get(nameIndex);
 
-    ctx.pop(); // jmp frame
-
-    final int level;
-    level = ctx.level();
-
     final RenderBooleanAttributeEvent event;
-    event = new RenderBooleanAttributeEvent(level, attributeName);
+    event = new RenderBooleanAttributeEvent(attributeName);
 
     ctx.result(event);
+
+    ctx.pop(); // jmp frame
 
     return new ScanElementAttributeState(ctx);
   }

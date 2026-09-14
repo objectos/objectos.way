@@ -37,9 +37,6 @@ final class RenderAmbiguousElementStartTagState implements State {
 
   @Override
   public final State compute() {
-    final int level;
-    level = ctx.level();
-
     final int nameIndex;
     nameIndex = ctx.nextInt(nameSize);
 
@@ -50,7 +47,7 @@ final class RenderAmbiguousElementStartTagState implements State {
     elementName = name.element;
 
     final BeginStartTagEvent event;
-    event = new BeginStartTagEvent(level, elementName);
+    event = new BeginStartTagEvent(elementName);
 
     ctx.result(event);
 

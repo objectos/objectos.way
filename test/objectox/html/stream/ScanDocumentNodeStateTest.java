@@ -81,7 +81,7 @@ public class ScanDocumentNodeStateTest {
 
         CtxY.create(opts -> {
           opts.sink(ctx);
-          opts.result(RenderDoctypeEvent.of(0));
+          opts.result(RenderDoctypeEvent.of());
           opts.push(new Frame(1));
         })
     );

@@ -31,7 +31,7 @@ public class RenderRawFormatterTest {
 
   private String format(RenderRawFormatter subject, String text) {
     final RenderRaw event;
-    event = RenderRawEvent.of(0, "ipsum");
+    event = RenderRawEvent.of("ipsum");
 
     final Output out;
     out = OutputY.create(opts -> {
@@ -223,7 +223,7 @@ public class RenderRawFormatterTest {
     );
 
     final RenderRaw event;
-    event = RenderRawEvent.of(0, "<br/> & <script>");
+    event = RenderRawEvent.of("<br/> & <script>");
 
     final Output out;
     out = OutputY.create(y -> y.level = 1);
