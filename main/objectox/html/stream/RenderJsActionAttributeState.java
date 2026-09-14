@@ -49,12 +49,15 @@ final class RenderJsActionAttributeState implements State {
     final JsAction action;
     action = ctx.objJsAction(valueIndex);
 
+    ctx.pop(); // jmp frame
+
+    final int level;
+    level = ctx.level();
+
     final RenderJsActionAttributeEvent event;
-    event = new RenderJsActionAttributeEvent(attributeName, action);
+    event = new RenderJsActionAttributeEvent(level, attributeName, action);
 
     ctx.result(event);
-
-    ctx.pop(); // jmp frame
 
     return new ScanElementAttributeState(ctx);
   }

@@ -17,10 +17,10 @@ package objectox.html.stream;
 
 import objectos.html.stream.RenderRaw;
 
-public record RenderRawEvent(String value) implements RenderRaw {
+public record RenderRawEvent(int level, String value) implements RenderRaw {
 
-  public static RenderRawEvent of(String value) {
-    return new RenderRawEvent(value);
+  public static RenderRawEvent of(int level, String value) {
+    return new RenderRawEvent(level, value);
   }
 
   @Override

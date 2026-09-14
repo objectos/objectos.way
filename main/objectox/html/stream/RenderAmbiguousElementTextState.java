@@ -35,8 +35,11 @@ final class RenderAmbiguousElementTextState implements State {
 
   @Override
   public final State compute() {
+    final int level;
+    level = ctx.level();
+
     final RenderTextEvent event;
-    event = new RenderTextEvent(value);
+    event = new RenderTextEvent(level, value);
 
     ctx.result(event);
 

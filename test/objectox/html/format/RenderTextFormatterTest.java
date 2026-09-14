@@ -35,7 +35,7 @@ public class RenderTextFormatterTest {
 
   private String format(RenderTextFormatter subject, String value, String text) {
     final RenderText event;
-    event = RenderTextEvent.of(value);
+    event = RenderTextEvent.of(0, value);
 
     final Output out;
     out = OutputY.create(opts -> {

@@ -135,7 +135,7 @@ public class BeginStartTagStateTest {
           opts.push(frame);
 
           final BeginStartTagEvent event;
-          event = BeginStartTagEvent.of(elementName);
+          event = BeginStartTagEvent.of(0, elementName);
 
           opts.result(event);
         })

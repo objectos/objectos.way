@@ -31,6 +31,9 @@ final class RenderRawState implements State {
 
   @Override
   public final State compute() {
+    final int level;
+    level = ctx.level();
+
     final int rawIndex;
     rawIndex = ctx.nextInt(rawSize);
 
@@ -38,7 +41,7 @@ final class RenderRawState implements State {
     raw = ctx.objString(rawIndex);
 
     final RenderRawEvent event;
-    event = RenderRawEvent.of(raw);
+    event = RenderRawEvent.of(level, raw);
 
     ctx.result(event);
 

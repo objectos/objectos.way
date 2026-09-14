@@ -46,7 +46,7 @@ public class EndStartTagFormatterTest {
     subject = new EndStartTagFormatter(newLine, newLineStyle);
 
     final EndStartTag event;
-    event = new EndStartTagEvent(EndStartTagKind.ELEMENT);
+    event = new EndStartTagEvent(0, EndStartTagKind.ELEMENT);
 
     final Output out;
     out = format(subject, event);
@@ -72,7 +72,7 @@ public class EndStartTagFormatterTest {
     subject = new EndStartTagFormatter(newLine, newLineStyle);
 
     final EndStartTag event;
-    event = new EndStartTagEvent(EndStartTagKind.VOID_ELEMENT);
+    event = new EndStartTagEvent(0, EndStartTagKind.VOID_ELEMENT);
 
     final Output out;
     out = format(subject, event);
@@ -98,7 +98,7 @@ public class EndStartTagFormatterTest {
     subject = new EndStartTagFormatter(newLine, newLineStyle);
 
     final EndStartTag event;
-    event = new EndStartTagEvent(EndStartTagKind.EMPTY_ELEMENT);
+    event = new EndStartTagEvent(0, EndStartTagKind.EMPTY_ELEMENT);
 
     final Output out;
     out = format(subject, event);
@@ -124,7 +124,7 @@ public class EndStartTagFormatterTest {
     subject = new EndStartTagFormatter(newLine, newLineStyle);
 
     final EndStartTag event;
-    event = new EndStartTagEvent(EndStartTagKind.ELEMENT);
+    event = new EndStartTagEvent(0, EndStartTagKind.ELEMENT);
 
     final Output out;
     out = format(subject, event);
@@ -150,7 +150,7 @@ public class EndStartTagFormatterTest {
     subject = new EndStartTagFormatter(newLine, newLineStyle);
 
     final EndStartTag event;
-    event = new EndStartTagEvent(EndStartTagKind.VOID_ELEMENT);
+    event = new EndStartTagEvent(0, EndStartTagKind.VOID_ELEMENT);
 
     final Output out;
     out = format(subject, event);
@@ -176,7 +176,7 @@ public class EndStartTagFormatterTest {
     subject = new EndStartTagFormatter(newLine, newLineStyle);
 
     final EndStartTag event;
-    event = new EndStartTagEvent(EndStartTagKind.EMPTY_ELEMENT);
+    event = new EndStartTagEvent(0, EndStartTagKind.EMPTY_ELEMENT);
 
     final Output out;
     out = format(subject, event);
@@ -202,7 +202,7 @@ public class EndStartTagFormatterTest {
     subject = new EndStartTagFormatter(newLine, newLineStyle);
 
     final EndStartTag event;
-    event = new EndStartTagEvent(EndStartTagKind.ELEMENT);
+    event = new EndStartTagEvent(0, EndStartTagKind.ELEMENT);
 
     final Output out;
     out = format(subject, event);
@@ -228,7 +228,7 @@ public class EndStartTagFormatterTest {
     subject = new EndStartTagFormatter(newLine, newLineStyle);
 
     final EndStartTag event;
-    event = new EndStartTagEvent(EndStartTagKind.VOID_ELEMENT);
+    event = new EndStartTagEvent(0, EndStartTagKind.VOID_ELEMENT);
 
     final Output out;
     out = format(subject, event);
@@ -254,7 +254,7 @@ public class EndStartTagFormatterTest {
     subject = new EndStartTagFormatter(newLine, newLineStyle);
 
     final EndStartTag event;
-    event = new EndStartTagEvent(EndStartTagKind.EMPTY_ELEMENT);
+    event = new EndStartTagEvent(0, EndStartTagKind.EMPTY_ELEMENT);
 
     final Output out;
     out = format(subject, event);

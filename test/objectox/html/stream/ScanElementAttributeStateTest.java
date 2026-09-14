@@ -64,7 +64,7 @@ public class ScanElementAttributeStateTest {
             f.values8(0, 0);
           }));
 
-          opts.result(new EndStartTagEvent(EndStartTagKind.EMPTY_ELEMENT));
+          opts.result(new EndStartTagEvent(0, EndStartTagKind.EMPTY_ELEMENT));
         })
     );
   }
@@ -106,7 +106,7 @@ public class ScanElementAttributeStateTest {
             f.values8(0, 0);
           }));
 
-          opts.result(new EndStartTagEvent(EndStartTagKind.VOID_ELEMENT));
+          opts.result(new EndStartTagEvent(0, EndStartTagKind.VOID_ELEMENT));
         })
     );
   }
@@ -448,7 +448,7 @@ public class ScanElementAttributeStateTest {
           }));
 
           final EndStartTagEvent event;
-          event = new EndStartTagEvent(EndStartTagKind.ELEMENT);
+          event = new EndStartTagEvent(0, EndStartTagKind.ELEMENT);
 
           opts.result(event);
         })
@@ -513,7 +513,7 @@ public class ScanElementAttributeStateTest {
           }));
 
           final EndStartTagEvent event;
-          event = new EndStartTagEvent(EndStartTagKind.ELEMENT);
+          event = new EndStartTagEvent(0, EndStartTagKind.ELEMENT);
 
           opts.result(event);
         })
@@ -638,7 +638,7 @@ public class ScanElementAttributeStateTest {
           }));
 
           final EndStartTagEvent event;
-          event = new EndStartTagEvent(EndStartTagKind.ELEMENT);
+          event = new EndStartTagEvent(0, EndStartTagKind.ELEMENT);
 
           opts.result(event);
         })

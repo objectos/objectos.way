@@ -52,7 +52,7 @@ public class RenderAmbiguousElementTextStateTest {
           }));
 
           final RenderTextEvent event;
-          event = new RenderTextEvent("Ipsum");
+          event = new RenderTextEvent(0, "Ipsum");
 
           opts.result(event);
         })

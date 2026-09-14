@@ -65,7 +65,7 @@ public class ScanElementNodeStateTest {
           }));
 
           final RenderEndTagEvent event;
-          event = new RenderEndTagEvent(ElementName.DIV);
+          event = new RenderEndTagEvent(0, ElementName.DIV);
 
           opts.result(event);
         })
