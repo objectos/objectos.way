@@ -33,7 +33,7 @@ public class BeginStartTagFormatterTest {
 
   private String format(BeginStartTagFormatter subject, Consumer<? super OutputY> opts) throws IOException {
     final BeginStartTag event;
-    event = new BeginStartTagEvent(ElementName.DIV);
+    event = new BeginStartTagEvent(0, ElementName.DIV);
 
     final Output out;
     out = OutputY.create(opts);

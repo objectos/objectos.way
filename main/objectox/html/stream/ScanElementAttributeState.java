@@ -123,11 +123,16 @@ final class ScanElementAttributeState implements State {
       throw State.malformed();
     }
 
+    // The first child jmp frame is already on top of the stack, so the
+    // parent's level is one below the current stack index.
+    final int level;
+    level = ctx.stackIndex() - 1;
+
     final EndStartTagKind kind;
     kind = EndStartTagKind.ELEMENT;
 
     final EndStartTagEvent event;
-    event = new EndStartTagEvent(kind);
+    event = new EndStartTagEvent(level, kind);
 
     ctx.result(event);
   }

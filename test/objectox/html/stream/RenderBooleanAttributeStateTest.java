@@ -56,7 +56,7 @@ public class RenderBooleanAttributeStateTest {
             f.index = 1;
           }));
 
-          opts.result(RenderBooleanAttributeEvent.of(AttributeName.AUTOFOCUS));
+          opts.result(RenderBooleanAttributeEvent.of(0, AttributeName.AUTOFOCUS));
         })
     );
   }

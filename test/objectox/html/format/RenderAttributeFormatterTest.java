@@ -28,7 +28,7 @@ public class RenderAttributeFormatterTest {
 
   private String format(RenderAttributeFormatter subject) throws IOException {
     final RenderAttribute attr;
-    attr = RenderAttributeEvent.of(AttributeName.ID, "value");
+    attr = RenderAttributeEvent.of(0, AttributeName.ID, "value");
 
     final Output out;
     out = OutputY.create();
@@ -44,7 +44,7 @@ public class RenderAttributeFormatterTest {
 
   private String format(RenderAttributeFormatter subject, String attrValue, String text) throws IOException {
     final RenderAttribute attr;
-    attr = RenderAttributeEvent.of(AttributeName.ID, attrValue);
+    attr = RenderAttributeEvent.of(0, AttributeName.ID, attrValue);
 
     final Output out;
     out = OutputY.create(opts -> {

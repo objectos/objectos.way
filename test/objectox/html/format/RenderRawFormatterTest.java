@@ -32,7 +32,7 @@ public class RenderRawFormatterTest {
 
   private String format(RenderRawFormatter subject, String text) throws IOException {
     final RenderRaw event;
-    event = RenderRawEvent.of("ipsum");
+    event = RenderRawEvent.of(0, "ipsum");
 
     final Output out;
     out = OutputY.create(opts -> {
@@ -224,7 +224,7 @@ public class RenderRawFormatterTest {
     );
 
     final RenderRaw event;
-    event = RenderRawEvent.of("<br/> & <script>");
+    event = RenderRawEvent.of(0, "<br/> & <script>");
 
     final Output out;
     out = OutputY.create(y -> y.level = 1);

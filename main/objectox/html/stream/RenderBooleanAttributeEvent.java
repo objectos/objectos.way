@@ -18,10 +18,10 @@ package objectox.html.stream;
 import objectos.html.stream.RenderBooleanAttribute;
 import objectox.html.attr.AttributeName;
 
-public record RenderBooleanAttributeEvent(AttributeName attributeName) implements RenderBooleanAttribute {
+public record RenderBooleanAttributeEvent(int level, AttributeName attributeName) implements RenderBooleanAttribute {
 
-  static RenderBooleanAttributeEvent of(AttributeName attributeName) {
-    return new RenderBooleanAttributeEvent(attributeName);
+  static RenderBooleanAttributeEvent of(int level, AttributeName attributeName) {
+    return new RenderBooleanAttributeEvent(level, attributeName);
   }
 
   @Override

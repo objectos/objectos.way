@@ -198,6 +198,10 @@ class Ctx {
     frame.index += value;
   }
 
+  public final int stackIndex() {
+    return stackIndex;
+  }
+
   @Override
   public final String toString() {
     return """

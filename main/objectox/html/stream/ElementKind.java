@@ -25,13 +25,16 @@ enum ElementKind {
   VOID;
 
   public final State endStartTagStateEmpty(Ctx ctx, ElementName elementName) {
+    final int level;
+    level = ctx.stackIndex();
+
     return switch (this) {
       case REGULAR -> {
         final EndStartTagKind kind;
         kind = EndStartTagKind.EMPTY_ELEMENT;
 
         final EndStartTagEvent event;
-        event = new EndStartTagEvent(kind);
+        event = new EndStartTagEvent(level, kind);
 
         ctx.result(event);
 
@@ -43,7 +46,7 @@ enum ElementKind {
         kind = EndStartTagKind.VOID_ELEMENT;
 
         final EndStartTagEvent event;
-        event = new EndStartTagEvent(kind);
+        event = new EndStartTagEvent(level, kind);
 
         ctx.result(event);
 

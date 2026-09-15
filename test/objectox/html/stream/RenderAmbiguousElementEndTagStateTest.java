@@ -56,7 +56,7 @@ public class RenderAmbiguousElementEndTagStateTest {
           }));
 
           final RenderEndTagEvent event;
-          event = new RenderEndTagEvent(ElementName.TITLE);
+          event = new RenderEndTagEvent(1, ElementName.TITLE);
 
           opts.result(event);
         })

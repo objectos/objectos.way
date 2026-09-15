@@ -18,10 +18,10 @@ package objectox.html.stream;
 import objectos.html.stream.RenderEndTag;
 import objectox.html.elem.ElementName;
 
-public record RenderEndTagEvent(ElementName elementName) implements RenderEndTag {
+public record RenderEndTagEvent(int level, ElementName elementName) implements RenderEndTag {
 
-  public static RenderEndTagEvent of(ElementName elementName) {
-    return new RenderEndTagEvent(elementName);
+  public static RenderEndTagEvent of(int level, ElementName elementName) {
+    return new RenderEndTagEvent(level, elementName);
   }
 
   @Override

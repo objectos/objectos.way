@@ -35,8 +35,13 @@ final class RenderAmbiguousElementTextState implements State {
 
   @Override
   public final State compute() {
+    // The ambiguous value has no child frame of its own, so the content
+    // level is one above the current stack index.
+    final int level;
+    level = ctx.stackIndex() + 1;
+
     final RenderTextEvent event;
-    event = new RenderTextEvent(value);
+    event = new RenderTextEvent(level, value);
 
     ctx.result(event);
 

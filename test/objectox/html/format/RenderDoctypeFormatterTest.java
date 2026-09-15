@@ -28,7 +28,7 @@ public class RenderDoctypeFormatterTest {
 
   private String format(RenderDoctypeFormatter subject) throws IOException {
     final RenderDoctype event;
-    event = RenderDoctypeEvent.of();
+    event = RenderDoctypeEvent.of(0);
 
     final Output out;
     out = OutputY.create();

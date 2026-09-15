@@ -33,7 +33,7 @@ public class RenderJsActionAttributeFormatterTest {
     action = Js.noop();
 
     final RenderJsActionAttribute attr;
-    attr = new RenderJsActionAttributeEvent(AttributeName.ONCLICK, action);
+    attr = new RenderJsActionAttributeEvent(0, AttributeName.ONCLICK, action);
 
     final Output out;
     out = OutputY.create();
@@ -48,7 +48,7 @@ public class RenderJsActionAttributeFormatterTest {
     action = Js.noop();
 
     final RenderJsActionAttribute attr;
-    attr = new RenderJsActionAttributeEvent(AttributeName.ONCLICK, action);
+    attr = new RenderJsActionAttributeEvent(0, AttributeName.ONCLICK, action);
 
     final Output out;
     out = OutputY.create(opts -> {

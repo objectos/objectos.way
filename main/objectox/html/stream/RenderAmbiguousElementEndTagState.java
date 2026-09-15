@@ -31,8 +31,11 @@ final class RenderAmbiguousElementEndTagState implements State {
 
   @Override
   public final State compute() {
+    final int level;
+    level = ctx.stackIndex();
+
     final RenderEndTagEvent event;
-    event = new RenderEndTagEvent(elementName);
+    event = new RenderEndTagEvent(level, elementName);
 
     ctx.result(event);
 

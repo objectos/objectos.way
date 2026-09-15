@@ -29,7 +29,7 @@ public class RenderBooleanAttributeFormatterTest {
 
   private String format(RenderBooleanAttributeFormatter subject) throws IOException {
     final RenderBooleanAttribute attr;
-    attr = new RenderBooleanAttributeEvent(AttributeName.CHECKED);
+    attr = new RenderBooleanAttributeEvent(0, AttributeName.CHECKED);
 
     final Output out;
     out = OutputY.create();
@@ -41,7 +41,7 @@ public class RenderBooleanAttributeFormatterTest {
 
   private String format(RenderBooleanAttributeFormatter subject, String text) throws IOException {
     final RenderBooleanAttribute attr;
-    attr = new RenderBooleanAttributeEvent(AttributeName.CHECKED);
+    attr = new RenderBooleanAttributeEvent(0, AttributeName.CHECKED);
 
     final Output out;
     out = OutputY.create(opts -> {

@@ -19,11 +19,11 @@ import objectos.html.stream.RenderJsActionAttribute;
 import objectos.script.JsAction;
 import objectox.html.attr.AttributeName;
 
-public record RenderJsActionAttributeEvent(AttributeName attributeName, JsAction action)
+public record RenderJsActionAttributeEvent(int level, AttributeName attributeName, JsAction action)
     implements RenderJsActionAttribute {
 
-  static RenderJsActionAttributeEvent of(AttributeName attributeName, JsAction action) {
-    return new RenderJsActionAttributeEvent(attributeName, action);
+  static RenderJsActionAttributeEvent of(int level, AttributeName attributeName, JsAction action) {
+    return new RenderJsActionAttributeEvent(level, attributeName, action);
   }
 
   @Override

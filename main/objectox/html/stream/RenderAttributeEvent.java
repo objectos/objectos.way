@@ -18,14 +18,14 @@ package objectox.html.stream;
 import objectos.html.stream.RenderAttribute;
 import objectox.html.attr.AttributeName;
 
-public record RenderAttributeEvent(AttributeName attributeName, String value) implements RenderAttribute {
+public record RenderAttributeEvent(int level, AttributeName attributeName, String value) implements RenderAttribute {
 
-  public static RenderAttributeEvent of(AttributeName attributeName, String value) {
-    return new RenderAttributeEvent(attributeName, value);
+  public static RenderAttributeEvent of(int level, AttributeName attributeName, String value) {
+    return new RenderAttributeEvent(level, attributeName, value);
   }
 
   public final RenderAttributeEvent merge(String more) {
-    return new RenderAttributeEvent(attributeName, value + ' ' + more);
+    return new RenderAttributeEvent(level, attributeName, value + ' ' + more);
   }
 
   @Override

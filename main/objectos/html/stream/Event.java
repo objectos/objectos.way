@@ -26,4 +26,14 @@ public sealed interface Event
     RenderEndTag,
     RenderJsActionAttribute,
     RenderRaw,
-    RenderText {}
+    RenderText {
+
+  /// Returns the nesting level of this event.
+  ///
+  /// The document root has a nesting level of `0`. Child nodes, including
+  /// text and raw nodes, have a nesting level one greater than their parent.
+  ///
+  /// @return the nesting level of this event
+  int level();
+
+}

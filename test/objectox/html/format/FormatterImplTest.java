@@ -35,7 +35,7 @@ public class FormatterImplTest {
     action = Js.noop();
 
     final Event event;
-    event = new RenderJsActionAttributeEvent(AttributeName.ONCLICK, action);
+    event = new RenderJsActionAttributeEvent(0, AttributeName.ONCLICK, action);
 
     final FormatterImpl subject;
     subject = (FormatterImpl) Formatter.standard();
@@ -55,7 +55,7 @@ public class FormatterImplTest {
   @Test(description = "RenderRaw events are formatted via the default options")
   public void renderRaw01() throws IOException {
     final Event event;
-    event = new RenderRawEvent("<br/>");
+    event = new RenderRawEvent(0, "<br/>");
 
     final FormatterImpl subject;
     subject = (FormatterImpl) Formatter.standard();

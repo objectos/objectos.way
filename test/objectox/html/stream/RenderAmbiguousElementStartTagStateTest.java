@@ -88,7 +88,7 @@ public class RenderAmbiguousElementStartTagStateTest {
           }));
 
           final BeginStartTagEvent event;
-          event = new BeginStartTagEvent(ElementName.TITLE);
+          event = new BeginStartTagEvent(1, ElementName.TITLE);
 
           opts.result(event);
         })

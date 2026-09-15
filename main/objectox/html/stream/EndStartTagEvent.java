@@ -18,10 +18,10 @@ package objectox.html.stream;
 import objectos.html.stream.EndStartTag;
 import objectos.html.stream.EndStartTagKind;
 
-public record EndStartTagEvent(EndStartTagKind kind) implements EndStartTag {
+public record EndStartTagEvent(int level, EndStartTagKind kind) implements EndStartTag {
 
-  public static EndStartTagEvent of(EndStartTagKind kind) {
-    return new EndStartTagEvent(kind);
+  public static EndStartTagEvent of(int level, EndStartTagKind kind) {
+    return new EndStartTagEvent(level, kind);
   }
 
   @Override
