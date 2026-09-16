@@ -47,16 +47,16 @@ public class HtmlTemplateTestTestable {
         },
 
         """
-        <table>
-        <tr>
-        <td>foo</td>
-        <td>bar</td>
-        </tr>
-        <tr>
-        <td>lorem</td>
-        <td>ipsum</td>
-        </tr>
-        </table>
+<table>\
+<tr>\
+<td>foo</td>\
+<td>bar</td>\
+</tr>\
+<tr>\
+<td>lorem</td>\
+<td>ipsum</td>\
+</tr>\
+</table>
         """,
 
         """
@@ -84,12 +84,12 @@ public class HtmlTemplateTestTestable {
         },
 
         """
-        <dl>
-        <dt>ID</dt>
-        <dd>123</dd>
-        <dt>Qty</dt>
-        <dd>456</dd>
-        </dl>
+<dl>\
+<dt>ID</dt>\
+<dd>123</dd>\
+<dt>Qty</dt>\
+<dd>456</dd>\
+</dl>
         """,
 
         """
@@ -163,9 +163,9 @@ public class HtmlTemplateTestTestable {
         },
 
         """
-        <div>
-        <div>abc</div>
-        </div>
+<div>\
+<div>abc</div>\
+</div>
         """,
 
         """
@@ -188,8 +188,8 @@ public class HtmlTemplateTestTestable {
         },
 
         """
-        <div>before</div>
-        <div>after</div>
+<div>before</div>\
+<div>after</div>
         """,
 
         """
@@ -214,12 +214,12 @@ public class HtmlTemplateTestTestable {
         },
 
         """
-        <h1>Level 1</h1>
-        <h2>Level 2</h2>
-        <h3>Level 3</h3>
-        <h4>Level 4</h4>
-        <h5>Level 5</h5>
-        <h6>Level 6</h6>
+<h1>Level 1</h1>\
+<h2>Level 2</h2>\
+<h3>Level 3</h3>\
+<h4>Level 4</h4>\
+<h5>Level 5</h5>\
+<h6>Level 6</h6>
         """,
 
         """

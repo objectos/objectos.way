@@ -37,8 +37,8 @@ public class DomFormatterTestStandard {
         },
 
         """
-      <html></html>
-      """
+        <html></html>
+        """
     );
   }
 
@@ -58,9 +58,9 @@ public class DomFormatterTestStandard {
         },
 
         """
-      <!DOCTYPE html>
-      <html></html>
-      """
+        <!DOCTYPE html>\
+        <html></html>
+        """
     );
   }
 
@@ -83,12 +83,12 @@ public class DomFormatterTestStandard {
         },
 
         """
-      <!DOCTYPE html>
-      <html>
-      <head></head>
-      <body></body>
-      </html>
-      """
+        <!DOCTYPE html>\
+        <html>\
+        <head></head>\
+        <body></body>\
+        </html>
+        """
     );
   }
 
@@ -113,14 +113,14 @@ public class DomFormatterTestStandard {
         },
 
         """
-      <!DOCTYPE html>
-      <html>
-      <head>
-      <meta charset="utf-8">
-      </head>
-      <body></body>
-      </html>
-      """
+        <!DOCTYPE html>\
+        <html>\
+        <head>\
+        <meta charset="utf-8">\
+        </head>\
+        <body></body>\
+        </html>
+        """
     );
   }
 
@@ -150,14 +150,14 @@ public class DomFormatterTestStandard {
         },
 
         """
-      <!DOCTYPE html>
-      <html id="a">
-      <head id="b">
-      <meta charset="utf-8">
-      </head>
-      <body id="c"></body>
-      </html>
-      """
+        <!DOCTYPE html>\
+        <html id="a">\
+        <head id="b">\
+        <meta charset="utf-8">\
+        </head>\
+        <body id="c"></body>\
+        </html>
+        """
     );
   }
 
@@ -181,13 +181,13 @@ public class DomFormatterTestStandard {
         },
 
         """
-      <!DOCTYPE html>
-      <html>
-      <body>
-      <p>abc</p>
-      </body>
-      </html>
-      """
+        <!DOCTYPE html>\
+        <html>\
+        <body>\
+        <p>abc</p>\
+        </body>\
+        </html>
+        """
     );
   }
 
@@ -212,13 +212,13 @@ public class DomFormatterTestStandard {
         },
 
         """
-      <!DOCTYPE html>
-      <html>
-      <body>
-      <p>abc <em>def</em> ghi</p>
-      </body>
-      </html>
-      """
+        <!DOCTYPE html>\
+        <html>\
+        <body>\
+        <p>abc <em>def</em> ghi</p>\
+        </body>\
+        </html>
+        """
     );
   }
 
@@ -246,19 +246,17 @@ public class DomFormatterTestStandard {
         },
 
         """
-      <!DOCTYPE html>
-      <html>
-      <body>
-      <ul>
-      <li>a</li>
-      <li>
-      <p>b</p>
-      </li>
-      <li><em>c</em></li>
-      </ul>
-      </body>
-      </html>
-      """
+        <!DOCTYPE html>\
+        <html>\
+        <body>\
+        <ul>\
+        <li>a</li>\
+        <li><p>b</p></li>\
+        <li><em>c</em></li>\
+        </ul>\
+        </body>\
+        </html>
+        """
     );
   }
 
@@ -295,22 +293,22 @@ public class DomFormatterTestStandard {
         },
 
         """
-      <!DOCTYPE html>
-      <html>
-      <head>
-      <style>
-      #a {border: 0}
+        <!DOCTYPE html>\
+        <html>\
+        <head>\
+        <style>\
+        #a {border: 0}
 
-      #b {margin: 0}
-      </style>
-      <style>
-      #c {border: 0}
+        #b {margin: 0}\
+        </style>\
+        <style>\
+        #c {border: 0}
 
-      #d {margin: 0}
-      </style>
-      </head>
-      </html>
-      """
+        #d {margin: 0}
+        </style>\
+        </head>\
+        </html>
+        """
     );
   }
 
@@ -330,9 +328,9 @@ public class DomFormatterTestStandard {
         },
 
         """
-      <!DOCTYPE html>
-      <a href="index.html">a</a>
-      """
+        <!DOCTYPE html>\
+        <a href="index.html">a</a>
+        """
     );
   }
 

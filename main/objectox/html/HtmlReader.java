@@ -20,8 +20,8 @@ import java.io.Reader;
 import java.util.Iterator;
 import java.util.Objects;
 import objectos.html.stream.Event;
-import objectox.html.format.FormatterImpl;
 import objectox.html.format.Output;
+import objectox.html.format.StandardFormatter;
 
 public final class HtmlReader extends Reader {
 
@@ -29,11 +29,15 @@ public final class HtmlReader extends Reader {
 
   private final Iterator<Event> events;
 
-  private final FormatterImpl formatter;
+  private boolean finalNewLine;
+
+  private final StandardFormatter formatter;
 
   private final Output output = new Output();
 
-  public HtmlReader(Iterator<Event> events, FormatterImpl formatter) {
+  private boolean written;
+
+  public HtmlReader(Iterator<Event> events, StandardFormatter formatter) {
     this.events = events;
 
     this.formatter = formatter;
@@ -61,6 +65,14 @@ public final class HtmlReader extends Reader {
       event = events.next();
 
       formatter.formatTo(event, output);
+
+      written = true;
+    }
+
+    if (written && !finalNewLine && !events.hasNext()) {
+      output.append('\n');
+
+      finalNewLine = true;
     }
 
     return output.written();

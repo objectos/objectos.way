@@ -15,32 +15,16 @@
  */
 package objectos.html.format;
 
-import java.util.function.Consumer;
-import objectox.html.format.FormatterBuilder;
-import objectox.html.format.FormatterImpl;
+import objectox.html.format.StandardFormatter;
 
 /// Formats the string representation of a compiled Objectos HTML document.
-public sealed interface Formatter permits FormatterImpl {
+public sealed interface Formatter permits StandardFormatter {
 
-  /// Returns a new formatter instance with the specified options.
+  /// Returns the standard formatter instance.
   ///
-  /// @param opts allows for setting the options
-  ///
-  /// @return a new formatter instance with the specified options
-  static Formatter create(Consumer<? super FormatterOptions> opts) {
-    final FormatterBuilder builder;
-    builder = new FormatterBuilder();
-
-    opts.accept(builder);
-
-    return builder.build();
-  }
-
-  /// Returns a new formatter instance with the default options.
-  ///
-  /// @return a new formatter instance with the default options
+  /// @return the standard formatter instance
   static Formatter standard() {
-    return create(_ -> {});
+    return new StandardFormatter();
   }
 
 }

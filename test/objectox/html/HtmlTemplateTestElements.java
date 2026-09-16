@@ -35,11 +35,11 @@ public class HtmlTemplateTestElements {
         },
 
         """
-        <aside></aside>
-        <aside>
-        <p>child</p>
-        </aside>
-        <aside>Text only</aside>
+<aside></aside>\
+<aside>\
+<p>child</p>\
+</aside>\
+<aside>Text only</aside>
         """
     );
   }
@@ -59,13 +59,13 @@ public class HtmlTemplateTestElements {
         },
 
         """
-        <dialog></dialog>
-        <dialog>
-        <p>child</p>
-        </dialog>
-        <dialog>Text only</dialog>
-        <dialog open></dialog>
-        <dialog closedby="foo"></dialog>
+<dialog></dialog>\
+<dialog>\
+<p>child</p>\
+</dialog>\
+<dialog>Text only</dialog>\
+<dialog open></dialog>\
+<dialog closedby="foo"></dialog>
         """
     );
   }
@@ -83,11 +83,11 @@ public class HtmlTemplateTestElements {
         },
 
         """
-        <noscript></noscript>
-        <noscript>
-        <p>child</p>
-        </noscript>
-        <noscript>Text only</noscript>
+<noscript></noscript>\
+<noscript>\
+<p>child</p>\
+</noscript>\
+<noscript>Text only</noscript>
         """
     );
   }

@@ -106,7 +106,7 @@ public class ServerTest {
         resp -> {
           assertEquals(resp.statusCode(), 200);
           assertEquals(resp.body(), """
-          <!DOCTYPE html>
+          <!DOCTYPE html>\
           <h1>home</h1>
           """);
         }
@@ -268,9 +268,7 @@ public class ServerTest {
         Content-Type: text/html; charset=utf-8\r
         Transfer-Encoding: chunked\r
         \r
-        <html>
-        <p>TC03 GET</p>
-        </html>
+        <html><p>TC03 GET</p></html>
         """,
   
         """
@@ -286,9 +284,7 @@ public class ServerTest {
         Content-Type: text/html; charset=utf-8\r
         Transfer-Encoding: chunked\r
         \r
-        <html>
-        <p>TC03 POST</p>
-        </html>
+        <html><p>TC03 POST</p></html>
         """
     );
   }

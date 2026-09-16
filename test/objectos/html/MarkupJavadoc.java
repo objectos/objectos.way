@@ -39,17 +39,17 @@ public class MarkupJavadoc {
         c.toHtml(),
 
         """
-        <ul>
-          <li>
-            Mon
-          </li>
-          <li>
-            Wed
-          </li>
-          <li>
-            Fri
-          </li>
-        </ul>
+<ul>\
+<li>\
+Mon\
+</li>\
+<li>\
+Wed\
+</li>\
+<li>\
+Fri\
+</li>\
+</ul>
         """
     );
   }
@@ -79,17 +79,17 @@ public class MarkupJavadoc {
         new MyComponent().toHtml(),
 
         """
-        <ul>
-          <li>
-            Mon
-          </li>
-          <li>
-            Wed
-          </li>
-          <li>
-            Fri
-          </li>
-        </ul>
+<ul>\
+<li>\
+Mon\
+</li>\
+<li>\
+Wed\
+</li>\
+<li>\
+Fri\
+</li>\
+</ul>
         """
     );
   }
@@ -116,14 +116,14 @@ public class MarkupJavadoc {
         new MyComponent().toHtml(),
 
         """
-        <div>
-          <button>
-            OK
-          </button>
-          <button>
-            Cancel
-          </button>
-        </div>
+<div>\
+<button>\
+OK\
+</button>\
+<button>\
+Cancel\
+</button>\
+</div>
         """
     );
   }
@@ -150,20 +150,20 @@ public class MarkupJavadoc {
         new MyComponent().toHtml(),
 
         """
-        <div>
-          <p>
-            City
-            <span>
-              Tokyo
-            </span>
-          </p>
-          <p>
-            Country
-            <span>
-              Japan
-            </span>
-          </p>
-        </div>
+<div>\
+<p>\
+City\
+<span>\
+Tokyo\
+</span>\
+</p>\
+<p>\
+Country\
+<span>\
+Japan\
+</span>\
+</p>\
+</div>
         """
     );
   }

@@ -62,12 +62,12 @@ public class HtmlReaderTest {
     final StringBuilder expected;
     expected = new StringBuilder();
 
-    expected.append("<ul>\n");
+    expected.append("<ul>");
 
     for (int i = 0; i < count; i++) {
-      expected.append("  <li>\n    ");
+      expected.append("<li>");
       expected.append(i);
-      expected.append("\n  </li>\n");
+      expected.append("</li>");
     }
 
     expected.append("</ul>\n");

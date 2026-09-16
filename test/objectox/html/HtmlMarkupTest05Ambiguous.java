@@ -35,12 +35,12 @@ public class HtmlMarkupTest05Ambiguous {
         },
 
         """
-        <div clip-path="at"></div>
-        <svg>
-          <clipPath>
-            el
-          </clipPath>
-        </svg>
+<div clip-path="at"></div>\
+<svg>\
+<clipPath>\
+el\
+</clipPath>\
+</svg>
         """
     );
   }

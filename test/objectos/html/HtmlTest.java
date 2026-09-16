@@ -590,8 +590,8 @@ public class HtmlTest {
         subject.toString(),
 
         """
-        <div>
-          <span></span>
+        <div>\
+        <span></span>\
         </div>
         """
     );
@@ -620,8 +620,8 @@ public class HtmlTest {
         subject.toString(),
 
         """
-        <article>
-          <hr>
+        <article>\
+        <hr>\
         </article>
         """
     );
@@ -656,10 +656,10 @@ public class HtmlTest {
         subject.toString(),
 
         """
-        <html>
-          <head>
-            <meta>
-          </head>
+        <html>\
+        <head>\
+        <meta>\
+        </head>\
         </html>
         """
     );
