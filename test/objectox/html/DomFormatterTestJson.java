@@ -119,7 +119,7 @@ public class DomFormatterTestJson {
         new Template() {
           @Override
           protected final void render() {
-            div("foo");
+            div(text("foo"));
           }
         },
 
@@ -148,7 +148,7 @@ public class DomFormatterTestJson {
             sb.append(' ');
             sb.append('&');
 
-            div(sb.toString());
+            div(text(sb.toString()));
           }
         },
 
@@ -174,7 +174,7 @@ public class DomFormatterTestJson {
             sb.append(' ');
             sb.append('\"');
 
-            div(sb.toString());
+            div(text(sb.toString()));
           }
         },
 

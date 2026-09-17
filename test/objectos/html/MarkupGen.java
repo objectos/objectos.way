@@ -177,12 +177,7 @@ public class MarkupGen {
         /// @param values the encoded attributes and encoded child nodes of the element
         /// @return an object representing the encoded element
         ElementMarkup %2$s(RegularElementValue... values);
-
-        /// Encodes the `%1$s` element with the specified text.
-        /// @param text the text value of the element
-        /// @return an object representing the encoded element
-        ElementMarkup %2$s(String text);
-        """.formatted(elem.htmlName(), elem.htmlName(), elem.javaName()));
+        """.formatted(elem.htmlName(), elem.htmlName()));
       }
 
       else {

@@ -174,7 +174,7 @@ public class DomFormatterTestStandard {
             doctype();
             html(
                 body(
-                    p("abc")
+                    p(text("abc"))
                 )
             );
           }
@@ -205,7 +205,7 @@ public class DomFormatterTestStandard {
             doctype();
             html(
                 body(
-                    p(text("abc "), em("def"), text(" ghi"))
+                    p(text("abc "), em(text("def")), text(" ghi"))
                 )
             );
           }
@@ -236,9 +236,9 @@ public class DomFormatterTestStandard {
             html(
                 body(
                     ul(
-                        li("a"),
-                        li(p("b")),
-                        li(em("c"))
+                        li(text("a")),
+                        li(p(text("b"))),
+                        li(em(text("c")))
                     )
                 )
             );

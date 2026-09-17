@@ -27,7 +27,7 @@ public final class TestingSingleParagraph extends Template {
   @Override
   protected final void render() {
     html(
-        p(text)
+        p(text(text))
     );
   }
 }

@@ -36,7 +36,7 @@ public class HtmlTemplateJavadoc {
             ),
 
             body(
-                p("Hello world!")
+                p(text("Hello world!"))
             )
         );
       }
@@ -80,7 +80,7 @@ Hello world!\
             "Java", "Scala", "Clojure", "Kotlin");
 
         for (var lang : langs) {
-          li(lang);
+          li(text(lang));
         }
       }
     }
@@ -115,16 +115,16 @@ Kotlin\
       @Override
       protected void render() {
         div(
-            h1("Actions"),
+            h1(text("Actions")),
             f(this::actions)
         );
       }
 
       private void actions() {
-        button("Read");
+        button(text("Read"));
 
         if (hasWritePermission()) {
-          button("Write");
+          button(text("Write"));
         }
       }
 
@@ -160,9 +160,9 @@ Write\
       @Override
       protected void render() {
         div(
-            h1("Actions"),
-            div(button("Read")),
-            hasWritePermission() ? div(button("Write")) : noop()
+            h1(text("Actions")),
+            div(button(text("Read"))),
+            hasWritePermission() ? div(button(text("Write"))) : noop()
         );
       }
 

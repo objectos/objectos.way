@@ -49,7 +49,7 @@ final class ServerTestHostMain implements Consumer<HostOptions> {
     @Override
     protected void render() {
       doctype();
-      h1("home");
+      h1(text("home"));
     }
   }
 

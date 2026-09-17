@@ -29,7 +29,7 @@ public class MarkupJavadoc {
     Component c = m -> m.ul(
         m.f(() -> {
           for (String day : days) {
-            m.li(day);
+            m.li(m.text(day));
           }
         })
     );
@@ -69,7 +69,7 @@ Fri\
 
       private void contents(Markup m) {
         for (String day : days) {
-          m.li(day);
+          m.li(m.text(day));
         }
       }
     }
@@ -107,7 +107,7 @@ Fri\
       }
 
       private void button(Markup m, String text) {
-        m.button(text);
+        m.button(m.text(text));
       }
     }
     // @end
@@ -141,7 +141,7 @@ Cancel\
       }
 
       private void item(Markup m, String name, String value) {
-        m.p(m.text(name), m.span(value));
+        m.p(m.text(name), m.span(m.text(value)));
       }
     }
     // @end

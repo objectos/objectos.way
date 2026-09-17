@@ -372,7 +372,7 @@ public class TemplateTest {
         new Template() {
           @Override
           protected final void render() {
-            span("some text");
+            span(text("some text"));
           }
         },
 
@@ -670,7 +670,7 @@ some text\
           protected final void render() {
             html(
                 body(
-                    p("o7html")
+                    p(text("o7html"))
                 )
             );
           }
@@ -700,7 +700,7 @@ o7html\
           protected final void render() {
             div(
                 text("a"),
-                p("b"),
+                p(text("b")),
                 text("c")
             );
           }
@@ -771,7 +771,7 @@ element\
                     id("id"),
                     title("t1"),
                     title("t2"),
-                    p("tc17")
+                    p(text("tc17"))
                 )
             );
           }
@@ -809,7 +809,7 @@ tc17\
                 id("id"),
                 title("t1"),
                 title("t2"),
-                p("tc18")
+                p(text("tc18"))
             );
           }
         },
@@ -934,7 +934,7 @@ element\
           protected final void render() {
             ElementMarkup[] children = new ElementMarkup[count];
             for (int i = 0; i < count; i++) {
-              children[i] = li(Integer.toString(i));
+              children[i] = li(text(Integer.toString(i)));
             }
             ul(children);
           }
@@ -1153,7 +1153,7 @@ ul > li { margin: 0; }\
           protected final void render() {
             head(
                 script(
-                    "alert(\"hello world!\");"
+                    raw("alert(\"hello world!\");")
                 )
             );
           }
@@ -1271,7 +1271,7 @@ c\
             div(
                 className("a"),
                 className("b"),
-                h1("Objectos HTML")
+                h1(text("Objectos HTML"))
             );
           }
         },
@@ -1377,9 +1377,9 @@ Objectos HTML\
         new Template() {
           @Override
           protected final void render() {
-            span("foo");
+            span(text("foo"));
             text("bar");
-            span("zaz");
+            span(text("zaz"));
           }
         },
 
@@ -1398,7 +1398,7 @@ zaz\
   /*
   @Test(description = """
   HtmlTemplate TC46 (A)
-  
+
   - flatten instruction
   """)
   public void testCase46a() {
@@ -1415,16 +1415,16 @@ zaz\
             );
           }
         },
-  
+
         """
         <form disabled><label></label><input></form>
         """
     );
   }
-  
+
   @Test(description = """
   HtmlTemplate TC46 (B)
-  
+
   - flatten instruction
   """)
   public void testCase46b() {
@@ -1434,7 +1434,7 @@ zaz\
               ClassName.of("cn1"),
               ClassName.of("cn2")
           );
-  
+
           @Override
           protected final void render() {
             div(
@@ -1442,7 +1442,7 @@ zaz\
             );
           }
         },
-  
+
         """
         <div class="cn1 cn2"></div>
         """
@@ -1646,19 +1646,19 @@ Foo\
           }
 
           private void frag1(String s1) {
-            div(s1);
+            div(text(s1));
           }
 
           private void frag2(String s1, String s2) {
-            div(s1 + s2);
+            div(text(s1 + s2));
           }
 
           private void frag3(String s1, String s2, String s3) {
-            div(s1 + s2 + s3);
+            div(text(s1 + s2 + s3));
           }
 
           private void frag4(String s1, String s2, String s3, String s4) {
-            div(s1 + s2 + s3 + s4);
+            div(text(s1 + s2 + s3 + s4));
           }
         },
 
@@ -1774,7 +1774,7 @@ svg title\
           @Override
           protected final void render() {
             div(
-                (Component) html -> html.span("as child")
+                (Component) html -> html.span(html.text("as child"))
             );
 
             f(this::fragment0);
@@ -1783,12 +1783,12 @@ svg title\
           }
 
           private void fragment0() {
-            div((Component) html -> html.span("fragment root"));
+            div((Component) html -> html.span(html.text("fragment root")));
           }
 
           private void fragment1() {
             div(
-                (Component) html -> html.span("fragment child")
+                (Component) html -> html.span(html.text("fragment child"))
             );
           }
         },
@@ -1965,11 +1965,11 @@ fragment child\
           private void outer() {
             f(this::inner);
 
-            span("x");
+            span(text("x"));
           }
 
           private void inner() {
-            span("y");
+            span(text("y"));
           }
         },
 

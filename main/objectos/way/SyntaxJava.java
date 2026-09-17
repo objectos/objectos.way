@@ -695,7 +695,7 @@ final class SyntaxJava implements Component {
       final String text;
       text = source.substring(normalIndex, sourceIndex);
 
-      html.span(text);
+      html.span(html.text(text));
 
     }
   }

@@ -442,15 +442,6 @@ public abstract class Template implements Component {
     return markup().a(values);
   }
 
-  /// Encodes the `a` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup a(String text) {
-    return markup().a(text);
-  }
-
   /// Encodes the `abbr` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -458,15 +449,6 @@ public abstract class Template implements Component {
   /// @return an object representing the encoded element
   protected final ElementMarkup abbr(RegularElementValue... values) {
     return markup().abbr(values);
-  }
-
-  /// Encodes the `abbr` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup abbr(String text) {
-    return markup().abbr(text);
   }
 
   /// Encodes the `article` element with the specified values.
@@ -478,15 +460,6 @@ public abstract class Template implements Component {
     return markup().article(values);
   }
 
-  /// Encodes the `article` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup article(String text) {
-    return markup().article(text);
-  }
-
   /// Encodes the `aside` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -494,15 +467,6 @@ public abstract class Template implements Component {
   /// @return an object representing the encoded element
   protected final ElementMarkup aside(RegularElementValue... values) {
     return markup().aside(values);
-  }
-
-  /// Encodes the `aside` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup aside(String text) {
-    return markup().aside(text);
   }
 
   /// Encodes the `b` element with the specified values.
@@ -514,15 +478,6 @@ public abstract class Template implements Component {
     return markup().b(values);
   }
 
-  /// Encodes the `b` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup b(String text) {
-    return markup().b(text);
-  }
-
   /// Encodes the `blockquote` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -532,15 +487,6 @@ public abstract class Template implements Component {
     return markup().blockquote(values);
   }
 
-  /// Encodes the `blockquote` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup blockquote(String text) {
-    return markup().blockquote(text);
-  }
-
   /// Encodes the `body` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -548,15 +494,6 @@ public abstract class Template implements Component {
   /// @return an object representing the encoded element
   protected final ElementMarkup body(RegularElementValue... values) {
     return markup().body(values);
-  }
-
-  /// Encodes the `body` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup body(String text) {
-    return markup().body(text);
   }
 
   /// Encodes the `br` element with the specified content.
@@ -576,15 +513,6 @@ public abstract class Template implements Component {
   protected final ElementMarkup button(RegularElementValue... values) {
     return markup().button(values);
   }
-
-  /// Encodes the `button` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup button(String text) {
-    return markup().button(text);
-  }
   /// Encodes the `clipPath` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -603,15 +531,6 @@ public abstract class Template implements Component {
     return markup().code(values);
   }
 
-  /// Encodes the `code` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup code(String text) {
-    return markup().code(text);
-  }
-
   /// Encodes the `dd` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -619,15 +538,6 @@ public abstract class Template implements Component {
   /// @return an object representing the encoded element
   protected final ElementMarkup dd(RegularElementValue... values) {
     return markup().dd(values);
-  }
-
-  /// Encodes the `dd` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup dd(String text) {
-    return markup().dd(text);
   }
 
   /// Encodes the `defs` element with the specified values.
@@ -639,15 +549,6 @@ public abstract class Template implements Component {
     return markup().defs(values);
   }
 
-  /// Encodes the `defs` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup defs(String text) {
-    return markup().defs(text);
-  }
-
   /// Encodes the `details` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -655,15 +556,6 @@ public abstract class Template implements Component {
   /// @return an object representing the encoded element
   protected final ElementMarkup details(RegularElementValue... values) {
     return markup().details(values);
-  }
-
-  /// Encodes the `details` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup details(String text) {
-    return markup().details(text);
   }
 
   /// Encodes the `dialog` element with the specified values.
@@ -675,15 +567,6 @@ public abstract class Template implements Component {
     return markup().dialog(values);
   }
 
-  /// Encodes the `dialog` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup dialog(String text) {
-    return markup().dialog(text);
-  }
-
   /// Encodes the `div` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -691,15 +574,6 @@ public abstract class Template implements Component {
   /// @return an object representing the encoded element
   protected final ElementMarkup div(RegularElementValue... values) {
     return markup().div(values);
-  }
-
-  /// Encodes the `div` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup div(String text) {
-    return markup().div(text);
   }
 
   /// Encodes the `dl` element with the specified values.
@@ -711,15 +585,6 @@ public abstract class Template implements Component {
     return markup().dl(values);
   }
 
-  /// Encodes the `dl` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup dl(String text) {
-    return markup().dl(text);
-  }
-
   /// Encodes the `dt` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -727,15 +592,6 @@ public abstract class Template implements Component {
   /// @return an object representing the encoded element
   protected final ElementMarkup dt(RegularElementValue... values) {
     return markup().dt(values);
-  }
-
-  /// Encodes the `dt` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup dt(String text) {
-    return markup().dt(text);
   }
 
   /// Encodes the `em` element with the specified values.
@@ -747,15 +603,6 @@ public abstract class Template implements Component {
     return markup().em(values);
   }
 
-  /// Encodes the `em` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup em(String text) {
-    return markup().em(text);
-  }
-
   /// Encodes the `fieldset` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -763,15 +610,6 @@ public abstract class Template implements Component {
   /// @return an object representing the encoded element
   protected final ElementMarkup fieldset(RegularElementValue... values) {
     return markup().fieldset(values);
-  }
-
-  /// Encodes the `fieldset` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup fieldset(String text) {
-    return markup().fieldset(text);
   }
 
   /// Encodes the `figure` element with the specified values.
@@ -783,15 +621,6 @@ public abstract class Template implements Component {
     return markup().figure(values);
   }
 
-  /// Encodes the `figure` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup figure(String text) {
-    return markup().figure(text);
-  }
-
   /// Encodes the `footer` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -799,15 +628,6 @@ public abstract class Template implements Component {
   /// @return an object representing the encoded element
   protected final ElementMarkup footer(RegularElementValue... values) {
     return markup().footer(values);
-  }
-
-  /// Encodes the `footer` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup footer(String text) {
-    return markup().footer(text);
   }
   /// Encodes the `form` element with the specified values.
   ///
@@ -827,15 +647,6 @@ public abstract class Template implements Component {
     return markup().g(values);
   }
 
-  /// Encodes the `g` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup g(String text) {
-    return markup().g(text);
-  }
-
   /// Encodes the `h1` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -843,15 +654,6 @@ public abstract class Template implements Component {
   /// @return an object representing the encoded element
   protected final ElementMarkup h1(RegularElementValue... values) {
     return markup().h1(values);
-  }
-
-  /// Encodes the `h1` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup h1(String text) {
-    return markup().h1(text);
   }
 
   /// Encodes the `h2` element with the specified values.
@@ -863,15 +665,6 @@ public abstract class Template implements Component {
     return markup().h2(values);
   }
 
-  /// Encodes the `h2` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup h2(String text) {
-    return markup().h2(text);
-  }
-
   /// Encodes the `h3` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -879,15 +672,6 @@ public abstract class Template implements Component {
   /// @return an object representing the encoded element
   protected final ElementMarkup h3(RegularElementValue... values) {
     return markup().h3(values);
-  }
-
-  /// Encodes the `h3` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup h3(String text) {
-    return markup().h3(text);
   }
 
   /// Encodes the `h4` element with the specified values.
@@ -899,15 +683,6 @@ public abstract class Template implements Component {
     return markup().h4(values);
   }
 
-  /// Encodes the `h4` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup h4(String text) {
-    return markup().h4(text);
-  }
-
   /// Encodes the `h5` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -915,15 +690,6 @@ public abstract class Template implements Component {
   /// @return an object representing the encoded element
   protected final ElementMarkup h5(RegularElementValue... values) {
     return markup().h5(values);
-  }
-
-  /// Encodes the `h5` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup h5(String text) {
-    return markup().h5(text);
   }
 
   /// Encodes the `h6` element with the specified values.
@@ -935,15 +701,6 @@ public abstract class Template implements Component {
     return markup().h6(values);
   }
 
-  /// Encodes the `h6` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup h6(String text) {
-    return markup().h6(text);
-  }
-
   /// Encodes the `head` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -951,15 +708,6 @@ public abstract class Template implements Component {
   /// @return an object representing the encoded element
   protected final ElementMarkup head(RegularElementValue... values) {
     return markup().head(values);
-  }
-
-  /// Encodes the `head` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup head(String text) {
-    return markup().head(text);
   }
 
   /// Encodes the `header` element with the specified values.
@@ -971,15 +719,6 @@ public abstract class Template implements Component {
     return markup().header(values);
   }
 
-  /// Encodes the `header` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup header(String text) {
-    return markup().header(text);
-  }
-
   /// Encodes the `hgroup` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -987,15 +726,6 @@ public abstract class Template implements Component {
   /// @return an object representing the encoded element
   protected final ElementMarkup hgroup(RegularElementValue... values) {
     return markup().hgroup(values);
-  }
-
-  /// Encodes the `hgroup` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup hgroup(String text) {
-    return markup().hgroup(text);
   }
 
   /// Encodes the `hr` element with the specified content.
@@ -1014,15 +744,6 @@ public abstract class Template implements Component {
   /// @return an object representing the encoded element
   protected final ElementMarkup html(RegularElementValue... values) {
     return markup().html(values);
-  }
-
-  /// Encodes the `html` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup html(String text) {
-    return markup().html(text);
   }
 
   /// Encodes the `img` element with the specified content.
@@ -1051,15 +772,6 @@ public abstract class Template implements Component {
   protected final ElementMarkup kbd(RegularElementValue... values) {
     return markup().kbd(values);
   }
-
-  /// Encodes the `kbd` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup kbd(String text) {
-    return markup().kbd(text);
-  }
   /// Encodes the `label` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -1078,15 +790,6 @@ public abstract class Template implements Component {
     return markup().legend(values);
   }
 
-  /// Encodes the `legend` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup legend(String text) {
-    return markup().legend(text);
-  }
-
   /// Encodes the `li` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -1094,15 +797,6 @@ public abstract class Template implements Component {
   /// @return an object representing the encoded element
   protected final ElementMarkup li(RegularElementValue... values) {
     return markup().li(values);
-  }
-
-  /// Encodes the `li` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup li(String text) {
-    return markup().li(text);
   }
 
   /// Encodes the `link` element with the specified content.
@@ -1123,15 +817,6 @@ public abstract class Template implements Component {
     return markup().main(values);
   }
 
-  /// Encodes the `main` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup main(String text) {
-    return markup().main(text);
-  }
-
   /// Encodes the `menu` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -1139,15 +824,6 @@ public abstract class Template implements Component {
   /// @return an object representing the encoded element
   protected final ElementMarkup menu(RegularElementValue... values) {
     return markup().menu(values);
-  }
-
-  /// Encodes the `menu` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup menu(String text) {
-    return markup().menu(text);
   }
 
   /// Encodes the `meta` element with the specified content.
@@ -1168,15 +844,6 @@ public abstract class Template implements Component {
     return markup().nav(values);
   }
 
-  /// Encodes the `nav` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup nav(String text) {
-    return markup().nav(text);
-  }
-
   /// Encodes the `noscript` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -1184,15 +851,6 @@ public abstract class Template implements Component {
   /// @return an object representing the encoded element
   protected final ElementMarkup noscript(RegularElementValue... values) {
     return markup().noscript(values);
-  }
-
-  /// Encodes the `noscript` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup noscript(String text) {
-    return markup().noscript(text);
   }
 
   /// Encodes the `ol` element with the specified values.
@@ -1204,15 +862,6 @@ public abstract class Template implements Component {
     return markup().ol(values);
   }
 
-  /// Encodes the `ol` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup ol(String text) {
-    return markup().ol(text);
-  }
-
   /// Encodes the `optgroup` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -1220,15 +869,6 @@ public abstract class Template implements Component {
   /// @return an object representing the encoded element
   protected final ElementMarkup optgroup(RegularElementValue... values) {
     return markup().optgroup(values);
-  }
-
-  /// Encodes the `optgroup` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup optgroup(String text) {
-    return markup().optgroup(text);
   }
 
   /// Encodes the `option` element with the specified values.
@@ -1240,15 +880,6 @@ public abstract class Template implements Component {
     return markup().option(values);
   }
 
-  /// Encodes the `option` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup option(String text) {
-    return markup().option(text);
-  }
-
   /// Encodes the `p` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -1256,15 +887,6 @@ public abstract class Template implements Component {
   /// @return an object representing the encoded element
   protected final ElementMarkup p(RegularElementValue... values) {
     return markup().p(values);
-  }
-
-  /// Encodes the `p` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup p(String text) {
-    return markup().p(text);
   }
 
   /// Encodes the `path` element with the specified values.
@@ -1276,15 +898,6 @@ public abstract class Template implements Component {
     return markup().path(values);
   }
 
-  /// Encodes the `path` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup path(String text) {
-    return markup().path(text);
-  }
-
   /// Encodes the `pre` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -1292,15 +905,6 @@ public abstract class Template implements Component {
   /// @return an object representing the encoded element
   protected final ElementMarkup pre(RegularElementValue... values) {
     return markup().pre(values);
-  }
-
-  /// Encodes the `pre` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup pre(String text) {
-    return markup().pre(text);
   }
 
   /// Encodes the `progress` element with the specified values.
@@ -1312,15 +916,6 @@ public abstract class Template implements Component {
     return markup().progress(values);
   }
 
-  /// Encodes the `progress` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup progress(String text) {
-    return markup().progress(text);
-  }
-
   /// Encodes the `samp` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -1328,15 +923,6 @@ public abstract class Template implements Component {
   /// @return an object representing the encoded element
   protected final ElementMarkup samp(RegularElementValue... values) {
     return markup().samp(values);
-  }
-
-  /// Encodes the `samp` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup samp(String text) {
-    return markup().samp(text);
   }
 
   /// Encodes the `script` element with the specified values.
@@ -1348,15 +934,6 @@ public abstract class Template implements Component {
     return markup().script(values);
   }
 
-  /// Encodes the `script` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup script(String text) {
-    return markup().script(text);
-  }
-
   /// Encodes the `section` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -1364,15 +941,6 @@ public abstract class Template implements Component {
   /// @return an object representing the encoded element
   protected final ElementMarkup section(RegularElementValue... values) {
     return markup().section(values);
-  }
-
-  /// Encodes the `section` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup section(String text) {
-    return markup().section(text);
   }
 
   /// Encodes the `select` element with the specified values.
@@ -1384,15 +952,6 @@ public abstract class Template implements Component {
     return markup().select(values);
   }
 
-  /// Encodes the `select` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup select(String text) {
-    return markup().select(text);
-  }
-
   /// Encodes the `small` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -1400,15 +959,6 @@ public abstract class Template implements Component {
   /// @return an object representing the encoded element
   protected final ElementMarkup small(RegularElementValue... values) {
     return markup().small(values);
-  }
-
-  /// Encodes the `small` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup small(String text) {
-    return markup().small(text);
   }
 
   /// Encodes the `span` element with the specified values.
@@ -1420,15 +970,6 @@ public abstract class Template implements Component {
     return markup().span(values);
   }
 
-  /// Encodes the `span` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup span(String text) {
-    return markup().span(text);
-  }
-
   /// Encodes the `strong` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -1436,15 +977,6 @@ public abstract class Template implements Component {
   /// @return an object representing the encoded element
   protected final ElementMarkup strong(RegularElementValue... values) {
     return markup().strong(values);
-  }
-
-  /// Encodes the `strong` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup strong(String text) {
-    return markup().strong(text);
   }
   /// Encodes the `style` element with the specified values.
   ///
@@ -1464,15 +996,6 @@ public abstract class Template implements Component {
     return markup().sub(values);
   }
 
-  /// Encodes the `sub` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup sub(String text) {
-    return markup().sub(text);
-  }
-
   /// Encodes the `summary` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -1480,15 +1003,6 @@ public abstract class Template implements Component {
   /// @return an object representing the encoded element
   protected final ElementMarkup summary(RegularElementValue... values) {
     return markup().summary(values);
-  }
-
-  /// Encodes the `summary` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup summary(String text) {
-    return markup().summary(text);
   }
 
   /// Encodes the `sup` element with the specified values.
@@ -1500,15 +1014,6 @@ public abstract class Template implements Component {
     return markup().sup(values);
   }
 
-  /// Encodes the `sup` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup sup(String text) {
-    return markup().sup(text);
-  }
-
   /// Encodes the `svg` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -1516,15 +1021,6 @@ public abstract class Template implements Component {
   /// @return an object representing the encoded element
   protected final ElementMarkup svg(RegularElementValue... values) {
     return markup().svg(values);
-  }
-
-  /// Encodes the `svg` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup svg(String text) {
-    return markup().svg(text);
   }
 
   /// Encodes the `table` element with the specified values.
@@ -1536,15 +1032,6 @@ public abstract class Template implements Component {
     return markup().table(values);
   }
 
-  /// Encodes the `table` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup table(String text) {
-    return markup().table(text);
-  }
-
   /// Encodes the `tbody` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -1552,15 +1039,6 @@ public abstract class Template implements Component {
   /// @return an object representing the encoded element
   protected final ElementMarkup tbody(RegularElementValue... values) {
     return markup().tbody(values);
-  }
-
-  /// Encodes the `tbody` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup tbody(String text) {
-    return markup().tbody(text);
   }
 
   /// Encodes the `td` element with the specified values.
@@ -1572,15 +1050,6 @@ public abstract class Template implements Component {
     return markup().td(values);
   }
 
-  /// Encodes the `td` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup td(String text) {
-    return markup().td(text);
-  }
-
   /// Encodes the `template` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -1588,15 +1057,6 @@ public abstract class Template implements Component {
   /// @return an object representing the encoded element
   protected final ElementMarkup template(RegularElementValue... values) {
     return markup().template(values);
-  }
-
-  /// Encodes the `template` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup template(String text) {
-    return markup().template(text);
   }
 
   /// Encodes the `textarea` element with the specified values.
@@ -1608,15 +1068,6 @@ public abstract class Template implements Component {
     return markup().textarea(values);
   }
 
-  /// Encodes the `textarea` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup textarea(String text) {
-    return markup().textarea(text);
-  }
-
   /// Encodes the `th` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -1626,15 +1077,6 @@ public abstract class Template implements Component {
     return markup().th(values);
   }
 
-  /// Encodes the `th` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup th(String text) {
-    return markup().th(text);
-  }
-
   /// Encodes the `thead` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -1642,15 +1084,6 @@ public abstract class Template implements Component {
   /// @return an object representing the encoded element
   protected final ElementMarkup thead(RegularElementValue... values) {
     return markup().thead(values);
-  }
-
-  /// Encodes the `thead` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup thead(String text) {
-    return markup().thead(text);
   }
   /// Encodes the `title` element with the specified values.
   ///
@@ -1670,15 +1103,6 @@ public abstract class Template implements Component {
     return markup().tr(values);
   }
 
-  /// Encodes the `tr` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup tr(String text) {
-    return markup().tr(text);
-  }
-
   /// Encodes the `ul` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -1686,15 +1110,6 @@ public abstract class Template implements Component {
   /// @return an object representing the encoded element
   protected final ElementMarkup ul(RegularElementValue... values) {
     return markup().ul(values);
-  }
-
-  /// Encodes the `ul` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  protected final ElementMarkup ul(String text) {
-    return markup().ul(text);
   }
 
   //

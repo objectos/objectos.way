@@ -51,7 +51,7 @@ public class HtmlReaderTest {
     items = new ElementMarkup[count];
 
     for (int i = 0; i < count; i++) {
-      items[i] = markup.li(Integer.toString(i));
+      items[i] = markup.li(markup.text(Integer.toString(i)));
     }
 
     markup.ul(items);

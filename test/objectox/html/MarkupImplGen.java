@@ -125,13 +125,6 @@ public class MarkupImplGen {
         public final ElementMarkup %2$s(RegularElementValue... values) {
           return recorder.regularElement(ElementName.%3$s, values);
         }
-
-        /// Encodes the `%1$s` element with the specified text.
-        /// @param text the text value of the element
-        /// @return an object representing the encoded element
-        public final ElementMarkup %2$s(String text) {
-          return recorder.regularElement(ElementName.%3$s, text);
-        }
         """.formatted(elem.htmlName(), elem.htmlName(), elem.javaName()));
       }
 

@@ -93,7 +93,7 @@ public final class ScriptSubmit01 extends AbstractDevScript {
 
       return s.contains(search);
     }).forEach(s -> {
-      li(s);
+      li(text(s));
     });
   }
 

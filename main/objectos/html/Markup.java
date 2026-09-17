@@ -357,26 +357,12 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded element
   ElementMarkup a(RegularElementValue... values);
 
-  /// Encodes the `a` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup a(String text);
-
   /// Encodes the `abbr` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
   ///
   /// @return an object representing the encoded element
   ElementMarkup abbr(RegularElementValue... values);
-
-  /// Encodes the `abbr` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup abbr(String text);
 
   /// Encodes the `article` element with the specified values.
   ///
@@ -385,26 +371,12 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded element
   ElementMarkup article(RegularElementValue... values);
 
-  /// Encodes the `article` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup article(String text);
-
   /// Encodes the `aside` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
   ///
   /// @return an object representing the encoded element
   ElementMarkup aside(RegularElementValue... values);
-
-  /// Encodes the `aside` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup aside(String text);
 
   /// Encodes the `b` element with the specified values.
   ///
@@ -413,13 +385,6 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded element
   ElementMarkup b(RegularElementValue... values);
 
-  /// Encodes the `b` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup b(String text);
-
   /// Encodes the `blockquote` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -427,26 +392,12 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded element
   ElementMarkup blockquote(RegularElementValue... values);
 
-  /// Encodes the `blockquote` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup blockquote(String text);
-
   /// Encodes the `body` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
   ///
   /// @return an object representing the encoded element
   ElementMarkup body(RegularElementValue... values);
-
-  /// Encodes the `body` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup body(String text);
 
   /// Encodes the `br` element with the specified content.
   ///
@@ -462,13 +413,6 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded element
   ElementMarkup button(RegularElementValue... values);
 
-  /// Encodes the `button` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup button(String text);
-
   /// Encodes the `clipPath` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -483,26 +427,12 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded element
   ElementMarkup code(RegularElementValue... values);
 
-  /// Encodes the `code` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup code(String text);
-
   /// Encodes the `dd` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
   ///
   /// @return an object representing the encoded element
   ElementMarkup dd(RegularElementValue... values);
-
-  /// Encodes the `dd` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup dd(String text);
 
   /// Encodes the `defs` element with the specified values.
   ///
@@ -511,26 +441,12 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded element
   ElementMarkup defs(RegularElementValue... values);
 
-  /// Encodes the `defs` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup defs(String text);
-
   /// Encodes the `details` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
   ///
   /// @return an object representing the encoded element
   ElementMarkup details(RegularElementValue... values);
-
-  /// Encodes the `details` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup details(String text);
 
   /// Encodes the `dialog` element with the specified values.
   ///
@@ -539,26 +455,12 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded element
   ElementMarkup dialog(RegularElementValue... values);
 
-  /// Encodes the `dialog` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup dialog(String text);
-
   /// Encodes the `div` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
   ///
   /// @return an object representing the encoded element
   ElementMarkup div(RegularElementValue... values);
-
-  /// Encodes the `div` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup div(String text);
 
   /// Encodes the `dl` element with the specified values.
   ///
@@ -567,26 +469,12 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded element
   ElementMarkup dl(RegularElementValue... values);
 
-  /// Encodes the `dl` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup dl(String text);
-
   /// Encodes the `dt` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
   ///
   /// @return an object representing the encoded element
   ElementMarkup dt(RegularElementValue... values);
-
-  /// Encodes the `dt` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup dt(String text);
 
   /// Encodes the `em` element with the specified values.
   ///
@@ -595,26 +483,12 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded element
   ElementMarkup em(RegularElementValue... values);
 
-  /// Encodes the `em` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup em(String text);
-
   /// Encodes the `fieldset` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
   ///
   /// @return an object representing the encoded element
   ElementMarkup fieldset(RegularElementValue... values);
-
-  /// Encodes the `fieldset` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup fieldset(String text);
 
   /// Encodes the `figure` element with the specified values.
   ///
@@ -623,26 +497,12 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded element
   ElementMarkup figure(RegularElementValue... values);
 
-  /// Encodes the `figure` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup figure(String text);
-
   /// Encodes the `footer` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
   ///
   /// @return an object representing the encoded element
   ElementMarkup footer(RegularElementValue... values);
-
-  /// Encodes the `footer` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup footer(String text);
 
   /// Encodes the `form` element with the specified values.
   ///
@@ -658,26 +518,12 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded element
   ElementMarkup g(RegularElementValue... values);
 
-  /// Encodes the `g` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup g(String text);
-
   /// Encodes the `h1` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
   ///
   /// @return an object representing the encoded element
   ElementMarkup h1(RegularElementValue... values);
-
-  /// Encodes the `h1` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup h1(String text);
 
   /// Encodes the `h2` element with the specified values.
   ///
@@ -686,26 +532,12 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded element
   ElementMarkup h2(RegularElementValue... values);
 
-  /// Encodes the `h2` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup h2(String text);
-
   /// Encodes the `h3` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
   ///
   /// @return an object representing the encoded element
   ElementMarkup h3(RegularElementValue... values);
-
-  /// Encodes the `h3` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup h3(String text);
 
   /// Encodes the `h4` element with the specified values.
   ///
@@ -714,26 +546,12 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded element
   ElementMarkup h4(RegularElementValue... values);
 
-  /// Encodes the `h4` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup h4(String text);
-
   /// Encodes the `h5` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
   ///
   /// @return an object representing the encoded element
   ElementMarkup h5(RegularElementValue... values);
-
-  /// Encodes the `h5` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup h5(String text);
 
   /// Encodes the `h6` element with the specified values.
   ///
@@ -742,26 +560,12 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded element
   ElementMarkup h6(RegularElementValue... values);
 
-  /// Encodes the `h6` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup h6(String text);
-
   /// Encodes the `head` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
   ///
   /// @return an object representing the encoded element
   ElementMarkup head(RegularElementValue... values);
-
-  /// Encodes the `head` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup head(String text);
 
   /// Encodes the `header` element with the specified values.
   ///
@@ -770,26 +574,12 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded element
   ElementMarkup header(RegularElementValue... values);
 
-  /// Encodes the `header` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup header(String text);
-
   /// Encodes the `hgroup` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
   ///
   /// @return an object representing the encoded element
   ElementMarkup hgroup(RegularElementValue... values);
-
-  /// Encodes the `hgroup` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup hgroup(String text);
 
   /// Encodes the `hr` element with the specified content.
   ///
@@ -804,13 +594,6 @@ public sealed interface Markup permits MarkupImpl {
   ///
   /// @return an object representing the encoded element
   ElementMarkup html(RegularElementValue... values);
-
-  /// Encodes the `html` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup html(String text);
 
   /// Encodes the `img` element with the specified content.
   ///
@@ -833,13 +616,6 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded element
   ElementMarkup kbd(RegularElementValue... values);
 
-  /// Encodes the `kbd` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup kbd(String text);
-
   /// Encodes the `label` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -854,26 +630,12 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded element
   ElementMarkup legend(RegularElementValue... values);
 
-  /// Encodes the `legend` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup legend(String text);
-
   /// Encodes the `li` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
   ///
   /// @return an object representing the encoded element
   ElementMarkup li(RegularElementValue... values);
-
-  /// Encodes the `li` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup li(String text);
 
   /// Encodes the `link` element with the specified content.
   ///
@@ -889,26 +651,12 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded element
   ElementMarkup main(RegularElementValue... values);
 
-  /// Encodes the `main` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup main(String text);
-
   /// Encodes the `menu` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
   ///
   /// @return an object representing the encoded element
   ElementMarkup menu(RegularElementValue... values);
-
-  /// Encodes the `menu` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup menu(String text);
 
   /// Encodes the `meta` element with the specified content.
   ///
@@ -924,26 +672,12 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded element
   ElementMarkup nav(RegularElementValue... values);
 
-  /// Encodes the `nav` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup nav(String text);
-
   /// Encodes the `noscript` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
   ///
   /// @return an object representing the encoded element
   ElementMarkup noscript(RegularElementValue... values);
-
-  /// Encodes the `noscript` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup noscript(String text);
 
   /// Encodes the `ol` element with the specified values.
   ///
@@ -952,26 +686,12 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded element
   ElementMarkup ol(RegularElementValue... values);
 
-  /// Encodes the `ol` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup ol(String text);
-
   /// Encodes the `optgroup` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
   ///
   /// @return an object representing the encoded element
   ElementMarkup optgroup(RegularElementValue... values);
-
-  /// Encodes the `optgroup` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup optgroup(String text);
 
   /// Encodes the `option` element with the specified values.
   ///
@@ -980,26 +700,12 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded element
   ElementMarkup option(RegularElementValue... values);
 
-  /// Encodes the `option` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup option(String text);
-
   /// Encodes the `p` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
   ///
   /// @return an object representing the encoded element
   ElementMarkup p(RegularElementValue... values);
-
-  /// Encodes the `p` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup p(String text);
 
   /// Encodes the `path` element with the specified values.
   ///
@@ -1008,26 +714,12 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded element
   ElementMarkup path(RegularElementValue... values);
 
-  /// Encodes the `path` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup path(String text);
-
   /// Encodes the `pre` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
   ///
   /// @return an object representing the encoded element
   ElementMarkup pre(RegularElementValue... values);
-
-  /// Encodes the `pre` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup pre(String text);
 
   /// Encodes the `progress` element with the specified values.
   ///
@@ -1036,26 +728,12 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded element
   ElementMarkup progress(RegularElementValue... values);
 
-  /// Encodes the `progress` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup progress(String text);
-
   /// Encodes the `samp` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
   ///
   /// @return an object representing the encoded element
   ElementMarkup samp(RegularElementValue... values);
-
-  /// Encodes the `samp` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup samp(String text);
 
   /// Encodes the `script` element with the specified values.
   ///
@@ -1064,26 +742,12 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded element
   ElementMarkup script(RegularElementValue... values);
 
-  /// Encodes the `script` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup script(String text);
-
   /// Encodes the `section` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
   ///
   /// @return an object representing the encoded element
   ElementMarkup section(RegularElementValue... values);
-
-  /// Encodes the `section` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup section(String text);
 
   /// Encodes the `select` element with the specified values.
   ///
@@ -1092,26 +756,12 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded element
   ElementMarkup select(RegularElementValue... values);
 
-  /// Encodes the `select` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup select(String text);
-
   /// Encodes the `small` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
   ///
   /// @return an object representing the encoded element
   ElementMarkup small(RegularElementValue... values);
-
-  /// Encodes the `small` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup small(String text);
 
   /// Encodes the `span` element with the specified values.
   ///
@@ -1120,26 +770,12 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded element
   ElementMarkup span(RegularElementValue... values);
 
-  /// Encodes the `span` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup span(String text);
-
   /// Encodes the `strong` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
   ///
   /// @return an object representing the encoded element
   ElementMarkup strong(RegularElementValue... values);
-
-  /// Encodes the `strong` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup strong(String text);
 
   /// Encodes the `style` element with the specified values.
   ///
@@ -1155,26 +791,12 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded element
   ElementMarkup sub(RegularElementValue... values);
 
-  /// Encodes the `sub` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup sub(String text);
-
   /// Encodes the `summary` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
   ///
   /// @return an object representing the encoded element
   ElementMarkup summary(RegularElementValue... values);
-
-  /// Encodes the `summary` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup summary(String text);
 
   /// Encodes the `sup` element with the specified values.
   ///
@@ -1183,26 +805,12 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded element
   ElementMarkup sup(RegularElementValue... values);
 
-  /// Encodes the `sup` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup sup(String text);
-
   /// Encodes the `svg` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
   ///
   /// @return an object representing the encoded element
   ElementMarkup svg(RegularElementValue... values);
-
-  /// Encodes the `svg` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup svg(String text);
 
   /// Encodes the `table` element with the specified values.
   ///
@@ -1211,26 +819,12 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded element
   ElementMarkup table(RegularElementValue... values);
 
-  /// Encodes the `table` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup table(String text);
-
   /// Encodes the `tbody` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
   ///
   /// @return an object representing the encoded element
   ElementMarkup tbody(RegularElementValue... values);
-
-  /// Encodes the `tbody` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup tbody(String text);
 
   /// Encodes the `td` element with the specified values.
   ///
@@ -1239,26 +833,12 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded element
   ElementMarkup td(RegularElementValue... values);
 
-  /// Encodes the `td` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup td(String text);
-
   /// Encodes the `template` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
   ///
   /// @return an object representing the encoded element
   ElementMarkup template(RegularElementValue... values);
-
-  /// Encodes the `template` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup template(String text);
 
   /// Encodes the `textarea` element with the specified values.
   ///
@@ -1267,13 +847,6 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded element
   ElementMarkup textarea(RegularElementValue... values);
 
-  /// Encodes the `textarea` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup textarea(String text);
-
   /// Encodes the `th` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
@@ -1281,26 +854,12 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded element
   ElementMarkup th(RegularElementValue... values);
 
-  /// Encodes the `th` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup th(String text);
-
   /// Encodes the `thead` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
   ///
   /// @return an object representing the encoded element
   ElementMarkup thead(RegularElementValue... values);
-
-  /// Encodes the `thead` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup thead(String text);
 
   /// Encodes the `title` element with the specified values.
   ///
@@ -1316,26 +875,12 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded element
   ElementMarkup tr(RegularElementValue... values);
 
-  /// Encodes the `tr` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup tr(String text);
-
   /// Encodes the `ul` element with the specified values.
   ///
   /// @param values the encoded attributes and encoded child nodes of the element
   ///
   /// @return an object representing the encoded element
   ElementMarkup ul(RegularElementValue... values);
-
-  /// Encodes the `ul` element with the specified text.
-  ///
-  /// @param text the text value of the element
-  ///
-  /// @return an object representing the encoded element
-  ElementMarkup ul(String text);
 
   //
   // ATTRIBUTES

@@ -29,8 +29,8 @@ public class HtmlTemplateTestElements {
           @Override
           protected final void render() {
             aside();
-            aside(p("child"));
-            aside("Text only");
+            aside(p(text("child")));
+            aside(text("Text only"));
           }
         },
 
@@ -51,8 +51,8 @@ public class HtmlTemplateTestElements {
           @Override
           protected final void render() {
             dialog();
-            dialog(p("child"));
-            dialog("Text only");
+            dialog(p(text("child")));
+            dialog(text("Text only"));
             dialog(open);
             dialog(closedby("foo"));
           }
@@ -77,8 +77,8 @@ public class HtmlTemplateTestElements {
           @Override
           protected final void render() {
             noscript();
-            noscript(p("child"));
-            noscript("Text only");
+            noscript(p(text("child")));
+            noscript(text("Text only"));
           }
         },
 

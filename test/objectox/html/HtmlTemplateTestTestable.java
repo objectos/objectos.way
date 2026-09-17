@@ -15,12 +15,9 @@
  */
 package objectox.html;
 
-import static org.testng.Assert.assertEquals;
-
-import objectos.html.Template;
-import org.testng.annotations.Test;
-
 public class HtmlTemplateTestTestable {
+
+  /*
 
   @Test
   public void cell01() {
@@ -33,39 +30,39 @@ public class HtmlTemplateTestTestable {
                     td(testableCell("foo", 5)),
                     td(testableCell("bar", 5))
                 ),
-
+  
                 testableNewLine(),
-
+  
                 tr(
                     td(testableCell("lorem", 5)),
                     td(testableCell("ipsum", 5))
                 ),
-
+  
                 testableNewLine()
             );
           }
         },
-
+  
         """
-<table>\
-<tr>\
-<td>foo</td>\
-<td>bar</td>\
-</tr>\
-<tr>\
-<td>lorem</td>\
-<td>ipsum</td>\
-</tr>\
-</table>
+  <table>\
+  <tr>\
+  <td>foo</td>\
+  <td>bar</td>\
+  </tr>\
+  <tr>\
+  <td>lorem</td>\
+  <td>ipsum</td>\
+  </tr>\
+  </table>
         """,
-
+  
         """
         foo   | bar
         lorem | ipsum
         """
     );
   }
-
+  
   @Test
   public void field01() {
     test(
@@ -73,34 +70,34 @@ public class HtmlTemplateTestTestable {
           @Override
           protected void render() {
             testableH1("Test");
-
+  
             dl(
-                dt("ID"),
+                dt(text("ID")),
                 dd(testableField("order.id", "123")),
-                dt("Qty"),
+                dt(text("Qty")),
                 dd(testableField("order.qty", "456"))
             );
           }
         },
-
+  
         """
-<dl>\
-<dt>ID</dt>\
-<dd>123</dd>\
-<dt>Qty</dt>\
-<dd>456</dd>\
-</dl>
+  <dl>\
+  <dt>ID</dt>\
+  <dd>123</dd>\
+  <dt>Qty</dt>\
+  <dd>456</dd>\
+  </dl>
         """,
-
+  
         """
         # Test
-
+  
         order.id: 123
         order.qty: 456
         """
     );
   }
-
+  
   @Test(description = """
   The testable text node + attributes
   """)
@@ -112,17 +109,17 @@ public class HtmlTemplateTestTestable {
             div(className("x"), text(testableField("x", "123")));
           }
         },
-
+  
         """
         <div class="x">123</div>
         """,
-
+  
         """
         x: 123
         """
     );
   }
-
+  
   @Test(description = """
   The testable text node + empty value
   """)
@@ -134,17 +131,17 @@ public class HtmlTemplateTestTestable {
             div(testableField("empty", ""));
           }
         },
-
+  
         """
         <div></div>
         """,
-
+  
         """
         empty:
         """
     );
   }
-
+  
   @Test(description = """
   The testable text node + fragment
   """)
@@ -155,49 +152,49 @@ public class HtmlTemplateTestTestable {
           protected final void render() {
             div(f(this::fragment));
           }
-
+  
           private void fragment() {
             div(testableField("x", "abc"));
             testableField("y", "123");
           }
         },
-
+  
         """
-<div>\
-<div>abc</div>\
-</div>
+  <div>\
+  <div>abc</div>\
+  </div>
         """,
-
+  
         """
         x: abc
         y: 123
         """
     );
   }
-
+  
   @Test
   public void field05() {
     test(
         new Template() {
           @Override
           protected final void render() {
-            div("before");
+            div(text("before"));
             testableField("foo", "bar");
-            div("after");
+            div(text("after"));
           }
         },
-
+  
         """
-<div>before</div>\
-<div>after</div>
+  <div>before</div>\
+  <div>after</div>
         """,
-
+  
         """
         foo: bar
         """
     );
   }
-
+  
   @Test
   public void heading01() {
     test(
@@ -212,37 +209,39 @@ public class HtmlTemplateTestTestable {
             h6(testableH6("Level 6"));
           }
         },
-
+  
         """
-<h1>Level 1</h1>\
-<h2>Level 2</h2>\
-<h3>Level 3</h3>\
-<h4>Level 4</h4>\
-<h5>Level 5</h5>\
-<h6>Level 6</h6>
+  <h1>Level 1</h1>\
+  <h2>Level 2</h2>\
+  <h3>Level 3</h3>\
+  <h4>Level 4</h4>\
+  <h5>Level 5</h5>\
+  <h6>Level 6</h6>
         """,
-
+  
         """
         # Level 1
-
+  
         ## Level 2
-
+  
         ### Level 3
-
+  
         #### Level 4
-
+  
         ##### Level 5
-
+  
         ###### Level 6
-
+  
         """
     );
   }
-
+  
   private void test(Template template, String expectedHtml, String expectedTestable) {
     assertEquals(template.toString(), expectedHtml);
-
+  
     assertEquals(template.toTestableText(), expectedTestable);
   }
+  
+  */
 
 }

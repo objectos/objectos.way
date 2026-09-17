@@ -54,7 +54,7 @@ public final class ScriptJsElement02 extends AbstractDevScript {
             text("Subject")
         ),
 
-        div("Bottom")
+        div(text("Bottom"))
     );
   }
 

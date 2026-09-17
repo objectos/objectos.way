@@ -306,7 +306,7 @@ public class ServerTest {
       String text;
       text = String.valueOf(o);
   
-      p(text);
+      p(text(text));
     }
   }
   
