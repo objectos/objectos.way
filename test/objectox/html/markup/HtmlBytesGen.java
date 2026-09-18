@@ -97,6 +97,24 @@ public class HtmlBytesGen {
     value("xRAW8");
     value("xRAW16");
     value("xRAW24");
+
+    comment("testable");
+
+    value("TEST8");
+    value("TEST16");
+    value("TEST24");
+    value("TESTONLY8");
+    value("TESTONLY16");
+    value("TESTONLY24");
+
+    comment("xtestable");
+
+    value("xTEST8");
+    value("xTEST16");
+    value("xTEST24");
+    value("xTESTONLY8");
+    value("xTESTONLY16");
+    value("xTESTONLY24");
   }
 
   protected int value = -128;

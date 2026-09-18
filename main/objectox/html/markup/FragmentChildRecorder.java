@@ -67,56 +67,40 @@ final class FragmentChildRecorder {
           cursor = skipElement(value);
         }
 
+        case HtmlBytes.TEST8 -> { sum += valueRecorder.record(size, value); cursor += 1; }
+        case HtmlBytes.TEST16 -> { sum += valueRecorder.record(size, value); cursor += 2; }
+        case HtmlBytes.TEST24 -> { sum += valueRecorder.record(size, value); cursor += 3; }
+
+        case HtmlBytes.TESTONLY8 -> { sum += valueRecorder.record(size, value); cursor += 1; }
+        case HtmlBytes.TESTONLY16 -> { sum += valueRecorder.record(size, value); cursor += 2; }
+        case HtmlBytes.TESTONLY24 -> { sum += valueRecorder.record(size, value); cursor += 3; }
+
+        case HtmlBytes.TEXT8 -> { sum += valueRecorder.record(size, value); cursor += 1; }
+        case HtmlBytes.TEXT16 -> { sum += valueRecorder.record(size, value); cursor += 2; }
+        case HtmlBytes.TEXT24 -> { sum += valueRecorder.record(size, value); cursor += 3; }
+
+        case HtmlBytes.RAW8 -> { sum += valueRecorder.record(size, value); cursor += 1; }
+        case HtmlBytes.RAW16 -> { sum += valueRecorder.record(size, value); cursor += 2; }
+        case HtmlBytes.RAW24 -> { sum += valueRecorder.record(size, value); cursor += 3; }
+
         case HtmlBytes.xELEMSTR8,
              HtmlBytes.xELEMVOID8 -> cursor = skipElement(value);
 
-        case HtmlBytes.RAW8 -> {
-          sum += valueRecorder.record(size, value);
+        case HtmlBytes.xTEST8 -> cursor += 1;
+        case HtmlBytes.xTEST16 -> cursor += 2;
+        case HtmlBytes.xTEST24 -> cursor += 3;
 
-          cursor += 1;
-        }
-
-        case HtmlBytes.xRAW8 -> cursor += 1;
-
-        case HtmlBytes.RAW16 -> {
-          sum += valueRecorder.record(size, value);
-
-          cursor += 2;
-        }
-
-        case HtmlBytes.xRAW16 -> cursor += 2;
-
-        case HtmlBytes.RAW24 -> {
-          sum += valueRecorder.record(size, value);
-
-          cursor += 3;
-        }
-
-        case HtmlBytes.xRAW24 -> cursor += 3;
-
-        case HtmlBytes.TEXT8 -> {
-          sum += valueRecorder.record(size, value);
-
-          cursor += 1;
-        }
+        case HtmlBytes.xTESTONLY8 -> cursor += 1;
+        case HtmlBytes.xTESTONLY16 -> cursor += 2;
+        case HtmlBytes.xTESTONLY24 -> cursor += 3;
 
         case HtmlBytes.xTEXT8 -> cursor += 1;
-
-        case HtmlBytes.TEXT16 -> {
-          sum += valueRecorder.record(size, value);
-
-          cursor += 2;
-        }
-
         case HtmlBytes.xTEXT16 -> cursor += 2;
-
-        case HtmlBytes.TEXT24 -> {
-          sum += valueRecorder.record(size, value);
-
-          cursor += 3;
-        }
-
         case HtmlBytes.xTEXT24 -> cursor += 3;
+
+        case HtmlBytes.xRAW8 -> cursor += 1;
+        case HtmlBytes.xRAW16 -> cursor += 2;
+        case HtmlBytes.xRAW24 -> cursor += 3;
 
         case HtmlBytes.ATTRIBUTE88,
              HtmlBytes.xATTRIBUTE88,

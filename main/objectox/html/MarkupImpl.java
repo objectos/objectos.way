@@ -15,8 +15,10 @@
  */
 package objectox.html;
 
+import objectos.html.Component;
 import objectos.html.Html;
 import objectos.html.Markup;
+import objectos.html.TestableName;
 import objectos.html.markup.AttributeMarkup;
 import objectos.html.markup.ElementMarkup;
 import objectos.html.markup.Fragment0;
@@ -28,6 +30,8 @@ import objectos.html.markup.FragmentMarkup;
 import objectos.html.markup.NoOpMarkup;
 import objectos.html.markup.RawMarkup;
 import objectos.html.markup.RegularElementValue;
+import objectos.html.markup.TestableMarkup;
+import objectos.html.markup.TestableOnlyMarkup;
 import objectos.html.markup.TextMarkup;
 import objectos.html.markup.VoidElementValue;
 import objectos.script.JsAction;
@@ -302,107 +306,33 @@ public final class MarkupImpl implements Markup {
   // TESTABLE
   //
 
-  /// Formats the specified value as a testable table cell with the specified
-  /// fixed width.
+  /// Encodes a testable node with the specified name and value.
   ///
-  /// @param value the cell value
-  /// @param width the fixed width of the cell
+  /// Testable nodes contribute to the output of the [Component#toTestableText()]
+  /// method. During regular HTML formatting, testable nodes are rendered as text
+  /// nodes with the specified value.
   ///
-  /// @return always the cell value
+  /// @param name the testable node name
+  /// @param value the testable node value
+  ///
+  /// @return an object representing the encoded testable node
   @Override
-  public final String testableCell(String value, int width) {
-    return recorder.testableCell(value, width);
+  public final TestableMarkup test(TestableName name, String value) {
+    return recorder.test(name, value);
   }
 
-  /// Formats the specified name and value as a testable field.
+  /// Encodes a testable-only node with the specified name and value.
   ///
-  /// @param name the field name
-  /// @param value the field value
+  /// Testable-only nodes differ from testable nodes in that the former do not
+  /// contribute to the regular HTML formatting as the latter do.
   ///
-  /// @return always the field value
+  /// @param name the testable node name
+  /// @param value the testable node value
+  ///
+  /// @return an object representing the encoded testable-only node
   @Override
-  public final String testableField(String name, String value) {
-    return recorder.testableField(name, value);
-  }
-
-  /// Formats the specified name as a testable field name.
-  ///
-  /// @param name the field name
-  ///
-  /// @return the specified field name
-  @Override
-  public final String testableFieldName(String name) {
-    return recorder.testableFieldName(name);
-  }
-
-  /// Formats the specified value as a testable field value.
-  ///
-  /// @param value the field value
-  ///
-  /// @return the specified field value
-  @Override
-  public final String testableFieldValue(String value) {
-    return recorder.testableFieldValue(value);
-  }
-
-  /// Formats the specified value as a testable heading level 1.
-  ///
-  /// @param value the heading value
-  ///
-  /// @return the specified value
-  @Override
-  public final String testableH1(String value) {
-    return recorder.testableH1(value);
-  }
-
-  /// Formats the specified value as a testable heading level 2.
-  ///
-  /// @param value the heading value
-  ///
-  /// @return the specified value
-  @Override
-  public final String testableH2(String value) {
-    return recorder.testableH2(value);
-  }
-
-  /// Formats the specified value as a testable heading level 3.
-  ///
-  /// @param value the heading value
-  ///
-  /// @return the specified value
-  @Override
-  public final String testableH3(String value) {
-    return recorder.testableH3(value);
-  }
-
-  /// Formats the specified value as a testable heading level 4.
-  ///
-  /// @param value the heading value
-  ///
-  /// @return the specified value
-  @Override
-  public final String testableH4(String value) {
-    return recorder.testableH4(value);
-  }
-
-  /// Formats the specified value as a testable heading level 5.
-  ///
-  /// @param value the heading value
-  ///
-  /// @return the specified value
-  @Override
-  public final String testableH5(String value) {
-    return recorder.testableH5(value);
-  }
-
-  /// Formats the specified value as a testable heading level 6.
-  ///
-  /// @param value the heading value
-  ///
-  /// @return the specified value
-  @Override
-  public final String testableH6(String value) {
-    return recorder.testableH6(value);
+  public final TestableOnlyMarkup testOnly(TestableName name, String value) {
+    return recorder.testOnly(name, value);
   }
 
   /// Formats a line separator at the testable output exclusively.

@@ -200,57 +200,24 @@ public final class HtmlSpec {
 
   public static List<MethodSpec> testableNodes() {
     return List.of(
-        new MethodSpec("String testableCell(String value, int width)", "testableCell(value, width)", """
-        Formats the specified value as a testable table cell with the specified fixed width.
-        @param value the cell value
-        @param width the fixed width of the cell
-        @return always the cell value
+        new MethodSpec("TestMarkup test(TestableName name, String value)", "test(name, value)", """
+        Encodes a testable node with the specified name and value.
+
+        Testable nodes contribute to the output of the [Component#toTestableText()] method.
+        During regular HTML formatting, testable nodes are rendered as text nodes with the specified value.
+
+        @param name the testable node name
+        @param value the testable node value
+        @return an object representing the encoded testable node
         """),
-        new MethodSpec("String testableField(String name, String value)", "testableField(name, value)", """
-        Formats the specified name and value as a testable field.
-        @param name the field name
-        @param value the field value
-        @return always the field value
-        """),
-        new MethodSpec("String testableFieldName(String name)", "testableFieldName(name)", """
-        Formats the specified name as a testable field name.
-        @param name the field name
-        @return the specified field name
-        """),
-        new MethodSpec("String testableFieldValue(String value)", "testableFieldValue(value)", """
-        Formats the specified value as a testable field value.
-        @param value the field value
-        @return the specified field value
-        """),
-        new MethodSpec("String testableH1(String value)", "testableH1(value)", """
-        Formats the specified value as a testable heading level 1.
-        @param value the heading value
-        @return the specified value
-        """),
-        new MethodSpec("String testableH2(String value)", "testableH2(value)", """
-        Formats the specified value as a testable heading level 2.
-        @param value the heading value
-        @return the specified value
-        """),
-        new MethodSpec("String testableH3(String value)", "testableH3(value)", """
-        Formats the specified value as a testable heading level 3.
-        @param value the heading value
-        @return the specified value
-        """),
-        new MethodSpec("String testableH4(String value)", "testableH4(value)", """
-        Formats the specified value as a testable heading level 4.
-        @param value the heading value
-        @return the specified value
-        """),
-        new MethodSpec("String testableH5(String value)", "testableH5(value)", """
-        Formats the specified value as a testable heading level 5.
-        @param value the heading value
-        @return the specified value
-        """),
-        new MethodSpec("String testableH6(String value)", "testableH6(value)", """
-        Formats the specified value as a testable heading level 6.
-        @param value the heading value
-        @return the specified value
+        new MethodSpec("TestOnlyMarkup testOnly(TestableName name, String value)", "testOnly(name, value)", """
+        Encodes a testable-only node with the specified name and value.
+
+        Testable-only nodes differ from testable nodes in that the former do not contribute to the regular HTML formatting as the latter do.
+
+        @param name the testable node name
+        @param value the testable node value
+        @return an object representing the encoded testable-only node
         """),
         new MethodSpec("NoOpMarkup testableNewLine()", "testableNewLine()", """
         Formats a line separator at the testable output exclusively.

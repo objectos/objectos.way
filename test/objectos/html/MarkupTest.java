@@ -350,4 +350,74 @@ public class MarkupTest {
     );
   }
 
+  @Test(description = """
+  testable node:
+  - document level
+  """)
+  public void test01() {
+    final Markup subject;
+    subject = Markup.of();
+
+    subject.test(TestableName.H1, "Ipsum");
+
+    assertEquals(
+        subject.compile(),
+
+        HtmlY.create(opts -> {
+          opts.addByte(HtmlBytes.TEST8);
+          opts.addObject(TestableName.H1);
+          opts.addInt8(opts.addObject("Ipsum"));
+        })
+    );
+  }
+
+  @Test(description = """
+  testable node:
+  - element child
+  """)
+  public void test02() {
+    final Markup subject;
+    subject = Markup.of();
+
+    subject.div(
+        subject.test(TestableName.H1, "Ipsum")
+    );
+
+    assertEquals(
+        subject.compile(),
+
+        HtmlY.create(opts -> {
+          opts.addByte(HtmlBytes.xTEST8);
+          opts.addObject(TestableName.H1);
+          opts.addInt8(opts.addObject("Ipsum"));
+          opts.addByte(HtmlBytes.ELEMSTR8);
+          opts.addInt8(ElementName.DIV.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(1);
+          opts.addInt8(0);
+        })
+    );
+  }
+
+  @Test(description = """
+  testable-only node:
+  - document level
+  """)
+  public void testOnly01() {
+    final Markup subject;
+    subject = Markup.of();
+
+    subject.testOnly(TestableName.H1, "Ipsum");
+
+    assertEquals(
+        subject.compile(),
+
+        HtmlY.create(opts -> {
+          opts.addByte(HtmlBytes.TESTONLY8);
+          opts.addObject(TestableName.H1);
+          opts.addInt8(opts.addObject("Ipsum"));
+        })
+    );
+  }
+
 }

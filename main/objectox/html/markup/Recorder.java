@@ -15,6 +15,7 @@
  */
 package objectox.html.markup;
 
+import objectos.html.TestableName;
 import objectos.html.markup.AttributeMarkup;
 import objectos.html.markup.BooleanAttribute;
 import objectos.html.markup.Fragment0;
@@ -26,6 +27,8 @@ import objectos.html.markup.FragmentMarkup;
 import objectos.html.markup.NoOpMarkup;
 import objectos.html.markup.RawMarkup;
 import objectos.html.markup.RegularElementValue;
+import objectos.html.markup.TestableMarkup;
+import objectos.html.markup.TestableOnlyMarkup;
 import objectos.html.markup.TextMarkup;
 import objectos.html.markup.VoidElementValue;
 import objectos.script.JsAction;
@@ -49,6 +52,8 @@ public final class Recorder {
 
   private final RegularElementRecorder regularElementRecorder;
 
+  private final TestableRecorder testableRecorder;
+
   private final TextRecorder textRecorder;
 
   private final VoidElementRecorder voidElementRecorder;
@@ -61,6 +66,7 @@ public final class Recorder {
       FragmentRecorder fragmentRecorder,
       RawRecorder rawRecorder,
       RegularElementRecorder regularElementRecorder,
+      TestableRecorder testableRecorder,
       TextRecorder textRecorder,
       VoidElementRecorder voidElementRecorder
   ) {
@@ -71,6 +77,7 @@ public final class Recorder {
     this.fragmentRecorder = fragmentRecorder;
     this.rawRecorder = rawRecorder;
     this.regularElementRecorder = regularElementRecorder;
+    this.testableRecorder = testableRecorder;
     this.textRecorder = textRecorder;
     this.voidElementRecorder = voidElementRecorder;
   }
@@ -130,6 +137,8 @@ public final class Recorder {
 
             elementPreRecorder
         ),
+
+        new TestableRecorder(sink),
 
         new TextRecorder(sink),
 
@@ -227,44 +236,12 @@ public final class Recorder {
     return regularElementRecorder.record(name, pointer);
   }
 
-  public final String testableCell(String value, int width) {
-    throw new UnsupportedOperationException("Implement me");
+  public final TestableMarkup test(TestableName name, String value) {
+    return testableRecorder.record(name, value);
   }
 
-  public final String testableField(String name, String value) {
-    throw new UnsupportedOperationException("Implement me");
-  }
-
-  public final String testableFieldName(String name) {
-    throw new UnsupportedOperationException("Implement me");
-  }
-
-  public final String testableFieldValue(String value) {
-    throw new UnsupportedOperationException("Implement me");
-  }
-
-  public final String testableH1(String value) {
-    throw new UnsupportedOperationException("Implement me");
-  }
-
-  public final String testableH2(String value) {
-    throw new UnsupportedOperationException("Implement me");
-  }
-
-  public final String testableH3(String value) {
-    throw new UnsupportedOperationException("Implement me");
-  }
-
-  public final String testableH4(String value) {
-    throw new UnsupportedOperationException("Implement me");
-  }
-
-  public final String testableH5(String value) {
-    throw new UnsupportedOperationException("Implement me");
-  }
-
-  public final String testableH6(String value) {
-    throw new UnsupportedOperationException("Implement me");
+  public final TestableOnlyMarkup testOnly(TestableName name, String value) {
+    return testableRecorder.recordOnly(name, value);
   }
 
   public final NoOpMarkup testableNewLine() {

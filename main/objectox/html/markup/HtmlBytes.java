@@ -90,6 +90,24 @@ public final class HtmlBytes {
   public static final byte xRAW16 = -93;
   public static final byte xRAW24 = -92;
 
+  // testable
+
+  public static final byte TEST8 = -91;
+  public static final byte TEST16 = -90;
+  public static final byte TEST24 = -89;
+  public static final byte TESTONLY8 = -88;
+  public static final byte TESTONLY16 = -87;
+  public static final byte TESTONLY24 = -86;
+
+  // xtestable
+
+  public static final byte xTEST8 = -85;
+  public static final byte xTEST16 = -84;
+  public static final byte xTEST24 = -83;
+  public static final byte xTESTONLY8 = -82;
+  public static final byte xTESTONLY16 = -81;
+  public static final byte xTESTONLY24 = -80;
+
   private HtmlBytes() {}
 
   public static byte consume(byte source) {
@@ -124,6 +142,18 @@ public final class HtmlBytes {
 
       case RAW24 -> xRAW24;
 
+      case TEST8 -> xTEST8;
+
+      case TEST16 -> xTEST16;
+
+      case TEST24 -> xTEST24;
+
+      case TESTONLY8 -> xTESTONLY8;
+
+      case TESTONLY16 -> xTESTONLY16;
+
+      case TESTONLY24 -> xTESTONLY24;
+
       case xELEMSTR8 -> xELEMSTR8;
 
       case xELEMVOID8 -> xELEMVOID8;
@@ -153,6 +183,18 @@ public final class HtmlBytes {
       case xRAW16 -> xRAW16;
 
       case xRAW24 -> xRAW24;
+
+      case xTEST8 -> xTEST8;
+
+      case xTEST16 -> xTEST16;
+
+      case xTEST24 -> xTEST24;
+
+      case xTESTONLY8 -> xTESTONLY8;
+
+      case xTESTONLY16 -> xTESTONLY16;
+
+      case xTESTONLY24 -> xTESTONLY24;
 
       default -> throw new IllegalArgumentException("source=" + source);
     };

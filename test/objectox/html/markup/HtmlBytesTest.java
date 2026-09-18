@@ -45,6 +45,13 @@ public class HtmlBytesTest {
         {HtmlBytes.RAW16, HtmlBytes.xRAW16},
         {HtmlBytes.RAW24, HtmlBytes.xRAW24},
 
+        {HtmlBytes.TEST8, HtmlBytes.xTEST8},
+        {HtmlBytes.TEST16, HtmlBytes.xTEST16},
+        {HtmlBytes.TEST24, HtmlBytes.xTEST24},
+        {HtmlBytes.TESTONLY8, HtmlBytes.xTESTONLY8},
+        {HtmlBytes.TESTONLY16, HtmlBytes.xTESTONLY16},
+        {HtmlBytes.TESTONLY24, HtmlBytes.xTESTONLY24},
+
         {HtmlBytes.xELEMSTR8, HtmlBytes.xELEMSTR8},
         {HtmlBytes.xELEMVOID8, HtmlBytes.xELEMVOID8},
 
@@ -63,7 +70,14 @@ public class HtmlBytesTest {
 
         {HtmlBytes.xRAW8, HtmlBytes.xRAW8},
         {HtmlBytes.xRAW16, HtmlBytes.xRAW16},
-        {HtmlBytes.xRAW24, HtmlBytes.xRAW24}
+        {HtmlBytes.xRAW24, HtmlBytes.xRAW24},
+
+        {HtmlBytes.xTEST8, HtmlBytes.xTEST8},
+        {HtmlBytes.xTEST16, HtmlBytes.xTEST16},
+        {HtmlBytes.xTEST24, HtmlBytes.xTEST24},
+        {HtmlBytes.xTESTONLY8, HtmlBytes.xTESTONLY8},
+        {HtmlBytes.xTESTONLY16, HtmlBytes.xTESTONLY16},
+        {HtmlBytes.xTESTONLY24, HtmlBytes.xTESTONLY24}
     };
   }
 

@@ -68,6 +68,10 @@ final class ElementChildrenRecorder {
 
       case RawPointer(int v) -> valueRecorder.record(size, v);
 
+      case TestableMarkupPointer(int v) -> valueRecorder.record(size, v);
+
+      case TestableOnlyMarkupPointer(int v) -> valueRecorder.record(size, v);
+
       case TextPointer(int v) -> valueRecorder.record(size, v);
     };
   }

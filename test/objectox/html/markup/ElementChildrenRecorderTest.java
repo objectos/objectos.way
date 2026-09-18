@@ -17,6 +17,7 @@ package objectox.html.markup;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.html.TestableName;
 import objectox.html.IntSize;
 import objectox.html.attr.AttributeName;
 import objectox.html.elem.ElementName;
@@ -190,6 +191,80 @@ public class ElementChildrenRecorderTest {
         HtmlSinkY.create(opts -> {
           opts.addInt24(HtmlSink.MAX_INT24);
           opts.addByte(HtmlBytes.xTEXT8);
+          opts.addInt8(opts.addObject("ipsum"));
+          opts.addInt8(3);
+        })
+    );
+  }
+
+  @Test(description = "testable node child")
+  public void test01() {
+    final HtmlSink sink;
+    sink = HtmlSinkY.create(opts -> {
+      opts.addInt24(HtmlSink.MAX_INT24);
+      opts.addByte(HtmlBytes.TEST8);
+      opts.addObject(TestableName.H1);
+      opts.addInt8(opts.addObject("ipsum"));
+    });
+
+    final ElementChildrenRecorder subject;
+    subject = create(sink);
+
+    final IntSize size;
+    size = IntSize.BIT8;
+
+    final TestableMarkupPointer pointer;
+    pointer = new TestableMarkupPointer(3);
+
+    final int res;
+    res = subject.record(size, pointer);
+
+    assertEquals(res, 1);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addInt24(HtmlSink.MAX_INT24);
+          opts.addByte(HtmlBytes.xTEST8);
+          opts.addObject(TestableName.H1);
+          opts.addInt8(opts.addObject("ipsum"));
+          opts.addInt8(3);
+        })
+    );
+  }
+
+  @Test(description = "testable-only node child")
+  public void testOnly01() {
+    final HtmlSink sink;
+    sink = HtmlSinkY.create(opts -> {
+      opts.addInt24(HtmlSink.MAX_INT24);
+      opts.addByte(HtmlBytes.TESTONLY8);
+      opts.addObject(TestableName.H1);
+      opts.addInt8(opts.addObject("ipsum"));
+    });
+
+    final ElementChildrenRecorder subject;
+    subject = create(sink);
+
+    final IntSize size;
+    size = IntSize.BIT8;
+
+    final TestableOnlyMarkupPointer pointer;
+    pointer = new TestableOnlyMarkupPointer(3);
+
+    final int res;
+    res = subject.record(size, pointer);
+
+    assertEquals(res, 1);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addInt24(HtmlSink.MAX_INT24);
+          opts.addByte(HtmlBytes.xTESTONLY8);
+          opts.addObject(TestableName.H1);
           opts.addInt8(opts.addObject("ipsum"));
           opts.addInt8(3);
         })
