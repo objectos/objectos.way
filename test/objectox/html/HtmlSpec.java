@@ -200,7 +200,7 @@ public final class HtmlSpec {
 
   public static List<MethodSpec> testableNodes() {
     return List.of(
-        new MethodSpec("TestMarkup test(TestableName name, String value)", "test(name, value)", """
+        new MethodSpec("TestableMarkup test(TestableName name, String value)", "test(name, value)", """
         Encodes a testable node with the specified name and value.
 
         Testable nodes contribute to the output of the [Component#toTestableText()] method.
@@ -210,7 +210,7 @@ public final class HtmlSpec {
         @param value the testable node value
         @return an object representing the encoded testable node
         """),
-        new MethodSpec("TestOnlyMarkup testOnly(TestableName name, String value)", "testOnly(name, value)", """
+        new MethodSpec("TestableOnlyMarkup testOnly(TestableName name, String value)", "testOnly(name, value)", """
         Encodes a testable-only node with the specified name and value.
 
         Testable-only nodes differ from testable nodes in that the former do not contribute to the regular HTML formatting as the latter do.
