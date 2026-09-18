@@ -53,7 +53,7 @@ public final class ScriptFollow01 extends AbstractDevScript {
     meta(name("viewport"), content("width=device-width, initial-scale=1"));
     link(rel("stylesheet"), type("text/css"), href("/styles.css"));
     script(src("/script.js"));
-    title(initial ? "026: initial" : "026: next");
+    title(text(initial ? "026: initial" : "026: next"));
   }
 
   @Override

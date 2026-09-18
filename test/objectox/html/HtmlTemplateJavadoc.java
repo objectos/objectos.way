@@ -32,7 +32,7 @@ public class HtmlTemplateJavadoc {
         doctype();
         html(
             head(
-                title("Objectos HTML")
+                title(text("Objectos HTML"))
             ),
 
             body(

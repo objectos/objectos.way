@@ -29,14 +29,11 @@ import objectos.html.markup.RegularElementValue;
 import objectos.html.markup.TextMarkup;
 import objectos.html.markup.VoidElementValue;
 import objectos.script.JsAction;
-import objectox.html.AmbiguousName;
 import objectox.html.HtmlImpl;
 import objectox.html.attr.AttributeName;
 import objectox.html.elem.ElementName;
 
 public final class Recorder {
-
-  private final AmbiguousRecorder ambiguousRecorder;
 
   private final AttributeRecorder attributeRecorder;
 
@@ -57,7 +54,6 @@ public final class Recorder {
   private final VoidElementRecorder voidElementRecorder;
 
   Recorder(
-      AmbiguousRecorder ambiguousRecorder,
       AttributeRecorder attributeRecorder,
       BooleanAttributeRecorder booleanAttributeRecorder,
       DoctypeRecorder doctypeRecorder,
@@ -68,7 +64,6 @@ public final class Recorder {
       TextRecorder textRecorder,
       VoidElementRecorder voidElementRecorder
   ) {
-    this.ambiguousRecorder = ambiguousRecorder;
     this.attributeRecorder = attributeRecorder;
     this.booleanAttributeRecorder = booleanAttributeRecorder;
     this.doctypeRecorder = doctypeRecorder;
@@ -85,14 +80,11 @@ public final class Recorder {
   }
 
   public static Recorder of(HtmlSink sink) {
-    final AmbiguousAttributeRecorder ambiguousAttributeRecorder;
-    ambiguousAttributeRecorder = new AmbiguousAttributeRecorder(sink);
-
     final ValueRecorder valueRecorder;
     valueRecorder = new ValueRecorder(sink);
 
     final FragmentAttributeRecorder fragmentAttributeRecorder;
-    fragmentAttributeRecorder = new FragmentAttributeRecorder(sink, ambiguousAttributeRecorder, valueRecorder);
+    fragmentAttributeRecorder = new FragmentAttributeRecorder(sink, valueRecorder);
 
     final AttributeRecorder attributeRecorder;
     attributeRecorder = new AttributeRecorder(sink);
@@ -107,17 +99,12 @@ public final class Recorder {
     elementPreRecorder = new ElementPreRecorder(attributeRecorder, booleanAttributeRecorder, fragmentRecorder);
 
     final ElementAttributesRecorder elementAttributesRecorder;
-    elementAttributesRecorder = new ElementAttributesRecorder(ambiguousAttributeRecorder, fragmentAttributeRecorder, valueRecorder);
-
-    final AmbiguousChildRecorder ambiguousChildRecorder;
-    ambiguousChildRecorder = new AmbiguousChildRecorder(sink);
+    elementAttributesRecorder = new ElementAttributesRecorder(fragmentAttributeRecorder, valueRecorder);
 
     final FragmentChildRecorder fragmentChildRecorder;
-    fragmentChildRecorder = new FragmentChildRecorder(sink, ambiguousChildRecorder, valueRecorder);
+    fragmentChildRecorder = new FragmentChildRecorder(sink, valueRecorder);
 
     return new Recorder(
-        new AmbiguousRecorder(sink),
-
         attributeRecorder,
 
         booleanAttributeRecorder,
@@ -136,8 +123,6 @@ public final class Recorder {
             elementAttributesRecorder,
 
             new ElementChildrenRecorder(
-                ambiguousChildRecorder,
-
                 fragmentChildRecorder,
 
                 valueRecorder
@@ -150,10 +135,6 @@ public final class Recorder {
 
         new VoidElementRecorder(sink, elementAttributesRecorder, elementPreRecorder)
     );
-  }
-
-  public final AmbiguousPointer ambiguous(AmbiguousName name, String text) {
-    return ambiguousRecorder.record(name, text);
   }
 
   public final AttributePointer attribute(AttributeName name, JsAction value) {

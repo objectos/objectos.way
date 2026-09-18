@@ -17,7 +17,6 @@ package objectox.html;
 
 import objectos.html.Html;
 import objectos.html.Markup;
-import objectos.html.markup.AmbiguousMarkup;
 import objectos.html.markup.AttributeMarkup;
 import objectos.html.markup.ElementMarkup;
 import objectos.html.markup.Fragment0;
@@ -1432,6 +1431,16 @@ public final class MarkupImpl implements Markup {
     return recorder.attribute(AttributeName.CLASS, value);
   }
 
+  /// Encodes the `clip-path` attribute with the specified value.
+  ///
+  /// @param value the attribute value
+  ///
+  /// @return an object representing the encoded attribute
+  @Override
+  public final AttributeMarkup clipPath(String value) {
+    return recorder.attribute(AttributeName.CLIP_PATH, value);
+  }
+
   /// Encodes the `clip-rule` attribute with the specified value.
   ///
   /// @param value the attribute value
@@ -1683,6 +1692,16 @@ public final class MarkupImpl implements Markup {
     return recorder.attribute(AttributeName.FLOOD_OPACITY, value);
   }
 
+  /// Encodes the `form` attribute with the specified value.
+  ///
+  /// @param value the attribute value
+  ///
+  /// @return an object representing the encoded attribute
+  @Override
+  public final AttributeMarkup form(String value) {
+    return recorder.attribute(AttributeName.FORM, value);
+  }
+
   /// Encodes the `for` attribute with the specified value.
   ///
   /// @param value the attribute value
@@ -1773,6 +1792,16 @@ public final class MarkupImpl implements Markup {
   @Override
   public final AttributeMarkup integrity(String value) {
     return recorder.attribute(AttributeName.INTEGRITY, value);
+  }
+
+  /// Encodes the `label` attribute with the specified value.
+  ///
+  /// @param value the attribute value
+  ///
+  /// @return an object representing the encoded attribute
+  @Override
+  public final AttributeMarkup label(String value) {
+    return recorder.attribute(AttributeName.LABEL, value);
   }
 
   /// Encodes the `lang` attribute with the specified value.
@@ -2265,6 +2294,16 @@ public final class MarkupImpl implements Markup {
     return recorder.attribute(AttributeName.STROKE_WIDTH, value);
   }
 
+  /// Encodes the `style` attribute with the specified value.
+  ///
+  /// @param value the attribute value
+  ///
+  /// @return an object representing the encoded attribute
+  @Override
+  public final AttributeMarkup style(String value) {
+    return recorder.attribute(AttributeName.STYLE, value);
+  }
+
   /// Encodes the `tabindex` attribute with the specified value.
   ///
   /// @param value the attribute value
@@ -2323,6 +2362,16 @@ public final class MarkupImpl implements Markup {
   @Override
   public final AttributeMarkup textRendering(String value) {
     return recorder.attribute(AttributeName.TEXT_RENDERING, value);
+  }
+
+  /// Encodes the `title` attribute with the specified value.
+  ///
+  /// @param value the attribute value
+  ///
+  /// @return an object representing the encoded attribute
+  @Override
+  public final AttributeMarkup title(String value) {
+    return recorder.attribute(AttributeName.TITLE, value);
   }
 
   /// Encodes the `transform` attribute with the specified value.
@@ -2473,65 +2522,6 @@ public final class MarkupImpl implements Markup {
   @Override
   public final AttributeMarkup xmlns(String value) {
     return recorder.attribute(AttributeName.XMLNS, value);
-  }
-
-  //
-  // AMBIGUOUS
-  //
-
-  /// Encodes the `clip-path` attribute or the `clipPath` element with the
-  /// specified text.
-  ///
-  /// @param value the attribute value or the text content of the element
-  ///
-  /// @return an object representing the encoded attribute or element
-  @Override
-  public final AmbiguousMarkup clipPath(String value) {
-    return recorder.ambiguous(AmbiguousName.CLIPPATH, value);
-  }
-
-  /// Encodes the `form` attribute or the `form` element with the specified
-  /// text.
-  ///
-  /// @param value the attribute value or the text content of the element
-  ///
-  /// @return an object representing the encoded attribute or element
-  @Override
-  public final AmbiguousMarkup form(String value) {
-    return recorder.ambiguous(AmbiguousName.FORM, value);
-  }
-
-  /// Encodes the `label` attribute or the `label` element with the specified
-  /// text.
-  ///
-  /// @param value the attribute value or the text content of the element
-  ///
-  /// @return an object representing the encoded attribute or element
-  @Override
-  public final AmbiguousMarkup label(String value) {
-    return recorder.ambiguous(AmbiguousName.LABEL, value);
-  }
-
-  /// Encodes the `style` attribute or the `style` element with the specified
-  /// text.
-  ///
-  /// @param value the attribute value or the text content of the element
-  ///
-  /// @return an object representing the encoded attribute or element
-  @Override
-  public final AmbiguousMarkup style(String value) {
-    return recorder.ambiguous(AmbiguousName.STYLE, value);
-  }
-
-  /// Encodes the `title` attribute or the `title` element with the specified
-  /// text.
-  ///
-  /// @param value the attribute value or the text content of the element
-  ///
-  /// @return an object representing the encoded attribute or element
-  @Override
-  public final AmbiguousMarkup title(String value) {
-    return recorder.ambiguous(AmbiguousName.TITLE, value);
   }
 
   //

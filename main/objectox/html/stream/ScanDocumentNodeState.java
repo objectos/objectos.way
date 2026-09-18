@@ -92,18 +92,6 @@ final class ScanDocumentNodeState implements State {
 
         case HtmlBytes.xJSACTION824 -> ctx.skip(1 + 3);
 
-        case HtmlBytes.aAMBIGUOUS88 -> ctx.skip(1 + 1);
-
-        case HtmlBytes.aAMBIGUOUS816 -> ctx.skip(1 + 2);
-
-        case HtmlBytes.aAMBIGUOUS824 -> ctx.skip(1 + 3);
-
-        case HtmlBytes.eAMBIGUOUS88 -> ctx.skip(1 + 1);
-
-        case HtmlBytes.eAMBIGUOUS816 -> ctx.skip(1 + 2);
-
-        case HtmlBytes.eAMBIGUOUS824 -> ctx.skip(1 + 3);
-
         case HtmlBytes.xFRAGSTR -> {
           final SkipFragment skip;
           skip = new SkipFragment(ctx);

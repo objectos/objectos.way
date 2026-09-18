@@ -16,7 +16,6 @@
 package objectox.html;
 
 import java.util.Iterator;
-import java.util.Set;
 import objectox.html.elem.ElementSpec;
 
 public class MarkupImplGen {
@@ -46,8 +45,6 @@ public class MarkupImplGen {
     elements();
 
     attributes();
-
-    ambiguous();
 
     text();
 
@@ -97,26 +94,8 @@ public class MarkupImplGen {
     //
     """);
 
-    final Set<String> ambiguousNames;
-    ambiguousNames = HtmlSpec.ambiguousElemNames();
-
     for (ElementSpec elem : HtmlSpec.elements()) {
-      final String htmlName;
-      htmlName = elem.htmlName();
-
-      if (ambiguousNames.contains(htmlName)) {
-        methods.append("""
-
-        /// Encodes the `%s` element with the specified values.
-        /// @param values the encoded attributes and encoded child nodes of the element
-        /// @return an object representing the encoded element
-        public final ElementMarkup %s(RegularElementValue... values) {
-          return recorder.regularElement(ElementName.%s, values);
-        }
-        """.formatted(elem.htmlName(), elem.htmlName(), elem.javaName()));
-      }
-
-      else if (elem.endTag()) {
+      if (elem.endTag()) {
         methods.append("""
 
         /// Encodes the `%1$s` element with the specified values.
@@ -151,11 +130,8 @@ public class MarkupImplGen {
     //
     """);
 
-    final Set<String> ambiguous;
-    ambiguous = HtmlSpec.ambiguousAttrNames();
-
     for (AttributeSpec attr : HtmlSpec.attributes()) {
-      if (ambiguous.contains(attr.htmlName()) || attr.booleanAttribute()) {
+      if (attr.booleanAttribute()) {
         continue;
       }
 
@@ -182,27 +158,6 @@ public class MarkupImplGen {
         return recorder.attribute(AttributeName.%s, action);
       }
       """.formatted(attr.htmlName(), attr.methodName(), attr.constantName()));
-    }
-  }
-
-  private void ambiguous() {
-    methods.append("""
-
-    //
-    // AMBIGUOUS
-    //
-    """);
-
-    for (AmbiguousSpec spec : HtmlSpec.ambiguous()) {
-      methods.append("""
-
-      /// Encodes the `%s` attribute or the `%s` element with the specified text.
-      /// @param value the attribute value or the text content of the element
-      /// @return an object representing the encoded attribute or element
-      public final AmbiguousMarkup %s(String value) {
-        return recorder.ambiguous(AmbiguousName.%s, value);
-      }
-      """.formatted(spec.attributeName(), spec.elementName(), spec.methodName(), spec.constantName()));
     }
   }
 

@@ -17,7 +17,6 @@ package objectox.html.markup;
 
 import static org.testng.Assert.assertEquals;
 
-import objectox.html.AmbiguousName;
 import objectox.html.IntSize;
 import objectox.html.attr.AttributeName;
 import objectox.html.elem.ElementName;
@@ -25,100 +24,6 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class FragmentAttributeRecorderTest {
-
-  @DataProvider
-  public Object[][] testCase01Provider() {
-    return new Object[][] {
-        {HtmlBytes.AMBIGUOUS88, HtmlBytes.aAMBIGUOUS88, "AMBIGUOUS88"},
-        {HtmlBytes.AMBIGUOUS816, HtmlBytes.aAMBIGUOUS816, "AMBIGUOUS816"},
-        {HtmlBytes.AMBIGUOUS824, HtmlBytes.aAMBIGUOUS824, "AMBIGUOUS824"}
-    };
-  }
-
-  @Test(dataProvider = "testCase01Provider", description = "ambiguous name that resolves to an attribute")
-  public void testCase01(byte opcode, byte marked, String description) {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.addInt24(HtmlSink.MAX_INT24);
-      opts.addByte(HtmlBytes.FRAGSTR);
-      opts.addInt24(0);
-      opts.addByte(opcode);
-      opts.addInt8(AmbiguousName.TITLE.index());
-      opts.addByte(HtmlBytes.FRAGEND);
-    });
-
-    final FragmentAttributeRecorder subject;
-    subject = create(sink);
-
-    final ElementName elementName;
-    elementName = ElementName.DIV;
-
-    final IntSize size;
-    size = IntSize.BIT8;
-
-    final int res;
-    res = subject.record(elementName, size, 3);
-
-    assertEquals(res, 1);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
-          opts.addInt24(HtmlSink.MAX_INT24);
-          opts.addByte(HtmlBytes.FRAGSTR);
-          opts.addInt24(0);
-          opts.addByte(marked);
-          opts.addInt8(AmbiguousName.TITLE.index());
-          opts.addByte(HtmlBytes.FRAGEND);
-          opts.addInt8(7);
-        })
-    );
-  }
-
-  @DataProvider
-  public Object[][] testCase02Provider() {
-    return new Object[][] {
-        {HtmlBytes.AMBIGUOUS816, ElementName.HEAD, "not an attribute of the element"}
-    };
-  }
-
-  @Test(dataProvider = "testCase02Provider", description = "ambiguous name that does not resolve to an attribute")
-  public void testCase02(byte opcode, ElementName elementName, String description) {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.addInt24(HtmlSink.MAX_INT24);
-      opts.addByte(HtmlBytes.FRAGSTR);
-      opts.addInt24(0);
-      opts.addByte(opcode);
-      opts.addInt8(AmbiguousName.TITLE.index());
-      opts.addByte(HtmlBytes.FRAGEND);
-    });
-
-    final FragmentAttributeRecorder subject;
-    subject = create(sink);
-
-    final IntSize size;
-    size = IntSize.BIT8;
-
-    final int res;
-    res = subject.record(elementName, size, 3);
-
-    assertEquals(res, 0);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
-          opts.addInt24(HtmlSink.MAX_INT24);
-          opts.addByte(HtmlBytes.FRAGSTR);
-          opts.addInt24(0);
-          opts.addByte(opcode);
-          opts.addInt8(AmbiguousName.TITLE.index());
-          opts.addByte(HtmlBytes.FRAGEND);
-        })
-    );
-  }
 
   @DataProvider
   public Object[][] testCase03Provider() {
@@ -590,13 +495,10 @@ public class FragmentAttributeRecorderTest {
   }
 
   private FragmentAttributeRecorder create(HtmlSink sink) {
-    final AmbiguousAttributeRecorder ambiguousAttributeRecorder;
-    ambiguousAttributeRecorder = new AmbiguousAttributeRecorder(sink);
-
     final ValueRecorder valueRecorder;
     valueRecorder = new ValueRecorder(sink);
 
-    return new FragmentAttributeRecorder(sink, ambiguousAttributeRecorder, valueRecorder);
+    return new FragmentAttributeRecorder(sink, valueRecorder);
   }
 
 }

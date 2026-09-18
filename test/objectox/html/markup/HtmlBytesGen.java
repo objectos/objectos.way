@@ -44,12 +44,6 @@ public class HtmlBytesGen {
     value("JSACTION816");
     value("JSACTION824");
 
-    comment("ambiguous");
-
-    value("AMBIGUOUS88");
-    value("AMBIGUOUS816");
-    value("AMBIGUOUS824");
-
     comment("fragment");
 
     value("FRAGSTR");
@@ -87,16 +81,6 @@ public class HtmlBytesGen {
     value("xJSACTION88");
     value("xJSACTION816");
     value("xJSACTION824");
-
-    comment("xambiguous");
-
-    value("aAMBIGUOUS88");
-    value("aAMBIGUOUS816");
-    value("aAMBIGUOUS824");
-
-    value("eAMBIGUOUS88");
-    value("eAMBIGUOUS816");
-    value("eAMBIGUOUS824");
 
     comment("xfragment");
 

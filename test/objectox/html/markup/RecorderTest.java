@@ -17,43 +17,12 @@ package objectox.html.markup;
 
 import static org.testng.Assert.assertEquals;
 
-import objectox.html.AmbiguousName;
 import org.testng.annotations.Test;
 
 public class RecorderTest {
 
   private Recorder create(HtmlSink sink) {
     return Recorder.of(sink);
-  }
-
-  @Test(description = "AmbiguousRecorder delegation")
-  public void ambiguous01() {
-    final HtmlSink sink;
-    sink = new HtmlSink();
-
-    final Recorder subject;
-    subject = create(sink);
-
-    final AmbiguousName name;
-    name = AmbiguousName.TITLE;
-
-    final String value;
-    value = "foo";
-
-    final AmbiguousPointer res;
-    res = subject.ambiguous(name, value);
-
-    assertEquals(res.value(), 0);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.AMBIGUOUS88);
-          opts.addInt8(name.index());
-          opts.addInt8(opts.addObject(value));
-        })
-    );
   }
 
   @Test(description = "DoctypeRecorder delegation")

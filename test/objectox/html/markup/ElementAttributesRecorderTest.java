@@ -21,7 +21,6 @@ import objectos.html.ClassName;
 import objectos.html.Id;
 import objectos.html.Markup;
 import objectos.html.markup.BooleanAttribute;
-import objectox.html.AmbiguousName;
 import objectox.html.IntSize;
 import objectox.html.elem.ElementName;
 import objectox.html.attr.AttributeName;
@@ -29,46 +28,6 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class ElementAttributesRecorderTest {
-
-  @Test(description = "AmbiguousAttributeRecorder delegation")
-  public void ambiguous01() {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.addByte(HtmlBytes.AMBIGUOUS88);
-      opts.addInt8(AmbiguousName.TITLE.index());
-      opts.addInt8(opts.addObject("foo"));
-      opts.addInt8(99);
-    });
-
-    final ElementAttributesRecorder subject;
-    subject = create(sink);
-
-    final ElementName elementName;
-    elementName = ElementName.DIV;
-
-    final IntSize size;
-    size = IntSize.BIT8;
-
-    final AmbiguousPointer pointer;
-    pointer = new AmbiguousPointer(0);
-
-    final int res;
-    res = subject.record(elementName, size, pointer);
-
-    assertEquals(res, 1);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.aAMBIGUOUS88);
-          opts.addInt8(AmbiguousName.TITLE.index());
-          opts.addInt8(opts.addObject("foo"));
-          opts.addInt8(99);
-          opts.addInt8(0);
-        })
-    );
-  }
 
   @Test(description = "ValueRecorder delegation")
   public void attribute01() {
@@ -248,16 +207,13 @@ public class ElementAttributesRecorderTest {
   }
 
   private ElementAttributesRecorder create(HtmlSink sink) {
-    final AmbiguousAttributeRecorder ambiguousAttributeRecorder;
-    ambiguousAttributeRecorder = new AmbiguousAttributeRecorder(sink);
-
     final ValueRecorder valueRecorder;
     valueRecorder = new ValueRecorder(sink);
 
     final FragmentAttributeRecorder fragmentAttributeRecorder;
-    fragmentAttributeRecorder = new FragmentAttributeRecorder(sink, ambiguousAttributeRecorder, valueRecorder);
+    fragmentAttributeRecorder = new FragmentAttributeRecorder(sink, valueRecorder);
 
-    return new ElementAttributesRecorder(ambiguousAttributeRecorder, fragmentAttributeRecorder, valueRecorder);
+    return new ElementAttributesRecorder(fragmentAttributeRecorder, valueRecorder);
   }
 
 }

@@ -143,7 +143,6 @@ public class ElementPreRecorderTest {
   @DataProvider
   public Object[][] ignoredProvider() {
     return new Object[][] {
-        {new AmbiguousPointer(0)},
         {new AttributePointer(0)},
         {new ElementPointer(0)},
         {new FragmentPointer(0)},

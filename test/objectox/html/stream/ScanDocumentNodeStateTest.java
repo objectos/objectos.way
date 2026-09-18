@@ -20,7 +20,6 @@ import static org.testng.Assert.assertSame;
 import java.util.function.Consumer;
 import objectos.script.Js;
 import objectos.script.JsAction;
-import objectox.html.AmbiguousName;
 import objectox.html.IntSize;
 import objectox.html.attr.AttributeName;
 import objectox.html.elem.ElementName;
@@ -176,46 +175,6 @@ public class ScanDocumentNodeStateTest {
           opts.addInt8(AttributeName.ONCLICK.index());
           opts.addInt24(opts.addObject(action));
         }), 6, "jsaction 8/24"},
-
-        {ctx(opts -> {
-          opts.addByte(HtmlBytes.aAMBIGUOUS88);
-          opts.addInt8(AmbiguousName.TITLE.index());
-          opts.addInt8(opts.addObject("foo"));
-        }), 4, "ambiguous attribute 8/8"},
-
-        {ctx(opts -> {
-          opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
-          opts.addByte(HtmlBytes.aAMBIGUOUS816);
-          opts.addInt8(AmbiguousName.TITLE.index());
-          opts.addInt16(opts.addObject("foo"));
-        }), 5, "ambiguous attribute 8/16"},
-
-        {ctx(opts -> {
-          opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
-          opts.addByte(HtmlBytes.aAMBIGUOUS824);
-          opts.addInt8(AmbiguousName.TITLE.index());
-          opts.addInt24(opts.addObject("foo"));
-        }), 6, "ambiguous attribute 8/24"},
-
-        {ctx(opts -> {
-          opts.addByte(HtmlBytes.eAMBIGUOUS88);
-          opts.addInt8(AmbiguousName.TITLE.index());
-          opts.addInt8(opts.addObject("foo"));
-        }), 4, "ambiguous element 8/8"},
-
-        {ctx(opts -> {
-          opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
-          opts.addByte(HtmlBytes.eAMBIGUOUS816);
-          opts.addInt8(AmbiguousName.TITLE.index());
-          opts.addInt16(opts.addObject("foo"));
-        }), 5, "ambiguous element 8/16"},
-
-        {ctx(opts -> {
-          opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
-          opts.addByte(HtmlBytes.eAMBIGUOUS824);
-          opts.addInt8(AmbiguousName.TITLE.index());
-          opts.addInt24(opts.addObject("foo"));
-        }), 6, "ambiguous element 8/24"},
 
         {ctx(opts -> {
           opts.addByte(HtmlBytes.xELEMSTR8);

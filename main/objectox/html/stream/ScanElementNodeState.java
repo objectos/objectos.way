@@ -71,12 +71,6 @@ final class ScanElementNodeState implements State {
 
       case HtmlBytes.xELEMVOID8 -> new BeginStartTagState(ctx, ElementKind.VOID, IntSize.BIT8);
 
-      case HtmlBytes.eAMBIGUOUS88 -> new RenderAmbiguousElementStartTagState(ctx, IntSize.BIT8, IntSize.BIT8);
-
-      case HtmlBytes.eAMBIGUOUS816 -> new RenderAmbiguousElementStartTagState(ctx, IntSize.BIT8, IntSize.BIT16);
-
-      case HtmlBytes.eAMBIGUOUS824 -> new RenderAmbiguousElementStartTagState(ctx, IntSize.BIT8, IntSize.BIT24);
-
       case HtmlBytes.xTEXT8 -> new RenderTextState(ctx, IntSize.BIT8);
 
       case HtmlBytes.xTEXT16 -> new RenderTextState(ctx, IntSize.BIT16);

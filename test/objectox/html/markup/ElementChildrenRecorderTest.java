@@ -17,90 +17,12 @@ package objectox.html.markup;
 
 import static org.testng.Assert.assertEquals;
 
-import objectox.html.AmbiguousName;
 import objectox.html.IntSize;
 import objectox.html.attr.AttributeName;
 import objectox.html.elem.ElementName;
 import org.testng.annotations.Test;
 
 public class ElementChildrenRecorderTest {
-
-  @Test(description = "ambiguous name that resolves to a child element")
-  public void ambiguous01() {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.addInt24(HtmlSink.MAX_INT24);
-      opts.addByte(HtmlBytes.AMBIGUOUS88);
-      opts.addInt8(AmbiguousName.TITLE.index());
-      opts.addInt8(opts.addObject("foo"));
-      opts.addInt8(99);
-    });
-
-    final ElementChildrenRecorder subject;
-    subject = create(sink);
-
-    final IntSize size;
-    size = IntSize.BIT8;
-
-    final AmbiguousPointer pointer;
-    pointer = new AmbiguousPointer(3);
-
-    final int res;
-    res = subject.record(size, pointer);
-
-    assertEquals(res, 1);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
-          opts.addInt24(HtmlSink.MAX_INT24);
-          opts.addByte(HtmlBytes.eAMBIGUOUS88);
-          opts.addInt8(AmbiguousName.TITLE.index());
-          opts.addInt8(opts.addObject("foo"));
-          opts.addInt8(99);
-          opts.addInt8(3);
-        })
-    );
-  }
-
-  @Test(description = "ambiguous name that resolves to an attribute")
-  public void ambiguous02() {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.addInt24(HtmlSink.MAX_INT24);
-      opts.addByte(HtmlBytes.aAMBIGUOUS88);
-      opts.addInt8(AmbiguousName.TITLE.index());
-      opts.addInt8(opts.addObject("foo"));
-      opts.addInt8(99);
-    });
-
-    final ElementChildrenRecorder subject;
-    subject = create(sink);
-
-    final IntSize size;
-    size = IntSize.BIT8;
-
-    final AmbiguousPointer pointer;
-    pointer = new AmbiguousPointer(3);
-
-    final int res;
-    res = subject.record(size, pointer);
-
-    assertEquals(res, 0);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
-          opts.addInt24(HtmlSink.MAX_INT24);
-          opts.addByte(HtmlBytes.aAMBIGUOUS88);
-          opts.addInt8(AmbiguousName.TITLE.index());
-          opts.addInt8(opts.addObject("foo"));
-          opts.addInt8(99);
-        })
-    );
-  }
 
   @Test(description = "attribute is not a child; sink unchanged")
   public void attribute01() {
@@ -275,16 +197,13 @@ public class ElementChildrenRecorderTest {
   }
 
   private ElementChildrenRecorder create(HtmlSink sink) {
-    final AmbiguousChildRecorder ambiguousChildRecorder;
-    ambiguousChildRecorder = new AmbiguousChildRecorder(sink);
-
     final ValueRecorder valueRecorder;
     valueRecorder = new ValueRecorder(sink);
 
     final FragmentChildRecorder fragmentChildRecorder;
-    fragmentChildRecorder = new FragmentChildRecorder(sink, ambiguousChildRecorder, valueRecorder);
+    fragmentChildRecorder = new FragmentChildRecorder(sink, valueRecorder);
 
-    return new ElementChildrenRecorder(ambiguousChildRecorder, fragmentChildRecorder, valueRecorder);
+    return new ElementChildrenRecorder(fragmentChildRecorder, valueRecorder);
   }
 
 }

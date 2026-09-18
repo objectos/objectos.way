@@ -28,21 +28,15 @@ import objectox.html.elem.ElementName;
 
 final class ElementAttributesRecorder {
 
-  private final AmbiguousAttributeRecorder ambiguousAttributeRecorder;
-
   private final FragmentAttributeRecorder fragmentAttributeRecorder;
 
   private final ValueRecorder valueRecorder;
 
   ElementAttributesRecorder(
-      AmbiguousAttributeRecorder ambiguousAttributeRecorder,
-
       FragmentAttributeRecorder fragmentAttributeRecorder,
 
       ValueRecorder valueRecorder
   ) {
-    this.ambiguousAttributeRecorder = ambiguousAttributeRecorder;
-
     this.fragmentAttributeRecorder = fragmentAttributeRecorder;
 
     this.valueRecorder = valueRecorder;
@@ -70,8 +64,6 @@ final class ElementAttributesRecorder {
 
   private int record0(ElementName elementName, IntSize size, ElementValue value) {
     return switch (value) {
-      case AmbiguousPointer(int v) -> ambiguousAttributeRecorder.record(elementName, size, v);
-
       case AttributePointer(int v) -> valueRecorder.record(size, v);
 
       case BooleanAttribute _ -> throw new ObjectAttributeDetected();

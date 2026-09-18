@@ -24,21 +24,15 @@ import objectox.html.IntSize;
 
 final class ElementChildrenRecorder {
 
-  private final AmbiguousChildRecorder ambiguousChildRecorder;
-
   private final FragmentChildRecorder fragmentChildRecorder;
 
   private final ValueRecorder valueRecorder;
 
   ElementChildrenRecorder(
-      AmbiguousChildRecorder ambiguousChildRecorder,
-
       FragmentChildRecorder fragmentChildRecorder,
 
       ValueRecorder valueRecorder
   ) {
-    this.ambiguousChildRecorder = ambiguousChildRecorder;
-
     this.fragmentChildRecorder = fragmentChildRecorder;
 
     this.valueRecorder = valueRecorder;
@@ -56,8 +50,6 @@ final class ElementChildrenRecorder {
 
   private int record0(IntSize size, ElementValue value) {
     return switch (value) {
-      case AmbiguousPointer(int v) -> ambiguousChildRecorder.record(size, v);
-
       case AttributePointer _ -> 0;
 
       case BooleanAttribute _ -> 0;

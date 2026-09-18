@@ -15,7 +15,6 @@
  */
 package objectox.html.stream;
 
-import objectox.html.AmbiguousName;
 import objectox.html.IntSize;
 import objectox.html.attr.AttributeName;
 import objectox.html.markup.HtmlBytes;
@@ -70,12 +69,6 @@ final class MergeAttributeState implements State {
 
       case HtmlBytes.xATTRIBUTE824 -> compute0Attr(IntSize.BIT8, IntSize.BIT24);
 
-      case HtmlBytes.aAMBIGUOUS88 -> compute1Ambi(IntSize.BIT8, IntSize.BIT8);
-
-      case HtmlBytes.aAMBIGUOUS816 -> compute1Ambi(IntSize.BIT8, IntSize.BIT16);
-
-      case HtmlBytes.aAMBIGUOUS824 -> compute1Ambi(IntSize.BIT8, IntSize.BIT24);
-
       default -> popAndToScan();
     };
   }
@@ -87,22 +80,6 @@ final class MergeAttributeState implements State {
 
     final int nextNameIndex;
     nextNameIndex = ctx.nextInt(nameSize);
-
-    return computeCommon(nextNameIndex, nextValueSize);
-  }
-
-  private State compute1Ambi(IntSize ambiSize, IntSize nextValueSize) {
-    final int nameIndex;
-    nameIndex = ctx.nextInt(ambiSize);
-
-    final AmbiguousName ambiName;
-    ambiName = AmbiguousName.get(nameIndex);
-
-    final AttributeName nextName;
-    nextName = ambiName.attribute;
-
-    final int nextNameIndex;
-    nextNameIndex = nextName.index();
 
     return computeCommon(nextNameIndex, nextValueSize);
   }

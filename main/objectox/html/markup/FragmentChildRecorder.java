@@ -21,20 +21,14 @@ final class FragmentChildRecorder {
 
   private final HtmlSink sink;
 
-  private final AmbiguousChildRecorder ambiguousChildRecorder;
-
   private final ValueRecorder valueRecorder;
 
   FragmentChildRecorder(
       HtmlSink sink,
 
-      AmbiguousChildRecorder ambiguousChildRecorder,
-
       ValueRecorder valueRecorder
   ) {
     this.sink = sink;
-
-    this.ambiguousChildRecorder = ambiguousChildRecorder;
 
     this.valueRecorder = valueRecorder;
   }
@@ -65,33 +59,6 @@ final class FragmentChildRecorder {
         case HtmlBytes.xFRAGSTR -> {
           cursor = sink.getInt24(value + 1);
         }
-
-        case HtmlBytes.AMBIGUOUS88 -> {
-          sum += ambiguousChildRecorder.record(size, value);
-
-          cursor += 1 + 1;
-        }
-
-        case HtmlBytes.AMBIGUOUS816 -> {
-          sum += ambiguousChildRecorder.record(size, value);
-
-          cursor += 1 + 2;
-        }
-
-        case HtmlBytes.AMBIGUOUS824 -> {
-          sum += ambiguousChildRecorder.record(size, value);
-
-          cursor += 1 + 3;
-        }
-
-        case HtmlBytes.aAMBIGUOUS88,
-             HtmlBytes.eAMBIGUOUS88 -> cursor += 1 + 1;
-
-        case HtmlBytes.aAMBIGUOUS816,
-             HtmlBytes.eAMBIGUOUS816 -> cursor += 1 + 2;
-
-        case HtmlBytes.aAMBIGUOUS824,
-             HtmlBytes.eAMBIGUOUS824 -> cursor += 1 + 3;
 
         case HtmlBytes.ELEMSTR8,
              HtmlBytes.ELEMVOID8 -> {

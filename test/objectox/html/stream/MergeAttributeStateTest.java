@@ -17,7 +17,6 @@ package objectox.html.stream;
 
 import static org.testng.Assert.assertEquals;
 
-import objectox.html.AmbiguousName;
 import objectox.html.IntSize;
 import objectox.html.attr.AttributeName;
 import objectox.html.elem.ElementName;
@@ -166,64 +165,15 @@ public class MergeAttributeStateTest {
   }
 
   @Test(description = """
-  ambiguous attribute but with different name
-  """)
-  public void testCase04() {
-    final int frameIndex = 3, valueIndex = 0;
-
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.aAMBIGUOUS88);
-      opts.addInt8(AmbiguousName.TITLE.index());
-      opts.addInt8(opts.addObject("#"));
-      opts.addInt8(valueIndex);
-
-      opts.push(FrameY.create(f -> {
-        f.index = frameIndex;
-
-        f.regular(ElementName.DIV);
-
-        f.values8(1, 2);
-      }));
-    });
-
-    final MergeAttributeState subject;
-    subject = new MergeAttributeState(ctx, IntSize.BIT8, AttributeName.STYLE, "s1");
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res, new ScanElementAttributeState(ctx));
-
-    assertEquals(
-        ctx,
-
-        CtxY.create(opts -> {
-          opts.sink(ctx);
-
-          opts.push(FrameY.create(f -> {
-            f.index = frameIndex;
-
-            f.regular(ElementName.DIV);
-
-            f.values8(1, 2);
-          }));
-
-          opts.result(RenderAttributeEvent.of(0, AttributeName.STYLE, "s1"));
-        })
-    );
-  }
-
-  @Test(description = """
-  ambiguous attribute but with same name
+  attribute but with same name
   """)
   public void testCase05() {
     final int frameIndex = 3, valueIndex = 0;
 
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.aAMBIGUOUS88);
-      opts.addInt8(AmbiguousName.TITLE.index());
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(AttributeName.TITLE.index());
       opts.addInt8(opts.addObject("t2"));
       opts.addInt8(valueIndex);
 
@@ -262,7 +212,7 @@ public class MergeAttributeStateTest {
   }
 
   @Test(description = """
-  ambiguous attribute 8/16 but with same name
+  attribute 8/16 but with same name
   """)
   public void testCase06() {
     final int frameIndex = 4, valueIndex = 0;
@@ -270,8 +220,8 @@ public class MergeAttributeStateTest {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
-      opts.addByte(HtmlBytes.aAMBIGUOUS816);
-      opts.addInt8(AmbiguousName.TITLE.index());
+      opts.addByte(HtmlBytes.xATTRIBUTE816);
+      opts.addInt8(AttributeName.TITLE.index());
       opts.addInt16(opts.addObject("t2"));
       opts.addInt8(valueIndex);
 
@@ -310,7 +260,7 @@ public class MergeAttributeStateTest {
   }
 
   @Test(description = """
-  ambiguous attribute 8/24 but with same name
+  attribute 8/24 but with same name
   """)
   public void testCase07() {
     final int frameIndex = 5, valueIndex = 0;
@@ -318,8 +268,8 @@ public class MergeAttributeStateTest {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
-      opts.addByte(HtmlBytes.aAMBIGUOUS824);
-      opts.addInt8(AmbiguousName.TITLE.index());
+      opts.addByte(HtmlBytes.xATTRIBUTE824);
+      opts.addInt8(AttributeName.TITLE.index());
       opts.addInt24(opts.addObject("t2"));
       opts.addInt8(valueIndex);
 

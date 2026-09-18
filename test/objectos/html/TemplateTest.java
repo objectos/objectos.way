@@ -730,7 +730,7 @@ c\
           protected final void render() {
             html(
                 head(
-                    title("element")
+                    title(text("element"))
                 ),
                 body(
                     title("attribute")
@@ -765,7 +765,7 @@ element\
             html(
                 head(
                     meta(charset("utf8")),
-                    title("test case 17")
+                    title(text("test case 17"))
                 ),
                 body(
                     id("id"),
@@ -836,7 +836,7 @@ tc18\
           protected final void render() {
             body(
                 option(label("attribute")),
-                fieldset(label("element"))
+                fieldset(label(text("element")))
             );
           }
         },
@@ -982,7 +982,7 @@ element\
           protected final void render() {
             head(
                 style(
-                    "@font-face {font-family: 'Foo';}"
+                    text("@font-face {font-family: 'Foo';}")
                 )
             );
           }
@@ -1697,7 +1697,7 @@ abcd\
           @Override
           protected final void render() {
             svg(
-                title("svg title")
+                title(text("svg title"))
             );
           }
         },

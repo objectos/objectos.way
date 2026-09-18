@@ -16,39 +16,11 @@
 package objectox.html;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import objectox.html.elem.ElementSpec;
 
 public final class HtmlSpec {
 
   private HtmlSpec() {}
-
-  // ##################################################################
-  // # BEGIN: Ambiguous
-  // ##################################################################
-
-  public static List<AmbiguousSpec> ambiguous() {
-    return List.of(
-        new AmbiguousSpec("CLIPPATH", "clipPath", "clip-path", "clipPath"),
-        new AmbiguousSpec("FORM", "form", "form", "form"),
-        new AmbiguousSpec("LABEL", "label", "label", "label"),
-        new AmbiguousSpec("STYLE", "style", "style", "style"),
-        new AmbiguousSpec("TITLE", "title", "title", "title")
-    );
-  }
-
-  public static Set<String> ambiguousAttrNames() {
-    return ambiguous().stream().map(AmbiguousSpec::attributeName).collect(Collectors.toUnmodifiableSet());
-  }
-
-  public static Set<String> ambiguousElemNames() {
-    return ambiguous().stream().map(AmbiguousSpec::elementName).collect(Collectors.toUnmodifiableSet());
-  }
-
-  // ##################################################################
-  // # END: Ambiguous
-  // ##################################################################
 
   // ##################################################################
   // # BEGIN: Attribute

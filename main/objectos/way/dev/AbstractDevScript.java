@@ -52,7 +52,7 @@ abstract class AbstractDevScript extends Template implements Handler {
     meta(name("viewport"), content("width=device-width, initial-scale=1"));
     link(rel("stylesheet"), type("text/css"), href("/styles.css"));
     script(src("/script.js"));
-    title(documentTitle());
+    title(text(documentTitle()));
   }
 
   String documentTitle() {

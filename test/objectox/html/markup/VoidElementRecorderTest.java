@@ -231,17 +231,14 @@ public class VoidElementRecorderTest {
   }
 
   private VoidElementRecorder create(HtmlSink sink) {
-    final AmbiguousAttributeRecorder ambiguousAttributeRecorder;
-    ambiguousAttributeRecorder = new AmbiguousAttributeRecorder(sink);
-
     final ValueRecorder valueRecorder;
     valueRecorder = new ValueRecorder(sink);
 
     final FragmentAttributeRecorder fragmentAttributeRecorder;
-    fragmentAttributeRecorder = new FragmentAttributeRecorder(sink, ambiguousAttributeRecorder, valueRecorder);
+    fragmentAttributeRecorder = new FragmentAttributeRecorder(sink, valueRecorder);
 
     final ElementAttributesRecorder attributesRecorder;
-    attributesRecorder = new ElementAttributesRecorder(ambiguousAttributeRecorder, fragmentAttributeRecorder, valueRecorder);
+    attributesRecorder = new ElementAttributesRecorder(fragmentAttributeRecorder, valueRecorder);
 
     final AttributeRecorder attributeRecorder;
     attributeRecorder = new AttributeRecorder(sink);

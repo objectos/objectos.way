@@ -24,95 +24,6 @@ import org.testng.annotations.Test;
 public class FragmentChildRecorderTest {
 
   @DataProvider
-  public Object[][] testCase01Provider() {
-    return new Object[][] {
-        {HtmlBytes.AMBIGUOUS88, HtmlBytes.eAMBIGUOUS88, "AMBIGUOUS88"},
-        {HtmlBytes.AMBIGUOUS816, HtmlBytes.eAMBIGUOUS816, "AMBIGUOUS816"},
-        {HtmlBytes.AMBIGUOUS824, HtmlBytes.eAMBIGUOUS824, "AMBIGUOUS824"}
-    };
-  }
-
-  @Test(dataProvider = "testCase01Provider", description = "AmbiguousChildRecorder delegation")
-  public void testCase01(byte opcode, byte marked, String description) {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.addInt24(HtmlSink.MAX_INT24);
-      opts.addByte(HtmlBytes.FRAGSTR);
-      opts.addInt24(0);
-      opts.addByte(opcode);
-      opts.addByte(HtmlBytes.FRAGEND);
-    });
-
-    final FragmentChildRecorder subject;
-    subject = create(sink);
-
-    final IntSize size;
-    size = IntSize.BIT8;
-
-    final int res;
-    res = subject.record(size, 3);
-
-    assertEquals(res, 1);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
-          opts.addInt24(HtmlSink.MAX_INT24);
-          opts.addByte(HtmlBytes.xFRAGSTR);
-          opts.addInt24(0);
-          opts.addByte(marked);
-          opts.addByte(HtmlBytes.FRAGEND);
-          opts.addInt8(7);
-        })
-    );
-  }
-
-  @DataProvider
-  public Object[][] testCase02Provider() {
-    return new Object[][] {
-        {HtmlBytes.aAMBIGUOUS88, "aAMBIGUOUS88"},
-        {HtmlBytes.aAMBIGUOUS816, "aAMBIGUOUS816"},
-        {HtmlBytes.aAMBIGUOUS824, "aAMBIGUOUS824"}
-    };
-  }
-
-  @Test(dataProvider = "testCase02Provider", description = "ambiguous already consumed as attribute")
-  public void testCase02(byte opcode, String description) {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.addInt24(HtmlSink.MAX_INT24);
-      opts.addByte(HtmlBytes.FRAGSTR);
-      opts.addInt24(0);
-      opts.addByte(opcode);
-      opts.addByte(HtmlBytes.FRAGEND);
-    });
-
-    final FragmentChildRecorder subject;
-    subject = create(sink);
-
-    final IntSize size;
-    size = IntSize.BIT8;
-
-    final int res;
-    res = subject.record(size, 3);
-
-    assertEquals(res, 0);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
-          opts.addInt24(HtmlSink.MAX_INT24);
-          opts.addByte(HtmlBytes.xFRAGSTR);
-          opts.addInt24(0);
-          opts.addByte(opcode);
-          opts.addByte(HtmlBytes.FRAGEND);
-        })
-    );
-  }
-
-  @DataProvider
   public Object[][] testCase03Provider() {
     return new Object[][] {
         {HtmlBytes.ELEMSTR8, HtmlBytes.xELEMSTR8, "ELEMSTR8", new byte[] {2, HtmlBytes.VALUES8, 0}},
@@ -527,13 +438,10 @@ public class FragmentChildRecorderTest {
   }
 
   private FragmentChildRecorder create(HtmlSink sink) {
-    final AmbiguousChildRecorder ambiguousChildRecorder;
-    ambiguousChildRecorder = new AmbiguousChildRecorder(sink);
-
     final ValueRecorder valueRecorder;
     valueRecorder = new ValueRecorder(sink);
 
-    return new FragmentChildRecorder(sink, ambiguousChildRecorder, valueRecorder);
+    return new FragmentChildRecorder(sink, valueRecorder);
   }
 
 }

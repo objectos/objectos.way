@@ -83,18 +83,6 @@ final class ScanElementAttributeState implements State {
 
       case HtmlBytes.xJSACTION824 -> new RenderJsActionAttributeState(ctx, IntSize.BIT8, IntSize.BIT24);
 
-      case HtmlBytes.aAMBIGUOUS88 -> new RenderAmbiguousAttributeState(ctx, IntSize.BIT8, IntSize.BIT8);
-
-      case HtmlBytes.aAMBIGUOUS816 -> new RenderAmbiguousAttributeState(ctx, IntSize.BIT8, IntSize.BIT16);
-
-      case HtmlBytes.aAMBIGUOUS824 -> new RenderAmbiguousAttributeState(ctx, IntSize.BIT8, IntSize.BIT24);
-
-      case HtmlBytes.eAMBIGUOUS88 -> { nodes(elem); yield new RenderAmbiguousElementStartTagState(ctx, IntSize.BIT8, IntSize.BIT8); }
-
-      case HtmlBytes.eAMBIGUOUS816 -> { nodes(elem); yield new RenderAmbiguousElementStartTagState(ctx, IntSize.BIT8, IntSize.BIT16); }
-
-      case HtmlBytes.eAMBIGUOUS824 -> { nodes(elem); yield new RenderAmbiguousElementStartTagState(ctx, IntSize.BIT8, IntSize.BIT24); }
-
       case HtmlBytes.xELEMSTR8 -> { nodes(elem); yield new BeginStartTagState(ctx, ElementKind.REGULAR, IntSize.BIT8); }
 
       case HtmlBytes.xELEMVOID8 -> { nodes(elem); yield new BeginStartTagState(ctx, ElementKind.VOID, IntSize.BIT8); }

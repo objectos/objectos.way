@@ -15,7 +15,6 @@
  */
 package objectos.html;
 
-import objectos.html.markup.AmbiguousMarkup;
 import objectos.html.markup.AttributeMarkup;
 import objectos.html.markup.BooleanAttribute;
 import objectos.html.markup.ElementMarkup;
@@ -1076,6 +1075,13 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded attribute
   AttributeMarkup className(String value);
 
+  /// Encodes the `clip-path` attribute with the specified value.
+  ///
+  /// @param value the attribute value
+  ///
+  /// @return an object representing the encoded attribute
+  AttributeMarkup clipPath(String value);
+
   /// Encodes the `clip-rule` attribute with the specified value.
   ///
   /// @param value the attribute value
@@ -1252,6 +1258,13 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded attribute
   AttributeMarkup floodOpacity(String value);
 
+  /// Encodes the `form` attribute with the specified value.
+  ///
+  /// @param value the attribute value
+  ///
+  /// @return an object representing the encoded attribute
+  AttributeMarkup form(String value);
+
   /// Encodes the `for` attribute with the specified value.
   ///
   /// @param value the attribute value
@@ -1316,6 +1329,13 @@ public sealed interface Markup permits MarkupImpl {
   ///
   /// @return an object representing the encoded attribute
   AttributeMarkup integrity(String value);
+
+  /// Encodes the `label` attribute with the specified value.
+  ///
+  /// @param value the attribute value
+  ///
+  /// @return an object representing the encoded attribute
+  AttributeMarkup label(String value);
 
   /// Encodes the `lang` attribute with the specified value.
   ///
@@ -1660,6 +1680,13 @@ public sealed interface Markup permits MarkupImpl {
   /// @return an object representing the encoded attribute
   AttributeMarkup strokeWidth(String value);
 
+  /// Encodes the `style` attribute with the specified value.
+  ///
+  /// @param value the attribute value
+  ///
+  /// @return an object representing the encoded attribute
+  AttributeMarkup style(String value);
+
   /// Encodes the `tabindex` attribute with the specified value.
   ///
   /// @param value the attribute value
@@ -1701,6 +1728,13 @@ public sealed interface Markup permits MarkupImpl {
   ///
   /// @return an object representing the encoded attribute
   AttributeMarkup textRendering(String value);
+
+  /// Encodes the `title` attribute with the specified value.
+  ///
+  /// @param value the attribute value
+  ///
+  /// @return an object representing the encoded attribute
+  AttributeMarkup title(String value);
 
   /// Encodes the `transform` attribute with the specified value.
   ///
@@ -1806,50 +1840,6 @@ public sealed interface Markup permits MarkupImpl {
   ///
   /// @return an object representing the encoded attribute
   AttributeMarkup xmlns(String value);
-
-  //
-  // AMBIGUOUS
-  //
-
-  /// Encodes the `clip-path` attribute or the `clipPath` element with the
-  /// specified text.
-  ///
-  /// @param text the attribute value or the text content of the element
-  ///
-  /// @return an object representing the encoded attribute or element
-  AmbiguousMarkup clipPath(String text);
-
-  /// Encodes the `form` attribute or the `form` element with the specified
-  /// text.
-  ///
-  /// @param text the attribute value or the text content of the element
-  ///
-  /// @return an object representing the encoded attribute or element
-  AmbiguousMarkup form(String text);
-
-  /// Encodes the `label` attribute or the `label` element with the specified
-  /// text.
-  ///
-  /// @param text the attribute value or the text content of the element
-  ///
-  /// @return an object representing the encoded attribute or element
-  AmbiguousMarkup label(String text);
-
-  /// Encodes the `style` attribute or the `style` element with the specified
-  /// text.
-  ///
-  /// @param text the attribute value or the text content of the element
-  ///
-  /// @return an object representing the encoded attribute or element
-  AmbiguousMarkup style(String text);
-
-  /// Encodes the `title` attribute or the `title` element with the specified
-  /// text.
-  ///
-  /// @param text the attribute value or the text content of the element
-  ///
-  /// @return an object representing the encoded attribute or element
-  AmbiguousMarkup title(String text);
 
   //
   // TEXT

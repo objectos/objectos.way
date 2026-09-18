@@ -274,18 +274,18 @@ public class DomFormatterTestStandard {
             html(
                 head(
                     style(
-                        """
+                        text("""
                 #a {border: 0}
 
-                #b {margin: 0}"""
+                #b {margin: 0}""")
 
                     ),
                     style(
-                        """
+                        text("""
                 #c {border: 0}
 
                 #d {margin: 0}
-                """
+                """)
                     )
                 )
             );

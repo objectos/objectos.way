@@ -196,17 +196,14 @@ public class RegularElementRecorderTest {
   }
 
   private RegularElementRecorder create(HtmlSink sink) {
-    final AmbiguousAttributeRecorder ambiguousAttributeRecorder;
-    ambiguousAttributeRecorder = new AmbiguousAttributeRecorder(sink);
-
     final ValueRecorder valueRecorder;
     valueRecorder = new ValueRecorder(sink);
 
     final FragmentAttributeRecorder fragmentAttributeRecorder;
-    fragmentAttributeRecorder = new FragmentAttributeRecorder(sink, ambiguousAttributeRecorder, valueRecorder);
+    fragmentAttributeRecorder = new FragmentAttributeRecorder(sink, valueRecorder);
 
     final ElementAttributesRecorder attributesRecorder;
-    attributesRecorder = new ElementAttributesRecorder(ambiguousAttributeRecorder, fragmentAttributeRecorder, valueRecorder);
+    attributesRecorder = new ElementAttributesRecorder(fragmentAttributeRecorder, valueRecorder);
 
     final AttributeRecorder attributeRecorder;
     attributeRecorder = new AttributeRecorder(sink);
@@ -220,14 +217,11 @@ public class RegularElementRecorderTest {
     final ElementPreRecorder elementPreRecorder;
     elementPreRecorder = new ElementPreRecorder(attributeRecorder, booleanAttributeRecorder, fragmentRecorder);
 
-    final AmbiguousChildRecorder ambiguousChildRecorder;
-    ambiguousChildRecorder = new AmbiguousChildRecorder(sink);
-
     final FragmentChildRecorder fragmentChildRecorder;
-    fragmentChildRecorder = new FragmentChildRecorder(sink, ambiguousChildRecorder, valueRecorder);
+    fragmentChildRecorder = new FragmentChildRecorder(sink, valueRecorder);
 
     final ElementChildrenRecorder childrenRecorder;
-    childrenRecorder = new ElementChildrenRecorder(ambiguousChildRecorder, fragmentChildRecorder, valueRecorder);
+    childrenRecorder = new ElementChildrenRecorder(fragmentChildRecorder, valueRecorder);
 
     return new RegularElementRecorder(sink, attributesRecorder, childrenRecorder, elementPreRecorder);
   }

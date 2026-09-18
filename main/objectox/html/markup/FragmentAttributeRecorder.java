@@ -22,14 +22,10 @@ final class FragmentAttributeRecorder {
 
   private final HtmlSink sink;
 
-  private final AmbiguousAttributeRecorder ambiguousAttributeRecorder;
-
   private final ValueRecorder valueRecorder;
 
-  FragmentAttributeRecorder(HtmlSink sink, AmbiguousAttributeRecorder ambiguousAttributeRecorder, ValueRecorder valueRecorder) {
+  FragmentAttributeRecorder(HtmlSink sink, ValueRecorder valueRecorder) {
     this.sink = sink;
-
-    this.ambiguousAttributeRecorder = ambiguousAttributeRecorder;
 
     this.valueRecorder = valueRecorder;
   }
@@ -60,33 +56,6 @@ final class FragmentAttributeRecorder {
         case HtmlBytes.xFRAGSTR -> {
           cursor = sink.getInt24(value + 1);
         }
-
-        case HtmlBytes.AMBIGUOUS88 -> {
-          sum += ambiguousAttributeRecorder.record(elementName, size, value);
-
-          cursor += 1 + 1;
-        }
-
-        case HtmlBytes.AMBIGUOUS816 -> {
-          sum += ambiguousAttributeRecorder.record(elementName, size, value);
-
-          cursor += 1 + 2;
-        }
-
-        case HtmlBytes.AMBIGUOUS824 -> {
-          sum += ambiguousAttributeRecorder.record(elementName, size, value);
-
-          cursor += 1 + 3;
-        }
-
-        case HtmlBytes.aAMBIGUOUS88,
-             HtmlBytes.eAMBIGUOUS88 -> cursor += 1 + 1;
-
-        case HtmlBytes.aAMBIGUOUS816,
-             HtmlBytes.eAMBIGUOUS816 -> cursor += 1 + 2;
-
-        case HtmlBytes.aAMBIGUOUS824,
-             HtmlBytes.eAMBIGUOUS824 -> cursor += 1 + 3;
 
         case HtmlBytes.ATTRIBUTE88,
              HtmlBytes.JSACTION88 -> {

@@ -16,8 +16,6 @@
 package objectos.html;
 
 import java.util.Iterator;
-import java.util.Set;
-import objectox.html.AmbiguousSpec;
 import objectox.html.AttributeSpec;
 import objectox.html.HtmlSpec;
 import objectox.html.MethodSpec;
@@ -50,8 +48,6 @@ public class TemplateGen {
     elements();
 
     attributes();
-
-    ambiguous();
 
     text();
   }
@@ -126,26 +122,8 @@ public class TemplateGen {
     }
     """);
 
-    final Set<String> ambiguousNames;
-    ambiguousNames = HtmlSpec.ambiguousElemNames();
-
     for (ElementSpec elem : HtmlSpec.elements()) {
-      final String htmlName;
-      htmlName = elem.htmlName();
-
-      if (ambiguousNames.contains(htmlName)) {
-        methods.append("""
-        /// Encodes the `%1$s` element with the specified values.
-        /// @param values the encoded attributes and encoded child nodes of the element
-        /// @return an object representing the encoded element
-        protected final ElementMarkup %2$s(RegularElementValue... values) {
-          return markup().%2$s(values);
-        }
-        """.formatted(elem.htmlName(), elem.htmlName()));
-
-      }
-
-      else if (elem.endTag()) {
+      if (elem.endTag()) {
         methods.append("""
 
         /// Encodes the `%1$s` element with the specified values.
@@ -195,15 +173,8 @@ public class TemplateGen {
     }
     """);
 
-    final Set<String> ambiguous;
-    ambiguous = HtmlSpec.ambiguousAttrNames();
-
     for (AttributeSpec attr : HtmlSpec.attributes()) {
-      if (ambiguous.contains(attr.htmlName())) {
-        continue;
-      }
-
-      else if (attr.booleanAttribute()) {
+      if (attr.booleanAttribute()) {
         fields.append("""
 
         /// The `%s` boolean attribute.
@@ -234,27 +205,6 @@ public class TemplateGen {
         """.formatted(attr.htmlName(), attr.methodName(), attr.methodName()));
         }
       }
-    }
-  }
-
-  private void ambiguous() {
-    methods.append("""
-
-    //
-    // AMBIGUOUS
-    //
-    """);
-
-    for (AmbiguousSpec spec : HtmlSpec.ambiguous()) {
-      methods.append("""
-
-      /// Encodes the `%s` attribute or the `%s` element with the specified text.
-      /// @param text the attribute value or the text content of the element
-      /// @return an object representing the encoded attribute or element
-      protected final AmbiguousMarkup %s(String text) {
-        return markup().%s(text);
-      }
-      """.formatted(spec.attributeName(), spec.elementName(), spec.methodName(), spec.methodName()));
     }
   }
 
