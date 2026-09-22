@@ -99,6 +99,18 @@ final class ScanElementAttributeState implements State {
 
       case HtmlBytes.xRAW24 -> { nodes(elem); yield new RenderRawState(ctx, IntSize.BIT24); }
 
+      case HtmlBytes.xTEST8 -> { nodes(elem); yield new RenderTestableTextState(ctx, IntSize.BIT8); }
+
+      case HtmlBytes.xTEST16 -> { nodes(elem); yield new RenderTestableTextState(ctx, IntSize.BIT16); }
+
+      case HtmlBytes.xTEST24 -> { nodes(elem); yield new RenderTestableTextState(ctx, IntSize.BIT24); }
+
+      case HtmlBytes.xTESTONLY8 -> { nodes(elem); yield new RenderTestableOnlyState(ctx, IntSize.BIT8); }
+
+      case HtmlBytes.xTESTONLY16 -> { nodes(elem); yield new RenderTestableOnlyState(ctx, IntSize.BIT16); }
+
+      case HtmlBytes.xTESTONLY24 -> { nodes(elem); yield new RenderTestableOnlyState(ctx, IntSize.BIT24); }
+
       default -> throw State.implCode(code);
     };
   }

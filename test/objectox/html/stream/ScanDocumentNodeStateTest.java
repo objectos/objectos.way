@@ -18,6 +18,7 @@ package objectox.html.stream;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 import java.util.function.Consumer;
+import objectos.html.TestableName;
 import objectos.script.Js;
 import objectos.script.JsAction;
 import objectox.html.IntSize;
@@ -237,7 +238,41 @@ public class ScanDocumentNodeStateTest {
           opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
           opts.addByte(HtmlBytes.xRAW24);
           opts.addInt24(opts.addObject("Ipsum"));
-        }), 5, "raw 24"}
+        }), 5, "raw 24"},
+
+        {ctx(opts -> {
+          opts.addByte(HtmlBytes.xTEST8);
+          opts.addInt8(opts.addObject("Ipsum"));
+        }), 3, "test 8"},
+
+        {ctx(opts -> {
+          opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
+          opts.addByte(HtmlBytes.xTEST16);
+          opts.addInt16(opts.addObject("Ipsum"));
+        }), 4, "test 16"},
+
+        {ctx(opts -> {
+          opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
+          opts.addByte(HtmlBytes.xTEST24);
+          opts.addInt24(opts.addObject("Ipsum"));
+        }), 5, "test 24"},
+
+        {ctx(opts -> {
+          opts.addByte(HtmlBytes.xTESTONLY8);
+          opts.addInt8(opts.addObject("Ipsum"));
+        }), 3, "test only 8"},
+
+        {ctx(opts -> {
+          opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
+          opts.addByte(HtmlBytes.xTESTONLY16);
+          opts.addInt16(opts.addObject("Ipsum"));
+        }), 4, "test only 16"},
+
+        {ctx(opts -> {
+          opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
+          opts.addByte(HtmlBytes.xTESTONLY24);
+          opts.addInt24(opts.addObject("Ipsum"));
+        }), 5, "test only 24"}
     };
   }
 
@@ -309,6 +344,116 @@ public class ScanDocumentNodeStateTest {
     res = subject.compute();
 
     assertEquals(res, new RenderRawState(ctx, rawSize));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(FrameY.create(f -> {
+            f.index = 1;
+          }));
+        })
+    );
+  }
+
+  @DataProvider
+  public Object[][] testCase05Provider() {
+    return new Object[][] {
+        {HtmlBytes.TEST8, IntSize.BIT8, "test 8"},
+        {HtmlBytes.TEST16, IntSize.BIT16, "test 16"},
+        {HtmlBytes.TEST24, IntSize.BIT24, "test 24"}
+    };
+  }
+
+  @Test(dataProvider = "testCase05Provider", description = """
+  Render testable node
+  """)
+  public void testCase05(byte proto, IntSize testSize, String description) {
+    final int objectsIndex;
+    objectsIndex = testSize == IntSize.BIT24 ? HtmlSink.MAX_INT16 + 1 : testSize == IntSize.BIT16 ? HtmlSink.MAX_INT8 + 1 : 0;
+
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.objectsIndex(objectsIndex);
+
+      opts.addObject(TestableName.H1);
+
+      final int valueIndex;
+      valueIndex = opts.addObject("Ipsum");
+
+      opts.addByte(proto);
+
+      opts.addInt(testSize, valueIndex);
+
+      opts.push(FrameY.create(f -> {
+        f.index = 0;
+      }));
+    });
+
+    final ScanDocumentNodeState subject;
+    subject = new ScanDocumentNodeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new RenderTestableTextState(ctx, testSize));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(FrameY.create(f -> {
+            f.index = 1;
+          }));
+        })
+    );
+  }
+
+  @DataProvider
+  public Object[][] testCase06Provider() {
+    return new Object[][] {
+        {HtmlBytes.TESTONLY8, IntSize.BIT8, "test only 8"},
+        {HtmlBytes.TESTONLY16, IntSize.BIT16, "test only 16"},
+        {HtmlBytes.TESTONLY24, IntSize.BIT24, "test only 24"}
+    };
+  }
+
+  @Test(dataProvider = "testCase06Provider", description = """
+  Render testable-only node
+  """)
+  public void testCase06(byte proto, IntSize testSize, String description) {
+    final int objectsIndex;
+    objectsIndex = testSize == IntSize.BIT24 ? HtmlSink.MAX_INT16 + 1 : testSize == IntSize.BIT16 ? HtmlSink.MAX_INT8 + 1 : 0;
+
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.objectsIndex(objectsIndex);
+
+      opts.addObject(TestableName.H1);
+
+      final int valueIndex;
+      valueIndex = opts.addObject("Ipsum");
+
+      opts.addByte(proto);
+
+      opts.addInt(testSize, valueIndex);
+
+      opts.push(FrameY.create(f -> {
+        f.index = 0;
+      }));
+    });
+
+    final ScanDocumentNodeState subject;
+    subject = new ScanDocumentNodeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new RenderTestableOnlyState(ctx, testSize));
 
     assertEquals(
         ctx,

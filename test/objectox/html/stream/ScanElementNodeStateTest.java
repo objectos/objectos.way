@@ -251,4 +251,124 @@ public class ScanElementNodeStateTest {
     );
   }
 
+  @DataProvider
+  public Object[][] testCase04Provider() {
+    return new Object[][] {
+        {HtmlBytes.xTEST8, IntSize.BIT8},
+        {HtmlBytes.xTEST16, IntSize.BIT16},
+        {HtmlBytes.xTEST24, IntSize.BIT24}
+    };
+  }
+
+  @Test(dataProvider = "testCase04Provider", description = """
+  element:
+  - element
+  - testable node
+  """)
+  public void testCase04(byte proto, IntSize testSize) {
+    final int frameIndex = 1, valueIndex = 0;
+
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(proto);
+      opts.addInt8(valueIndex);
+
+      opts.push(FrameY.create(f -> {
+        f.index = frameIndex;
+
+        f.regular(ElementName.DIV);
+
+        f.values8(1, 2);
+      }));
+    });
+
+    final ScanElementNodeState subject;
+    subject = new ScanElementNodeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new RenderTestableTextState(ctx, testSize));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(FrameY.create(f -> {
+            f.index = frameIndex + 1;
+
+            f.regular(ElementName.DIV);
+
+            f.values8(2, 2);
+          }));
+
+          opts.push(FrameY.create(f -> {
+            f.index = valueIndex + 1;
+          }));
+        })
+    );
+  }
+
+  @DataProvider
+  public Object[][] testCase05Provider() {
+    return new Object[][] {
+        {HtmlBytes.xTESTONLY8, IntSize.BIT8},
+        {HtmlBytes.xTESTONLY16, IntSize.BIT16},
+        {HtmlBytes.xTESTONLY24, IntSize.BIT24}
+    };
+  }
+
+  @Test(dataProvider = "testCase05Provider", description = """
+  element:
+  - element
+  - testable-only node
+  """)
+  public void testCase05(byte proto, IntSize testSize) {
+    final int frameIndex = 1, valueIndex = 0;
+
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(proto);
+      opts.addInt8(valueIndex);
+
+      opts.push(FrameY.create(f -> {
+        f.index = frameIndex;
+
+        f.regular(ElementName.DIV);
+
+        f.values8(1, 2);
+      }));
+    });
+
+    final ScanElementNodeState subject;
+    subject = new ScanElementNodeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new RenderTestableOnlyState(ctx, testSize));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(FrameY.create(f -> {
+            f.index = frameIndex + 1;
+
+            f.regular(ElementName.DIV);
+
+            f.values8(2, 2);
+          }));
+
+          opts.push(FrameY.create(f -> {
+            f.index = valueIndex + 1;
+          }));
+        })
+    );
+  }
+
 }

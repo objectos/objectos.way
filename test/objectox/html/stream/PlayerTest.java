@@ -17,6 +17,7 @@ package objectox.html.stream;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.html.TestableName;
 import objectos.html.stream.EndStartTagKind;
 import objectos.script.Js;
 import objectos.script.JsAction;
@@ -631,6 +632,143 @@ public class PlayerTest {
     assertEquals(subject.next(), new RenderEndTagEvent(1, ElementName.HEAD));
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new RenderEndTagEvent(0, ElementName.HTML));
+    assertEquals(subject.hasNext(), false);
+  }
+
+  @Test(description = """
+  testable:
+  - document level
+  - 8 bit
+  """)
+  public void testable01() {
+    final Player subject;
+    subject = PlayerY.create(opts -> {
+      opts.addByte(HtmlBytes.TEST8);
+
+      opts.addObject(TestableName.H1);
+
+      final int valueIndex;
+      valueIndex = opts.addObject("Heading 1");
+
+      opts.addInt8(valueIndex);
+    });
+
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), RenderTextEvent.of(0, "Heading 1"));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), TestableHeadingEvent.of(0, 1, "Heading 1"));
+    assertEquals(subject.hasNext(), false);
+  }
+
+  @Test(description = """
+  testable:
+  - document level
+  - 16 bit
+  """)
+  public void testable02() {
+    final Player subject;
+    subject = PlayerY.create(opts -> {
+      opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
+
+      opts.addByte(HtmlBytes.TEST16);
+
+      opts.addObject(TestableName.DD);
+
+      final int valueIndex;
+      valueIndex = opts.addObject("foo");
+
+      opts.addInt16(valueIndex);
+    });
+
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), RenderTextEvent.of(0, "foo"));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), TestableEntryValueEvent.of(0, "foo"));
+    assertEquals(subject.hasNext(), false);
+  }
+
+  @Test(description = """
+  testable-only:
+  - document level
+  - 8 bit
+  """)
+  public void testableOnly01() {
+    final Player subject;
+    subject = PlayerY.create(opts -> {
+      opts.addByte(HtmlBytes.TESTONLY8);
+
+      opts.addObject(TestableName.DT);
+
+      final int valueIndex;
+      valueIndex = opts.addObject("bar");
+
+      opts.addInt8(valueIndex);
+    });
+
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), TestableEntryNameEvent.of(0, "bar"));
+    assertEquals(subject.hasNext(), false);
+  }
+
+  @Test(description = """
+  testable-only:
+  - document level
+  - 24 bit
+  """)
+  public void testableOnly02() {
+    final Player subject;
+    subject = PlayerY.create(opts -> {
+      opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
+
+      opts.addByte(HtmlBytes.TESTONLY24);
+
+      opts.addObject(TestableName.cell(5));
+
+      final int valueIndex;
+      valueIndex = opts.addObject("12345");
+
+      opts.addInt24(valueIndex);
+    });
+
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), TestableCellEvent.of(0, 5, "12345"));
+    assertEquals(subject.hasNext(), false);
+  }
+
+  @Test(description = """
+  testable:
+  - element child
+  - regular elem
+  """)
+  public void testable03() {
+    final Player subject;
+    subject = PlayerY.create(opts -> {
+      opts.addByte(HtmlBytes.xTEST8);
+
+      opts.addObject(TestableName.H1);
+
+      final int valueIndex;
+      valueIndex = opts.addObject("Ipsum");
+
+      opts.addInt8(valueIndex);
+
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.DIV.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+    });
+
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new BeginStartTagEvent(0, ElementName.DIV));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EndStartTagEvent(0, EndStartTagKind.ELEMENT));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), RenderTextEvent.of(1, "Ipsum"));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), TestableHeadingEvent.of(1, 1, "Ipsum"));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new RenderEndTagEvent(0, ElementName.DIV));
     assertEquals(subject.hasNext(), false);
   }
 

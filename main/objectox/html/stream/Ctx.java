@@ -18,6 +18,7 @@ package objectox.html.stream;
 import java.util.Arrays;
 import java.util.HexFormat;
 import java.util.Objects;
+import objectos.html.TestableName;
 import objectos.html.stream.Event;
 import objectos.script.JsAction;
 import objectos.internal.Util;
@@ -129,6 +130,13 @@ class Ctx {
     o = objects[index];
 
     return (String) o;
+  }
+
+  public final TestableName objTestableName(int index) {
+    final Object o;
+    o = objects[index];
+
+    return (TestableName) o;
   }
 
   public final byte peekByte() {

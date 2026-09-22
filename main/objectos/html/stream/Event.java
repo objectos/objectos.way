@@ -26,6 +26,7 @@ public sealed interface Event
     RenderEndTag,
     RenderJsActionAttribute,
     RenderRaw,
+    RenderTestable,
     RenderText {
 
   /// Returns the nesting level of this event.

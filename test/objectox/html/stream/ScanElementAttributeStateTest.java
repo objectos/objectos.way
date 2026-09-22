@@ -520,4 +520,134 @@ public class ScanElementAttributeStateTest {
     );
   }
 
+  @DataProvider
+  public Object[][] testCase09Provider() {
+    return new Object[][] {
+        {HtmlBytes.xTEST8, IntSize.BIT8},
+        {HtmlBytes.xTEST16, IntSize.BIT16},
+        {HtmlBytes.xTEST24, IntSize.BIT24}
+    };
+  }
+
+  @Test(dataProvider = "testCase09Provider", description = """
+  regular element:
+  - values8
+  - testable node
+  """)
+  public void testCase09(byte proto, IntSize testSize) {
+    final int frameIndex = 1, valueIndex = 0;
+
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(proto);
+      opts.addInt8(valueIndex);
+
+      opts.push(FrameY.create(f -> {
+        f.index = frameIndex;
+
+        f.regular(ElementName.SPAN);
+
+        f.values8(0, 1);
+      }));
+    });
+
+    final ScanElementAttributeState subject;
+    subject = new ScanElementAttributeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new RenderTestableTextState(ctx, testSize));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(FrameY.create(f -> {
+            f.index = frameIndex + 1;
+
+            f.regular(ElementName.SPAN);
+
+            f.values8(1, 1);
+          }));
+
+          opts.push(FrameY.create(f -> {
+            f.index = valueIndex + 1;
+          }));
+
+          final EndStartTagEvent event;
+          event = new EndStartTagEvent(0, EndStartTagKind.ELEMENT);
+
+          opts.result(event);
+        })
+    );
+  }
+
+  @DataProvider
+  public Object[][] testCase10Provider() {
+    return new Object[][] {
+        {HtmlBytes.xTESTONLY8, IntSize.BIT8},
+        {HtmlBytes.xTESTONLY16, IntSize.BIT16},
+        {HtmlBytes.xTESTONLY24, IntSize.BIT24}
+    };
+  }
+
+  @Test(dataProvider = "testCase10Provider", description = """
+  regular element:
+  - values8
+  - testable-only node
+  """)
+  public void testCase10(byte proto, IntSize testSize) {
+    final int frameIndex = 1, valueIndex = 0;
+
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(proto);
+      opts.addInt8(valueIndex);
+
+      opts.push(FrameY.create(f -> {
+        f.index = frameIndex;
+
+        f.regular(ElementName.SPAN);
+
+        f.values8(0, 1);
+      }));
+    });
+
+    final ScanElementAttributeState subject;
+    subject = new ScanElementAttributeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new RenderTestableOnlyState(ctx, testSize));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(FrameY.create(f -> {
+            f.index = frameIndex + 1;
+
+            f.regular(ElementName.SPAN);
+
+            f.values8(1, 1);
+          }));
+
+          opts.push(FrameY.create(f -> {
+            f.index = valueIndex + 1;
+          }));
+
+          final EndStartTagEvent event;
+          event = new EndStartTagEvent(0, EndStartTagKind.ELEMENT);
+
+          opts.result(event);
+        })
+    );
+  }
+
 }

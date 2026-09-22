@@ -18,6 +18,7 @@ package objectox.html.stream;
 import java.util.function.Consumer;
 import objectos.html.stream.Event;
 import objectos.internal.Util;
+import objectox.html.IntSize;
 import objectox.html.markup.HtmlSink;
 import objectox.html.markup.HtmlSinkY;
 
@@ -42,6 +43,10 @@ final class CtxY {
 
   public final int addByte(byte value) {
     return sink.addByte(value);
+  }
+
+  public final void addInt(IntSize size, int value) {
+    sink.addInt(size, value);
   }
 
   public final void addInt16(int value) {

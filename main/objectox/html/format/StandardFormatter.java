@@ -26,6 +26,7 @@ import objectos.html.stream.RenderDoctype;
 import objectos.html.stream.RenderEndTag;
 import objectos.html.stream.RenderJsActionAttribute;
 import objectos.html.stream.RenderRaw;
+import objectos.html.stream.RenderTestable;
 import objectos.html.stream.RenderText;
 import objectox.html.markup.CommonEscaper;
 
@@ -70,6 +71,8 @@ public final class StandardFormatter implements Formatter {
       case RenderEndTag endTag -> renderEndTag(endTag, out);
 
       case RenderRaw raw -> renderRaw(raw, out);
+
+      case RenderTestable _ -> {}
 
       case RenderText text -> renderText(text, out);
     }
