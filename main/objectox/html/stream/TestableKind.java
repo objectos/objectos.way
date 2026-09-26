@@ -13,8 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html;
+package objectox.html.stream;
 
-import objectos.html.TestableName;
+enum TestableKind {
 
-public record TestableNameCell(int width) implements TestableName {}
+  HEADING,
+
+  CELL,
+
+  PROP,
+
+  PROP_KEY,
+
+  PROP_VALUE,
+
+  NEWLINE;
+
+}

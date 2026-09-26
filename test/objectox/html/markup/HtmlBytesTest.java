@@ -45,12 +45,22 @@ public class HtmlBytesTest {
         {HtmlBytes.RAW16, HtmlBytes.xRAW16},
         {HtmlBytes.RAW24, HtmlBytes.xRAW24},
 
-        {HtmlBytes.TEST8, HtmlBytes.xTEST8},
-        {HtmlBytes.TEST16, HtmlBytes.xTEST16},
-        {HtmlBytes.TEST24, HtmlBytes.xTEST24},
-        {HtmlBytes.TESTONLY8, HtmlBytes.xTESTONLY8},
-        {HtmlBytes.TESTONLY16, HtmlBytes.xTESTONLY16},
-        {HtmlBytes.TESTONLY24, HtmlBytes.xTESTONLY24},
+        {HtmlBytes.THEADING8, HtmlBytes.xTHEADING8},
+        {HtmlBytes.THEADING16, HtmlBytes.xTHEADING16},
+        {HtmlBytes.THEADING24, HtmlBytes.xTHEADING24},
+        {HtmlBytes.TCELL8, HtmlBytes.xTCELL8},
+        {HtmlBytes.TCELL16, HtmlBytes.xTCELL16},
+        {HtmlBytes.TCELL24, HtmlBytes.xTCELL24},
+        {HtmlBytes.TPROP8, HtmlBytes.xTPROP8},
+        {HtmlBytes.TPROP16, HtmlBytes.xTPROP16},
+        {HtmlBytes.TPROP24, HtmlBytes.xTPROP24},
+        {HtmlBytes.TPROPKEY8, HtmlBytes.xTPROPKEY8},
+        {HtmlBytes.TPROPKEY16, HtmlBytes.xTPROPKEY16},
+        {HtmlBytes.TPROPKEY24, HtmlBytes.xTPROPKEY24},
+        {HtmlBytes.TPROPVAL8, HtmlBytes.xTPROPVAL8},
+        {HtmlBytes.TPROPVAL16, HtmlBytes.xTPROPVAL16},
+        {HtmlBytes.TPROPVAL24, HtmlBytes.xTPROPVAL24},
+        {HtmlBytes.TNEWLINE, HtmlBytes.xTNEWLINE},
 
         {HtmlBytes.xELEMSTR8, HtmlBytes.xELEMSTR8},
         {HtmlBytes.xELEMVOID8, HtmlBytes.xELEMVOID8},
@@ -72,12 +82,77 @@ public class HtmlBytesTest {
         {HtmlBytes.xRAW16, HtmlBytes.xRAW16},
         {HtmlBytes.xRAW24, HtmlBytes.xRAW24},
 
-        {HtmlBytes.xTEST8, HtmlBytes.xTEST8},
-        {HtmlBytes.xTEST16, HtmlBytes.xTEST16},
-        {HtmlBytes.xTEST24, HtmlBytes.xTEST24},
-        {HtmlBytes.xTESTONLY8, HtmlBytes.xTESTONLY8},
-        {HtmlBytes.xTESTONLY16, HtmlBytes.xTESTONLY16},
-        {HtmlBytes.xTESTONLY24, HtmlBytes.xTESTONLY24}
+        {HtmlBytes.xTHEADING8, HtmlBytes.xTHEADING8},
+        {HtmlBytes.xTHEADING16, HtmlBytes.xTHEADING16},
+        {HtmlBytes.xTHEADING24, HtmlBytes.xTHEADING24},
+        {HtmlBytes.xTCELL8, HtmlBytes.xTCELL8},
+        {HtmlBytes.xTCELL16, HtmlBytes.xTCELL16},
+        {HtmlBytes.xTCELL24, HtmlBytes.xTCELL24},
+        {HtmlBytes.xTPROP8, HtmlBytes.xTPROP8},
+        {HtmlBytes.xTPROP16, HtmlBytes.xTPROP16},
+        {HtmlBytes.xTPROP24, HtmlBytes.xTPROP24},
+        {HtmlBytes.xTPROPKEY8, HtmlBytes.xTPROPKEY8},
+        {HtmlBytes.xTPROPKEY16, HtmlBytes.xTPROPKEY16},
+        {HtmlBytes.xTPROPKEY24, HtmlBytes.xTPROPKEY24},
+        {HtmlBytes.xTPROPVAL8, HtmlBytes.xTPROPVAL8},
+        {HtmlBytes.xTPROPVAL16, HtmlBytes.xTPROPVAL16},
+        {HtmlBytes.xTPROPVAL24, HtmlBytes.xTPROPVAL24},
+        {HtmlBytes.xTNEWLINE, HtmlBytes.xTNEWLINE},
+
+        {HtmlBytes.oTHEADING8, HtmlBytes.oTHEADING8},
+        {HtmlBytes.oTHEADING16, HtmlBytes.oTHEADING16},
+        {HtmlBytes.oTHEADING24, HtmlBytes.oTHEADING24},
+        {HtmlBytes.oTCELL8, HtmlBytes.oTCELL8},
+        {HtmlBytes.oTCELL16, HtmlBytes.oTCELL16},
+        {HtmlBytes.oTCELL24, HtmlBytes.oTCELL24},
+        {HtmlBytes.oTPROP8, HtmlBytes.oTPROP8},
+        {HtmlBytes.oTPROP16, HtmlBytes.oTPROP16},
+        {HtmlBytes.oTPROP24, HtmlBytes.oTPROP24},
+        {HtmlBytes.oTPROPKEY8, HtmlBytes.oTPROPKEY8},
+        {HtmlBytes.oTPROPKEY16, HtmlBytes.oTPROPKEY16},
+        {HtmlBytes.oTPROPKEY24, HtmlBytes.oTPROPKEY24},
+        {HtmlBytes.oTPROPVAL8, HtmlBytes.oTPROPVAL8},
+        {HtmlBytes.oTPROPVAL16, HtmlBytes.oTPROPVAL16},
+        {HtmlBytes.oTPROPVAL24, HtmlBytes.oTPROPVAL24}
+    };
+  }
+
+  @DataProvider
+  public Object[][] testableOnlyProvider() {
+    return new Object[][] {
+        {HtmlBytes.THEADING8, HtmlBytes.oTHEADING8},
+        {HtmlBytes.THEADING16, HtmlBytes.oTHEADING16},
+        {HtmlBytes.THEADING24, HtmlBytes.oTHEADING24},
+        {HtmlBytes.TCELL8, HtmlBytes.oTCELL8},
+        {HtmlBytes.TCELL16, HtmlBytes.oTCELL16},
+        {HtmlBytes.TCELL24, HtmlBytes.oTCELL24},
+        {HtmlBytes.TPROP8, HtmlBytes.oTPROP8},
+        {HtmlBytes.TPROP16, HtmlBytes.oTPROP16},
+        {HtmlBytes.TPROP24, HtmlBytes.oTPROP24},
+        {HtmlBytes.TPROPKEY8, HtmlBytes.oTPROPKEY8},
+        {HtmlBytes.TPROPKEY16, HtmlBytes.oTPROPKEY16},
+        {HtmlBytes.TPROPKEY24, HtmlBytes.oTPROPKEY24},
+        {HtmlBytes.TPROPVAL8, HtmlBytes.oTPROPVAL8},
+        {HtmlBytes.TPROPVAL16, HtmlBytes.oTPROPVAL16},
+        {HtmlBytes.TPROPVAL24, HtmlBytes.oTPROPVAL24},
+        {HtmlBytes.TNEWLINE, HtmlBytes.xTNEWLINE},
+        {HtmlBytes.xTNEWLINE, HtmlBytes.xTNEWLINE},
+
+        {HtmlBytes.oTHEADING8, HtmlBytes.oTHEADING8},
+        {HtmlBytes.oTHEADING16, HtmlBytes.oTHEADING16},
+        {HtmlBytes.oTHEADING24, HtmlBytes.oTHEADING24},
+        {HtmlBytes.oTCELL8, HtmlBytes.oTCELL8},
+        {HtmlBytes.oTCELL16, HtmlBytes.oTCELL16},
+        {HtmlBytes.oTCELL24, HtmlBytes.oTCELL24},
+        {HtmlBytes.oTPROP8, HtmlBytes.oTPROP8},
+        {HtmlBytes.oTPROP16, HtmlBytes.oTPROP16},
+        {HtmlBytes.oTPROP24, HtmlBytes.oTPROP24},
+        {HtmlBytes.oTPROPKEY8, HtmlBytes.oTPROPKEY8},
+        {HtmlBytes.oTPROPKEY16, HtmlBytes.oTPROPKEY16},
+        {HtmlBytes.oTPROPKEY24, HtmlBytes.oTPROPKEY24},
+        {HtmlBytes.oTPROPVAL8, HtmlBytes.oTPROPVAL8},
+        {HtmlBytes.oTPROPVAL16, HtmlBytes.oTPROPVAL16},
+        {HtmlBytes.oTPROPVAL24, HtmlBytes.oTPROPVAL24}
     };
   }
 
@@ -85,6 +160,14 @@ public class HtmlBytesTest {
   public void consume(byte source, byte expected) {
     final byte res;
     res = HtmlBytes.consume(source);
+
+    assertEquals(res, expected);
+  }
+
+  @Test(dataProvider = "testableOnlyProvider")
+  public void testableOnly(byte source, byte expected) {
+    final byte res;
+    res = HtmlBytes.testableOnly(source);
 
     assertEquals(res, expected);
   }

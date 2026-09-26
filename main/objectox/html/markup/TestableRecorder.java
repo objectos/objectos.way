@@ -16,7 +16,6 @@
 package objectox.html.markup;
 
 import java.util.Objects;
-import objectos.html.TestableName;
 import objectox.html.IntSize;
 
 final class TestableRecorder {
@@ -27,28 +26,52 @@ final class TestableRecorder {
     this.sink = sink;
   }
 
-  public final TestableMarkupPointer record(TestableName name, String value) {
-    final int startIndex;
-    startIndex = record0(name, value, HtmlBytes.TEST8, HtmlBytes.TEST16, HtmlBytes.TEST24);
+  public final TestableMarkupPointer cell(int width, String value) {
+    if (width <= 0) {
+      final String msg;
+      msg = "width must be > 0";
 
-    return new TestableMarkupPointer(startIndex);
-  }
-
-  public final TestableOnlyMarkupPointer recordOnly(TestableName name, String value) {
-    final int startIndex;
-    startIndex = record0(name, value, HtmlBytes.TESTONLY8, HtmlBytes.TESTONLY16, HtmlBytes.TESTONLY24);
-
-    return new TestableOnlyMarkupPointer(startIndex);
-  }
-
-  private int record0(TestableName name, String value, byte proto8, byte proto16, byte proto24) {
-    final TestableName n;
-    n = Objects.requireNonNull(name, "name == null");
+      throw new IllegalArgumentException(msg);
+    }
 
     final String v;
     v = Objects.requireNonNull(value, "value == null");
 
-    sink.addObject(n);
+    final int valueIndex;
+    valueIndex = sink.addObject(v);
+
+    final IntSize size;
+    size = IntSize.of(Math.max(width, valueIndex));
+
+    final byte proto;
+    proto = switch (size) {
+      case BIT8 -> HtmlBytes.TCELL8;
+
+      case BIT16 -> HtmlBytes.TCELL16;
+
+      case BIT24 -> HtmlBytes.TCELL24;
+    };
+
+    final int startIndex;
+    startIndex = sink.addByte(proto);
+
+    sink.addInt(size, width);
+
+    sink.addInt(size, valueIndex);
+
+    return new TestableMarkupPointer(startIndex);
+  }
+
+  public final TestableMarkupPointer heading(int level, String value) {
+    if (level < 1 || level > 6) {
+      final String msg;
+      msg = "level must be between 1 and 6";
+
+      throw new IllegalArgumentException(msg);
+    }
+
+    final String v;
+    v = Objects.requireNonNull(value, "value == null");
 
     final int valueIndex;
     valueIndex = sink.addObject(v);
@@ -58,11 +81,109 @@ final class TestableRecorder {
 
     final byte proto;
     proto = switch (size) {
-      case BIT8 -> proto8;
+      case BIT8 -> HtmlBytes.THEADING8;
 
-      case BIT16 -> proto16;
+      case BIT16 -> HtmlBytes.THEADING16;
 
-      case BIT24 -> proto24;
+      case BIT24 -> HtmlBytes.THEADING24;
+    };
+
+    final int startIndex;
+    startIndex = sink.addByte(proto);
+
+    sink.addByte((byte) level);
+
+    sink.addInt(size, valueIndex);
+
+    return new TestableMarkupPointer(startIndex);
+  }
+
+  public final TestableMarkupPointer newLine() {
+    final int startIndex;
+    startIndex = sink.addByte(HtmlBytes.TNEWLINE);
+
+    return new TestableMarkupPointer(startIndex);
+  }
+
+  public final TestableMarkupPointer property(String key, String value) {
+    final String k;
+    k = Objects.requireNonNull(key, "key == null");
+
+    final String v;
+    v = Objects.requireNonNull(value, "value == null");
+
+    final int keyIndex;
+    keyIndex = sink.addObject(k);
+
+    final int valueIndex;
+    valueIndex = sink.addObject(v);
+
+    final IntSize size;
+    size = IntSize.of(Math.max(keyIndex, valueIndex));
+
+    final byte proto;
+    proto = switch (size) {
+      case BIT8 -> HtmlBytes.TPROP8;
+
+      case BIT16 -> HtmlBytes.TPROP16;
+
+      case BIT24 -> HtmlBytes.TPROP24;
+    };
+
+    final int startIndex;
+    startIndex = sink.addByte(proto);
+
+    sink.addInt(size, keyIndex);
+
+    sink.addInt(size, valueIndex);
+
+    return new TestableMarkupPointer(startIndex);
+  }
+
+  public final TestableMarkupPointer propKey(String key) {
+    final String k;
+    k = Objects.requireNonNull(key, "key == null");
+
+    final int keyIndex;
+    keyIndex = sink.addObject(k);
+
+    final IntSize size;
+    size = IntSize.of(keyIndex);
+
+    final byte proto;
+    proto = switch (size) {
+      case BIT8 -> HtmlBytes.TPROPKEY8;
+
+      case BIT16 -> HtmlBytes.TPROPKEY16;
+
+      case BIT24 -> HtmlBytes.TPROPKEY24;
+    };
+
+    final int startIndex;
+    startIndex = sink.addByte(proto);
+
+    sink.addInt(size, keyIndex);
+
+    return new TestableMarkupPointer(startIndex);
+  }
+
+  public final TestableMarkupPointer propValue(String value) {
+    final String v;
+    v = Objects.requireNonNull(value, "value == null");
+
+    final int valueIndex;
+    valueIndex = sink.addObject(v);
+
+    final IntSize size;
+    size = IntSize.of(valueIndex);
+
+    final byte proto;
+    proto = switch (size) {
+      case BIT8 -> HtmlBytes.TPROPVAL8;
+
+      case BIT16 -> HtmlBytes.TPROPVAL16;
+
+      case BIT24 -> HtmlBytes.TPROPVAL24;
     };
 
     final int startIndex;
@@ -70,7 +191,7 @@ final class TestableRecorder {
 
     sink.addInt(size, valueIndex);
 
-    return startIndex;
+    return new TestableMarkupPointer(startIndex);
   }
 
 }

@@ -17,7 +17,6 @@ package objectox.html.stream;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.html.TestableName;
 import objectox.html.elem.ElementName;
 import org.testng.annotations.Test;
 
@@ -36,8 +35,11 @@ public class RenderTestableNodeStateTest {
       }));
     });
 
+    final TestableNode node;
+    node = new TestableNode(TestableKind.HEADING, 1, 0, null, "Ipsum");
+
     final RenderTestableNodeState subject;
-    subject = new RenderTestableNodeState(ctx, TestableName.H1, "Ipsum");
+    subject = new RenderTestableNodeState(ctx, node);
 
     final State res;
     res = subject.compute();
@@ -80,8 +82,11 @@ public class RenderTestableNodeStateTest {
       }));
     });
 
+    final TestableNode node;
+    node = new TestableNode(TestableKind.HEADING, 6, 0, null, "Ipsum");
+
     final RenderTestableNodeState subject;
-    subject = new RenderTestableNodeState(ctx, TestableName.H6, "Ipsum");
+    subject = new RenderTestableNodeState(ctx, node);
 
     final State res;
     res = subject.compute();
@@ -120,8 +125,11 @@ public class RenderTestableNodeStateTest {
       }));
     });
 
+    final TestableNode node;
+    node = new TestableNode(TestableKind.CELL, 0, 4, null, "Ipsum");
+
     final RenderTestableNodeState subject;
-    subject = new RenderTestableNodeState(ctx, TestableName.cell(4), "Ipsum");
+    subject = new RenderTestableNodeState(ctx, node);
 
     final State res;
     res = subject.compute();
@@ -145,10 +153,10 @@ public class RenderTestableNodeStateTest {
 
   @Test(description = """
   testable node:
-  - entry name
+  - property
   - document level
   """)
-  public void entryName01() {
+  public void prop01() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.push(FrameY.create(f -> {
@@ -156,8 +164,11 @@ public class RenderTestableNodeStateTest {
       }));
     });
 
+    final TestableNode node;
+    node = new TestableNode(TestableKind.PROP, 0, 0, "foo", "bar");
+
     final RenderTestableNodeState subject;
-    subject = new RenderTestableNodeState(ctx, TestableName.DT, "Ipsum");
+    subject = new RenderTestableNodeState(ctx, node);
 
     final State res;
     res = subject.compute();
@@ -174,17 +185,17 @@ public class RenderTestableNodeStateTest {
             f.index = 0;
           }));
 
-          opts.result(TestableEntryNameEvent.of(0, "Ipsum"));
+          opts.result(TestablePropEvent.of(0, "foo", "bar"));
         })
     );
   }
 
   @Test(description = """
   testable node:
-  - entry value
+  - property key
   - document level
   """)
-  public void entryValue01() {
+  public void propKey01() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.push(FrameY.create(f -> {
@@ -192,8 +203,11 @@ public class RenderTestableNodeStateTest {
       }));
     });
 
+    final TestableNode node;
+    node = new TestableNode(TestableKind.PROP_KEY, 0, 0, "foo", null);
+
     final RenderTestableNodeState subject;
-    subject = new RenderTestableNodeState(ctx, TestableName.DD, "Ipsum");
+    subject = new RenderTestableNodeState(ctx, node);
 
     final State res;
     res = subject.compute();
@@ -210,7 +224,85 @@ public class RenderTestableNodeStateTest {
             f.index = 0;
           }));
 
-          opts.result(TestableEntryValueEvent.of(0, "Ipsum"));
+          opts.result(TestableEntryNameEvent.of(0, "foo"));
+        })
+    );
+  }
+
+  @Test(description = """
+  testable node:
+  - property value
+  - document level
+  """)
+  public void propValue01() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.push(FrameY.create(f -> {
+        f.index = 0;
+      }));
+    });
+
+    final TestableNode node;
+    node = new TestableNode(TestableKind.PROP_VALUE, 0, 0, null, "bar");
+
+    final RenderTestableNodeState subject;
+    subject = new RenderTestableNodeState(ctx, node);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new ScanDocumentNodeState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(FrameY.create(f -> {
+            f.index = 0;
+          }));
+
+          opts.result(TestableEntryValueEvent.of(0, "bar"));
+        })
+    );
+  }
+
+  @Test(description = """
+  testable node:
+  - new line
+  - document level
+  """)
+  public void newLine01() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.push(FrameY.create(f -> {
+        f.index = 0;
+      }));
+    });
+
+    final TestableNode node;
+    node = new TestableNode(TestableKind.NEWLINE, 0, 0, null, null);
+
+    final RenderTestableNodeState subject;
+    subject = new RenderTestableNodeState(ctx, node);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new ScanDocumentNodeState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(FrameY.create(f -> {
+            f.index = 0;
+          }));
+
+          opts.result(TestableNewLineEvent.of(0));
         })
     );
   }

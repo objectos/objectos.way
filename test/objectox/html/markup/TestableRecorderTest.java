@@ -18,182 +18,270 @@ package objectox.html.markup;
 import static org.testng.Assert.assertEquals;
 
 import java.util.stream.IntStream;
-import objectos.html.TestableName;
 import objectos.internal.Util;
 import org.testng.annotations.Test;
 
 public class TestableRecorderTest {
 
-  @Test(description = "returned markup")
-  public void markup01() {
+  @Test(description = "heading: THEADING8")
+  public void heading8() {
     final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.addInt24(0);
-    });
+    sink = new HtmlSink();
 
     final TestableRecorder subject;
     subject = new TestableRecorder(sink);
 
     final TestableMarkupPointer res;
-    res = subject.record(TestableName.H1, "Ipsum");
+    res = subject.heading(1, "Ipsum");
 
-    assertEquals(res.value(), 3);
+    assertEquals(res.value(), 0);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.THEADING8);
+          opts.addByte((byte) 1);
+          opts.addInt8(opts.addObject("Ipsum"));
+        })
+    );
+  }
+
+  @Test(description = "heading: THEADING16")
+  public void heading16() {
+    final HtmlSink sink;
+    sink = new HtmlSink(Util.EMPTY_BYTE_ARRAY, new Object[256]);
+
+    final TestableRecorder subject;
+    subject = new TestableRecorder(sink);
+
+    subject.heading(6, "Ipsum");
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          IntStream.range(0, 256).forEach(_ -> opts.addObject(null));
+          opts.addByte(HtmlBytes.THEADING16);
+          opts.addByte((byte) 6);
+          opts.addInt16(opts.addObject("Ipsum"));
+        })
+    );
+  }
+
+  @Test(description = "heading: THEADING24")
+  public void heading24() {
+    final HtmlSink sink;
+    sink = new HtmlSink(Util.EMPTY_BYTE_ARRAY, new Object[1 << 16]);
+
+    final TestableRecorder subject;
+    subject = new TestableRecorder(sink);
+
+    subject.heading(3, "Ipsum");
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          IntStream.range(0, 1 << 16).forEach(_ -> opts.addObject(null));
+          opts.addByte(HtmlBytes.THEADING24);
+          opts.addByte((byte) 3);
+          opts.addInt24(opts.addObject("Ipsum"));
+        })
+    );
   }
 
   @Test(
-      description = "reject null name",
-      expectedExceptions = NullPointerException.class,
-      expectedExceptionsMessageRegExp = "name == null")
-  public void reject01() {
+      description = "reject invalid heading level",
+      expectedExceptions = IllegalArgumentException.class,
+      expectedExceptionsMessageRegExp = "level must be between 1 and 6")
+  public void headingReject01() {
     final HtmlSink sink;
     sink = new HtmlSink();
 
     final TestableRecorder subject;
     subject = new TestableRecorder(sink);
 
-    subject.record(null, "Ipsum");
+    subject.heading(0, "Ipsum");
   }
 
   @Test(
-      description = "reject null value",
+      description = "reject null heading value",
       expectedExceptions = NullPointerException.class,
       expectedExceptionsMessageRegExp = "value == null")
-  public void reject02() {
+  public void headingReject02() {
     final HtmlSink sink;
     sink = new HtmlSink();
 
     final TestableRecorder subject;
     subject = new TestableRecorder(sink);
 
-    subject.record(TestableName.H1, null);
+    subject.heading(1, null);
   }
 
-  @Test(description = "TEST8")
-  public void test8() {
+  @Test(description = "cell: TCELL8")
+  public void cell8() {
     final HtmlSink sink;
     sink = new HtmlSink();
 
     final TestableRecorder subject;
     subject = new TestableRecorder(sink);
 
-    subject.record(TestableName.H1, "Ipsum");
+    subject.cell(3, "Ipsum");
 
     assertEquals(
         sink,
 
         HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.TEST8);
-          opts.addObject(TestableName.H1);
+          opts.addByte(HtmlBytes.TCELL8);
+          opts.addInt8(3);
           opts.addInt8(opts.addObject("Ipsum"));
         })
     );
   }
 
-  @Test(description = "TEST16")
-  public void test16() {
-    final HtmlSink sink;
-    sink = new HtmlSink(Util.EMPTY_BYTE_ARRAY, new Object[256]);
-
-    final TestableRecorder subject;
-    subject = new TestableRecorder(sink);
-
-    subject.record(TestableName.H1, "Ipsum");
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
-          IntStream.range(0, 256).forEach(_ -> opts.addObject(null));
-          opts.addByte(HtmlBytes.TEST16);
-          opts.addObject(TestableName.H1);
-          opts.addInt16(opts.addObject("Ipsum"));
-        })
-    );
-  }
-
-  @Test(description = "TEST24")
-  public void test24() {
-    final HtmlSink sink;
-    sink = new HtmlSink(Util.EMPTY_BYTE_ARRAY, new Object[1 << 16]);
-
-    final TestableRecorder subject;
-    subject = new TestableRecorder(sink);
-
-    subject.record(TestableName.H1, "Ipsum");
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
-          IntStream.range(0, 1 << 16).forEach(_ -> opts.addObject(null));
-          opts.addByte(HtmlBytes.TEST24);
-          opts.addObject(TestableName.H1);
-          opts.addInt24(opts.addObject("Ipsum"));
-        })
-    );
-  }
-
-  @Test(description = "TESTONLY8")
-  public void testOnly8() {
+  @Test(description = "cell: width determines the IntSize")
+  public void cell16() {
     final HtmlSink sink;
     sink = new HtmlSink();
 
     final TestableRecorder subject;
     subject = new TestableRecorder(sink);
 
-    subject.recordOnly(TestableName.H1, "Ipsum");
+    subject.cell(256, "Ipsum");
 
     assertEquals(
         sink,
 
         HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.TESTONLY8);
-          opts.addObject(TestableName.H1);
-          opts.addInt8(opts.addObject("Ipsum"));
-        })
-    );
-  }
-
-  @Test(description = "TESTONLY16")
-  public void testOnly16() {
-    final HtmlSink sink;
-    sink = new HtmlSink(Util.EMPTY_BYTE_ARRAY, new Object[256]);
-
-    final TestableRecorder subject;
-    subject = new TestableRecorder(sink);
-
-    subject.recordOnly(TestableName.H1, "Ipsum");
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
-          IntStream.range(0, 256).forEach(_ -> opts.addObject(null));
-          opts.addByte(HtmlBytes.TESTONLY16);
-          opts.addObject(TestableName.H1);
+          opts.addByte(HtmlBytes.TCELL16);
+          opts.addInt16(256);
           opts.addInt16(opts.addObject("Ipsum"));
         })
     );
   }
 
-  @Test(description = "TESTONLY24")
-  public void testOnly24() {
+  @Test(
+      description = "reject invalid cell width",
+      expectedExceptions = IllegalArgumentException.class,
+      expectedExceptionsMessageRegExp = "width must be > 0")
+  public void cellReject01() {
     final HtmlSink sink;
-    sink = new HtmlSink(Util.EMPTY_BYTE_ARRAY, new Object[1 << 16]);
+    sink = new HtmlSink();
 
     final TestableRecorder subject;
     subject = new TestableRecorder(sink);
 
-    subject.recordOnly(TestableName.H1, "Ipsum");
+    subject.cell(0, "Ipsum");
+  }
+
+  @Test(description = "property: TPROP8")
+  public void property8() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final TestableRecorder subject;
+    subject = new TestableRecorder(sink);
+
+    subject.property("foo", "bar");
 
     assertEquals(
         sink,
 
         HtmlSinkY.create(opts -> {
-          IntStream.range(0, 1 << 16).forEach(_ -> opts.addObject(null));
-          opts.addByte(HtmlBytes.TESTONLY24);
-          opts.addObject(TestableName.H1);
-          opts.addInt24(opts.addObject("Ipsum"));
+          opts.addByte(HtmlBytes.TPROP8);
+          opts.addInt8(opts.addObject("foo"));
+          opts.addInt8(opts.addObject("bar"));
+        })
+    );
+  }
+
+  @Test(
+      description = "reject null property key",
+      expectedExceptions = NullPointerException.class,
+      expectedExceptionsMessageRegExp = "key == null")
+  public void propertyReject01() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final TestableRecorder subject;
+    subject = new TestableRecorder(sink);
+
+    subject.property(null, "bar");
+  }
+
+  @Test(
+      description = "reject null property value",
+      expectedExceptions = NullPointerException.class,
+      expectedExceptionsMessageRegExp = "value == null")
+  public void propertyReject02() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final TestableRecorder subject;
+    subject = new TestableRecorder(sink);
+
+    subject.property("foo", null);
+  }
+
+  @Test(description = "prop key: TPROPKEY8")
+  public void propKey8() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final TestableRecorder subject;
+    subject = new TestableRecorder(sink);
+
+    subject.propKey("foo");
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.TPROPKEY8);
+          opts.addInt8(opts.addObject("foo"));
+        })
+    );
+  }
+
+  @Test(description = "prop value: TPROPVAL8")
+  public void propValue8() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final TestableRecorder subject;
+    subject = new TestableRecorder(sink);
+
+    subject.propValue("bar");
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.TPROPVAL8);
+          opts.addInt8(opts.addObject("bar"));
+        })
+    );
+  }
+
+  @Test(description = "new line: TNEWLINE")
+  public void newLine01() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final TestableRecorder subject;
+    subject = new TestableRecorder(sink);
+
+    final TestableMarkupPointer res;
+    res = subject.newLine();
+
+    assertEquals(res.value(), 0);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.TNEWLINE);
         })
     );
   }

@@ -15,48 +15,51 @@
  */
 package objectox.html.stream;
 
-import objectos.html.TestableName;
 import objectox.html.IntSize;
 
 final class RenderTestableTextState implements State {
 
   private final Ctx ctx;
 
-  private final IntSize testSize;
+  private final TestableKind kind;
 
-  RenderTestableTextState(Ctx ctx, IntSize testSize) {
+  private final IntSize size;
+
+  RenderTestableTextState(Ctx ctx, TestableKind kind, IntSize size) {
     this.ctx = ctx;
 
-    this.testSize = testSize;
+    this.kind = kind;
+
+    this.size = size;
   }
 
   @Override
   public final State compute() {
-    final int level;
-    level = ctx.stackIndex();
+    final TestableNode node;
+    node = TestableNode.parse(ctx, kind, size);
 
-    final int testIndex;
-    testIndex = ctx.nextInt(testSize);
+    final String text;
+    text = node.htmlText();
 
-    final String value;
-    value = ctx.objString(testIndex);
+    if (text != null) {
+      final int level;
+      level = ctx.stackIndex();
 
-    final TestableName name;
-    name = ctx.objTestableName(testIndex - 1);
+      final RenderTextEvent event;
+      event = RenderTextEvent.of(level, text);
 
-    final RenderTextEvent event;
-    event = RenderTextEvent.of(level, value);
+      ctx.result(event);
+    }
 
-    ctx.result(event);
-
-    return new RenderTestableNodeState(ctx, name, value);
+    return new RenderTestableNodeState(ctx, node);
   }
 
   @Override
   public final boolean equals(Object obj) {
     return obj instanceof RenderTestableTextState that
         && ctx.equals(that.ctx)
-        && testSize.equals(that.testSize);
+        && kind.equals(that.kind)
+        && size.equals(that.size);
   }
 
 }

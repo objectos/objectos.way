@@ -15,10 +15,8 @@
  */
 package objectox.html;
 
-import objectos.html.Component;
 import objectos.html.Html;
 import objectos.html.Markup;
-import objectos.html.TestableName;
 import objectos.html.markup.AttributeMarkup;
 import objectos.html.markup.ElementMarkup;
 import objectos.html.markup.Fragment0;
@@ -31,7 +29,6 @@ import objectos.html.markup.NoOpMarkup;
 import objectos.html.markup.RawMarkup;
 import objectos.html.markup.RegularElementValue;
 import objectos.html.markup.TestableMarkup;
-import objectos.html.markup.TestableOnlyMarkup;
 import objectos.html.markup.TextMarkup;
 import objectos.html.markup.VoidElementValue;
 import objectos.script.JsAction;
@@ -306,41 +303,114 @@ public final class MarkupImpl implements Markup {
   // TESTABLE
   //
 
-  /// Encodes a testable node with the specified name and value.
+  /// Encodes a testable heading 1 node with the specified value.
   ///
-  /// Testable nodes contribute to the output of the [Component#toTestableText()]
-  /// method. During regular HTML formatting, testable nodes are rendered as text
-  /// nodes with the specified value.
-  ///
-  /// @param name the testable node name
   /// @param value the testable node value
-  ///
+  /// 
   /// @return an object representing the encoded testable node
   @Override
-  public final TestableMarkup test(TestableName name, String value) {
-    return recorder.test(name, value);
+  public final TestableMarkup th1(String value) {
+    return recorder.th1(value);
   }
 
-  /// Encodes a testable-only node with the specified name and value.
+  /// Encodes a testable heading 2 node with the specified value.
   ///
-  /// Testable-only nodes differ from testable nodes in that the former do not
-  /// contribute to the regular HTML formatting as the latter do.
-  ///
-  /// @param name the testable node name
   /// @param value the testable node value
-  ///
-  /// @return an object representing the encoded testable-only node
+  /// 
+  /// @return an object representing the encoded testable node
   @Override
-  public final TestableOnlyMarkup testOnly(TestableName name, String value) {
-    return recorder.testOnly(name, value);
+  public final TestableMarkup th2(String value) {
+    return recorder.th2(value);
+  }
+
+  /// Encodes a testable heading 3 node with the specified value.
+  ///
+  /// @param value the testable node value
+  /// 
+  /// @return an object representing the encoded testable node
+  @Override
+  public final TestableMarkup th3(String value) {
+    return recorder.th3(value);
+  }
+
+  /// Encodes a testable heading 4 node with the specified value.
+  ///
+  /// @param value the testable node value
+  /// 
+  /// @return an object representing the encoded testable node
+  @Override
+  public final TestableMarkup th4(String value) {
+    return recorder.th4(value);
+  }
+
+  /// Encodes a testable heading 5 node with the specified value.
+  ///
+  /// @param value the testable node value
+  /// 
+  /// @return an object representing the encoded testable node
+  @Override
+  public final TestableMarkup th5(String value) {
+    return recorder.th5(value);
+  }
+
+  /// Encodes a testable heading 6 node with the specified value.
+  ///
+  /// @param value the testable node value
+  /// 
+  /// @return an object representing the encoded testable node
+  @Override
+  public final TestableMarkup th6(String value) {
+    return recorder.th6(value);
+  }
+
+  /// Encodes a testable cell node with the specified width and value.
+  ///
+  /// @param width the fixed width of the cell, must be greater than zero
+  /// @param value the testable node value
+  /// 
+  /// @return an object representing the encoded testable node
+  @Override
+  public final TestableMarkup tcell(int width, String value) {
+    return recorder.tcell(width, value);
   }
 
   /// Formats a line separator at the testable output exclusively.
   ///
-  /// @return a no-op instruction
+  /// @return an object representing the encoded testable node
   @Override
-  public final NoOpMarkup testableNewLine() {
-    return recorder.testableNewLine();
+  public final TestableMarkup tbr() {
+    return recorder.tbr();
+  }
+
+  /// Encodes a testable property node with the specified key and value.
+  ///
+  /// @param key the testable property key
+  /// @param value the testable property value
+  /// 
+  /// @return an object representing the encoded testable node
+  @Override
+  public final TestableMarkup tprop(String key, String value) {
+    return recorder.tprop(key, value);
+  }
+
+  /// Encodes a testable property key node with the specified value.
+  ///
+  /// @param value the testable property key value
+  /// 
+  /// @return an object representing the encoded testable node
+  @Override
+  public final TestableMarkup tpropkey(String value) {
+    return recorder.tpropkey(value);
+  }
+
+  /// Encodes a testable property value node with the specified value.
+  ///
+  /// @param value the testable property value
+  /// 
+  /// @return an object representing the encoded testable node
+  @Override
+  public final TestableMarkup tpropval(String value) {
+    return recorder.tpropval(value);
   }
 
   //

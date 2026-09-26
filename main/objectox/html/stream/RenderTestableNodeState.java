@@ -15,25 +15,16 @@
  */
 package objectox.html.stream;
 
-import objectos.html.TestableName;
-import objectos.html.stream.RenderTestable;
-import objectox.html.TestableNameCell;
-import objectox.html.TestableNameEnum;
-
 final class RenderTestableNodeState implements State {
 
   private final Ctx ctx;
 
-  private final TestableName name;
+  private final TestableNode node;
 
-  private final String value;
-
-  RenderTestableNodeState(Ctx ctx, TestableName name, String value) {
+  RenderTestableNodeState(Ctx ctx, TestableNode node) {
     this.ctx = ctx;
 
-    this.name = name;
-
-    this.value = value;
+    this.node = node;
   }
 
   @Override
@@ -41,10 +32,7 @@ final class RenderTestableNodeState implements State {
     final int level;
     level = ctx.stackIndex();
 
-    final RenderTestable event;
-    event = event(level);
-
-    ctx.result(event);
+    ctx.result(node.event(level));
 
     final Frame top;
     top = ctx.pop();
@@ -55,36 +43,11 @@ final class RenderTestableNodeState implements State {
     return endNode.execute(top);
   }
 
-  private RenderTestable event(int level) {
-    return switch (name) {
-      case TestableNameEnum e -> switch (e) {
-        case H1 -> TestableHeadingEvent.of(level, 1, value);
-
-        case H2 -> TestableHeadingEvent.of(level, 2, value);
-
-        case H3 -> TestableHeadingEvent.of(level, 3, value);
-
-        case H4 -> TestableHeadingEvent.of(level, 4, value);
-
-        case H5 -> TestableHeadingEvent.of(level, 5, value);
-
-        case H6 -> TestableHeadingEvent.of(level, 6, value);
-
-        case DD -> TestableEntryValueEvent.of(level, value);
-
-        case DT -> TestableEntryNameEvent.of(level, value);
-      };
-
-      case TestableNameCell c -> TestableCellEvent.of(level, c.width(), value);
-    };
-  }
-
   @Override
   public final boolean equals(Object obj) {
     return obj instanceof RenderTestableNodeState that
         && ctx.equals(that.ctx)
-        && name.equals(that.name)
-        && value.equals(that.value);
+        && node.equals(that.node);
   }
 
 }

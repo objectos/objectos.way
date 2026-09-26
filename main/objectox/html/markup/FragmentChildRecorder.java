@@ -67,13 +67,42 @@ final class FragmentChildRecorder {
           cursor = skipElement(value);
         }
 
-        case HtmlBytes.TEST8 -> { sum += valueRecorder.record(size, value); cursor += 1; }
-        case HtmlBytes.TEST16 -> { sum += valueRecorder.record(size, value); cursor += 2; }
-        case HtmlBytes.TEST24 -> { sum += valueRecorder.record(size, value); cursor += 3; }
+        case HtmlBytes.THEADING8,
+             HtmlBytes.oTHEADING8 -> { sum += testableOnly(size, value); cursor += 2; }
+        case HtmlBytes.THEADING16,
+             HtmlBytes.oTHEADING16 -> { sum += testableOnly(size, value); cursor += 3; }
+        case HtmlBytes.THEADING24,
+             HtmlBytes.oTHEADING24 -> { sum += testableOnly(size, value); cursor += 4; }
 
-        case HtmlBytes.TESTONLY8 -> { sum += valueRecorder.record(size, value); cursor += 1; }
-        case HtmlBytes.TESTONLY16 -> { sum += valueRecorder.record(size, value); cursor += 2; }
-        case HtmlBytes.TESTONLY24 -> { sum += valueRecorder.record(size, value); cursor += 3; }
+        case HtmlBytes.TCELL8,
+             HtmlBytes.oTCELL8 -> { sum += testableOnly(size, value); cursor += 2; }
+        case HtmlBytes.TCELL16,
+             HtmlBytes.oTCELL16 -> { sum += testableOnly(size, value); cursor += 4; }
+        case HtmlBytes.TCELL24,
+             HtmlBytes.oTCELL24 -> { sum += testableOnly(size, value); cursor += 6; }
+
+        case HtmlBytes.TPROP8,
+             HtmlBytes.oTPROP8 -> { sum += testableOnly(size, value); cursor += 2; }
+        case HtmlBytes.TPROP16,
+             HtmlBytes.oTPROP16 -> { sum += testableOnly(size, value); cursor += 4; }
+        case HtmlBytes.TPROP24,
+             HtmlBytes.oTPROP24 -> { sum += testableOnly(size, value); cursor += 6; }
+
+        case HtmlBytes.TPROPKEY8,
+             HtmlBytes.oTPROPKEY8 -> { sum += testableOnly(size, value); cursor += 1; }
+        case HtmlBytes.TPROPKEY16,
+             HtmlBytes.oTPROPKEY16 -> { sum += testableOnly(size, value); cursor += 2; }
+        case HtmlBytes.TPROPKEY24,
+             HtmlBytes.oTPROPKEY24 -> { sum += testableOnly(size, value); cursor += 3; }
+
+        case HtmlBytes.TPROPVAL8,
+             HtmlBytes.oTPROPVAL8 -> { sum += testableOnly(size, value); cursor += 1; }
+        case HtmlBytes.TPROPVAL16,
+             HtmlBytes.oTPROPVAL16 -> { sum += testableOnly(size, value); cursor += 2; }
+        case HtmlBytes.TPROPVAL24,
+             HtmlBytes.oTPROPVAL24 -> { sum += testableOnly(size, value); cursor += 3; }
+
+        case HtmlBytes.TNEWLINE -> { sum += valueRecorder.record(size, value); }
 
         case HtmlBytes.TEXT8 -> { sum += valueRecorder.record(size, value); cursor += 1; }
         case HtmlBytes.TEXT16 -> { sum += valueRecorder.record(size, value); cursor += 2; }
@@ -86,13 +115,25 @@ final class FragmentChildRecorder {
         case HtmlBytes.xELEMSTR8,
              HtmlBytes.xELEMVOID8 -> cursor = skipElement(value);
 
-        case HtmlBytes.xTEST8 -> cursor += 1;
-        case HtmlBytes.xTEST16 -> cursor += 2;
-        case HtmlBytes.xTEST24 -> cursor += 3;
+        case HtmlBytes.xTHEADING8 -> cursor += 2;
+        case HtmlBytes.xTHEADING16 -> cursor += 3;
+        case HtmlBytes.xTHEADING24 -> cursor += 4;
 
-        case HtmlBytes.xTESTONLY8 -> cursor += 1;
-        case HtmlBytes.xTESTONLY16 -> cursor += 2;
-        case HtmlBytes.xTESTONLY24 -> cursor += 3;
+        case HtmlBytes.xTCELL8 -> cursor += 2;
+        case HtmlBytes.xTCELL16 -> cursor += 4;
+        case HtmlBytes.xTCELL24 -> cursor += 6;
+
+        case HtmlBytes.xTPROP8 -> cursor += 2;
+        case HtmlBytes.xTPROP16 -> cursor += 4;
+        case HtmlBytes.xTPROP24 -> cursor += 6;
+
+        case HtmlBytes.xTPROPKEY8 -> cursor += 1;
+        case HtmlBytes.xTPROPKEY16 -> cursor += 2;
+        case HtmlBytes.xTPROPKEY24 -> cursor += 3;
+
+        case HtmlBytes.xTPROPVAL8 -> cursor += 1;
+        case HtmlBytes.xTPROPVAL16 -> cursor += 2;
+        case HtmlBytes.xTPROPVAL24 -> cursor += 3;
 
         case HtmlBytes.xTEXT8 -> cursor += 1;
         case HtmlBytes.xTEXT16 -> cursor += 2;
@@ -125,6 +166,15 @@ final class FragmentChildRecorder {
     sink.setByte(fragValue, HtmlBytes.xFRAGSTR);
 
     return sum;
+  }
+
+  private int testableOnly(IntSize size, int value) {
+    final byte b;
+    b = sink.getByte(value);
+
+    sink.setByte(value, HtmlBytes.testableOnly(b));
+
+    return valueRecorder.record(size, value);
   }
 
   private int skipElement(int elemIndex) {

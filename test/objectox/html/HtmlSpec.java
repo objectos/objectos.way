@@ -15,6 +15,7 @@
  */
 package objectox.html;
 
+import java.util.ArrayList;
 import java.util.List;
 import objectox.html.elem.ElementSpec;
 
@@ -199,31 +200,82 @@ public final class HtmlSpec {
   // ##################################################################
 
   public static List<MethodSpec> testableNodes() {
-    return List.of(
-        new MethodSpec("TestableMarkup test(TestableName name, String value)", "test(name, value)", """
-        Encodes a testable node with the specified name and value.
+    final List<MethodSpec> result;
+    result = new ArrayList<>();
 
-        Testable nodes contribute to the output of the [Component#toTestableText()] method.
-        During regular HTML formatting, testable nodes are rendered as text nodes with the specified value.
+    for (int level = 1; level <= 6; level++) {
+      final String method;
+      method = "th" + level;
 
-        @param name the testable node name
-        @param value the testable node value
-        @return an object representing the encoded testable node
-        """),
-        new MethodSpec("TestableOnlyMarkup testOnly(TestableName name, String value)", "testOnly(name, value)", """
-        Encodes a testable-only node with the specified name and value.
+      final String sig;
+      sig = "TestableMarkup " + method + "(String value)";
 
-        Testable-only nodes differ from testable nodes in that the former do not contribute to the regular HTML formatting as the latter do.
+      final String invocation;
+      invocation = method + "(value)";
 
-        @param name the testable node name
-        @param value the testable node value
-        @return an object representing the encoded testable-only node
-        """),
-        new MethodSpec("NoOpMarkup testableNewLine()", "testableNewLine()", """
-        Formats a line separator at the testable output exclusively.
-        @return a no-op instruction
-        """)
-    );
+      final String javadocs;
+      javadocs = """
+      Encodes a testable heading %d node with the specified value.
+
+      Testable nodes contribute to the output of the [Component#toTestableText()] method.
+      During regular HTML formatting, testable nodes are rendered as text nodes with the specified value.
+
+      @param value the testable node value
+      @return an object representing the encoded testable node
+      """.formatted(level);
+
+      result.add(new MethodSpec(sig, invocation, javadocs));
+    }
+
+    result.add(new MethodSpec("TestableMarkup tcell(int width, String value)", "tcell(width, value)", """
+    Encodes a testable cell node with the specified width and value.
+
+    Testable nodes contribute to the output of the [Component#toTestableText()] method.
+    During regular HTML formatting, testable nodes are rendered as text nodes with the specified value.
+
+    @param width the fixed width of the cell, must be greater than zero
+    @param value the testable node value
+    @return an object representing the encoded testable node
+    """));
+
+    result.add(new MethodSpec("TestableMarkup tbr()", "tbr()", """
+    Formats a line separator at the testable output exclusively.
+
+    @return an object representing the encoded testable node
+    """));
+
+    result.add(new MethodSpec("TestableMarkup tprop(String key, String value)", "tprop(key, value)", """
+    Encodes a testable property node with the specified key and value.
+
+    Testable nodes contribute to the output of the [Component#toTestableText()] method.
+    During regular HTML formatting, testable nodes are rendered as text nodes with the specified value.
+
+    @param key the testable property key
+    @param value the testable property value
+    @return an object representing the encoded testable node
+    """));
+
+    result.add(new MethodSpec("TestableMarkup tpropkey(String value)", "tpropkey(value)", """
+    Encodes a testable property key node with the specified value.
+
+    Testable nodes contribute to the output of the [Component#toTestableText()] method.
+    During regular HTML formatting, testable nodes are rendered as text nodes with the specified value.
+
+    @param value the testable property key value
+    @return an object representing the encoded testable node
+    """));
+
+    result.add(new MethodSpec("TestableMarkup tpropval(String value)", "tpropval(value)", """
+    Encodes a testable property value node with the specified value.
+
+    Testable nodes contribute to the output of the [Component#toTestableText()] method.
+    During regular HTML formatting, testable nodes are rendered as text nodes with the specified value.
+
+    @param value the testable property value
+    @return an object representing the encoded testable node
+    """));
+
+    return List.copyOf(result);
   }
 
   // ##################################################################

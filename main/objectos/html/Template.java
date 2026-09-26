@@ -28,7 +28,6 @@ import objectos.html.markup.NoOpMarkup;
 import objectos.html.markup.RawMarkup;
 import objectos.html.markup.RegularElementValue;
 import objectos.html.markup.TestableMarkup;
-import objectos.html.markup.TestableOnlyMarkup;
 import objectos.html.markup.TextMarkup;
 import objectos.html.markup.VoidElementValue;
 import objectos.internal.Check;
@@ -295,38 +294,97 @@ public abstract class Template implements Component {
   // TESTABLE
   //
 
-  /// Encodes a testable node with the specified name and value.
+  /// Encodes a testable heading 1 node with the specified value.
   ///
   /// Testable nodes contribute to the output of the [Component#toTestableText()]
   /// method. During regular HTML formatting, testable nodes are rendered as text
   /// nodes with the specified value.
   ///
-  /// @param name the testable node name
   /// @param value the testable node value
-  ///
   /// @return an object representing the encoded testable node
-  protected final TestableMarkup test(TestableName name, String value) {
-    return markup().test(name, value);
+  protected final TestableMarkup th1(String value) {
+    return markup().th1(value);
   }
 
-  /// Encodes a testable-only node with the specified name and value.
+  /// Encodes a testable heading 2 node with the specified value.
   ///
-  /// Testable-only nodes differ from testable nodes in that the former do not
-  /// contribute to the regular HTML formatting as the latter do.
-  ///
-  /// @param name the testable node name
   /// @param value the testable node value
+  /// @return an object representing the encoded testable node
+  protected final TestableMarkup th2(String value) {
+    return markup().th2(value);
+  }
+
+  /// Encodes a testable heading 3 node with the specified value.
   ///
-  /// @return an object representing the encoded testable-only node
-  protected final TestableOnlyMarkup testOnly(TestableName name, String value) {
-    return markup().testOnly(name, value);
+  /// @param value the testable node value
+  /// @return an object representing the encoded testable node
+  protected final TestableMarkup th3(String value) {
+    return markup().th3(value);
+  }
+
+  /// Encodes a testable heading 4 node with the specified value.
+  ///
+  /// @param value the testable node value
+  /// @return an object representing the encoded testable node
+  protected final TestableMarkup th4(String value) {
+    return markup().th4(value);
+  }
+
+  /// Encodes a testable heading 5 node with the specified value.
+  ///
+  /// @param value the testable node value
+  /// @return an object representing the encoded testable node
+  protected final TestableMarkup th5(String value) {
+    return markup().th5(value);
+  }
+
+  /// Encodes a testable heading 6 node with the specified value.
+  ///
+  /// @param value the testable node value
+  /// @return an object representing the encoded testable node
+  protected final TestableMarkup th6(String value) {
+    return markup().th6(value);
+  }
+
+  /// Encodes a testable cell node with the specified width and value.
+  ///
+  /// @param width the fixed width of the cell, must be greater than zero
+  /// @param value the testable node value
+  /// @return an object representing the encoded testable node
+  protected final TestableMarkup tcell(int width, String value) {
+    return markup().tcell(width, value);
   }
 
   /// Formats a line separator at the testable output exclusively.
   ///
-  /// @return a no-op instruction
-  protected final NoOpMarkup testableNewLine() {
-    return markup().testableNewLine();
+  /// @return an object representing the encoded testable node
+  protected final TestableMarkup tbr() {
+    return markup().tbr();
+  }
+
+  /// Encodes a testable property node with the specified key and value.
+  ///
+  /// @param key the testable property key
+  /// @param value the testable property value
+  /// @return an object representing the encoded testable node
+  protected final TestableMarkup tprop(String key, String value) {
+    return markup().tprop(key, value);
+  }
+
+  /// Encodes a testable property key node with the specified value.
+  ///
+  /// @param value the testable property key value
+  /// @return an object representing the encoded testable node
+  protected final TestableMarkup tpropkey(String value) {
+    return markup().tpropkey(value);
+  }
+
+  /// Encodes a testable property value node with the specified value.
+  ///
+  /// @param value the testable property value
+  /// @return an object representing the encoded testable node
+  protected final TestableMarkup tpropval(String value) {
+    return markup().tpropval(value);
   }
 
   //

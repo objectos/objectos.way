@@ -13,26 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html;
+package objectos.html.stream;
 
-import objectos.html.TestableName;
+import objectox.html.stream.TestableNewLineEvent;
 
-public enum TestableNameEnum implements TestableName {
-
-  H1,
-
-  H2,
-
-  H3,
-
-  H4,
-
-  H5,
-
-  H6,
-
-  DD,
-
-  DT;
+/// This event renders a testable new line node.
+public sealed interface TestableNewLine
+    extends RenderTestable
+    permits TestableNewLineEvent {
 
 }

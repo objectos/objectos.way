@@ -15,7 +15,6 @@
  */
 package objectox.html.markup;
 
-import objectos.html.TestableName;
 import objectos.html.markup.AttributeMarkup;
 import objectos.html.markup.BooleanAttribute;
 import objectos.html.markup.Fragment0;
@@ -28,7 +27,6 @@ import objectos.html.markup.NoOpMarkup;
 import objectos.html.markup.RawMarkup;
 import objectos.html.markup.RegularElementValue;
 import objectos.html.markup.TestableMarkup;
-import objectos.html.markup.TestableOnlyMarkup;
 import objectos.html.markup.TextMarkup;
 import objectos.html.markup.VoidElementValue;
 import objectos.script.JsAction;
@@ -236,16 +234,48 @@ public final class Recorder {
     return regularElementRecorder.record(name, pointer);
   }
 
-  public final TestableMarkup test(TestableName name, String value) {
-    return testableRecorder.record(name, value);
+  public final TestableMarkup tbr() {
+    return testableRecorder.newLine();
   }
 
-  public final TestableOnlyMarkup testOnly(TestableName name, String value) {
-    return testableRecorder.recordOnly(name, value);
+  public final TestableMarkup tcell(int width, String value) {
+    return testableRecorder.cell(width, value);
   }
 
-  public final NoOpMarkup testableNewLine() {
-    throw new UnsupportedOperationException("Implement me");
+  public final TestableMarkup th1(String value) {
+    return testableRecorder.heading(1, value);
+  }
+
+  public final TestableMarkup th2(String value) {
+    return testableRecorder.heading(2, value);
+  }
+
+  public final TestableMarkup th3(String value) {
+    return testableRecorder.heading(3, value);
+  }
+
+  public final TestableMarkup th4(String value) {
+    return testableRecorder.heading(4, value);
+  }
+
+  public final TestableMarkup th5(String value) {
+    return testableRecorder.heading(5, value);
+  }
+
+  public final TestableMarkup th6(String value) {
+    return testableRecorder.heading(6, value);
+  }
+
+  public final TestableMarkup tprop(String key, String value) {
+    return testableRecorder.property(key, value);
+  }
+
+  public final TestableMarkup tpropkey(String value) {
+    return testableRecorder.propKey(value);
+  }
+
+  public final TestableMarkup tpropval(String value) {
+    return testableRecorder.propValue(value);
   }
 
   public final TextMarkup text(String value) {

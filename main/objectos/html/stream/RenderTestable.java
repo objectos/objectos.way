@@ -21,7 +21,9 @@ public sealed interface RenderTestable
     permits
     TestableHeading,
     TestableCell,
+    TestableProp,
     TestableEntryName,
-    TestableEntryValue {
+    TestableEntryValue,
+    TestableNewLine {
 
 }

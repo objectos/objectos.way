@@ -351,28 +351,28 @@ public class MarkupTest {
   }
 
   @Test(description = """
-  testable node:
+  testable heading node:
   - document level
   """)
   public void test01() {
     final Markup subject;
     subject = Markup.of();
 
-    subject.test(TestableName.H1, "Ipsum");
+    subject.th1("Ipsum");
 
     assertEquals(
         subject.compile(),
 
         HtmlY.create(opts -> {
-          opts.addByte(HtmlBytes.TEST8);
-          opts.addObject(TestableName.H1);
+          opts.addByte(HtmlBytes.THEADING8);
+          opts.addByte((byte) 1);
           opts.addInt8(opts.addObject("Ipsum"));
         })
     );
   }
 
   @Test(description = """
-  testable node:
+  testable heading node:
   - element child
   """)
   public void test02() {
@@ -380,15 +380,15 @@ public class MarkupTest {
     subject = Markup.of();
 
     subject.div(
-        subject.test(TestableName.H1, "Ipsum")
+        subject.th1("Ipsum")
     );
 
     assertEquals(
         subject.compile(),
 
         HtmlY.create(opts -> {
-          opts.addByte(HtmlBytes.xTEST8);
-          opts.addObject(TestableName.H1);
+          opts.addByte(HtmlBytes.xTHEADING8);
+          opts.addByte((byte) 1);
           opts.addInt8(opts.addObject("Ipsum"));
           opts.addByte(HtmlBytes.ELEMSTR8);
           opts.addInt8(ElementName.DIV.index());
@@ -400,22 +400,41 @@ public class MarkupTest {
   }
 
   @Test(description = """
-  testable-only node:
+  testable new line node:
   - document level
   """)
-  public void testOnly01() {
+  public void test03() {
     final Markup subject;
     subject = Markup.of();
 
-    subject.testOnly(TestableName.H1, "Ipsum");
+    subject.tbr();
 
     assertEquals(
         subject.compile(),
 
         HtmlY.create(opts -> {
-          opts.addByte(HtmlBytes.TESTONLY8);
-          opts.addObject(TestableName.H1);
-          opts.addInt8(opts.addObject("Ipsum"));
+          opts.addByte(HtmlBytes.TNEWLINE);
+        })
+    );
+  }
+
+  @Test(description = """
+  testable property node:
+  - document level
+  """)
+  public void test04() {
+    final Markup subject;
+    subject = Markup.of();
+
+    subject.tprop("foo", "bar");
+
+    assertEquals(
+        subject.compile(),
+
+        HtmlY.create(opts -> {
+          opts.addByte(HtmlBytes.TPROP8);
+          opts.addInt8(opts.addObject("foo"));
+          opts.addInt8(opts.addObject("bar"));
         })
     );
   }

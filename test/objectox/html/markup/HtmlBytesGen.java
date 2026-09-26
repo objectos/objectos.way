@@ -51,12 +51,22 @@ public class HtmlBytesGen {
 
     comment("testable");
 
-    value("TEST8");
-    value("TEST16");
-    value("TEST24");
-    value("TESTONLY8");
-    value("TESTONLY16");
-    value("TESTONLY24");
+    value("THEADING8");
+    value("THEADING16");
+    value("THEADING24");
+    value("TCELL8");
+    value("TCELL16");
+    value("TCELL24");
+    value("TPROP8");
+    value("TPROP16");
+    value("TPROP24");
+    value("TPROPKEY8");
+    value("TPROPKEY16");
+    value("TPROPKEY24");
+    value("TPROPVAL8");
+    value("TPROPVAL16");
+    value("TPROPVAL24");
+    value("TNEWLINE");
 
     comment("text");
 
@@ -97,12 +107,40 @@ public class HtmlBytesGen {
 
     comment("xtestable");
 
-    value("xTEST8");
-    value("xTEST16");
-    value("xTEST24");
-    value("xTESTONLY8");
-    value("xTESTONLY16");
-    value("xTESTONLY24");
+    value("xTHEADING8");
+    value("xTHEADING16");
+    value("xTHEADING24");
+    value("xTCELL8");
+    value("xTCELL16");
+    value("xTCELL24");
+    value("xTPROP8");
+    value("xTPROP16");
+    value("xTPROP24");
+    value("xTPROPKEY8");
+    value("xTPROPKEY16");
+    value("xTPROPKEY24");
+    value("xTPROPVAL8");
+    value("xTPROPVAL16");
+    value("xTPROPVAL24");
+    value("xTNEWLINE");
+
+    comment("otestable");
+
+    value("oTHEADING8");
+    value("oTHEADING16");
+    value("oTHEADING24");
+    value("oTCELL8");
+    value("oTCELL16");
+    value("oTCELL24");
+    value("oTPROP8");
+    value("oTPROP16");
+    value("oTPROP24");
+    value("oTPROPKEY8");
+    value("oTPROPKEY16");
+    value("oTPROPKEY24");
+    value("oTPROPVAL8");
+    value("oTPROPVAL16");
+    value("oTPROPVAL24");
 
     comment("xtext");
 

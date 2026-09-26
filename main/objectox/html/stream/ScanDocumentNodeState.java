@@ -41,6 +41,16 @@ final class ScanDocumentNodeState implements State {
       final byte code;
       code = ctx.nextByte();
 
+      if (TestableStates.isOnly(code)) {
+        return TestableStates.only(ctx, code);
+      }
+
+      if (TestableStates.isRegular(code)) {
+        ctx.skip(TestableStates.skip(code));
+
+        continue;
+      }
+
       switch (code) {
         case HtmlBytes.DOCTYPE -> { return doctype(); }
 
@@ -63,18 +73,6 @@ final class ScanDocumentNodeState implements State {
         case HtmlBytes.RAW16 -> { return new RenderRawState(ctx, IntSize.BIT16); }
 
         case HtmlBytes.RAW24 -> { return new RenderRawState(ctx, IntSize.BIT24); }
-
-        case HtmlBytes.TEST8 -> { return new RenderTestableTextState(ctx, IntSize.BIT8); }
-
-        case HtmlBytes.TEST16 -> { return new RenderTestableTextState(ctx, IntSize.BIT16); }
-
-        case HtmlBytes.TEST24 -> { return new RenderTestableTextState(ctx, IntSize.BIT24); }
-
-        case HtmlBytes.TESTONLY8 -> { return new RenderTestableOnlyState(ctx, IntSize.BIT8); }
-
-        case HtmlBytes.TESTONLY16 -> { return new RenderTestableOnlyState(ctx, IntSize.BIT16); }
-
-        case HtmlBytes.TESTONLY24 -> { return new RenderTestableOnlyState(ctx, IntSize.BIT24); }
 
         case HtmlBytes.xELEMSTR8 -> {
           final SkipRegularElement skip;
@@ -122,18 +120,6 @@ final class ScanDocumentNodeState implements State {
         case HtmlBytes.xRAW16 -> ctx.skip(2);
 
         case HtmlBytes.xRAW24 -> ctx.skip(3);
-
-        case HtmlBytes.xTEST8 -> ctx.skip(1);
-
-        case HtmlBytes.xTEST16 -> ctx.skip(2);
-
-        case HtmlBytes.xTEST24 -> ctx.skip(3);
-
-        case HtmlBytes.xTESTONLY8 -> ctx.skip(1);
-
-        case HtmlBytes.xTESTONLY16 -> ctx.skip(2);
-
-        case HtmlBytes.xTESTONLY24 -> ctx.skip(3);
 
         default -> throw State.implCode(code);
       }

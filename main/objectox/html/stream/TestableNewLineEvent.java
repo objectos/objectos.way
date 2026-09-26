@@ -13,13 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.markup;
+package objectox.html.stream;
 
-import objectox.html.markup.TestableOnlyMarkupPointer;
+import objectos.html.stream.TestableNewLine;
 
-/// Represents the encoded markup of an Objectos HTML testable-only node.
-public sealed interface TestableOnlyMarkup
-    extends
-    RegularElementValue
-    permits
-    TestableOnlyMarkupPointer {}
+public record TestableNewLineEvent(int level) implements TestableNewLine {
+
+  public static TestableNewLineEvent of(int level) {
+    return new TestableNewLineEvent(level);
+  }
+
+  @Override
+  public final String toString() {
+    return "TestableNewLine()";
+  }
+
+}

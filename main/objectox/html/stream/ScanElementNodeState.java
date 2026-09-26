@@ -66,6 +66,14 @@ final class ScanElementNodeState implements State {
     final byte code;
     code = ctx.nextByte();
 
+    if (TestableStates.isOnly(code)) {
+      return TestableStates.only(ctx, code);
+    }
+
+    if (TestableStates.isRegular(code)) {
+      return TestableStates.text(ctx, code);
+    }
+
     return switch (code) {
       case HtmlBytes.xELEMSTR8 -> new BeginStartTagState(ctx, ElementKind.REGULAR, IntSize.BIT8);
 
@@ -82,18 +90,6 @@ final class ScanElementNodeState implements State {
       case HtmlBytes.xRAW16 -> new RenderRawState(ctx, IntSize.BIT16);
 
       case HtmlBytes.xRAW24 -> new RenderRawState(ctx, IntSize.BIT24);
-
-      case HtmlBytes.xTEST8 -> new RenderTestableTextState(ctx, IntSize.BIT8);
-
-      case HtmlBytes.xTEST16 -> new RenderTestableTextState(ctx, IntSize.BIT16);
-
-      case HtmlBytes.xTEST24 -> new RenderTestableTextState(ctx, IntSize.BIT24);
-
-      case HtmlBytes.xTESTONLY8 -> new RenderTestableOnlyState(ctx, IntSize.BIT8);
-
-      case HtmlBytes.xTESTONLY16 -> new RenderTestableOnlyState(ctx, IntSize.BIT16);
-
-      case HtmlBytes.xTESTONLY24 -> new RenderTestableOnlyState(ctx, IntSize.BIT24);
 
       default -> throw State.malformed();
     };

@@ -15,40 +15,38 @@
  */
 package objectox.html.stream;
 
-import objectos.html.TestableName;
 import objectox.html.IntSize;
 
 final class RenderTestableOnlyState implements State {
 
   private final Ctx ctx;
 
-  private final IntSize testSize;
+  private final TestableKind kind;
 
-  RenderTestableOnlyState(Ctx ctx, IntSize testSize) {
+  private final IntSize size;
+
+  RenderTestableOnlyState(Ctx ctx, TestableKind kind, IntSize size) {
     this.ctx = ctx;
 
-    this.testSize = testSize;
+    this.kind = kind;
+
+    this.size = size;
   }
 
   @Override
   public final State compute() {
-    final int testIndex;
-    testIndex = ctx.nextInt(testSize);
+    final TestableNode node;
+    node = TestableNode.parse(ctx, kind, size);
 
-    final String value;
-    value = ctx.objString(testIndex);
-
-    final TestableName name;
-    name = ctx.objTestableName(testIndex - 1);
-
-    return new RenderTestableNodeState(ctx, name, value);
+    return new RenderTestableNodeState(ctx, node);
   }
 
   @Override
   public final boolean equals(Object obj) {
     return obj instanceof RenderTestableOnlyState that
         && ctx.equals(that.ctx)
-        && testSize.equals(that.testSize);
+        && kind.equals(that.kind)
+        && size.equals(that.size);
   }
 
 }

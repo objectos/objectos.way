@@ -523,9 +523,9 @@ public class ScanElementAttributeStateTest {
   @DataProvider
   public Object[][] testCase09Provider() {
     return new Object[][] {
-        {HtmlBytes.xTEST8, IntSize.BIT8},
-        {HtmlBytes.xTEST16, IntSize.BIT16},
-        {HtmlBytes.xTEST24, IntSize.BIT24}
+        {HtmlBytes.xTHEADING8, IntSize.BIT8},
+        {HtmlBytes.xTHEADING16, IntSize.BIT16},
+        {HtmlBytes.xTHEADING24, IntSize.BIT24}
     };
   }
 
@@ -557,7 +557,7 @@ public class ScanElementAttributeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new RenderTestableTextState(ctx, testSize));
+    assertEquals(res, new RenderTestableTextState(ctx, TestableKind.HEADING, testSize));
 
     assertEquals(
         ctx,
@@ -588,9 +588,9 @@ public class ScanElementAttributeStateTest {
   @DataProvider
   public Object[][] testCase10Provider() {
     return new Object[][] {
-        {HtmlBytes.xTESTONLY8, IntSize.BIT8},
-        {HtmlBytes.xTESTONLY16, IntSize.BIT16},
-        {HtmlBytes.xTESTONLY24, IntSize.BIT24}
+        {HtmlBytes.oTHEADING8, IntSize.BIT8},
+        {HtmlBytes.oTHEADING16, IntSize.BIT16},
+        {HtmlBytes.oTHEADING24, IntSize.BIT24}
     };
   }
 
@@ -622,7 +622,7 @@ public class ScanElementAttributeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new RenderTestableOnlyState(ctx, testSize));
+    assertEquals(res, new RenderTestableOnlyState(ctx, TestableKind.HEADING, testSize));
 
     assertEquals(
         ctx,

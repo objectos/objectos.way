@@ -19,7 +19,6 @@ import static org.testng.Assert.assertEquals;
 
 import java.util.List;
 import objectos.html.Template;
-import objectos.html.TestableName;
 import objectox.http.Header;
 import objectox.http.resp.ResponseEntity;
 import objectox.http.resp.ResponsePojo;
@@ -123,11 +122,9 @@ public class ResponseTest {
     html = new Template() {
       @Override
       protected void render() {
-        test(TestableName.H1, "Heading 1");
+        th1("Heading 1");
 
-        test(TestableName.DD, "foo");
-
-        test(TestableName.DT, "bar");
+        tprop("foo", "bar");
       }
     };
 

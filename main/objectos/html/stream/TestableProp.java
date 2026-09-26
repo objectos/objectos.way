@@ -13,10 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html.markup;
+package objectos.html.stream;
 
-import objectos.html.markup.TestableOnlyMarkup;
+import objectox.html.stream.TestablePropEvent;
 
-public record TestableOnlyMarkupPointer(int value)
-    implements
-    TestableOnlyMarkup {}
+/// This event renders a testable property node.
+public sealed interface TestableProp
+    extends RenderTestable
+    permits TestablePropEvent {
+
+  /// Returns the property key.
+  ///
+  /// @return the property key
+  String key();
+
+  /// Returns the property value.
+  ///
+  /// @return the property value
+  String value();
+
+}

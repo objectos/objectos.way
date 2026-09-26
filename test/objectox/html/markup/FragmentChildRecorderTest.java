@@ -437,6 +437,82 @@ public class FragmentChildRecorderTest {
     );
   }
 
+  @Test(description = "fragment root testable node becomes testable-only")
+  public void testCase11() {
+    final HtmlSink sink;
+    sink = HtmlSinkY.create(opts -> {
+      opts.addInt24(HtmlSink.MAX_INT24);
+      opts.addByte(HtmlBytes.FRAGSTR);
+      opts.addInt24(0);
+      opts.addByte(HtmlBytes.THEADING8);
+      opts.addByte((byte) 1);
+      opts.addInt8(opts.addObject("Ipsum"));
+      opts.addByte(HtmlBytes.FRAGEND);
+    });
+
+    final FragmentChildRecorder subject;
+    subject = create(sink);
+
+    final IntSize size;
+    size = IntSize.BIT8;
+
+    final int res;
+    res = subject.record(size, 3);
+
+    assertEquals(res, 1);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addInt24(HtmlSink.MAX_INT24);
+          opts.addByte(HtmlBytes.xFRAGSTR);
+          opts.addInt24(0);
+          opts.addByte(HtmlBytes.oTHEADING8);
+          opts.addByte((byte) 1);
+          opts.addInt8(opts.addObject("Ipsum"));
+          opts.addByte(HtmlBytes.FRAGEND);
+          opts.addInt8(7);
+        })
+    );
+  }
+
+  @Test(description = "fragment root testable new line becomes testable-only")
+  public void testCase12() {
+    final HtmlSink sink;
+    sink = HtmlSinkY.create(opts -> {
+      opts.addInt24(HtmlSink.MAX_INT24);
+      opts.addByte(HtmlBytes.FRAGSTR);
+      opts.addInt24(0);
+      opts.addByte(HtmlBytes.TNEWLINE);
+      opts.addByte(HtmlBytes.FRAGEND);
+    });
+
+    final FragmentChildRecorder subject;
+    subject = create(sink);
+
+    final IntSize size;
+    size = IntSize.BIT8;
+
+    final int res;
+    res = subject.record(size, 3);
+
+    assertEquals(res, 1);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addInt24(HtmlSink.MAX_INT24);
+          opts.addByte(HtmlBytes.xFRAGSTR);
+          opts.addInt24(0);
+          opts.addByte(HtmlBytes.xTNEWLINE);
+          opts.addByte(HtmlBytes.FRAGEND);
+          opts.addInt8(7);
+        })
+    );
+  }
+
   private FragmentChildRecorder create(HtmlSink sink) {
     final ValueRecorder valueRecorder;
     valueRecorder = new ValueRecorder(sink);

@@ -17,7 +17,6 @@ package objectox.html.stream;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.html.TestableName;
 import objectox.html.IntSize;
 import objectox.html.markup.HtmlSink;
 import org.testng.annotations.Test;
@@ -25,19 +24,16 @@ import org.testng.annotations.Test;
 public class RenderTestableTextStateTest {
 
   @Test(description = """
-  testable text node:
+  testable heading:
   - 8 bit
   - document level
   """)
-  public void compute08() {
+  public void heading08() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
-      opts.addObject(TestableName.H1);
+      opts.addByte((byte) 1);
 
-      final int valueIndex;
-      valueIndex = opts.addObject("Ipsum");
-
-      opts.addInt8(valueIndex);
+      opts.addInt8(opts.addObject("Ipsum"));
 
       opts.push(FrameY.create(f -> {
         f.index = 0;
@@ -45,57 +41,12 @@ public class RenderTestableTextStateTest {
     });
 
     final RenderTestableTextState subject;
-    subject = new RenderTestableTextState(ctx, IntSize.BIT8);
+    subject = new RenderTestableTextState(ctx, TestableKind.HEADING, IntSize.BIT8);
 
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new RenderTestableNodeState(ctx, TestableName.H1, "Ipsum"));
-
-    assertEquals(
-        ctx,
-
-        CtxY.create(opts -> {
-          opts.sink(ctx);
-
-          opts.push(FrameY.create(f -> {
-            f.index = 1;
-          }));
-
-          opts.result(RenderTextEvent.of(0, "Ipsum"));
-        })
-    );
-  }
-
-  @Test(description = """
-  testable text node:
-  - 16 bit
-  - document level
-  """)
-  public void compute16() {
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
-
-      opts.addObject(TestableName.H1);
-
-      final int valueIndex;
-      valueIndex = opts.addObject("Ipsum");
-
-      opts.addInt16(valueIndex);
-
-      opts.push(FrameY.create(f -> {
-        f.index = 0;
-      }));
-    });
-
-    final RenderTestableTextState subject;
-    subject = new RenderTestableTextState(ctx, IntSize.BIT16);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res, new RenderTestableNodeState(ctx, TestableName.H1, "Ipsum"));
+    assertEquals(res, new RenderTestableNodeState(ctx, new TestableNode(TestableKind.HEADING, 1, 0, null, "Ipsum")));
 
     assertEquals(
         ctx,
@@ -113,21 +64,18 @@ public class RenderTestableTextStateTest {
   }
 
   @Test(description = """
-  testable text node:
-  - 24 bit
+  testable heading:
+  - 16 bit
   - document level
   """)
-  public void compute24() {
+  public void heading16() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
-      opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
+      opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
 
-      opts.addObject(TestableName.H1);
+      opts.addByte((byte) 2);
 
-      final int valueIndex;
-      valueIndex = opts.addObject("Ipsum");
-
-      opts.addInt24(valueIndex);
+      opts.addInt16(opts.addObject("Ipsum"));
 
       opts.push(FrameY.create(f -> {
         f.index = 0;
@@ -135,12 +83,12 @@ public class RenderTestableTextStateTest {
     });
 
     final RenderTestableTextState subject;
-    subject = new RenderTestableTextState(ctx, IntSize.BIT24);
+    subject = new RenderTestableTextState(ctx, TestableKind.HEADING, IntSize.BIT16);
 
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new RenderTestableNodeState(ctx, TestableName.H1, "Ipsum"));
+    assertEquals(res, new RenderTestableNodeState(ctx, new TestableNode(TestableKind.HEADING, 2, 0, null, "Ipsum")));
 
     assertEquals(
         ctx,
@@ -153,6 +101,204 @@ public class RenderTestableTextStateTest {
           }));
 
           opts.result(RenderTextEvent.of(0, "Ipsum"));
+        })
+    );
+  }
+
+  @Test(description = """
+  testable heading:
+  - 24 bit
+  - document level
+  """)
+  public void heading24() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
+
+      opts.addByte((byte) 3);
+
+      opts.addInt24(opts.addObject("Ipsum"));
+
+      opts.push(FrameY.create(f -> {
+        f.index = 0;
+      }));
+    });
+
+    final RenderTestableTextState subject;
+    subject = new RenderTestableTextState(ctx, TestableKind.HEADING, IntSize.BIT24);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new RenderTestableNodeState(ctx, new TestableNode(TestableKind.HEADING, 3, 0, null, "Ipsum")));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(FrameY.create(f -> {
+            f.index = 4;
+          }));
+
+          opts.result(RenderTextEvent.of(0, "Ipsum"));
+        })
+    );
+  }
+
+  @Test(description = """
+  testable cell:
+  - 8 bit
+  - document level
+  """)
+  public void cell08() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addInt8(4);
+
+      opts.addInt8(opts.addObject("Ipsum"));
+
+      opts.push(FrameY.create(f -> {
+        f.index = 0;
+      }));
+    });
+
+    final RenderTestableTextState subject;
+    subject = new RenderTestableTextState(ctx, TestableKind.CELL, IntSize.BIT8);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new RenderTestableNodeState(ctx, new TestableNode(TestableKind.CELL, 0, 4, null, "Ipsum")));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(FrameY.create(f -> {
+            f.index = 2;
+          }));
+
+          opts.result(RenderTextEvent.of(0, "Ipsum"));
+        })
+    );
+  }
+
+  @Test(description = """
+  testable property:
+  - 8 bit
+  - document level
+  """)
+  public void prop08() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addInt8(opts.addObject("foo"));
+
+      opts.addInt8(opts.addObject("bar"));
+
+      opts.push(FrameY.create(f -> {
+        f.index = 0;
+      }));
+    });
+
+    final RenderTestableTextState subject;
+    subject = new RenderTestableTextState(ctx, TestableKind.PROP, IntSize.BIT8);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new RenderTestableNodeState(ctx, new TestableNode(TestableKind.PROP, 0, 0, "foo", "bar")));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(FrameY.create(f -> {
+            f.index = 2;
+          }));
+
+          opts.result(RenderTextEvent.of(0, "bar"));
+        })
+    );
+  }
+
+  @Test(description = """
+  testable property key:
+  - 8 bit
+  - document level
+  """)
+  public void propKey08() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addInt8(opts.addObject("foo"));
+
+      opts.push(FrameY.create(f -> {
+        f.index = 0;
+      }));
+    });
+
+    final RenderTestableTextState subject;
+    subject = new RenderTestableTextState(ctx, TestableKind.PROP_KEY, IntSize.BIT8);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new RenderTestableNodeState(ctx, new TestableNode(TestableKind.PROP_KEY, 0, 0, "foo", null)));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(FrameY.create(f -> {
+            f.index = 1;
+          }));
+
+          opts.result(RenderTextEvent.of(0, "foo"));
+        })
+    );
+  }
+
+  @Test(description = """
+  testable property value:
+  - 8 bit
+  - document level
+  """)
+  public void propValue08() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addInt8(opts.addObject("bar"));
+
+      opts.push(FrameY.create(f -> {
+        f.index = 0;
+      }));
+    });
+
+    final RenderTestableTextState subject;
+    subject = new RenderTestableTextState(ctx, TestableKind.PROP_VALUE, IntSize.BIT8);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new RenderTestableNodeState(ctx, new TestableNode(TestableKind.PROP_VALUE, 0, 0, null, "bar")));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(FrameY.create(f -> {
+            f.index = 1;
+          }));
+
+          opts.result(RenderTextEvent.of(0, "bar"));
         })
     );
   }

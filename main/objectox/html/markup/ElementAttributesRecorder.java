@@ -23,7 +23,6 @@ import objectos.html.markup.ElementMarkup;
 import objectos.html.markup.NoOpMarkup;
 import objectos.html.markup.RawMarkup;
 import objectos.html.markup.TestableMarkup;
-import objectos.html.markup.TestableOnlyMarkup;
 import objectos.html.markup.TextMarkup;
 import objectox.html.IntSize;
 import objectox.html.elem.ElementName;
@@ -85,8 +84,6 @@ final class ElementAttributesRecorder {
       case RawMarkup _ -> 0;
 
       case TestableMarkup _ -> 0;
-
-      case TestableOnlyMarkup _ -> 0;
 
       case TextMarkup _ -> 0;
     };

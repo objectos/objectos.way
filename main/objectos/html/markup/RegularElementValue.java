@@ -36,5 +36,4 @@ public sealed interface RegularElementValue
     NoOpMarkup,
     RawMarkup,
     TestableMarkup,
-    TestableOnlyMarkup,
     TextMarkup {}

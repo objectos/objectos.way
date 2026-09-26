@@ -67,6 +67,18 @@ final class ScanElementAttributeState implements State {
     final byte code;
     code = ctx.nextByte();
 
+    if (TestableStates.isOnly(code)) {
+      nodes(elem);
+
+      return TestableStates.only(ctx, code);
+    }
+
+    if (TestableStates.isRegular(code)) {
+      nodes(elem);
+
+      return TestableStates.text(ctx, code);
+    }
+
     return switch (code) {
 
       case HtmlBytes.xATTRIBUTE88 -> new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT8);
@@ -98,18 +110,6 @@ final class ScanElementAttributeState implements State {
       case HtmlBytes.xRAW16 -> { nodes(elem); yield new RenderRawState(ctx, IntSize.BIT16); }
 
       case HtmlBytes.xRAW24 -> { nodes(elem); yield new RenderRawState(ctx, IntSize.BIT24); }
-
-      case HtmlBytes.xTEST8 -> { nodes(elem); yield new RenderTestableTextState(ctx, IntSize.BIT8); }
-
-      case HtmlBytes.xTEST16 -> { nodes(elem); yield new RenderTestableTextState(ctx, IntSize.BIT16); }
-
-      case HtmlBytes.xTEST24 -> { nodes(elem); yield new RenderTestableTextState(ctx, IntSize.BIT24); }
-
-      case HtmlBytes.xTESTONLY8 -> { nodes(elem); yield new RenderTestableOnlyState(ctx, IntSize.BIT8); }
-
-      case HtmlBytes.xTESTONLY16 -> { nodes(elem); yield new RenderTestableOnlyState(ctx, IntSize.BIT16); }
-
-      case HtmlBytes.xTESTONLY24 -> { nodes(elem); yield new RenderTestableOnlyState(ctx, IntSize.BIT24); }
 
       default -> throw State.implCode(code);
     };
