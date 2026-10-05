@@ -66,15 +66,86 @@ final class ScanElementNodeState implements State {
     final byte code;
     code = ctx.nextByte();
 
-    if (TestableStates.isOnly(code)) {
-      return TestableStates.only(ctx, code);
-    }
-
-    if (TestableStates.isRegular(code)) {
-      return TestableStates.text(ctx, code);
-    }
-
     return switch (code) {
+      case HtmlBytes.THEADING8,
+           HtmlBytes.oTHEADING8 -> new RenderTestableOnlyState(ctx, TestableKind.HEADING, IntSize.BIT8);
+
+      case HtmlBytes.THEADING16,
+           HtmlBytes.oTHEADING16 -> new RenderTestableOnlyState(ctx, TestableKind.HEADING, IntSize.BIT16);
+
+      case HtmlBytes.THEADING24,
+           HtmlBytes.oTHEADING24 -> new RenderTestableOnlyState(ctx, TestableKind.HEADING, IntSize.BIT24);
+
+      case HtmlBytes.TCELL8,
+           HtmlBytes.oTCELL8 -> new RenderTestableOnlyState(ctx, TestableKind.CELL, IntSize.BIT8);
+
+      case HtmlBytes.TCELL16,
+           HtmlBytes.oTCELL16 -> new RenderTestableOnlyState(ctx, TestableKind.CELL, IntSize.BIT16);
+
+      case HtmlBytes.TCELL24,
+           HtmlBytes.oTCELL24 -> new RenderTestableOnlyState(ctx, TestableKind.CELL, IntSize.BIT24);
+
+      case HtmlBytes.TPROP8,
+           HtmlBytes.oTPROP8 -> new RenderTestableOnlyState(ctx, TestableKind.PROP, IntSize.BIT8);
+
+      case HtmlBytes.TPROP16,
+           HtmlBytes.oTPROP16 -> new RenderTestableOnlyState(ctx, TestableKind.PROP, IntSize.BIT16);
+
+      case HtmlBytes.TPROP24,
+           HtmlBytes.oTPROP24 -> new RenderTestableOnlyState(ctx, TestableKind.PROP, IntSize.BIT24);
+
+      case HtmlBytes.TPROPKEY8,
+           HtmlBytes.oTPROPKEY8 -> new RenderTestableOnlyState(ctx, TestableKind.PROP_KEY, IntSize.BIT8);
+
+      case HtmlBytes.TPROPKEY16,
+           HtmlBytes.oTPROPKEY16 -> new RenderTestableOnlyState(ctx, TestableKind.PROP_KEY, IntSize.BIT16);
+
+      case HtmlBytes.TPROPKEY24,
+           HtmlBytes.oTPROPKEY24 -> new RenderTestableOnlyState(ctx, TestableKind.PROP_KEY, IntSize.BIT24);
+
+      case HtmlBytes.TPROPVAL8,
+           HtmlBytes.oTPROPVAL8 -> new RenderTestableOnlyState(ctx, TestableKind.PROP_VALUE, IntSize.BIT8);
+
+      case HtmlBytes.TPROPVAL16,
+           HtmlBytes.oTPROPVAL16 -> new RenderTestableOnlyState(ctx, TestableKind.PROP_VALUE, IntSize.BIT16);
+
+      case HtmlBytes.TPROPVAL24,
+           HtmlBytes.oTPROPVAL24 -> new RenderTestableOnlyState(ctx, TestableKind.PROP_VALUE, IntSize.BIT24);
+
+      case HtmlBytes.TNEWLINE -> new RenderTestableOnlyState(ctx, TestableKind.NEWLINE, IntSize.BIT8);
+
+      case HtmlBytes.xTHEADING8 -> new RenderTestableTextState(ctx, TestableKind.HEADING, IntSize.BIT8);
+
+      case HtmlBytes.xTHEADING16 -> new RenderTestableTextState(ctx, TestableKind.HEADING, IntSize.BIT16);
+
+      case HtmlBytes.xTHEADING24 -> new RenderTestableTextState(ctx, TestableKind.HEADING, IntSize.BIT24);
+
+      case HtmlBytes.xTCELL8 -> new RenderTestableTextState(ctx, TestableKind.CELL, IntSize.BIT8);
+
+      case HtmlBytes.xTCELL16 -> new RenderTestableTextState(ctx, TestableKind.CELL, IntSize.BIT16);
+
+      case HtmlBytes.xTCELL24 -> new RenderTestableTextState(ctx, TestableKind.CELL, IntSize.BIT24);
+
+      case HtmlBytes.xTPROP8 -> new RenderTestableTextState(ctx, TestableKind.PROP, IntSize.BIT8);
+
+      case HtmlBytes.xTPROP16 -> new RenderTestableTextState(ctx, TestableKind.PROP, IntSize.BIT16);
+
+      case HtmlBytes.xTPROP24 -> new RenderTestableTextState(ctx, TestableKind.PROP, IntSize.BIT24);
+
+      case HtmlBytes.xTPROPKEY8 -> new RenderTestableTextState(ctx, TestableKind.PROP_KEY, IntSize.BIT8);
+
+      case HtmlBytes.xTPROPKEY16 -> new RenderTestableTextState(ctx, TestableKind.PROP_KEY, IntSize.BIT16);
+
+      case HtmlBytes.xTPROPKEY24 -> new RenderTestableTextState(ctx, TestableKind.PROP_KEY, IntSize.BIT24);
+
+      case HtmlBytes.xTPROPVAL8 -> new RenderTestableTextState(ctx, TestableKind.PROP_VALUE, IntSize.BIT8);
+
+      case HtmlBytes.xTPROPVAL16 -> new RenderTestableTextState(ctx, TestableKind.PROP_VALUE, IntSize.BIT16);
+
+      case HtmlBytes.xTPROPVAL24 -> new RenderTestableTextState(ctx, TestableKind.PROP_VALUE, IntSize.BIT24);
+
+      case HtmlBytes.xTNEWLINE -> new RenderTestableOnlyState(ctx, TestableKind.NEWLINE, IntSize.BIT8);
+
       case HtmlBytes.xELEMSTR8 -> new BeginStartTagState(ctx, ElementKind.REGULAR, IntSize.BIT8);
 
       case HtmlBytes.xELEMVOID8 -> new BeginStartTagState(ctx, ElementKind.VOID, IntSize.BIT8);
