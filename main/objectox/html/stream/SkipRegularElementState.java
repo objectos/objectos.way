@@ -18,19 +18,20 @@ package objectox.html.stream;
 import objectox.html.IntSize;
 import objectox.html.markup.HtmlBytes;
 
-final class SkipRegularElement {
+final class SkipRegularElementState implements State {
 
   private final Ctx ctx;
 
   private final IntSize nameSize;
 
-  SkipRegularElement(Ctx ctx, IntSize nameSize) {
+  SkipRegularElementState(Ctx ctx, IntSize nameSize) {
     this.ctx = ctx;
 
     this.nameSize = nameSize;
   }
 
-  public final void execute() {
+  @Override
+  public final State compute() {
     final int nameBytes;
     nameBytes = nameSize.bytes();
 
@@ -42,7 +43,19 @@ final class SkipRegularElement {
     final int count;
     count = ctx.nextInt(size);
 
-    ctx.skip(count * size.bytes());
+    final int valueBytes;
+    valueBytes = count * size.bytes();
+
+    ctx.skip(valueBytes);
+
+    return new ScanDocumentNodeState(ctx);
+  }
+
+  @Override
+  public final boolean equals(Object obj) {
+    return obj instanceof SkipRegularElementState that
+        && nameSize.equals(that.nameSize)
+        && ctx.equals(that.ctx);
   }
 
   private IntSize valuesSize() {

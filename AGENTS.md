@@ -52,7 +52,7 @@ Implementation classes live in:
 
 ## TDD
 
-When writing tests, you may assume TDD is being used.
+Write tests first.
 
 ## Code style
 

@@ -37,164 +37,11 @@ final class ScanDocumentNodeState implements State {
 
   @Override
   public final State compute() {
-    while (ctx.hasByte()) {
-      final byte code;
-      code = ctx.nextByte();
-
-      switch (code) {
-        case HtmlBytes.DOCTYPE -> { return doctype(); }
-
-        case HtmlBytes.ELEMSTR8 -> { return new BeginStartTagState(ctx, ElementKind.REGULAR, IntSize.BIT8); }
-
-        case HtmlBytes.ELEMVOID8 -> { return new BeginStartTagState(ctx, ElementKind.VOID, IntSize.BIT8); }
-
-        case HtmlBytes.FRAGSTR -> { ctx.skip(3); }
-
-        case HtmlBytes.FRAGEND -> {}
-
-        case HtmlBytes.TEXT8 -> { return new RenderTextState(ctx, IntSize.BIT8); }
-
-        case HtmlBytes.TEXT16 -> { return new RenderTextState(ctx, IntSize.BIT16); }
-
-        case HtmlBytes.TEXT24 -> { return new RenderTextState(ctx, IntSize.BIT24); }
-
-        case HtmlBytes.RAW8 -> { return new RenderRawState(ctx, IntSize.BIT8); }
-
-        case HtmlBytes.RAW16 -> { return new RenderRawState(ctx, IntSize.BIT16); }
-
-        case HtmlBytes.RAW24 -> { return new RenderRawState(ctx, IntSize.BIT24); }
-
-        case HtmlBytes.THEADING8,
-             HtmlBytes.oTHEADING8 -> { return new RenderTestableOnlyState(ctx, TestableKind.HEADING, IntSize.BIT8); }
-
-        case HtmlBytes.THEADING16,
-             HtmlBytes.oTHEADING16 -> { return new RenderTestableOnlyState(ctx, TestableKind.HEADING, IntSize.BIT16); }
-
-        case HtmlBytes.THEADING24,
-             HtmlBytes.oTHEADING24 -> { return new RenderTestableOnlyState(ctx, TestableKind.HEADING, IntSize.BIT24); }
-
-        case HtmlBytes.TCELL8,
-             HtmlBytes.oTCELL8 -> { return new RenderTestableOnlyState(ctx, TestableKind.CELL, IntSize.BIT8); }
-
-        case HtmlBytes.TCELL16,
-             HtmlBytes.oTCELL16 -> { return new RenderTestableOnlyState(ctx, TestableKind.CELL, IntSize.BIT16); }
-
-        case HtmlBytes.TCELL24,
-             HtmlBytes.oTCELL24 -> { return new RenderTestableOnlyState(ctx, TestableKind.CELL, IntSize.BIT24); }
-
-        case HtmlBytes.TPROP8,
-             HtmlBytes.oTPROP8 -> { return new RenderTestableOnlyState(ctx, TestableKind.PROP, IntSize.BIT8); }
-
-        case HtmlBytes.TPROP16,
-             HtmlBytes.oTPROP16 -> { return new RenderTestableOnlyState(ctx, TestableKind.PROP, IntSize.BIT16); }
-
-        case HtmlBytes.TPROP24,
-             HtmlBytes.oTPROP24 -> { return new RenderTestableOnlyState(ctx, TestableKind.PROP, IntSize.BIT24); }
-
-        case HtmlBytes.TPROPKEY8,
-             HtmlBytes.oTPROPKEY8 -> { return new RenderTestableOnlyState(ctx, TestableKind.PROP_KEY, IntSize.BIT8); }
-
-        case HtmlBytes.TPROPKEY16,
-             HtmlBytes.oTPROPKEY16 -> { return new RenderTestableOnlyState(ctx, TestableKind.PROP_KEY, IntSize.BIT16); }
-
-        case HtmlBytes.TPROPKEY24,
-             HtmlBytes.oTPROPKEY24 -> { return new RenderTestableOnlyState(ctx, TestableKind.PROP_KEY, IntSize.BIT24); }
-
-        case HtmlBytes.TPROPVAL8,
-             HtmlBytes.oTPROPVAL8 -> { return new RenderTestableOnlyState(ctx, TestableKind.PROP_VALUE, IntSize.BIT8); }
-
-        case HtmlBytes.TPROPVAL16,
-             HtmlBytes.oTPROPVAL16 -> { return new RenderTestableOnlyState(ctx, TestableKind.PROP_VALUE, IntSize.BIT16); }
-
-        case HtmlBytes.TPROPVAL24,
-             HtmlBytes.oTPROPVAL24 -> { return new RenderTestableOnlyState(ctx, TestableKind.PROP_VALUE, IntSize.BIT24); }
-
-        case HtmlBytes.TNEWLINE -> { return new RenderTestableOnlyState(ctx, TestableKind.NEWLINE, IntSize.BIT8); }
-
-        case HtmlBytes.xTHEADING8 -> ctx.skip(2);
-
-        case HtmlBytes.xTHEADING16 -> ctx.skip(3);
-
-        case HtmlBytes.xTHEADING24 -> ctx.skip(4);
-
-        case HtmlBytes.xTCELL8 -> ctx.skip(2);
-
-        case HtmlBytes.xTCELL16 -> ctx.skip(4);
-
-        case HtmlBytes.xTCELL24 -> ctx.skip(6);
-
-        case HtmlBytes.xTPROP8 -> ctx.skip(2);
-
-        case HtmlBytes.xTPROP16 -> ctx.skip(4);
-
-        case HtmlBytes.xTPROP24 -> ctx.skip(6);
-
-        case HtmlBytes.xTPROPKEY8 -> ctx.skip(1);
-
-        case HtmlBytes.xTPROPKEY16 -> ctx.skip(2);
-
-        case HtmlBytes.xTPROPKEY24 -> ctx.skip(3);
-
-        case HtmlBytes.xTPROPVAL8 -> ctx.skip(1);
-
-        case HtmlBytes.xTPROPVAL16 -> ctx.skip(2);
-
-        case HtmlBytes.xTPROPVAL24 -> ctx.skip(3);
-
-        case HtmlBytes.xTNEWLINE -> {}
-
-        case HtmlBytes.xELEMSTR8 -> {
-          final SkipRegularElement skip;
-          skip = new SkipRegularElement(ctx, IntSize.BIT8);
-
-          skip.execute();
-        }
-
-        case HtmlBytes.xELEMVOID8 -> {
-          final SkipVoidElement skip;
-          skip = new SkipVoidElement(ctx, IntSize.BIT8);
-
-          skip.execute();
-        }
-
-        case HtmlBytes.xATTRIBUTE88 -> ctx.skip(1 + 1);
-
-        case HtmlBytes.xATTRIBUTE816 -> ctx.skip(1 + 2);
-
-        case HtmlBytes.xATTRIBUTE824 -> ctx.skip(1 + 3);
-
-        case HtmlBytes.xBOOLEAN8 -> ctx.skip(1);
-
-        case HtmlBytes.xJSACTION88 -> ctx.skip(1 + 1);
-
-        case HtmlBytes.xJSACTION816 -> ctx.skip(1 + 2);
-
-        case HtmlBytes.xJSACTION824 -> ctx.skip(1 + 3);
-
-        case HtmlBytes.xFRAGSTR -> {
-          final SkipFragment skip;
-          skip = new SkipFragment(ctx);
-
-          skip.execute();
-        }
-
-        case HtmlBytes.xTEXT8 -> ctx.skip(1);
-
-        case HtmlBytes.xTEXT16 -> ctx.skip(2);
-
-        case HtmlBytes.xTEXT24 -> ctx.skip(3);
-
-        case HtmlBytes.xRAW8 -> ctx.skip(1);
-
-        case HtmlBytes.xRAW16 -> ctx.skip(2);
-
-        case HtmlBytes.xRAW24 -> ctx.skip(3);
-
-        default -> throw State.implCode(code);
-      }
+    if (ctx.hasByte()) {
+      return compute0();
+    } else {
+      return new StopState(ctx);
     }
-
-    return new StopState(ctx);
   }
 
   @Override
@@ -203,16 +50,146 @@ final class ScanDocumentNodeState implements State {
         && ctx.equals(that.ctx);
   }
 
-  private State doctype() {
-    final int level;
-    level = ctx.stackIndex();
+  private State compute0() {
+    final byte code;
+    code = ctx.nextByte();
 
-    final RenderDoctypeEvent event;
-    event = RenderDoctypeEvent.of(level);
+    return switch (code) {
+      case HtmlBytes.DOCTYPE -> new RenderDoctypeState(ctx);
 
-    ctx.result(event);
+      case HtmlBytes.ELEMSTR8 -> new BeginStartTagState(ctx, ElementKind.REGULAR, IntSize.BIT8);
 
-    return this;
+      case HtmlBytes.ELEMVOID8 -> new BeginStartTagState(ctx, ElementKind.VOID, IntSize.BIT8);
+
+      case HtmlBytes.FRAGSTR -> new SkipState(ctx, 3);
+
+      case HtmlBytes.FRAGEND -> this;
+
+      case HtmlBytes.TEXT8 -> new RenderTextState(ctx, IntSize.BIT8);
+
+      case HtmlBytes.TEXT16 -> new RenderTextState(ctx, IntSize.BIT16);
+
+      case HtmlBytes.TEXT24 -> new RenderTextState(ctx, IntSize.BIT24);
+
+      case HtmlBytes.RAW8 -> new RenderRawState(ctx, IntSize.BIT8);
+
+      case HtmlBytes.RAW16 -> new RenderRawState(ctx, IntSize.BIT16);
+
+      case HtmlBytes.RAW24 -> new RenderRawState(ctx, IntSize.BIT24);
+
+      case HtmlBytes.THEADING8,
+           HtmlBytes.oTHEADING8 -> new RenderTestableOnlyState(ctx, TestableKind.HEADING, IntSize.BIT8);
+
+      case HtmlBytes.THEADING16,
+           HtmlBytes.oTHEADING16 -> new RenderTestableOnlyState(ctx, TestableKind.HEADING, IntSize.BIT16);
+
+      case HtmlBytes.THEADING24,
+           HtmlBytes.oTHEADING24 -> new RenderTestableOnlyState(ctx, TestableKind.HEADING, IntSize.BIT24);
+
+      case HtmlBytes.TCELL8,
+           HtmlBytes.oTCELL8 -> new RenderTestableOnlyState(ctx, TestableKind.CELL, IntSize.BIT8);
+
+      case HtmlBytes.TCELL16,
+           HtmlBytes.oTCELL16 -> new RenderTestableOnlyState(ctx, TestableKind.CELL, IntSize.BIT16);
+
+      case HtmlBytes.TCELL24,
+           HtmlBytes.oTCELL24 -> new RenderTestableOnlyState(ctx, TestableKind.CELL, IntSize.BIT24);
+
+      case HtmlBytes.TPROP8,
+           HtmlBytes.oTPROP8 -> new RenderTestableOnlyState(ctx, TestableKind.PROP, IntSize.BIT8);
+
+      case HtmlBytes.TPROP16,
+           HtmlBytes.oTPROP16 -> new RenderTestableOnlyState(ctx, TestableKind.PROP, IntSize.BIT16);
+
+      case HtmlBytes.TPROP24,
+           HtmlBytes.oTPROP24 -> new RenderTestableOnlyState(ctx, TestableKind.PROP, IntSize.BIT24);
+
+      case HtmlBytes.TPROPKEY8,
+           HtmlBytes.oTPROPKEY8 -> new RenderTestableOnlyState(ctx, TestableKind.PROP_KEY, IntSize.BIT8);
+
+      case HtmlBytes.TPROPKEY16,
+           HtmlBytes.oTPROPKEY16 -> new RenderTestableOnlyState(ctx, TestableKind.PROP_KEY, IntSize.BIT16);
+
+      case HtmlBytes.TPROPKEY24,
+           HtmlBytes.oTPROPKEY24 -> new RenderTestableOnlyState(ctx, TestableKind.PROP_KEY, IntSize.BIT24);
+
+      case HtmlBytes.TPROPVAL8,
+           HtmlBytes.oTPROPVAL8 -> new RenderTestableOnlyState(ctx, TestableKind.PROP_VALUE, IntSize.BIT8);
+
+      case HtmlBytes.TPROPVAL16,
+           HtmlBytes.oTPROPVAL16 -> new RenderTestableOnlyState(ctx, TestableKind.PROP_VALUE, IntSize.BIT16);
+
+      case HtmlBytes.TPROPVAL24,
+           HtmlBytes.oTPROPVAL24 -> new RenderTestableOnlyState(ctx, TestableKind.PROP_VALUE, IntSize.BIT24);
+
+      case HtmlBytes.TNEWLINE -> new RenderTestableOnlyState(ctx, TestableKind.NEWLINE, IntSize.BIT8);
+
+      case HtmlBytes.xTHEADING8 -> new SkipState(ctx, 2);
+
+      case HtmlBytes.xTHEADING16 -> new SkipState(ctx, 3);
+
+      case HtmlBytes.xTHEADING24 -> new SkipState(ctx, 4);
+
+      case HtmlBytes.xTCELL8 -> new SkipState(ctx, 2);
+
+      case HtmlBytes.xTCELL16 -> new SkipState(ctx, 4);
+
+      case HtmlBytes.xTCELL24 -> new SkipState(ctx, 6);
+
+      case HtmlBytes.xTPROP8 -> new SkipState(ctx, 2);
+
+      case HtmlBytes.xTPROP16 -> new SkipState(ctx, 4);
+
+      case HtmlBytes.xTPROP24 -> new SkipState(ctx, 6);
+
+      case HtmlBytes.xTPROPKEY8 -> new SkipState(ctx, 1);
+
+      case HtmlBytes.xTPROPKEY16 -> new SkipState(ctx, 2);
+
+      case HtmlBytes.xTPROPKEY24 -> new SkipState(ctx, 3);
+
+      case HtmlBytes.xTPROPVAL8 -> new SkipState(ctx, 1);
+
+      case HtmlBytes.xTPROPVAL16 -> new SkipState(ctx, 2);
+
+      case HtmlBytes.xTPROPVAL24 -> new SkipState(ctx, 3);
+
+      case HtmlBytes.xTNEWLINE -> this;
+
+      case HtmlBytes.xELEMSTR8 -> new SkipRegularElementState(ctx, IntSize.BIT8);
+
+      case HtmlBytes.xELEMVOID8 -> new SkipVoidElementState(ctx, IntSize.BIT8);
+
+      case HtmlBytes.xATTRIBUTE88 -> new SkipState(ctx, 1 + 1);
+
+      case HtmlBytes.xATTRIBUTE816 -> new SkipState(ctx, 1 + 2);
+
+      case HtmlBytes.xATTRIBUTE824 -> new SkipState(ctx, 1 + 3);
+
+      case HtmlBytes.xBOOLEAN8 -> new SkipState(ctx, 1);
+
+      case HtmlBytes.xJSACTION88 -> new SkipState(ctx, 1 + 1);
+
+      case HtmlBytes.xJSACTION816 -> new SkipState(ctx, 1 + 2);
+
+      case HtmlBytes.xJSACTION824 -> new SkipState(ctx, 1 + 3);
+
+      case HtmlBytes.xFRAGSTR -> new SkipFragmentState(ctx);
+
+      case HtmlBytes.xTEXT8 -> new SkipState(ctx, 1);
+
+      case HtmlBytes.xTEXT16 -> new SkipState(ctx, 2);
+
+      case HtmlBytes.xTEXT24 -> new SkipState(ctx, 3);
+
+      case HtmlBytes.xRAW8 -> new SkipState(ctx, 1);
+
+      case HtmlBytes.xRAW16 -> new SkipState(ctx, 2);
+
+      case HtmlBytes.xRAW24 -> new SkipState(ctx, 3);
+
+      default -> throw State.implCode(code);
+    };
   }
 
 }

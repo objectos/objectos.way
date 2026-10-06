@@ -21,7 +21,7 @@ import objectox.html.attr.AttributeName;
 import objectox.html.markup.HtmlBytes;
 import org.testng.annotations.Test;
 
-public class SkipFragmentTest {
+public class SkipFragmentStateTest {
 
   @Test(description = "empty fragment")
   public void testCase01() {
@@ -37,10 +37,13 @@ public class SkipFragmentTest {
       }));
     });
 
-    final SkipFragment subject;
-    subject = new SkipFragment(ctx);
+    final SkipFragmentState subject;
+    subject = new SkipFragmentState(ctx);
 
-    subject.execute();
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new ScanDocumentNodeState(ctx));
 
     assertEquals(
         ctx,
@@ -75,10 +78,13 @@ public class SkipFragmentTest {
       }));
     });
 
-    final SkipFragment subject;
-    subject = new SkipFragment(ctx);
+    final SkipFragmentState subject;
+    subject = new SkipFragmentState(ctx);
 
-    subject.execute();
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new ScanDocumentNodeState(ctx));
 
     assertEquals(
         ctx,

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2026 Objectos Software LTDA.
+ * Copyright (C) 2022-2026 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,38 +17,31 @@ package objectox.html.stream;
 
 import static org.testng.Assert.assertEquals;
 
-import objectox.html.IntSize;
-import objectox.html.elem.ElementName;
+import objectox.html.attr.AttributeName;
 import objectox.html.markup.HtmlBytes;
 import org.testng.annotations.Test;
 
-public class SkipRegularElementTest {
+public class SkipStateTest {
 
   @Test(description = """
-  regular elem:
-  - no attrs
-  - reg elem (no attrs / no children)
+  skip the specified number of bytes
   """)
-  public void regularElement02() {
+  public void compute() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.xELEMSTR8);
-      opts.addInt8(ElementName.SPAN.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMSTR8);
-      opts.addInt8(ElementName.DIV.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
+      opts.addByte(HtmlBytes.xBOOLEAN8);
+      opts.addInt8(AttributeName.AUTOFOCUS.index());
 
-      opts.push(new Frame(1));
+      opts.push(new Frame(0));
     });
 
-    final SkipRegularElement subject;
-    subject = new SkipRegularElement(ctx, IntSize.BIT8);
+    final SkipState subject;
+    subject = new SkipState(ctx, 2);
 
-    subject.execute();
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new ScanDocumentNodeState(ctx));
 
     assertEquals(
         ctx,
@@ -56,7 +49,9 @@ public class SkipRegularElementTest {
         CtxY.create(opts -> {
           opts.sink(ctx);
 
-          opts.push(new Frame(4));
+          opts.push(FrameY.create(f -> {
+            f.index = 2;
+          }));
         })
     );
   }

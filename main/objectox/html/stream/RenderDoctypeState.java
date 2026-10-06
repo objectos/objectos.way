@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2026 Objectos Software LTDA.
+ * Copyright (C) 2022-2026 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,24 +15,31 @@
  */
 package objectox.html.stream;
 
-import objectox.html.IntSize;
-
-final class SkipFragment {
+final class RenderDoctypeState implements State {
 
   private final Ctx ctx;
 
-  SkipFragment(Ctx ctx) {
+  RenderDoctypeState(Ctx ctx) {
     this.ctx = ctx;
   }
 
-  public final void execute() {
-    final int jump;
-    jump = ctx.nextInt(IntSize.BIT24);
+  @Override
+  public final State compute() {
+    final int level;
+    level = ctx.stackIndex();
 
-    final Frame frame;
-    frame = ctx.peekFrame();
+    final RenderDoctypeEvent event;
+    event = RenderDoctypeEvent.of(level);
 
-    frame.index = jump;
+    ctx.result(event);
+
+    return new ScanDocumentNodeState(ctx);
+  }
+
+  @Override
+  public final boolean equals(Object obj) {
+    return obj instanceof RenderDoctypeState that
+        && ctx.equals(that.ctx);
   }
 
 }

@@ -16,7 +16,6 @@
 package objectox.html.stream;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertSame;
 import java.util.function.Consumer;
 import objectos.script.Js;
 import objectos.script.JsAction;
@@ -73,14 +72,14 @@ public class ScanDocumentNodeStateTest {
     final State res;
     res = subject.compute();
 
-    assertSame(res, subject);
+    assertEquals(res, new RenderDoctypeState(ctx));
 
     assertEquals(
         ctx,
 
         CtxY.create(opts -> {
           opts.sink(ctx);
-          opts.result(RenderDoctypeEvent.of(0));
+
           opts.push(new Frame(1));
         })
     );
@@ -135,167 +134,183 @@ public class ScanDocumentNodeStateTest {
           opts.addByte(HtmlBytes.xATTRIBUTE88);
           opts.addInt8(AttributeName.CONTENTEDITABLE.index());
           opts.addInt8(opts.addObject("false"));
-        }), 4, "attribute 8/8"},
+        }), 2, "attribute 8/8"},
 
         {ctx(opts -> {
           opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
           opts.addByte(HtmlBytes.xATTRIBUTE816);
           opts.addInt8(AttributeName.CONTENTEDITABLE.index());
           opts.addInt16(opts.addObject("false"));
-        }), 5, "attribute 8/16"},
+        }), 3, "attribute 8/16"},
 
         {ctx(opts -> {
           opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
           opts.addByte(HtmlBytes.xATTRIBUTE824);
           opts.addInt8(AttributeName.CONTENTEDITABLE.index());
           opts.addInt24(opts.addObject("false"));
-        }), 6, "attribute 8/24"},
+        }), 4, "attribute 8/24"},
 
         {ctx(opts -> {
           opts.addByte(HtmlBytes.xBOOLEAN8);
           opts.addInt8(AttributeName.AUTOFOCUS.index());
-        }), 3, "boolean 8"},
+        }), 1, "boolean 8"},
 
         {ctx(opts -> {
           opts.addByte(HtmlBytes.xJSACTION88);
           opts.addInt8(AttributeName.ONCLICK.index());
           opts.addInt8(opts.addObject(action));
-        }), 4, "jsaction 8/8"},
+        }), 2, "jsaction 8/8"},
 
         {ctx(opts -> {
           opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
           opts.addByte(HtmlBytes.xJSACTION816);
           opts.addInt8(AttributeName.ONCLICK.index());
           opts.addInt16(opts.addObject(action));
-        }), 5, "jsaction 8/16"},
+        }), 3, "jsaction 8/16"},
 
         {ctx(opts -> {
           opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
           opts.addByte(HtmlBytes.xJSACTION824);
           opts.addInt8(AttributeName.ONCLICK.index());
           opts.addInt24(opts.addObject(action));
-        }), 6, "jsaction 8/24"},
-
-        {ctx(opts -> {
-          opts.addByte(HtmlBytes.xELEMSTR8);
-          opts.addInt8(ElementName.SPAN.index());
-          opts.addByte(HtmlBytes.VALUES8);
-          opts.addInt8(0);
-        }), 5, "consumed element regular"},
-
-        {ctx(opts -> {
-          opts.addByte(HtmlBytes.xELEMVOID8);
-          opts.addInt8(ElementName.HR.index());
-          opts.addByte(HtmlBytes.VALUES8);
-          opts.addInt8(0);
-        }), 5, "consumed element void"},
-
-        {ctx(opts -> {
-          opts.addByte(HtmlBytes.xFRAGSTR);
-          opts.addInt24(5);
-          opts.addByte(HtmlBytes.FRAGEND);
-        }), 6, "consumed fragment empty"},
-
-        {ctx(opts -> {
-          opts.addByte(HtmlBytes.xFRAGSTR);
-          opts.addInt24(8);
-          opts.addByte(HtmlBytes.xATTRIBUTE88);
-          opts.addInt8(AttributeName.CONTENTEDITABLE.index());
-          opts.addInt8(opts.addObject("false"));
-          opts.addByte(HtmlBytes.FRAGEND);
-        }), 9, "consumed fragment one child"},
+        }), 4, "jsaction 8/24"},
 
         {ctx(opts -> {
           opts.addByte(HtmlBytes.xTEXT8);
           opts.addInt8(opts.addObject("Ipsum"));
-        }), 3, "text 8"},
+        }), 1, "text 8"},
 
         {ctx(opts -> {
           opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
           opts.addByte(HtmlBytes.xTEXT16);
           opts.addInt16(opts.addObject("Ipsum"));
-        }), 4, "text 16"},
+        }), 2, "text 16"},
 
         {ctx(opts -> {
           opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
           opts.addByte(HtmlBytes.xTEXT24);
           opts.addInt24(opts.addObject("Ipsum"));
-        }), 5, "text 24"},
+        }), 3, "text 24"},
 
         {ctx(opts -> {
           opts.addByte(HtmlBytes.xRAW8);
           opts.addInt8(opts.addObject("Ipsum"));
-        }), 3, "raw 8"},
+        }), 1, "raw 8"},
 
         {ctx(opts -> {
           opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
           opts.addByte(HtmlBytes.xRAW16);
           opts.addInt16(opts.addObject("Ipsum"));
-        }), 4, "raw 16"},
+        }), 2, "raw 16"},
 
         {ctx(opts -> {
           opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
           opts.addByte(HtmlBytes.xRAW24);
           opts.addInt24(opts.addObject("Ipsum"));
-        }), 5, "raw 24"},
+        }), 3, "raw 24"},
 
         {ctx(opts -> {
           opts.addByte(HtmlBytes.xTHEADING8);
           opts.addByte((byte) 1);
           opts.addInt8(opts.addObject("Ipsum"));
-        }), 4, "testable heading 8"},
+        }), 2, "testable heading 8"},
 
         {ctx(opts -> {
           opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
           opts.addByte(HtmlBytes.xTHEADING16);
           opts.addByte((byte) 1);
           opts.addInt16(opts.addObject("Ipsum"));
-        }), 5, "testable heading 16"},
+        }), 3, "testable heading 16"},
 
         {ctx(opts -> {
           opts.addByte(HtmlBytes.xTCELL8);
           opts.addInt8(3);
           opts.addInt8(opts.addObject("Ipsum"));
-        }), 4, "testable cell 8"},
+        }), 2, "testable cell 8"},
 
         {ctx(opts -> {
           opts.addByte(HtmlBytes.xTCELL16);
           opts.addInt16(300);
           opts.addInt16(opts.addObject("Ipsum"));
-        }), 6, "testable cell 16"},
+        }), 4, "testable cell 16"},
 
         {ctx(opts -> {
           opts.addByte(HtmlBytes.xTPROP8);
           opts.addInt8(opts.addObject("foo"));
           opts.addInt8(opts.addObject("bar"));
-        }), 4, "testable prop 8"},
+        }), 2, "testable prop 8"},
+
+        {ctx(opts -> {
+          opts.addByte(HtmlBytes.xTPROP16);
+          opts.addInt16(opts.addObject("foo"));
+          opts.addInt16(opts.addObject("bar"));
+        }), 4, "testable prop 16"},
 
         {ctx(opts -> {
           opts.addByte(HtmlBytes.xTPROPKEY8);
           opts.addInt8(opts.addObject("foo"));
-        }), 3, "testable prop key 8"},
+        }), 1, "testable prop key 8"},
+
+        {ctx(opts -> {
+          opts.addByte(HtmlBytes.xTPROPKEY16);
+          opts.addInt16(opts.addObject("foo"));
+        }), 2, "testable prop key 16"},
 
         {ctx(opts -> {
           opts.addByte(HtmlBytes.xTPROPVAL8);
           opts.addInt8(opts.addObject("bar"));
-        }), 3, "testable prop value 8"}
+        }), 1, "testable prop value 8"},
+
+        {ctx(opts -> {
+          opts.addByte(HtmlBytes.xTPROPVAL16);
+          opts.addInt16(opts.addObject("bar"));
+        }), 2, "testable prop value 16"}
     };
   }
 
   @Test(dataProvider = "testCase03Provider", description = """
-  Skip to element start
+  Skip to next document node
   """)
-  public void testCase03(Consumer<CtxY> prefix, int expectedIndex, String description) {
+  public void testCase03(Consumer<CtxY> prefix, int expectedCount, String description) {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.push(new Frame(0));
 
       prefix.accept(opts);
+    });
 
-      opts.addByte(HtmlBytes.ELEMSTR8);
-      opts.addInt8(ElementName.DIV.index());
+    final ScanDocumentNodeState subject;
+    subject = new ScanDocumentNodeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new SkipState(ctx, expectedCount));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(FrameY.create(f -> {
+            f.index = 1;
+          }));
+        })
+    );
+  }
+
+  @Test(description = """
+  Consumed regular element marker
+  """)
+  public void testCase07() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.push(new Frame(0));
+
+      opts.addByte(HtmlBytes.xELEMSTR8);
+      opts.addInt8(ElementName.SPAN.index());
       opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
       opts.addInt8(0);
     });
 
@@ -305,7 +320,7 @@ public class ScanDocumentNodeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new BeginStartTagState(ctx, ElementKind.REGULAR, IntSize.BIT8));
+    assertEquals(res, new SkipRegularElementState(ctx, IntSize.BIT8));
 
     assertEquals(
         ctx,
@@ -314,7 +329,76 @@ public class ScanDocumentNodeStateTest {
           opts.sink(ctx);
 
           opts.push(FrameY.create(f -> {
-            f.index = expectedIndex;
+            f.index = 1;
+          }));
+        })
+    );
+  }
+
+  @Test(description = """
+  Consumed void element marker
+  """)
+  public void testCase08() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.push(new Frame(0));
+
+      opts.addByte(HtmlBytes.xELEMVOID8);
+      opts.addInt8(ElementName.HR.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(0);
+    });
+
+    final ScanDocumentNodeState subject;
+    subject = new ScanDocumentNodeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new SkipVoidElementState(ctx, IntSize.BIT8));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(FrameY.create(f -> {
+            f.index = 1;
+          }));
+        })
+    );
+  }
+
+  @Test(description = """
+  Consumed fragment marker
+  """)
+  public void testCase09() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.push(new Frame(0));
+
+      opts.addByte(HtmlBytes.xFRAGSTR);
+      opts.addInt24(5);
+      opts.addByte(HtmlBytes.FRAGEND);
+    });
+
+    final ScanDocumentNodeState subject;
+    subject = new ScanDocumentNodeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new SkipFragmentState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(FrameY.create(f -> {
+            f.index = 1;
           }));
         })
     );
