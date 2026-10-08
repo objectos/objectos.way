@@ -44,17 +44,15 @@ public class RenderTestableNodeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new ScanDocumentNodeState(ctx));
+    assertEquals(res, new EndNodeState(ctx, FrameY.create(f -> {
+      f.index = 0;
+    })));
 
     assertEquals(
         ctx,
 
         CtxY.create(opts -> {
           opts.sink(ctx);
-
-          opts.push(FrameY.create(f -> {
-            f.index = 0;
-          }));
 
           opts.result(TestableHeadingEvent.of(0, 1, "Ipsum"));
         })
@@ -91,7 +89,9 @@ public class RenderTestableNodeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new ScanElementNodeState(ctx));
+    assertEquals(res, new EndNodeState(ctx, FrameY.create(f -> {
+      f.index = 0;
+    })));
 
     assertEquals(
         ctx,
@@ -134,17 +134,15 @@ public class RenderTestableNodeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new ScanDocumentNodeState(ctx));
+    assertEquals(res, new EndNodeState(ctx, FrameY.create(f -> {
+      f.index = 0;
+    })));
 
     assertEquals(
         ctx,
 
         CtxY.create(opts -> {
           opts.sink(ctx);
-
-          opts.push(FrameY.create(f -> {
-            f.index = 0;
-          }));
 
           opts.result(TestableCellEvent.of(0, 4, "Ipsum"));
         })
@@ -173,17 +171,15 @@ public class RenderTestableNodeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new ScanDocumentNodeState(ctx));
+    assertEquals(res, new EndNodeState(ctx, FrameY.create(f -> {
+      f.index = 0;
+    })));
 
     assertEquals(
         ctx,
 
         CtxY.create(opts -> {
           opts.sink(ctx);
-
-          opts.push(FrameY.create(f -> {
-            f.index = 0;
-          }));
 
           opts.result(TestablePropEvent.of(0, "foo", "bar"));
         })
@@ -212,17 +208,15 @@ public class RenderTestableNodeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new ScanDocumentNodeState(ctx));
+    assertEquals(res, new EndNodeState(ctx, FrameY.create(f -> {
+      f.index = 0;
+    })));
 
     assertEquals(
         ctx,
 
         CtxY.create(opts -> {
           opts.sink(ctx);
-
-          opts.push(FrameY.create(f -> {
-            f.index = 0;
-          }));
 
           opts.result(TestableEntryNameEvent.of(0, "foo"));
         })
@@ -251,17 +245,15 @@ public class RenderTestableNodeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new ScanDocumentNodeState(ctx));
+    assertEquals(res, new EndNodeState(ctx, FrameY.create(f -> {
+      f.index = 0;
+    })));
 
     assertEquals(
         ctx,
 
         CtxY.create(opts -> {
           opts.sink(ctx);
-
-          opts.push(FrameY.create(f -> {
-            f.index = 0;
-          }));
 
           opts.result(TestableEntryValueEvent.of(0, "bar"));
         })
@@ -290,17 +282,15 @@ public class RenderTestableNodeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new ScanDocumentNodeState(ctx));
+    assertEquals(res, new EndNodeState(ctx, FrameY.create(f -> {
+      f.index = 0;
+    })));
 
     assertEquals(
         ctx,
 
         CtxY.create(opts -> {
           opts.sink(ctx);
-
-          opts.push(FrameY.create(f -> {
-            f.index = 0;
-          }));
 
           opts.result(TestableNewLineEvent.of(0));
         })

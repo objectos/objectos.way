@@ -49,17 +49,15 @@ public class EndElementStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new ScanDocumentNodeState(ctx));
+    assertEquals(res, new EndNodeState(ctx, FrameY.create(f -> {
+      f.index = 5;
+    })));
 
     assertEquals(
         ctx,
 
         CtxY.create(opts -> {
           opts.sink(ctx);
-
-          opts.push(FrameY.create(f -> {
-            f.index = 5;
-          }));
         })
     );
   }

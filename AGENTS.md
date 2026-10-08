@@ -52,7 +52,13 @@ Implementation classes live in:
 
 ## TDD
 
-Write tests first.
+This project is developed using TDD:
+
+- Write tests first.
+- The tests should drive the design of the class being developed.
+- Don't limit yourself to the happy path; think hard on what ways can a functionality fail.
+- Don't limit yourself to unit tests; include integration tests if you feel the need for them.
+- Before modifying an existing production class, ensure that test coverage for the class is adequate.
 
 ## Code style
 

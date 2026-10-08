@@ -48,10 +48,7 @@ final class RenderRawState implements State {
     final Frame top;
     top = ctx.pop();
 
-    final EndNode endNode;
-    endNode = new EndNode(ctx);
-
-    return endNode.execute(top);
+    return new EndNodeState(ctx, top);
   }
 
   @Override

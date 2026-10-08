@@ -15,15 +15,20 @@
  */
 package objectox.html.stream;
 
-final class EndNode {
+final class EndNodeState implements State {
 
   private final Ctx ctx;
 
-  EndNode(Ctx ctx) {
+  private final Frame top;
+
+  EndNodeState(Ctx ctx, Frame top) {
     this.ctx = ctx;
+
+    this.top = top;
   }
 
-  public final State execute(Frame top) {
+  @Override
+  public final State compute() {
     final int size;
     size = ctx.frames();
 
@@ -43,6 +48,13 @@ final class EndNode {
     else {
       return new ScanElementNodeState(ctx);
     }
+  }
+
+  @Override
+  public final boolean equals(Object obj) {
+    return obj instanceof EndNodeState that
+        && ctx.equals(that.ctx)
+        && top.equals(that.top);
   }
 
 }

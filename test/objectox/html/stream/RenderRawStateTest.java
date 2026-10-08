@@ -45,17 +45,15 @@ public class RenderRawStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new ScanDocumentNodeState(ctx));
+    assertEquals(res, new EndNodeState(ctx, FrameY.create(f -> {
+      f.index = 1;
+    })));
 
     assertEquals(
         ctx,
 
         CtxY.create(opts -> {
           opts.sink(ctx);
-
-          opts.push(FrameY.create(f -> {
-            f.index = 1;
-          }));
 
           opts.result(RenderRawEvent.of(0, "Ipsum"));
         })
@@ -85,17 +83,15 @@ public class RenderRawStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new ScanDocumentNodeState(ctx));
+    assertEquals(res, new EndNodeState(ctx, FrameY.create(f -> {
+      f.index = 2;
+    })));
 
     assertEquals(
         ctx,
 
         CtxY.create(opts -> {
           opts.sink(ctx);
-
-          opts.push(FrameY.create(f -> {
-            f.index = 2;
-          }));
 
           opts.result(RenderRawEvent.of(0, "Ipsum"));
         })
@@ -125,17 +121,15 @@ public class RenderRawStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new ScanDocumentNodeState(ctx));
+    assertEquals(res, new EndNodeState(ctx, FrameY.create(f -> {
+      f.index = 3;
+    })));
 
     assertEquals(
         ctx,
 
         CtxY.create(opts -> {
           opts.sink(ctx);
-
-          opts.push(FrameY.create(f -> {
-            f.index = 3;
-          }));
 
           opts.result(RenderRawEvent.of(0, "Ipsum"));
         })
@@ -171,7 +165,9 @@ public class RenderRawStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new ScanElementNodeState(ctx));
+    assertEquals(res, new EndNodeState(ctx, FrameY.create(f -> {
+      f.index = 1;
+    })));
 
     assertEquals(
         ctx,

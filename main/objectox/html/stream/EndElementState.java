@@ -30,10 +30,7 @@ final class EndElementState implements State {
 
     top.elementFrame = null;
 
-    final EndNode endNode;
-    endNode = new EndNode(ctx);
-
-    return endNode.execute(top);
+    return new EndNodeState(ctx, top);
   }
 
   @Override
