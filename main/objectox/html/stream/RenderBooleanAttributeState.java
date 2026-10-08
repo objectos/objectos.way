@@ -18,7 +18,7 @@ package objectox.html.stream;
 import objectox.html.IntSize;
 import objectox.html.attr.AttributeName;
 
-final class RenderBooleanAttributeState implements State {
+final class RenderBooleanAttributeState implements State, ScanOp {
 
   private final Ctx ctx;
 
@@ -52,10 +52,25 @@ final class RenderBooleanAttributeState implements State {
   }
 
   @Override
+  public final State documentNode() {
+    return new SkipState(ctx, 1);
+  }
+
+  @Override
+  public final State elementAttribute() {
+    return this;
+  }
+
+  @Override
   public final boolean equals(Object obj) {
     return obj instanceof RenderBooleanAttributeState that
         && ctx.equals(that.ctx)
         && nameSize.equals(that.nameSize);
+  }
+
+  @Override
+  public final boolean isAttribute() {
+    return true;
   }
 
 }

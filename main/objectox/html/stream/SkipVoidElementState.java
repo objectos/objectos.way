@@ -18,7 +18,7 @@ package objectox.html.stream;
 import objectox.html.IntSize;
 import objectox.html.markup.HtmlBytes;
 
-final class SkipVoidElementState implements State {
+final class SkipVoidElementState implements State, ScanOp {
 
   private final Ctx ctx;
 
@@ -49,6 +49,11 @@ final class SkipVoidElementState implements State {
     ctx.skip(valueBytes);
 
     return new ScanDocumentNodeState(ctx);
+  }
+
+  @Override
+  public final State documentNode() {
+    return this;
   }
 
   @Override

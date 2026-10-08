@@ -16,6 +16,7 @@
 package objectox.html.stream;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.fail;
 
 import objectox.html.IntSize;
 import objectox.html.elem.ElementName;
@@ -108,7 +109,7 @@ public class ScanElementNodeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new BeginStartTagState(ctx, elementKind, nameSize));
+    assertEquals(res, new BeginStartTagState(ctx, ScanOpKind.X, elementKind, nameSize));
 
     assertEquals(
         ctx,
@@ -168,7 +169,7 @@ public class ScanElementNodeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new RenderTextState(ctx, textSize));
+    assertEquals(res, new RenderTextState(ctx, ScanOpKind.X, textSize));
 
     assertEquals(
         ctx,
@@ -228,7 +229,7 @@ public class ScanElementNodeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new RenderRawState(ctx, rawSize));
+    assertEquals(res, new RenderRawState(ctx, ScanOpKind.X, rawSize));
 
     assertEquals(
         ctx,
@@ -348,7 +349,7 @@ public class ScanElementNodeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new RenderTestableOnlyState(ctx, TestableKind.HEADING, testSize));
+    assertEquals(res, new RenderTestableOnlyState(ctx, ScanOpKind.X, TestableKind.HEADING, testSize));
 
     assertEquals(
         ctx,
@@ -369,6 +370,77 @@ public class ScanElementNodeStateTest {
           }));
         })
     );
+  }
+
+  @Test(description = """
+  element:
+  - element
+  - attribute op code
+  - not an element node op
+  """)
+  public void testCase06() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addInt8(0);
+
+      opts.push(FrameY.create(f -> {
+        f.index = 1;
+
+        f.regular(ElementName.DIV);
+
+        f.values8(1, 2);
+      }));
+    });
+
+    final ScanElementNodeState subject;
+    subject = new ScanElementNodeState(ctx);
+
+    try {
+      subject.compute();
+
+      fail();
+    } catch (IllegalStateException e) {
+      final String msg;
+      msg = e.getMessage();
+
+      assertEquals(msg, "Not an element node op");
+    }
+  }
+
+  @Test(description = """
+  element:
+  - element
+  - unknown op code
+  """)
+  public void testCase07() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte((byte) 0x7F);
+      opts.addInt8(0);
+
+      opts.push(FrameY.create(f -> {
+        f.index = 1;
+
+        f.regular(ElementName.DIV);
+
+        f.values8(1, 2);
+      }));
+    });
+
+    final ScanElementNodeState subject;
+    subject = new ScanElementNodeState(ctx);
+
+    try {
+      subject.compute();
+
+      fail();
+    } catch (IllegalArgumentException e) {
+      final String msg;
+      msg = e.getMessage();
+
+      assertEquals(msg, "Invalid compiled HTML code");
+    }
   }
 
 }

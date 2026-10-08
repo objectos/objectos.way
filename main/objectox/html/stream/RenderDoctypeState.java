@@ -15,7 +15,7 @@
  */
 package objectox.html.stream;
 
-final class RenderDoctypeState implements State {
+final class RenderDoctypeState implements State, ScanOp {
 
   private final Ctx ctx;
 
@@ -34,6 +34,11 @@ final class RenderDoctypeState implements State {
     ctx.result(event);
 
     return new ScanDocumentNodeState(ctx);
+  }
+
+  @Override
+  public final State documentNode() {
+    return this;
   }
 
   @Override

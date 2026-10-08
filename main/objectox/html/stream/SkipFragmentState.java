@@ -17,7 +17,7 @@ package objectox.html.stream;
 
 import objectox.html.IntSize;
 
-final class SkipFragmentState implements State {
+final class SkipFragmentState implements State, ScanOp {
 
   private final Ctx ctx;
 
@@ -36,6 +36,11 @@ final class SkipFragmentState implements State {
     frame.index = jump;
 
     return new ScanDocumentNodeState(ctx);
+  }
+
+  @Override
+  public final State documentNode() {
+    return this;
   }
 
   @Override

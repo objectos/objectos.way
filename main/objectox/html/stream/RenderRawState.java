@@ -17,14 +17,18 @@ package objectox.html.stream;
 
 import objectox.html.IntSize;
 
-final class RenderRawState implements State {
+final class RenderRawState implements State, ScanOp {
 
   private final Ctx ctx;
 
+  private final ScanOpKind opKind;
+
   private final IntSize rawSize;
 
-  RenderRawState(Ctx ctx, IntSize rawSize) {
+  RenderRawState(Ctx ctx, ScanOpKind opKind, IntSize rawSize) {
     this.ctx = ctx;
+
+    this.opKind = opKind;
 
     this.rawSize = rawSize;
   }
@@ -52,9 +56,42 @@ final class RenderRawState implements State {
   }
 
   @Override
+  public final State documentNode() {
+    return switch (opKind) {
+      case REGULAR -> this;
+
+      case X -> {
+        final int count;
+        count = rawSize.bytes();
+
+        yield new SkipState(ctx, count);
+      }
+    };
+  }
+
+  @Override
+  public final State elementAttribute() {
+    return switch (opKind) {
+      case REGULAR -> ScanOp.super.elementAttribute();
+
+      case X -> this;
+    };
+  }
+
+  @Override
+  public final State elementNode() {
+    return switch (opKind) {
+      case REGULAR -> ScanOp.super.elementNode();
+
+      case X -> this;
+    };
+  }
+
+  @Override
   public final boolean equals(Object obj) {
     return obj instanceof RenderRawState that
         && ctx.equals(that.ctx)
+        && opKind.equals(that.opKind)
         && rawSize.equals(that.rawSize);
   }
 

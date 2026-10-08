@@ -16,9 +16,7 @@
 package objectox.html.stream;
 
 import objectos.html.stream.EndStartTagKind;
-import objectox.html.IntSize;
 import objectox.html.elem.ElementName;
-import objectox.html.markup.HtmlBytes;
 
 final class ScanElementAttributeState implements State {
 
@@ -64,121 +62,20 @@ final class ScanElementAttributeState implements State {
 
     ctx.push(frame);
 
-    final byte code;
-    code = ctx.nextByte();
+    final ScanOp op;
+    op = ctx.nextScanOp();
 
-    return switch (code) {
-      case HtmlBytes.THEADING8,
-           HtmlBytes.oTHEADING8 -> { nodes(elem); yield new RenderTestableOnlyState(ctx, TestableKind.HEADING, IntSize.BIT8); }
+    final boolean attribute;
+    attribute = op.isAttribute();
 
-      case HtmlBytes.THEADING16,
-           HtmlBytes.oTHEADING16 -> { nodes(elem); yield new RenderTestableOnlyState(ctx, TestableKind.HEADING, IntSize.BIT16); }
+    final State state;
+    state = op.elementAttribute();
 
-      case HtmlBytes.THEADING24,
-           HtmlBytes.oTHEADING24 -> { nodes(elem); yield new RenderTestableOnlyState(ctx, TestableKind.HEADING, IntSize.BIT24); }
+    if (!attribute) {
+      nodes(elem);
+    }
 
-      case HtmlBytes.TCELL8,
-           HtmlBytes.oTCELL8 -> { nodes(elem); yield new RenderTestableOnlyState(ctx, TestableKind.CELL, IntSize.BIT8); }
-
-      case HtmlBytes.TCELL16,
-           HtmlBytes.oTCELL16 -> { nodes(elem); yield new RenderTestableOnlyState(ctx, TestableKind.CELL, IntSize.BIT16); }
-
-      case HtmlBytes.TCELL24,
-           HtmlBytes.oTCELL24 -> { nodes(elem); yield new RenderTestableOnlyState(ctx, TestableKind.CELL, IntSize.BIT24); }
-
-      case HtmlBytes.TPROP8,
-           HtmlBytes.oTPROP8 -> { nodes(elem); yield new RenderTestableOnlyState(ctx, TestableKind.PROP, IntSize.BIT8); }
-
-      case HtmlBytes.TPROP16,
-           HtmlBytes.oTPROP16 -> { nodes(elem); yield new RenderTestableOnlyState(ctx, TestableKind.PROP, IntSize.BIT16); }
-
-      case HtmlBytes.TPROP24,
-           HtmlBytes.oTPROP24 -> { nodes(elem); yield new RenderTestableOnlyState(ctx, TestableKind.PROP, IntSize.BIT24); }
-
-      case HtmlBytes.TPROPKEY8,
-           HtmlBytes.oTPROPKEY8 -> { nodes(elem); yield new RenderTestableOnlyState(ctx, TestableKind.PROP_KEY, IntSize.BIT8); }
-
-      case HtmlBytes.TPROPKEY16,
-           HtmlBytes.oTPROPKEY16 -> { nodes(elem); yield new RenderTestableOnlyState(ctx, TestableKind.PROP_KEY, IntSize.BIT16); }
-
-      case HtmlBytes.TPROPKEY24,
-           HtmlBytes.oTPROPKEY24 -> { nodes(elem); yield new RenderTestableOnlyState(ctx, TestableKind.PROP_KEY, IntSize.BIT24); }
-
-      case HtmlBytes.TPROPVAL8,
-           HtmlBytes.oTPROPVAL8 -> { nodes(elem); yield new RenderTestableOnlyState(ctx, TestableKind.PROP_VALUE, IntSize.BIT8); }
-
-      case HtmlBytes.TPROPVAL16,
-           HtmlBytes.oTPROPVAL16 -> { nodes(elem); yield new RenderTestableOnlyState(ctx, TestableKind.PROP_VALUE, IntSize.BIT16); }
-
-      case HtmlBytes.TPROPVAL24,
-           HtmlBytes.oTPROPVAL24 -> { nodes(elem); yield new RenderTestableOnlyState(ctx, TestableKind.PROP_VALUE, IntSize.BIT24); }
-
-      case HtmlBytes.TNEWLINE -> { nodes(elem); yield new RenderTestableOnlyState(ctx, TestableKind.NEWLINE, IntSize.BIT8); }
-
-      case HtmlBytes.xTHEADING8 -> { nodes(elem); yield new RenderTestableTextState(ctx, TestableKind.HEADING, IntSize.BIT8); }
-
-      case HtmlBytes.xTHEADING16 -> { nodes(elem); yield new RenderTestableTextState(ctx, TestableKind.HEADING, IntSize.BIT16); }
-
-      case HtmlBytes.xTHEADING24 -> { nodes(elem); yield new RenderTestableTextState(ctx, TestableKind.HEADING, IntSize.BIT24); }
-
-      case HtmlBytes.xTCELL8 -> { nodes(elem); yield new RenderTestableTextState(ctx, TestableKind.CELL, IntSize.BIT8); }
-
-      case HtmlBytes.xTCELL16 -> { nodes(elem); yield new RenderTestableTextState(ctx, TestableKind.CELL, IntSize.BIT16); }
-
-      case HtmlBytes.xTCELL24 -> { nodes(elem); yield new RenderTestableTextState(ctx, TestableKind.CELL, IntSize.BIT24); }
-
-      case HtmlBytes.xTPROP8 -> { nodes(elem); yield new RenderTestableTextState(ctx, TestableKind.PROP, IntSize.BIT8); }
-
-      case HtmlBytes.xTPROP16 -> { nodes(elem); yield new RenderTestableTextState(ctx, TestableKind.PROP, IntSize.BIT16); }
-
-      case HtmlBytes.xTPROP24 -> { nodes(elem); yield new RenderTestableTextState(ctx, TestableKind.PROP, IntSize.BIT24); }
-
-      case HtmlBytes.xTPROPKEY8 -> { nodes(elem); yield new RenderTestableTextState(ctx, TestableKind.PROP_KEY, IntSize.BIT8); }
-
-      case HtmlBytes.xTPROPKEY16 -> { nodes(elem); yield new RenderTestableTextState(ctx, TestableKind.PROP_KEY, IntSize.BIT16); }
-
-      case HtmlBytes.xTPROPKEY24 -> { nodes(elem); yield new RenderTestableTextState(ctx, TestableKind.PROP_KEY, IntSize.BIT24); }
-
-      case HtmlBytes.xTPROPVAL8 -> { nodes(elem); yield new RenderTestableTextState(ctx, TestableKind.PROP_VALUE, IntSize.BIT8); }
-
-      case HtmlBytes.xTPROPVAL16 -> { nodes(elem); yield new RenderTestableTextState(ctx, TestableKind.PROP_VALUE, IntSize.BIT16); }
-
-      case HtmlBytes.xTPROPVAL24 -> { nodes(elem); yield new RenderTestableTextState(ctx, TestableKind.PROP_VALUE, IntSize.BIT24); }
-
-      case HtmlBytes.xTNEWLINE -> { nodes(elem); yield new RenderTestableOnlyState(ctx, TestableKind.NEWLINE, IntSize.BIT8); }
-
-      case HtmlBytes.xATTRIBUTE88 -> new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT8);
-
-      case HtmlBytes.xATTRIBUTE816 -> new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT16);
-
-      case HtmlBytes.xATTRIBUTE824 -> new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT24);
-
-      case HtmlBytes.xBOOLEAN8 -> new RenderBooleanAttributeState(ctx, IntSize.BIT8);
-
-      case HtmlBytes.xJSACTION88 -> new RenderJsActionAttributeState(ctx, IntSize.BIT8, IntSize.BIT8);
-
-      case HtmlBytes.xJSACTION816 -> new RenderJsActionAttributeState(ctx, IntSize.BIT8, IntSize.BIT16);
-
-      case HtmlBytes.xJSACTION824 -> new RenderJsActionAttributeState(ctx, IntSize.BIT8, IntSize.BIT24);
-
-      case HtmlBytes.xELEMSTR8 -> { nodes(elem); yield new BeginStartTagState(ctx, ElementKind.REGULAR, IntSize.BIT8); }
-
-      case HtmlBytes.xELEMVOID8 -> { nodes(elem); yield new BeginStartTagState(ctx, ElementKind.VOID, IntSize.BIT8); }
-
-      case HtmlBytes.xTEXT8 -> { nodes(elem); yield new RenderTextState(ctx, IntSize.BIT8); }
-
-      case HtmlBytes.xTEXT16 -> { nodes(elem); yield new RenderTextState(ctx, IntSize.BIT16); }
-
-      case HtmlBytes.xTEXT24 -> { nodes(elem); yield new RenderTextState(ctx, IntSize.BIT24); }
-
-      case HtmlBytes.xRAW8 -> { nodes(elem); yield new RenderRawState(ctx, IntSize.BIT8); }
-
-      case HtmlBytes.xRAW16 -> { nodes(elem); yield new RenderRawState(ctx, IntSize.BIT16); }
-
-      case HtmlBytes.xRAW24 -> { nodes(elem); yield new RenderRawState(ctx, IntSize.BIT24); }
-
-      default -> throw State.implCode(code);
-    };
+    return state;
   }
 
   private void nodes(ElementFrame elem) {

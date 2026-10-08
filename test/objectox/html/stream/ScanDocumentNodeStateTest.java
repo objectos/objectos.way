@@ -16,6 +16,7 @@
 package objectox.html.stream;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.fail;
 import java.util.function.Consumer;
 import objectos.script.Js;
 import objectos.script.JsAction;
@@ -111,7 +112,7 @@ public class ScanDocumentNodeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new BeginStartTagState(ctx, elementKind, nameSize));
+    assertEquals(res, new BeginStartTagState(ctx, ScanOpKind.REGULAR, elementKind, nameSize));
 
     assertEquals(
         ctx,
@@ -433,7 +434,7 @@ public class ScanDocumentNodeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new RenderRawState(ctx, rawSize));
+    assertEquals(res, new RenderRawState(ctx, ScanOpKind.REGULAR, rawSize));
 
     assertEquals(
         ctx,
@@ -488,7 +489,7 @@ public class ScanDocumentNodeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new RenderTestableOnlyState(ctx, TestableKind.HEADING, testSize));
+    assertEquals(res, new RenderTestableOnlyState(ctx, ScanOpKind.REGULAR, TestableKind.HEADING, testSize));
 
     assertEquals(
         ctx,
@@ -543,7 +544,7 @@ public class ScanDocumentNodeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new RenderTestableOnlyState(ctx, TestableKind.HEADING, testSize));
+    assertEquals(res, new RenderTestableOnlyState(ctx, ScanOpKind.X, TestableKind.HEADING, testSize));
 
     assertEquals(
         ctx,
@@ -556,6 +557,96 @@ public class ScanDocumentNodeStateTest {
           }));
         })
     );
+  }
+
+  @Test(description = """
+  Consumed fragment end marker
+  """)
+  public void testCase10() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.push(new Frame(0));
+
+      opts.addByte(HtmlBytes.FRAGEND);
+    });
+
+    final ScanDocumentNodeState subject;
+    subject = new ScanDocumentNodeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new ScanDocumentNodeState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(FrameY.create(f -> {
+            f.index = 1;
+          }));
+        })
+    );
+  }
+
+  @Test(description = """
+  Consumed optional new line marker
+  """)
+  public void testCase11() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.push(new Frame(0));
+
+      opts.addByte(HtmlBytes.xTNEWLINE);
+    });
+
+    final ScanDocumentNodeState subject;
+    subject = new ScanDocumentNodeState(ctx);
+
+    final State res;
+    res = subject.compute();
+
+    assertEquals(res, new ScanDocumentNodeState(ctx));
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(opts -> {
+          opts.sink(ctx);
+
+          opts.push(FrameY.create(f -> {
+            f.index = 1;
+          }));
+        })
+    );
+  }
+
+  @Test(description = """
+  Unknown op code
+  """)
+  public void testCase12() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.push(new Frame(0));
+
+      opts.addByte((byte) 0x7F);
+    });
+
+    final ScanDocumentNodeState subject;
+    subject = new ScanDocumentNodeState(ctx);
+
+    try {
+      subject.compute();
+
+      fail();
+    } catch (IllegalArgumentException e) {
+      final String msg;
+      msg = e.getMessage();
+
+      assertEquals(msg, "Invalid compiled HTML code");
+    }
   }
 
   @Test(description = """

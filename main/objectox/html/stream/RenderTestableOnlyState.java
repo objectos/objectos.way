@@ -17,16 +17,20 @@ package objectox.html.stream;
 
 import objectox.html.IntSize;
 
-final class RenderTestableOnlyState implements State {
+final class RenderTestableOnlyState implements State, ScanOp {
 
   private final Ctx ctx;
+
+  private final ScanOpKind opKind;
 
   private final TestableKind kind;
 
   private final IntSize size;
 
-  RenderTestableOnlyState(Ctx ctx, TestableKind kind, IntSize size) {
+  RenderTestableOnlyState(Ctx ctx, ScanOpKind opKind, TestableKind kind, IntSize size) {
     this.ctx = ctx;
+
+    this.opKind = opKind;
 
     this.kind = kind;
 
@@ -42,9 +46,33 @@ final class RenderTestableOnlyState implements State {
   }
 
   @Override
+  public final State documentNode() {
+    return switch (opKind) {
+      case REGULAR -> this;
+
+      case X -> switch (kind) {
+        case NEWLINE -> new ScanDocumentNodeState(ctx);
+
+        case CELL, HEADING, PROP, PROP_KEY, PROP_VALUE -> this;
+      };
+    };
+  }
+
+  @Override
+  public final State elementAttribute() {
+    return this;
+  }
+
+  @Override
+  public final State elementNode() {
+    return this;
+  }
+
+  @Override
   public final boolean equals(Object obj) {
     return obj instanceof RenderTestableOnlyState that
         && ctx.equals(that.ctx)
+        && opKind.equals(that.opKind)
         && kind.equals(that.kind)
         && size.equals(that.size);
   }

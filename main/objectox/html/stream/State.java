@@ -17,13 +17,6 @@ package objectox.html.stream;
 
 interface State {
 
-  static UnsupportedOperationException implCode(byte code) {
-    final String msg;
-    msg = "Implement me: code=%d".formatted(code);
-
-    return new UnsupportedOperationException(msg);
-  }
-
   static IllegalArgumentException malformed() {
     final String msg;
     msg = "Invalid compiled HTML code";

@@ -15,7 +15,7 @@
  */
 package objectox.html.stream;
 
-final class SkipState implements State {
+final class SkipState implements State, ScanOp {
 
   private final Ctx ctx;
 
@@ -32,6 +32,11 @@ final class SkipState implements State {
     ctx.skip(count);
 
     return new ScanDocumentNodeState(ctx);
+  }
+
+  @Override
+  public final State documentNode() {
+    return this;
   }
 
   @Override

@@ -17,14 +17,18 @@ package objectox.html.stream;
 
 import objectox.html.IntSize;
 
-final class RenderTextState implements State {
+final class RenderTextState implements State, ScanOp {
 
   private final Ctx ctx;
 
+  private final ScanOpKind opKind;
+
   private final IntSize textSize;
 
-  RenderTextState(Ctx ctx, IntSize textSize) {
+  RenderTextState(Ctx ctx, ScanOpKind opKind, IntSize textSize) {
     this.ctx = ctx;
+
+    this.opKind = opKind;
 
     this.textSize = textSize;
   }
@@ -52,9 +56,42 @@ final class RenderTextState implements State {
   }
 
   @Override
+  public final State documentNode() {
+    return switch (opKind) {
+      case REGULAR -> this;
+
+      case X -> {
+        final int count;
+        count = textSize.bytes();
+
+        yield new SkipState(ctx, count);
+      }
+    };
+  }
+
+  @Override
+  public final State elementAttribute() {
+    return switch (opKind) {
+      case REGULAR -> ScanOp.super.elementAttribute();
+
+      case X -> this;
+    };
+  }
+
+  @Override
+  public final State elementNode() {
+    return switch (opKind) {
+      case REGULAR -> ScanOp.super.elementNode();
+
+      case X -> this;
+    };
+  }
+
+  @Override
   public final boolean equals(Object obj) {
     return obj instanceof RenderTextState that
         && ctx.equals(that.ctx)
+        && opKind.equals(that.opKind)
         && textSize.equals(that.textSize);
   }
 

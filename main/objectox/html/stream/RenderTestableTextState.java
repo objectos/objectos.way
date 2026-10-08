@@ -17,7 +17,7 @@ package objectox.html.stream;
 
 import objectox.html.IntSize;
 
-final class RenderTestableTextState implements State {
+final class RenderTestableTextState implements State, ScanOp {
 
   private final Ctx ctx;
 
@@ -55,11 +55,44 @@ final class RenderTestableTextState implements State {
   }
 
   @Override
+  public final State documentNode() {
+    final int count;
+    count = skip();
+
+    return new SkipState(ctx, count);
+  }
+
+  @Override
+  public final State elementAttribute() {
+    return this;
+  }
+
+  @Override
+  public final State elementNode() {
+    return this;
+  }
+
+  @Override
   public final boolean equals(Object obj) {
     return obj instanceof RenderTestableTextState that
         && ctx.equals(that.ctx)
         && kind.equals(that.kind)
         && size.equals(that.size);
+  }
+
+  private int skip() {
+    final int bytes;
+    bytes = size.bytes();
+
+    return switch (kind) {
+      case HEADING -> 1 + bytes;
+
+      case CELL, PROP -> 2 * bytes;
+
+      case PROP_KEY, PROP_VALUE -> bytes;
+
+      case NEWLINE -> throw new IllegalStateException("Unexpected kind: " + kind);
+    };
   }
 
 }

@@ -16,6 +16,7 @@
 package objectox.html.stream;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.fail;
 
 import objectos.html.stream.EndStartTagKind;
 import objectox.html.IntSize;
@@ -427,7 +428,7 @@ public class ScanElementAttributeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new RenderTextState(ctx, textSize));
+    assertEquals(res, new RenderTextState(ctx, ScanOpKind.X, textSize));
 
     assertEquals(
         ctx,
@@ -492,7 +493,7 @@ public class ScanElementAttributeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new RenderRawState(ctx, rawSize));
+    assertEquals(res, new RenderRawState(ctx, ScanOpKind.X, rawSize));
 
     assertEquals(
         ctx,
@@ -622,7 +623,7 @@ public class ScanElementAttributeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new RenderTestableOnlyState(ctx, TestableKind.HEADING, testSize));
+    assertEquals(res, new RenderTestableOnlyState(ctx, ScanOpKind.X, TestableKind.HEADING, testSize));
 
     assertEquals(
         ctx,
@@ -648,6 +649,113 @@ public class ScanElementAttributeStateTest {
           opts.result(event);
         })
     );
+  }
+
+  @Test(description = """
+  void element:
+  - values8
+  - text node
+  - malformed
+  """)
+  public void testCase11() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.xTEXT8);
+      opts.addInt8(opts.addObject("Ipsum"));
+
+      opts.push(FrameY.create(f -> {
+        f.index = 1;
+
+        f.voidElem(ElementName.INPUT);
+
+        f.values8(0, 1);
+      }));
+    });
+
+    final ScanElementAttributeState subject;
+    subject = new ScanElementAttributeState(ctx);
+
+    try {
+      subject.compute();
+
+      fail();
+    } catch (IllegalArgumentException e) {
+      final String msg;
+      msg = e.getMessage();
+
+      assertEquals(msg, "Invalid compiled HTML code");
+    }
+  }
+
+  @Test(description = """
+  regular element:
+  - values8
+  - document node op code
+  - not an element attribute op
+  """)
+  public void testCase12() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte(HtmlBytes.DOCTYPE);
+      opts.addInt8(0);
+
+      opts.push(FrameY.create(f -> {
+        f.index = 1;
+
+        f.regular(ElementName.SPAN);
+
+        f.values8(1, 2);
+      }));
+    });
+
+    final ScanElementAttributeState subject;
+    subject = new ScanElementAttributeState(ctx);
+
+    try {
+      subject.compute();
+
+      fail();
+    } catch (IllegalStateException e) {
+      final String msg;
+      msg = e.getMessage();
+
+      assertEquals(msg, "Not an element attribute op");
+    }
+  }
+
+  @Test(description = """
+  regular element:
+  - values8
+  - unknown op code
+  """)
+  public void testCase13() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.addByte((byte) 0x7F);
+      opts.addInt8(0);
+
+      opts.push(FrameY.create(f -> {
+        f.index = 1;
+
+        f.regular(ElementName.SPAN);
+
+        f.values8(1, 2);
+      }));
+    });
+
+    final ScanElementAttributeState subject;
+    subject = new ScanElementAttributeState(ctx);
+
+    try {
+      subject.compute();
+
+      fail();
+    } catch (IllegalArgumentException e) {
+      final String msg;
+      msg = e.getMessage();
+
+      assertEquals(msg, "Invalid compiled HTML code");
+    }
   }
 
 }

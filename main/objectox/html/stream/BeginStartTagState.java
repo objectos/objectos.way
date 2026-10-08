@@ -19,16 +19,20 @@ import objectox.html.IntSize;
 import objectox.html.elem.ElementName;
 import objectox.html.markup.HtmlBytes;
 
-final class BeginStartTagState implements State {
+final class BeginStartTagState implements State, ScanOp {
 
   private final Ctx ctx;
+
+  private final ScanOpKind opKind;
 
   private final ElementKind elementKind;
 
   private final IntSize nameSize;
 
-  BeginStartTagState(Ctx ctx, ElementKind elementKind, IntSize nameSize) {
+  BeginStartTagState(Ctx ctx, ScanOpKind opKind, ElementKind elementKind, IntSize nameSize) {
     this.ctx = ctx;
+
+    this.opKind = opKind;
 
     this.elementKind = elementKind;
 
@@ -72,11 +76,47 @@ final class BeginStartTagState implements State {
   }
 
   @Override
+  public final State documentNode() {
+    return switch (opKind) {
+      case REGULAR -> this;
+
+      case X -> skipState();
+    };
+  }
+
+  @Override
+  public final State elementAttribute() {
+    return switch (opKind) {
+      case REGULAR -> ScanOp.super.elementAttribute();
+
+      case X -> this;
+    };
+  }
+
+  @Override
+  public final State elementNode() {
+    return switch (opKind) {
+      case REGULAR -> ScanOp.super.elementNode();
+
+      case X -> this;
+    };
+  }
+
+  @Override
   public final boolean equals(Object obj) {
     return obj instanceof BeginStartTagState that
         && ctx.equals(that.ctx)
+        && opKind.equals(that.opKind)
         && elementKind.equals(that.elementKind)
         && nameSize.equals(that.nameSize);
+  }
+
+  private State skipState() {
+    return switch (elementKind) {
+      case REGULAR -> new SkipRegularElementState(ctx, nameSize);
+
+      case VOID -> new SkipVoidElementState(ctx, nameSize);
+    };
   }
 
   private IntSize valueSize(byte values) {
