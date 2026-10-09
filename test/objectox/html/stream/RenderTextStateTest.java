@@ -40,7 +40,7 @@ public class RenderTextStateTest {
     });
 
     final RenderTextState subject;
-    subject = new RenderTextState(ctx, ScanOpKind.REGULAR, IntSize.BIT8);
+    subject = new RenderTextState(ctx, ScanLevel.TOP_LEVEL, IntSize.BIT8);
 
     final State res;
     res = subject.compute();
@@ -78,7 +78,7 @@ public class RenderTextStateTest {
     });
 
     final RenderTextState subject;
-    subject = new RenderTextState(ctx, ScanOpKind.REGULAR, IntSize.BIT16);
+    subject = new RenderTextState(ctx, ScanLevel.TOP_LEVEL, IntSize.BIT16);
 
     final State res;
     res = subject.compute();
@@ -116,7 +116,7 @@ public class RenderTextStateTest {
     });
 
     final RenderTextState subject;
-    subject = new RenderTextState(ctx, ScanOpKind.REGULAR, IntSize.BIT24);
+    subject = new RenderTextState(ctx, ScanLevel.TOP_LEVEL, IntSize.BIT24);
 
     final State res;
     res = subject.compute();
@@ -160,7 +160,7 @@ public class RenderTextStateTest {
     });
 
     final RenderTextState subject;
-    subject = new RenderTextState(ctx, ScanOpKind.X, IntSize.BIT8);
+    subject = new RenderTextState(ctx, ScanLevel.NESTED, IntSize.BIT8);
 
     final State res;
     res = subject.compute();

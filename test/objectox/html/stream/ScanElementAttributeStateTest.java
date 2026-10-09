@@ -428,7 +428,7 @@ public class ScanElementAttributeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new RenderTextState(ctx, ScanOpKind.X, textSize));
+    assertEquals(res, new RenderTextState(ctx, ScanLevel.NESTED, textSize));
 
     assertEquals(
         ctx,
@@ -493,7 +493,7 @@ public class ScanElementAttributeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new RenderRawState(ctx, ScanOpKind.X, rawSize));
+    assertEquals(res, new RenderRawState(ctx, ScanLevel.NESTED, rawSize));
 
     assertEquals(
         ctx,
@@ -623,7 +623,7 @@ public class ScanElementAttributeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new RenderTestableOnlyState(ctx, ScanOpKind.X, TestableKind.HEADING, testSize));
+    assertEquals(res, new RenderTestableOnlyState(ctx, ScanLevel.NESTED, TestableKind.HEADING, testSize));
 
     assertEquals(
         ctx,

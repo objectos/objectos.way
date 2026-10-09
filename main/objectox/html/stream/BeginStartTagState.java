@@ -23,16 +23,16 @@ final class BeginStartTagState implements State, ScanOp {
 
   private final Ctx ctx;
 
-  private final ScanOpKind opKind;
+  private final ScanLevel scanLevel;
 
   private final ElementKind elementKind;
 
   private final IntSize nameSize;
 
-  BeginStartTagState(Ctx ctx, ScanOpKind opKind, ElementKind elementKind, IntSize nameSize) {
+  BeginStartTagState(Ctx ctx, ScanLevel scanLevel, ElementKind elementKind, IntSize nameSize) {
     this.ctx = ctx;
 
-    this.opKind = opKind;
+    this.scanLevel = scanLevel;
 
     this.elementKind = elementKind;
 
@@ -77,28 +77,28 @@ final class BeginStartTagState implements State, ScanOp {
 
   @Override
   public final State documentNode() {
-    return switch (opKind) {
-      case REGULAR -> this;
+    return switch (scanLevel) {
+      case TOP_LEVEL -> this;
 
-      case X -> skipState();
+      case NESTED -> skipState();
     };
   }
 
   @Override
   public final State elementAttribute() {
-    return switch (opKind) {
-      case REGULAR -> ScanOp.super.elementAttribute();
+    return switch (scanLevel) {
+      case TOP_LEVEL -> ScanOp.super.elementAttribute();
 
-      case X -> this;
+      case NESTED -> this;
     };
   }
 
   @Override
   public final State elementNode() {
-    return switch (opKind) {
-      case REGULAR -> ScanOp.super.elementNode();
+    return switch (scanLevel) {
+      case TOP_LEVEL -> ScanOp.super.elementNode();
 
-      case X -> this;
+      case NESTED -> this;
     };
   }
 
@@ -106,7 +106,7 @@ final class BeginStartTagState implements State, ScanOp {
   public final boolean equals(Object obj) {
     return obj instanceof BeginStartTagState that
         && ctx.equals(that.ctx)
-        && opKind.equals(that.opKind)
+        && scanLevel.equals(that.scanLevel)
         && elementKind.equals(that.elementKind)
         && nameSize.equals(that.nameSize);
   }

@@ -15,10 +15,10 @@
  */
 package objectox.html.stream;
 
-enum ScanOpKind {
+enum ScanLevel {
 
-  REGULAR,
+  NESTED,
 
-  X;
+  TOP_LEVEL;
 
 }

@@ -42,7 +42,7 @@ public class RenderTestableOnlyStateTest {
     });
 
     final RenderTestableOnlyState subject;
-    subject = new RenderTestableOnlyState(ctx, ScanOpKind.REGULAR, TestableKind.HEADING, IntSize.BIT8);
+    subject = new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.HEADING, IntSize.BIT8);
 
     final State res;
     res = subject.compute();
@@ -82,7 +82,7 @@ public class RenderTestableOnlyStateTest {
     });
 
     final RenderTestableOnlyState subject;
-    subject = new RenderTestableOnlyState(ctx, ScanOpKind.REGULAR, TestableKind.HEADING, IntSize.BIT16);
+    subject = new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.HEADING, IntSize.BIT16);
 
     final State res;
     res = subject.compute();
@@ -122,7 +122,7 @@ public class RenderTestableOnlyStateTest {
     });
 
     final RenderTestableOnlyState subject;
-    subject = new RenderTestableOnlyState(ctx, ScanOpKind.REGULAR, TestableKind.HEADING, IntSize.BIT24);
+    subject = new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.HEADING, IntSize.BIT24);
 
     final State res;
     res = subject.compute();
@@ -160,7 +160,7 @@ public class RenderTestableOnlyStateTest {
     });
 
     final RenderTestableOnlyState subject;
-    subject = new RenderTestableOnlyState(ctx, ScanOpKind.REGULAR, TestableKind.CELL, IntSize.BIT8);
+    subject = new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.CELL, IntSize.BIT8);
 
     final State res;
     res = subject.compute();
@@ -198,7 +198,7 @@ public class RenderTestableOnlyStateTest {
     });
 
     final RenderTestableOnlyState subject;
-    subject = new RenderTestableOnlyState(ctx, ScanOpKind.REGULAR, TestableKind.PROP, IntSize.BIT8);
+    subject = new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.PROP, IntSize.BIT8);
 
     final State res;
     res = subject.compute();
@@ -234,7 +234,7 @@ public class RenderTestableOnlyStateTest {
     });
 
     final RenderTestableOnlyState subject;
-    subject = new RenderTestableOnlyState(ctx, ScanOpKind.REGULAR, TestableKind.PROP_KEY, IntSize.BIT8);
+    subject = new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.PROP_KEY, IntSize.BIT8);
 
     final State res;
     res = subject.compute();
@@ -270,7 +270,7 @@ public class RenderTestableOnlyStateTest {
     });
 
     final RenderTestableOnlyState subject;
-    subject = new RenderTestableOnlyState(ctx, ScanOpKind.REGULAR, TestableKind.PROP_VALUE, IntSize.BIT8);
+    subject = new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.PROP_VALUE, IntSize.BIT8);
 
     final State res;
     res = subject.compute();
@@ -303,7 +303,7 @@ public class RenderTestableOnlyStateTest {
     });
 
     final RenderTestableOnlyState subject;
-    subject = new RenderTestableOnlyState(ctx, ScanOpKind.REGULAR, TestableKind.NEWLINE, IntSize.BIT8);
+    subject = new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.NEWLINE, IntSize.BIT8);
 
     final State res;
     res = subject.compute();
@@ -326,13 +326,13 @@ public class RenderTestableOnlyStateTest {
   @DataProvider
   public Object[][] documentNodeProvider() {
     return new Object[][] {
-        {ScanOpKind.REGULAR, TestableKind.HEADING, "regular heading"},
-        {ScanOpKind.REGULAR, TestableKind.NEWLINE, "regular new line"},
-        {ScanOpKind.X, TestableKind.HEADING, "recorded heading"},
-        {ScanOpKind.X, TestableKind.CELL, "recorded cell"},
-        {ScanOpKind.X, TestableKind.PROP, "recorded prop"},
-        {ScanOpKind.X, TestableKind.PROP_KEY, "recorded prop key"},
-        {ScanOpKind.X, TestableKind.PROP_VALUE, "recorded prop value"}
+        {ScanLevel.TOP_LEVEL, TestableKind.HEADING, "regular heading"},
+        {ScanLevel.TOP_LEVEL, TestableKind.NEWLINE, "regular new line"},
+        {ScanLevel.NESTED, TestableKind.HEADING, "recorded heading"},
+        {ScanLevel.NESTED, TestableKind.CELL, "recorded cell"},
+        {ScanLevel.NESTED, TestableKind.PROP, "recorded prop"},
+        {ScanLevel.NESTED, TestableKind.PROP_KEY, "recorded prop key"},
+        {ScanLevel.NESTED, TestableKind.PROP_VALUE, "recorded prop value"}
     };
   }
 
@@ -340,12 +340,12 @@ public class RenderTestableOnlyStateTest {
   documentNode:
   - renders at the document level
   """)
-  public void documentNode(ScanOpKind opKind, TestableKind kind, String description) {
+  public void documentNode(ScanLevel scanLevel, TestableKind kind, String description) {
     final Ctx ctx;
     ctx = CtxY.create(_ -> {});
 
     final RenderTestableOnlyState subject;
-    subject = new RenderTestableOnlyState(ctx, opKind, kind, IntSize.BIT8);
+    subject = new RenderTestableOnlyState(ctx, scanLevel, kind, IntSize.BIT8);
 
     final State res;
     res = subject.documentNode();
@@ -363,7 +363,7 @@ public class RenderTestableOnlyStateTest {
     ctx = CtxY.create(_ -> {});
 
     final RenderTestableOnlyState subject;
-    subject = new RenderTestableOnlyState(ctx, ScanOpKind.X, TestableKind.NEWLINE, IntSize.BIT8);
+    subject = new RenderTestableOnlyState(ctx, ScanLevel.NESTED, TestableKind.NEWLINE, IntSize.BIT8);
 
     final State res;
     res = subject.documentNode();

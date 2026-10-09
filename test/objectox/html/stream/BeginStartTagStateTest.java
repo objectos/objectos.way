@@ -113,7 +113,7 @@ public class BeginStartTagStateTest {
     });
 
     final BeginStartTagState subject;
-    subject = new BeginStartTagState(ctx, ScanOpKind.REGULAR, elementKind, IntSize.BIT8);
+    subject = new BeginStartTagState(ctx, ScanLevel.TOP_LEVEL, elementKind, IntSize.BIT8);
 
     final State res;
     res = subject.compute();

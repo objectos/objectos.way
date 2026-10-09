@@ -21,16 +21,16 @@ final class RenderTestableOnlyState implements State, ScanOp {
 
   private final Ctx ctx;
 
-  private final ScanOpKind opKind;
+  private final ScanLevel scanLevel;
 
   private final TestableKind kind;
 
   private final IntSize size;
 
-  RenderTestableOnlyState(Ctx ctx, ScanOpKind opKind, TestableKind kind, IntSize size) {
+  RenderTestableOnlyState(Ctx ctx, ScanLevel scanLevel, TestableKind kind, IntSize size) {
     this.ctx = ctx;
 
-    this.opKind = opKind;
+    this.scanLevel = scanLevel;
 
     this.kind = kind;
 
@@ -47,10 +47,10 @@ final class RenderTestableOnlyState implements State, ScanOp {
 
   @Override
   public final State documentNode() {
-    return switch (opKind) {
-      case REGULAR -> this;
+    return switch (scanLevel) {
+      case TOP_LEVEL -> this;
 
-      case X -> switch (kind) {
+      case NESTED -> switch (kind) {
         case NEWLINE -> new ScanDocumentNodeState(ctx);
 
         case CELL, HEADING, PROP, PROP_KEY, PROP_VALUE -> this;
@@ -72,7 +72,7 @@ final class RenderTestableOnlyState implements State, ScanOp {
   public final boolean equals(Object obj) {
     return obj instanceof RenderTestableOnlyState that
         && ctx.equals(that.ctx)
-        && opKind.equals(that.opKind)
+        && scanLevel.equals(that.scanLevel)
         && kind.equals(that.kind)
         && size.equals(that.size);
   }

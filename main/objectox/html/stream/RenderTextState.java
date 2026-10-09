@@ -21,14 +21,14 @@ final class RenderTextState implements State, ScanOp {
 
   private final Ctx ctx;
 
-  private final ScanOpKind opKind;
+  private final ScanLevel scanLevel;
 
   private final IntSize textSize;
 
-  RenderTextState(Ctx ctx, ScanOpKind opKind, IntSize textSize) {
+  RenderTextState(Ctx ctx, ScanLevel scanLevel, IntSize textSize) {
     this.ctx = ctx;
 
-    this.opKind = opKind;
+    this.scanLevel = scanLevel;
 
     this.textSize = textSize;
   }
@@ -57,10 +57,10 @@ final class RenderTextState implements State, ScanOp {
 
   @Override
   public final State documentNode() {
-    return switch (opKind) {
-      case REGULAR -> this;
+    return switch (scanLevel) {
+      case TOP_LEVEL -> this;
 
-      case X -> {
+      case NESTED -> {
         final int count;
         count = textSize.bytes();
 
@@ -71,19 +71,19 @@ final class RenderTextState implements State, ScanOp {
 
   @Override
   public final State elementAttribute() {
-    return switch (opKind) {
-      case REGULAR -> ScanOp.super.elementAttribute();
+    return switch (scanLevel) {
+      case TOP_LEVEL -> ScanOp.super.elementAttribute();
 
-      case X -> this;
+      case NESTED -> this;
     };
   }
 
   @Override
   public final State elementNode() {
-    return switch (opKind) {
-      case REGULAR -> ScanOp.super.elementNode();
+    return switch (scanLevel) {
+      case TOP_LEVEL -> ScanOp.super.elementNode();
 
-      case X -> this;
+      case NESTED -> this;
     };
   }
 
@@ -91,7 +91,7 @@ final class RenderTextState implements State, ScanOp {
   public final boolean equals(Object obj) {
     return obj instanceof RenderTextState that
         && ctx.equals(that.ctx)
-        && opKind.equals(that.opKind)
+        && scanLevel.equals(that.scanLevel)
         && textSize.equals(that.textSize);
   }
 

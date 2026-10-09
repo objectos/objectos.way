@@ -68,14 +68,11 @@ final class ScanElementAttributeState implements State {
     final boolean attribute;
     attribute = op.isAttribute();
 
-    final State state;
-    state = op.elementAttribute();
-
     if (!attribute) {
       nodes(elem);
     }
 
-    return state;
+    return op.elementAttribute();
   }
 
   private void nodes(ElementFrame elem) {

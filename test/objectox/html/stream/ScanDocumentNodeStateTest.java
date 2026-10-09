@@ -112,7 +112,7 @@ public class ScanDocumentNodeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new BeginStartTagState(ctx, ScanOpKind.REGULAR, elementKind, nameSize));
+    assertEquals(res, new BeginStartTagState(ctx, ScanLevel.TOP_LEVEL, elementKind, nameSize));
 
     assertEquals(
         ctx,
@@ -434,7 +434,7 @@ public class ScanDocumentNodeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new RenderRawState(ctx, ScanOpKind.REGULAR, rawSize));
+    assertEquals(res, new RenderRawState(ctx, ScanLevel.TOP_LEVEL, rawSize));
 
     assertEquals(
         ctx,
@@ -489,7 +489,7 @@ public class ScanDocumentNodeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new RenderTestableOnlyState(ctx, ScanOpKind.REGULAR, TestableKind.HEADING, testSize));
+    assertEquals(res, new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.HEADING, testSize));
 
     assertEquals(
         ctx,
@@ -544,7 +544,7 @@ public class ScanDocumentNodeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new RenderTestableOnlyState(ctx, ScanOpKind.X, TestableKind.HEADING, testSize));
+    assertEquals(res, new RenderTestableOnlyState(ctx, ScanLevel.NESTED, TestableKind.HEADING, testSize));
 
     assertEquals(
         ctx,

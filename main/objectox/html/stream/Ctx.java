@@ -125,91 +125,91 @@ class Ctx {
     return switch (code) {
       case HtmlBytes.DOCTYPE -> new RenderDoctypeState(this);
 
-      case HtmlBytes.ELEMSTR8 -> new BeginStartTagState(this, ScanOpKind.REGULAR, ElementKind.REGULAR, IntSize.BIT8);
+      case HtmlBytes.ELEMSTR8 -> new BeginStartTagState(this, ScanLevel.TOP_LEVEL, ElementKind.REGULAR, IntSize.BIT8);
 
-      case HtmlBytes.ELEMVOID8 -> new BeginStartTagState(this, ScanOpKind.REGULAR, ElementKind.VOID, IntSize.BIT8);
+      case HtmlBytes.ELEMVOID8 -> new BeginStartTagState(this, ScanLevel.TOP_LEVEL, ElementKind.VOID, IntSize.BIT8);
 
       case HtmlBytes.FRAGSTR -> new SkipState(this, 3);
 
       case HtmlBytes.FRAGEND -> new ScanDocumentNodeState(this);
 
-      case HtmlBytes.TEXT8 -> new RenderTextState(this, ScanOpKind.REGULAR, IntSize.BIT8);
+      case HtmlBytes.TEXT8 -> new RenderTextState(this, ScanLevel.TOP_LEVEL, IntSize.BIT8);
 
-      case HtmlBytes.TEXT16 -> new RenderTextState(this, ScanOpKind.REGULAR, IntSize.BIT16);
+      case HtmlBytes.TEXT16 -> new RenderTextState(this, ScanLevel.TOP_LEVEL, IntSize.BIT16);
 
-      case HtmlBytes.TEXT24 -> new RenderTextState(this, ScanOpKind.REGULAR, IntSize.BIT24);
+      case HtmlBytes.TEXT24 -> new RenderTextState(this, ScanLevel.TOP_LEVEL, IntSize.BIT24);
 
-      case HtmlBytes.RAW8 -> new RenderRawState(this, ScanOpKind.REGULAR, IntSize.BIT8);
+      case HtmlBytes.RAW8 -> new RenderRawState(this, ScanLevel.TOP_LEVEL, IntSize.BIT8);
 
-      case HtmlBytes.RAW16 -> new RenderRawState(this, ScanOpKind.REGULAR, IntSize.BIT16);
+      case HtmlBytes.RAW16 -> new RenderRawState(this, ScanLevel.TOP_LEVEL, IntSize.BIT16);
 
-      case HtmlBytes.RAW24 -> new RenderRawState(this, ScanOpKind.REGULAR, IntSize.BIT24);
+      case HtmlBytes.RAW24 -> new RenderRawState(this, ScanLevel.TOP_LEVEL, IntSize.BIT24);
 
-      case HtmlBytes.THEADING8 -> new RenderTestableOnlyState(this, ScanOpKind.REGULAR, TestableKind.HEADING, IntSize.BIT8);
+      case HtmlBytes.THEADING8 -> new RenderTestableOnlyState(this, ScanLevel.TOP_LEVEL, TestableKind.HEADING, IntSize.BIT8);
 
-      case HtmlBytes.THEADING16 -> new RenderTestableOnlyState(this, ScanOpKind.REGULAR, TestableKind.HEADING, IntSize.BIT16);
+      case HtmlBytes.THEADING16 -> new RenderTestableOnlyState(this, ScanLevel.TOP_LEVEL, TestableKind.HEADING, IntSize.BIT16);
 
-      case HtmlBytes.THEADING24 -> new RenderTestableOnlyState(this, ScanOpKind.REGULAR, TestableKind.HEADING, IntSize.BIT24);
+      case HtmlBytes.THEADING24 -> new RenderTestableOnlyState(this, ScanLevel.TOP_LEVEL, TestableKind.HEADING, IntSize.BIT24);
 
-      case HtmlBytes.TCELL8 -> new RenderTestableOnlyState(this, ScanOpKind.REGULAR, TestableKind.CELL, IntSize.BIT8);
+      case HtmlBytes.TCELL8 -> new RenderTestableOnlyState(this, ScanLevel.TOP_LEVEL, TestableKind.CELL, IntSize.BIT8);
 
-      case HtmlBytes.TCELL16 -> new RenderTestableOnlyState(this, ScanOpKind.REGULAR, TestableKind.CELL, IntSize.BIT16);
+      case HtmlBytes.TCELL16 -> new RenderTestableOnlyState(this, ScanLevel.TOP_LEVEL, TestableKind.CELL, IntSize.BIT16);
 
-      case HtmlBytes.TCELL24 -> new RenderTestableOnlyState(this, ScanOpKind.REGULAR, TestableKind.CELL, IntSize.BIT24);
+      case HtmlBytes.TCELL24 -> new RenderTestableOnlyState(this, ScanLevel.TOP_LEVEL, TestableKind.CELL, IntSize.BIT24);
 
-      case HtmlBytes.TPROP8 -> new RenderTestableOnlyState(this, ScanOpKind.REGULAR, TestableKind.PROP, IntSize.BIT8);
+      case HtmlBytes.TPROP8 -> new RenderTestableOnlyState(this, ScanLevel.TOP_LEVEL, TestableKind.PROP, IntSize.BIT8);
 
-      case HtmlBytes.TPROP16 -> new RenderTestableOnlyState(this, ScanOpKind.REGULAR, TestableKind.PROP, IntSize.BIT16);
+      case HtmlBytes.TPROP16 -> new RenderTestableOnlyState(this, ScanLevel.TOP_LEVEL, TestableKind.PROP, IntSize.BIT16);
 
-      case HtmlBytes.TPROP24 -> new RenderTestableOnlyState(this, ScanOpKind.REGULAR, TestableKind.PROP, IntSize.BIT24);
+      case HtmlBytes.TPROP24 -> new RenderTestableOnlyState(this, ScanLevel.TOP_LEVEL, TestableKind.PROP, IntSize.BIT24);
 
-      case HtmlBytes.TPROPKEY8 -> new RenderTestableOnlyState(this, ScanOpKind.REGULAR, TestableKind.PROP_KEY, IntSize.BIT8);
+      case HtmlBytes.TPROPKEY8 -> new RenderTestableOnlyState(this, ScanLevel.TOP_LEVEL, TestableKind.PROP_KEY, IntSize.BIT8);
 
-      case HtmlBytes.TPROPKEY16 -> new RenderTestableOnlyState(this, ScanOpKind.REGULAR, TestableKind.PROP_KEY, IntSize.BIT16);
+      case HtmlBytes.TPROPKEY16 -> new RenderTestableOnlyState(this, ScanLevel.TOP_LEVEL, TestableKind.PROP_KEY, IntSize.BIT16);
 
-      case HtmlBytes.TPROPKEY24 -> new RenderTestableOnlyState(this, ScanOpKind.REGULAR, TestableKind.PROP_KEY, IntSize.BIT24);
+      case HtmlBytes.TPROPKEY24 -> new RenderTestableOnlyState(this, ScanLevel.TOP_LEVEL, TestableKind.PROP_KEY, IntSize.BIT24);
 
-      case HtmlBytes.TPROPVAL8 -> new RenderTestableOnlyState(this, ScanOpKind.REGULAR, TestableKind.PROP_VALUE, IntSize.BIT8);
+      case HtmlBytes.TPROPVAL8 -> new RenderTestableOnlyState(this, ScanLevel.TOP_LEVEL, TestableKind.PROP_VALUE, IntSize.BIT8);
 
-      case HtmlBytes.TPROPVAL16 -> new RenderTestableOnlyState(this, ScanOpKind.REGULAR, TestableKind.PROP_VALUE, IntSize.BIT16);
+      case HtmlBytes.TPROPVAL16 -> new RenderTestableOnlyState(this, ScanLevel.TOP_LEVEL, TestableKind.PROP_VALUE, IntSize.BIT16);
 
-      case HtmlBytes.TPROPVAL24 -> new RenderTestableOnlyState(this, ScanOpKind.REGULAR, TestableKind.PROP_VALUE, IntSize.BIT24);
+      case HtmlBytes.TPROPVAL24 -> new RenderTestableOnlyState(this, ScanLevel.TOP_LEVEL, TestableKind.PROP_VALUE, IntSize.BIT24);
 
-      case HtmlBytes.TNEWLINE -> new RenderTestableOnlyState(this, ScanOpKind.REGULAR, TestableKind.NEWLINE, IntSize.BIT8);
+      case HtmlBytes.TNEWLINE -> new RenderTestableOnlyState(this, ScanLevel.TOP_LEVEL, TestableKind.NEWLINE, IntSize.BIT8);
 
-      case HtmlBytes.oTHEADING8 -> new RenderTestableOnlyState(this, ScanOpKind.X, TestableKind.HEADING, IntSize.BIT8);
+      case HtmlBytes.oTHEADING8 -> new RenderTestableOnlyState(this, ScanLevel.NESTED, TestableKind.HEADING, IntSize.BIT8);
 
-      case HtmlBytes.oTHEADING16 -> new RenderTestableOnlyState(this, ScanOpKind.X, TestableKind.HEADING, IntSize.BIT16);
+      case HtmlBytes.oTHEADING16 -> new RenderTestableOnlyState(this, ScanLevel.NESTED, TestableKind.HEADING, IntSize.BIT16);
 
-      case HtmlBytes.oTHEADING24 -> new RenderTestableOnlyState(this, ScanOpKind.X, TestableKind.HEADING, IntSize.BIT24);
+      case HtmlBytes.oTHEADING24 -> new RenderTestableOnlyState(this, ScanLevel.NESTED, TestableKind.HEADING, IntSize.BIT24);
 
-      case HtmlBytes.oTCELL8 -> new RenderTestableOnlyState(this, ScanOpKind.X, TestableKind.CELL, IntSize.BIT8);
+      case HtmlBytes.oTCELL8 -> new RenderTestableOnlyState(this, ScanLevel.NESTED, TestableKind.CELL, IntSize.BIT8);
 
-      case HtmlBytes.oTCELL16 -> new RenderTestableOnlyState(this, ScanOpKind.X, TestableKind.CELL, IntSize.BIT16);
+      case HtmlBytes.oTCELL16 -> new RenderTestableOnlyState(this, ScanLevel.NESTED, TestableKind.CELL, IntSize.BIT16);
 
-      case HtmlBytes.oTCELL24 -> new RenderTestableOnlyState(this, ScanOpKind.X, TestableKind.CELL, IntSize.BIT24);
+      case HtmlBytes.oTCELL24 -> new RenderTestableOnlyState(this, ScanLevel.NESTED, TestableKind.CELL, IntSize.BIT24);
 
-      case HtmlBytes.oTPROP8 -> new RenderTestableOnlyState(this, ScanOpKind.X, TestableKind.PROP, IntSize.BIT8);
+      case HtmlBytes.oTPROP8 -> new RenderTestableOnlyState(this, ScanLevel.NESTED, TestableKind.PROP, IntSize.BIT8);
 
-      case HtmlBytes.oTPROP16 -> new RenderTestableOnlyState(this, ScanOpKind.X, TestableKind.PROP, IntSize.BIT16);
+      case HtmlBytes.oTPROP16 -> new RenderTestableOnlyState(this, ScanLevel.NESTED, TestableKind.PROP, IntSize.BIT16);
 
-      case HtmlBytes.oTPROP24 -> new RenderTestableOnlyState(this, ScanOpKind.X, TestableKind.PROP, IntSize.BIT24);
+      case HtmlBytes.oTPROP24 -> new RenderTestableOnlyState(this, ScanLevel.NESTED, TestableKind.PROP, IntSize.BIT24);
 
-      case HtmlBytes.oTPROPKEY8 -> new RenderTestableOnlyState(this, ScanOpKind.X, TestableKind.PROP_KEY, IntSize.BIT8);
+      case HtmlBytes.oTPROPKEY8 -> new RenderTestableOnlyState(this, ScanLevel.NESTED, TestableKind.PROP_KEY, IntSize.BIT8);
 
-      case HtmlBytes.oTPROPKEY16 -> new RenderTestableOnlyState(this, ScanOpKind.X, TestableKind.PROP_KEY, IntSize.BIT16);
+      case HtmlBytes.oTPROPKEY16 -> new RenderTestableOnlyState(this, ScanLevel.NESTED, TestableKind.PROP_KEY, IntSize.BIT16);
 
-      case HtmlBytes.oTPROPKEY24 -> new RenderTestableOnlyState(this, ScanOpKind.X, TestableKind.PROP_KEY, IntSize.BIT24);
+      case HtmlBytes.oTPROPKEY24 -> new RenderTestableOnlyState(this, ScanLevel.NESTED, TestableKind.PROP_KEY, IntSize.BIT24);
 
-      case HtmlBytes.oTPROPVAL8 -> new RenderTestableOnlyState(this, ScanOpKind.X, TestableKind.PROP_VALUE, IntSize.BIT8);
+      case HtmlBytes.oTPROPVAL8 -> new RenderTestableOnlyState(this, ScanLevel.NESTED, TestableKind.PROP_VALUE, IntSize.BIT8);
 
-      case HtmlBytes.oTPROPVAL16 -> new RenderTestableOnlyState(this, ScanOpKind.X, TestableKind.PROP_VALUE, IntSize.BIT16);
+      case HtmlBytes.oTPROPVAL16 -> new RenderTestableOnlyState(this, ScanLevel.NESTED, TestableKind.PROP_VALUE, IntSize.BIT16);
 
-      case HtmlBytes.oTPROPVAL24 -> new RenderTestableOnlyState(this, ScanOpKind.X, TestableKind.PROP_VALUE, IntSize.BIT24);
+      case HtmlBytes.oTPROPVAL24 -> new RenderTestableOnlyState(this, ScanLevel.NESTED, TestableKind.PROP_VALUE, IntSize.BIT24);
 
-      case HtmlBytes.xELEMSTR8 -> new BeginStartTagState(this, ScanOpKind.X, ElementKind.REGULAR, IntSize.BIT8);
+      case HtmlBytes.xELEMSTR8 -> new BeginStartTagState(this, ScanLevel.NESTED, ElementKind.REGULAR, IntSize.BIT8);
 
-      case HtmlBytes.xELEMVOID8 -> new BeginStartTagState(this, ScanOpKind.X, ElementKind.VOID, IntSize.BIT8);
+      case HtmlBytes.xELEMVOID8 -> new BeginStartTagState(this, ScanLevel.NESTED, ElementKind.VOID, IntSize.BIT8);
 
       case HtmlBytes.xATTRIBUTE88 -> new RenderAttributeState(this, IntSize.BIT8, IntSize.BIT8);
 
@@ -227,17 +227,17 @@ class Ctx {
 
       case HtmlBytes.xFRAGSTR -> new SkipFragmentState(this);
 
-      case HtmlBytes.xTEXT8 -> new RenderTextState(this, ScanOpKind.X, IntSize.BIT8);
+      case HtmlBytes.xTEXT8 -> new RenderTextState(this, ScanLevel.NESTED, IntSize.BIT8);
 
-      case HtmlBytes.xTEXT16 -> new RenderTextState(this, ScanOpKind.X, IntSize.BIT16);
+      case HtmlBytes.xTEXT16 -> new RenderTextState(this, ScanLevel.NESTED, IntSize.BIT16);
 
-      case HtmlBytes.xTEXT24 -> new RenderTextState(this, ScanOpKind.X, IntSize.BIT24);
+      case HtmlBytes.xTEXT24 -> new RenderTextState(this, ScanLevel.NESTED, IntSize.BIT24);
 
-      case HtmlBytes.xRAW8 -> new RenderRawState(this, ScanOpKind.X, IntSize.BIT8);
+      case HtmlBytes.xRAW8 -> new RenderRawState(this, ScanLevel.NESTED, IntSize.BIT8);
 
-      case HtmlBytes.xRAW16 -> new RenderRawState(this, ScanOpKind.X, IntSize.BIT16);
+      case HtmlBytes.xRAW16 -> new RenderRawState(this, ScanLevel.NESTED, IntSize.BIT16);
 
-      case HtmlBytes.xRAW24 -> new RenderRawState(this, ScanOpKind.X, IntSize.BIT24);
+      case HtmlBytes.xRAW24 -> new RenderRawState(this, ScanLevel.NESTED, IntSize.BIT24);
 
       case HtmlBytes.xTHEADING8 -> new RenderTestableTextState(this, TestableKind.HEADING, IntSize.BIT8);
 
@@ -269,7 +269,7 @@ class Ctx {
 
       case HtmlBytes.xTPROPVAL24 -> new RenderTestableTextState(this, TestableKind.PROP_VALUE, IntSize.BIT24);
 
-      case HtmlBytes.xTNEWLINE -> new RenderTestableOnlyState(this, ScanOpKind.X, TestableKind.NEWLINE, IntSize.BIT8);
+      case HtmlBytes.xTNEWLINE -> new RenderTestableOnlyState(this, ScanLevel.NESTED, TestableKind.NEWLINE, IntSize.BIT8);
 
       default -> throw State.malformed();
     };
