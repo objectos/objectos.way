@@ -33,4 +33,10 @@ final class ValueRecorder {
     return 1;
   }
 
+  public final int testableOnly(IntSize size, int value) {
+    sink.addInt(size, value);
+
+    return 1;
+  }
+
 }

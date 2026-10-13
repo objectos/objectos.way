@@ -116,35 +116,17 @@ public final class HtmlBytes {
   public static final byte xTPROPVAL24 = -67;
   public static final byte xTNEWLINE = -66;
 
-  // otestable
-
-  public static final byte oTHEADING8 = -65;
-  public static final byte oTHEADING16 = -64;
-  public static final byte oTHEADING24 = -63;
-  public static final byte oTCELL8 = -62;
-  public static final byte oTCELL16 = -61;
-  public static final byte oTCELL24 = -60;
-  public static final byte oTPROP8 = -59;
-  public static final byte oTPROP16 = -58;
-  public static final byte oTPROP24 = -57;
-  public static final byte oTPROPKEY8 = -56;
-  public static final byte oTPROPKEY16 = -55;
-  public static final byte oTPROPKEY24 = -54;
-  public static final byte oTPROPVAL8 = -53;
-  public static final byte oTPROPVAL16 = -52;
-  public static final byte oTPROPVAL24 = -51;
-
   // xtext
 
-  public static final byte xTEXT8 = -50;
-  public static final byte xTEXT16 = -49;
-  public static final byte xTEXT24 = -48;
+  public static final byte xTEXT8 = -65;
+  public static final byte xTEXT16 = -64;
+  public static final byte xTEXT24 = -63;
 
   // xraw
 
-  public static final byte xRAW8 = -47;
-  public static final byte xRAW16 = -46;
-  public static final byte xRAW24 = -45;
+  public static final byte xRAW8 = -62;
+  public static final byte xRAW16 = -61;
+  public static final byte xRAW24 = -60;
 
   private HtmlBytes() {}
 
@@ -273,106 +255,6 @@ public final class HtmlBytes {
       case xTPROPVAL24 -> xTPROPVAL24;
 
       case xTNEWLINE -> xTNEWLINE;
-
-      case oTHEADING8 -> oTHEADING8;
-
-      case oTHEADING16 -> oTHEADING16;
-
-      case oTHEADING24 -> oTHEADING24;
-
-      case oTCELL8 -> oTCELL8;
-
-      case oTCELL16 -> oTCELL16;
-
-      case oTCELL24 -> oTCELL24;
-
-      case oTPROP8 -> oTPROP8;
-
-      case oTPROP16 -> oTPROP16;
-
-      case oTPROP24 -> oTPROP24;
-
-      case oTPROPKEY8 -> oTPROPKEY8;
-
-      case oTPROPKEY16 -> oTPROPKEY16;
-
-      case oTPROPKEY24 -> oTPROPKEY24;
-
-      case oTPROPVAL8 -> oTPROPVAL8;
-
-      case oTPROPVAL16 -> oTPROPVAL16;
-
-      case oTPROPVAL24 -> oTPROPVAL24;
-
-      default -> throw new IllegalArgumentException("source=" + source);
-    };
-  }
-
-  public static byte testableOnly(byte source) {
-    return switch (source) {
-      case THEADING8 -> oTHEADING8;
-
-      case THEADING16 -> oTHEADING16;
-
-      case THEADING24 -> oTHEADING24;
-
-      case TCELL8 -> oTCELL8;
-
-      case TCELL16 -> oTCELL16;
-
-      case TCELL24 -> oTCELL24;
-
-      case TPROP8 -> oTPROP8;
-
-      case TPROP16 -> oTPROP16;
-
-      case TPROP24 -> oTPROP24;
-
-      case TPROPKEY8 -> oTPROPKEY8;
-
-      case TPROPKEY16 -> oTPROPKEY16;
-
-      case TPROPKEY24 -> oTPROPKEY24;
-
-      case TPROPVAL8 -> oTPROPVAL8;
-
-      case TPROPVAL16 -> oTPROPVAL16;
-
-      case TPROPVAL24 -> oTPROPVAL24;
-
-      case TNEWLINE -> xTNEWLINE;
-
-      case xTNEWLINE -> xTNEWLINE;
-
-      case oTHEADING8 -> oTHEADING8;
-
-      case oTHEADING16 -> oTHEADING16;
-
-      case oTHEADING24 -> oTHEADING24;
-
-      case oTCELL8 -> oTCELL8;
-
-      case oTCELL16 -> oTCELL16;
-
-      case oTCELL24 -> oTCELL24;
-
-      case oTPROP8 -> oTPROP8;
-
-      case oTPROP16 -> oTPROP16;
-
-      case oTPROP24 -> oTPROP24;
-
-      case oTPROPKEY8 -> oTPROPKEY8;
-
-      case oTPROPKEY16 -> oTPROPKEY16;
-
-      case oTPROPKEY24 -> oTPROPKEY24;
-
-      case oTPROPVAL8 -> oTPROPVAL8;
-
-      case oTPROPVAL16 -> oTPROPVAL16;
-
-      case oTPROPVAL24 -> oTPROPVAL24;
 
       default -> throw new IllegalArgumentException("source=" + source);
     };

@@ -315,9 +315,9 @@ public class ScanElementNodeStateTest {
   @DataProvider
   public Object[][] testCase05Provider() {
     return new Object[][] {
-        {HtmlBytes.oTHEADING8, IntSize.BIT8},
-        {HtmlBytes.oTHEADING16, IntSize.BIT16},
-        {HtmlBytes.oTHEADING24, IntSize.BIT24}
+        {HtmlBytes.THEADING8, IntSize.BIT8},
+        {HtmlBytes.THEADING16, IntSize.BIT16},
+        {HtmlBytes.THEADING24, IntSize.BIT24}
     };
   }
 
@@ -349,7 +349,7 @@ public class ScanElementNodeStateTest {
     final State res;
     res = subject.compute();
 
-    assertEquals(res, new RenderTestableOnlyState(ctx, ScanLevel.NESTED, TestableKind.HEADING, testSize));
+    assertEquals(res, new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.HEADING, testSize));
 
     assertEquals(
         ctx,

@@ -437,7 +437,7 @@ public class FragmentChildRecorderTest {
     );
   }
 
-  @Test(description = "fragment root testable node becomes testable-only")
+  @Test(description = "fragment root testable node stays testable-only")
   public void testCase11() {
     final HtmlSink sink;
     sink = HtmlSinkY.create(opts -> {
@@ -468,7 +468,7 @@ public class FragmentChildRecorderTest {
           opts.addInt24(HtmlSink.MAX_INT24);
           opts.addByte(HtmlBytes.xFRAGSTR);
           opts.addInt24(0);
-          opts.addByte(HtmlBytes.oTHEADING8);
+          opts.addByte(HtmlBytes.THEADING8);
           opts.addByte((byte) 1);
           opts.addInt8(opts.addObject("Ipsum"));
           opts.addByte(HtmlBytes.FRAGEND);
@@ -477,7 +477,7 @@ public class FragmentChildRecorderTest {
     );
   }
 
-  @Test(description = "fragment root testable new line becomes testable-only")
+  @Test(description = "fragment root testable new line is consumed")
   public void testCase12() {
     final HtmlSink sink;
     sink = HtmlSinkY.create(opts -> {

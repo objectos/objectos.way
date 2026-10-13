@@ -97,62 +97,7 @@ public class HtmlBytesTest {
         {HtmlBytes.xTPROPVAL8, HtmlBytes.xTPROPVAL8},
         {HtmlBytes.xTPROPVAL16, HtmlBytes.xTPROPVAL16},
         {HtmlBytes.xTPROPVAL24, HtmlBytes.xTPROPVAL24},
-        {HtmlBytes.xTNEWLINE, HtmlBytes.xTNEWLINE},
-
-        {HtmlBytes.oTHEADING8, HtmlBytes.oTHEADING8},
-        {HtmlBytes.oTHEADING16, HtmlBytes.oTHEADING16},
-        {HtmlBytes.oTHEADING24, HtmlBytes.oTHEADING24},
-        {HtmlBytes.oTCELL8, HtmlBytes.oTCELL8},
-        {HtmlBytes.oTCELL16, HtmlBytes.oTCELL16},
-        {HtmlBytes.oTCELL24, HtmlBytes.oTCELL24},
-        {HtmlBytes.oTPROP8, HtmlBytes.oTPROP8},
-        {HtmlBytes.oTPROP16, HtmlBytes.oTPROP16},
-        {HtmlBytes.oTPROP24, HtmlBytes.oTPROP24},
-        {HtmlBytes.oTPROPKEY8, HtmlBytes.oTPROPKEY8},
-        {HtmlBytes.oTPROPKEY16, HtmlBytes.oTPROPKEY16},
-        {HtmlBytes.oTPROPKEY24, HtmlBytes.oTPROPKEY24},
-        {HtmlBytes.oTPROPVAL8, HtmlBytes.oTPROPVAL8},
-        {HtmlBytes.oTPROPVAL16, HtmlBytes.oTPROPVAL16},
-        {HtmlBytes.oTPROPVAL24, HtmlBytes.oTPROPVAL24}
-    };
-  }
-
-  @DataProvider
-  public Object[][] testableOnlyProvider() {
-    return new Object[][] {
-        {HtmlBytes.THEADING8, HtmlBytes.oTHEADING8},
-        {HtmlBytes.THEADING16, HtmlBytes.oTHEADING16},
-        {HtmlBytes.THEADING24, HtmlBytes.oTHEADING24},
-        {HtmlBytes.TCELL8, HtmlBytes.oTCELL8},
-        {HtmlBytes.TCELL16, HtmlBytes.oTCELL16},
-        {HtmlBytes.TCELL24, HtmlBytes.oTCELL24},
-        {HtmlBytes.TPROP8, HtmlBytes.oTPROP8},
-        {HtmlBytes.TPROP16, HtmlBytes.oTPROP16},
-        {HtmlBytes.TPROP24, HtmlBytes.oTPROP24},
-        {HtmlBytes.TPROPKEY8, HtmlBytes.oTPROPKEY8},
-        {HtmlBytes.TPROPKEY16, HtmlBytes.oTPROPKEY16},
-        {HtmlBytes.TPROPKEY24, HtmlBytes.oTPROPKEY24},
-        {HtmlBytes.TPROPVAL8, HtmlBytes.oTPROPVAL8},
-        {HtmlBytes.TPROPVAL16, HtmlBytes.oTPROPVAL16},
-        {HtmlBytes.TPROPVAL24, HtmlBytes.oTPROPVAL24},
-        {HtmlBytes.TNEWLINE, HtmlBytes.xTNEWLINE},
-        {HtmlBytes.xTNEWLINE, HtmlBytes.xTNEWLINE},
-
-        {HtmlBytes.oTHEADING8, HtmlBytes.oTHEADING8},
-        {HtmlBytes.oTHEADING16, HtmlBytes.oTHEADING16},
-        {HtmlBytes.oTHEADING24, HtmlBytes.oTHEADING24},
-        {HtmlBytes.oTCELL8, HtmlBytes.oTCELL8},
-        {HtmlBytes.oTCELL16, HtmlBytes.oTCELL16},
-        {HtmlBytes.oTCELL24, HtmlBytes.oTCELL24},
-        {HtmlBytes.oTPROP8, HtmlBytes.oTPROP8},
-        {HtmlBytes.oTPROP16, HtmlBytes.oTPROP16},
-        {HtmlBytes.oTPROP24, HtmlBytes.oTPROP24},
-        {HtmlBytes.oTPROPKEY8, HtmlBytes.oTPROPKEY8},
-        {HtmlBytes.oTPROPKEY16, HtmlBytes.oTPROPKEY16},
-        {HtmlBytes.oTPROPKEY24, HtmlBytes.oTPROPKEY24},
-        {HtmlBytes.oTPROPVAL8, HtmlBytes.oTPROPVAL8},
-        {HtmlBytes.oTPROPVAL16, HtmlBytes.oTPROPVAL16},
-        {HtmlBytes.oTPROPVAL24, HtmlBytes.oTPROPVAL24}
+        {HtmlBytes.xTNEWLINE, HtmlBytes.xTNEWLINE}
     };
   }
 
@@ -160,14 +105,6 @@ public class HtmlBytesTest {
   public void consume(byte source, byte expected) {
     final byte res;
     res = HtmlBytes.consume(source);
-
-    assertEquals(res, expected);
-  }
-
-  @Test(dataProvider = "testableOnlyProvider")
-  public void testableOnly(byte source, byte expected) {
-    final byte res;
-    res = HtmlBytes.testableOnly(source);
 
     assertEquals(res, expected);
   }

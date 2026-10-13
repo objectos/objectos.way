@@ -177,36 +177,6 @@ class Ctx {
 
       case HtmlBytes.TNEWLINE -> new RenderTestableOnlyState(this, ScanLevel.TOP_LEVEL, TestableKind.NEWLINE, IntSize.BIT8);
 
-      case HtmlBytes.oTHEADING8 -> new RenderTestableOnlyState(this, ScanLevel.NESTED, TestableKind.HEADING, IntSize.BIT8);
-
-      case HtmlBytes.oTHEADING16 -> new RenderTestableOnlyState(this, ScanLevel.NESTED, TestableKind.HEADING, IntSize.BIT16);
-
-      case HtmlBytes.oTHEADING24 -> new RenderTestableOnlyState(this, ScanLevel.NESTED, TestableKind.HEADING, IntSize.BIT24);
-
-      case HtmlBytes.oTCELL8 -> new RenderTestableOnlyState(this, ScanLevel.NESTED, TestableKind.CELL, IntSize.BIT8);
-
-      case HtmlBytes.oTCELL16 -> new RenderTestableOnlyState(this, ScanLevel.NESTED, TestableKind.CELL, IntSize.BIT16);
-
-      case HtmlBytes.oTCELL24 -> new RenderTestableOnlyState(this, ScanLevel.NESTED, TestableKind.CELL, IntSize.BIT24);
-
-      case HtmlBytes.oTPROP8 -> new RenderTestableOnlyState(this, ScanLevel.NESTED, TestableKind.PROP, IntSize.BIT8);
-
-      case HtmlBytes.oTPROP16 -> new RenderTestableOnlyState(this, ScanLevel.NESTED, TestableKind.PROP, IntSize.BIT16);
-
-      case HtmlBytes.oTPROP24 -> new RenderTestableOnlyState(this, ScanLevel.NESTED, TestableKind.PROP, IntSize.BIT24);
-
-      case HtmlBytes.oTPROPKEY8 -> new RenderTestableOnlyState(this, ScanLevel.NESTED, TestableKind.PROP_KEY, IntSize.BIT8);
-
-      case HtmlBytes.oTPROPKEY16 -> new RenderTestableOnlyState(this, ScanLevel.NESTED, TestableKind.PROP_KEY, IntSize.BIT16);
-
-      case HtmlBytes.oTPROPKEY24 -> new RenderTestableOnlyState(this, ScanLevel.NESTED, TestableKind.PROP_KEY, IntSize.BIT24);
-
-      case HtmlBytes.oTPROPVAL8 -> new RenderTestableOnlyState(this, ScanLevel.NESTED, TestableKind.PROP_VALUE, IntSize.BIT8);
-
-      case HtmlBytes.oTPROPVAL16 -> new RenderTestableOnlyState(this, ScanLevel.NESTED, TestableKind.PROP_VALUE, IntSize.BIT16);
-
-      case HtmlBytes.oTPROPVAL24 -> new RenderTestableOnlyState(this, ScanLevel.NESTED, TestableKind.PROP_VALUE, IntSize.BIT24);
-
       case HtmlBytes.xELEMSTR8 -> new BeginStartTagState(this, ScanLevel.NESTED, ElementKind.REGULAR, IntSize.BIT8);
 
       case HtmlBytes.xELEMVOID8 -> new BeginStartTagState(this, ScanLevel.NESTED, ElementKind.VOID, IntSize.BIT8);

@@ -24,6 +24,4 @@ public sealed interface RenderTestable
     TestableProp,
     TestableEntryName,
     TestableEntryValue,
-    TestableNewLine {
-
-}
+    TestableNewLine {}

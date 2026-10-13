@@ -504,61 +504,6 @@ public class ScanDocumentNodeStateTest {
     );
   }
 
-  @DataProvider
-  public Object[][] testCase06Provider() {
-    return new Object[][] {
-        {HtmlBytes.oTHEADING8, IntSize.BIT8, "testable-only heading 8"},
-        {HtmlBytes.oTHEADING16, IntSize.BIT16, "testable-only heading 16"},
-        {HtmlBytes.oTHEADING24, IntSize.BIT24, "testable-only heading 24"}
-    };
-  }
-
-  @Test(dataProvider = "testCase06Provider", description = """
-  Render testable-only node
-  """)
-  public void testCase06(byte proto, IntSize testSize, String description) {
-    final int objectsIndex;
-    objectsIndex = testSize == IntSize.BIT24 ? HtmlSink.MAX_INT16 + 1 : testSize == IntSize.BIT16 ? HtmlSink.MAX_INT8 + 1 : 0;
-
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.objectsIndex(objectsIndex);
-
-      final int valueIndex;
-      valueIndex = opts.addObject("Ipsum");
-
-      opts.addByte(proto);
-
-      opts.addByte((byte) 1);
-
-      opts.addInt(testSize, valueIndex);
-
-      opts.push(FrameY.create(f -> {
-        f.index = 0;
-      }));
-    });
-
-    final ScanDocumentNodeState subject;
-    subject = new ScanDocumentNodeState(ctx);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res, new RenderTestableOnlyState(ctx, ScanLevel.NESTED, TestableKind.HEADING, testSize));
-
-    assertEquals(
-        ctx,
-
-        CtxY.create(opts -> {
-          opts.sink(ctx);
-
-          opts.push(FrameY.create(f -> {
-            f.index = 1;
-          }));
-        })
-    );
-  }
-
   @Test(description = """
   Consumed fragment end marker
   """)

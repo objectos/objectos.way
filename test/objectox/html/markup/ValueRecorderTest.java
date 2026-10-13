@@ -116,4 +116,101 @@ public class ValueRecorderTest {
     );
   }
 
+  @Test(description = "THEADING8 is consumed")
+  public void heading8() {
+    final HtmlSink sink;
+    sink = HtmlSinkY.create(opts -> {
+      opts.addInt24(HtmlSink.MAX_INT24);
+      opts.addByte(HtmlBytes.THEADING8);
+      opts.addByte((byte) 1);
+      opts.addInt8(opts.addObject("Ipsum"));
+    });
+
+    final ValueRecorder subject;
+    subject = new ValueRecorder(sink);
+
+    final int res;
+    res = subject.record(IntSize.BIT8, 3);
+
+    assertEquals(res, 1);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addInt24(HtmlSink.MAX_INT24);
+          opts.addByte(HtmlBytes.xTHEADING8);
+          opts.addByte((byte) 1);
+          opts.addInt8(opts.addObject("Ipsum"));
+          opts.addInt8(3);
+        })
+    );
+  }
+
+  @Test(description = """
+  THEADING8 is not consumed
+  """)
+  public void testableOnly01() {
+    final HtmlSink sink;
+    sink = HtmlSinkY.create(opts -> {
+      opts.addInt24(HtmlSink.MAX_INT24);
+      opts.addByte(HtmlBytes.THEADING8);
+      opts.addByte((byte) 1);
+      opts.addInt8(opts.addObject("Ipsum"));
+    });
+
+    final ValueRecorder subject;
+    subject = new ValueRecorder(sink);
+
+    final int res;
+    res = subject.testableOnly(IntSize.BIT8, 3);
+
+    assertEquals(res, 1);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addInt24(HtmlSink.MAX_INT24);
+          opts.addByte(HtmlBytes.THEADING8);
+          opts.addByte((byte) 1);
+          opts.addInt8(opts.addObject("Ipsum"));
+          opts.addInt8(3);
+        })
+    );
+  }
+
+  @Test(description = """
+  TCELL24 is not consumed
+  """)
+  public void testableOnly02() {
+    final HtmlSink sink;
+    sink = HtmlSinkY.create(opts -> {
+      opts.addInt24(HtmlSink.MAX_INT24);
+      opts.addByte(HtmlBytes.TCELL24);
+      opts.addInt24(5);
+      opts.addInt24(opts.addObject("12345"));
+    });
+
+    final ValueRecorder subject;
+    subject = new ValueRecorder(sink);
+
+    final int res;
+    res = subject.testableOnly(IntSize.BIT24, 3);
+
+    assertEquals(res, 1);
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addInt24(HtmlSink.MAX_INT24);
+          opts.addByte(HtmlBytes.TCELL24);
+          opts.addInt24(5);
+          opts.addInt24(opts.addObject("12345"));
+          opts.addInt24(3);
+        })
+    );
+  }
+
 }
