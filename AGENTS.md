@@ -101,3 +101,6 @@ Every Java source file starts with the Apache 2.0 header; the conventional copyr
 ## Notes
 
 - This checkout is **not** a git repo; do not rely on git workflow assumptions.
+- Do not try to run the build.
+- Do not try to run the tests.
+- Just generate the code
