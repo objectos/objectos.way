@@ -17,8 +17,6 @@ package objectox.html.markup;
 
 import static org.testng.Assert.assertEquals;
 
-import java.util.stream.IntStream;
-import objectos.internal.Util;
 import org.testng.annotations.Test;
 
 public class TextRecorderTest {
@@ -82,7 +80,9 @@ public class TextRecorderTest {
   @Test(description = "TEXT16")
   public void text16() {
     final HtmlSink sink;
-    sink = new HtmlSink(Util.EMPTY_BYTE_ARRAY, new Object[256]);
+    sink = HtmlSinkY.create(opts -> {
+      opts.objectsIndex(HtmlSink.FIRST_INT16);
+    });
 
     final TextRecorder subject;
     subject = new TextRecorder(sink);
@@ -96,7 +96,7 @@ public class TextRecorderTest {
         sink,
 
         HtmlSinkY.create(opts -> {
-          IntStream.range(0, 256).forEach(_ -> opts.addObject(null));
+          opts.objectsIndex(HtmlSink.FIRST_INT16);
           opts.addByte(HtmlBytes.TEXT16);
           opts.addInt16(opts.addObject(value));
         })
@@ -106,7 +106,9 @@ public class TextRecorderTest {
   @Test(description = "TEXT24")
   public void text24() {
     final HtmlSink sink;
-    sink = new HtmlSink(Util.EMPTY_BYTE_ARRAY, new Object[1 << 16]);
+    sink = HtmlSinkY.create(opts -> {
+      opts.objectsIndex(HtmlSink.FIRST_INT24);
+    });
 
     final TextRecorder subject;
     subject = new TextRecorder(sink);
@@ -120,7 +122,7 @@ public class TextRecorderTest {
         sink,
 
         HtmlSinkY.create(opts -> {
-          IntStream.range(0, 1 << 16).forEach(_ -> opts.addObject(null));
+          opts.objectsIndex(HtmlSink.FIRST_INT24);
           opts.addByte(HtmlBytes.TEXT24);
           opts.addInt24(opts.addObject(value));
         })

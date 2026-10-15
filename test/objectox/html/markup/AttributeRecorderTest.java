@@ -17,9 +17,7 @@ package objectox.html.markup;
 
 import static org.testng.Assert.assertEquals;
 
-import java.util.stream.IntStream;
 import objectos.html.Id;
-import objectos.internal.Util;
 import objectos.script.Js;
 import objectos.script.JsAction;
 import objectox.html.attr.AttributeName;
@@ -61,7 +59,9 @@ public class AttributeRecorderTest {
   @Test(description = "ATTRIBUTE816")
   public void attribute816() {
     final HtmlSink sink;
-    sink = new HtmlSink(Util.EMPTY_BYTE_ARRAY, new Object[256]);
+    sink = HtmlSinkY.create(opts -> {
+      opts.objectsIndex(HtmlSink.FIRST_INT16);
+    });
 
     final AttributeRecorder subject;
     subject = new AttributeRecorder(sink);
@@ -81,7 +81,7 @@ public class AttributeRecorderTest {
         sink,
 
         HtmlSinkY.create(opts -> {
-          IntStream.range(0, 256).forEach(_ -> opts.addObject(null));
+          opts.objectsIndex(HtmlSink.FIRST_INT16);
           opts.addByte(HtmlBytes.ATTRIBUTE816);
           opts.addInt8(name.index());
           opts.addInt16(opts.addObject("foo"));
@@ -92,7 +92,9 @@ public class AttributeRecorderTest {
   @Test(description = "ATTRIBUTE824")
   public void attribute824() {
     final HtmlSink sink;
-    sink = new HtmlSink(Util.EMPTY_BYTE_ARRAY, new Object[1 << 16]);
+    sink = HtmlSinkY.create(opts -> {
+      opts.objectsIndex(HtmlSink.FIRST_INT24);
+    });
 
     final AttributeRecorder subject;
     subject = new AttributeRecorder(sink);
@@ -112,7 +114,7 @@ public class AttributeRecorderTest {
         sink,
 
         HtmlSinkY.create(opts -> {
-          IntStream.range(0, 1 << 16).forEach(_ -> opts.addObject(null));
+          opts.objectsIndex(HtmlSink.FIRST_INT24);
           opts.addByte(HtmlBytes.ATTRIBUTE824);
           opts.addInt8(name.index());
           opts.addInt24(opts.addObject("foo"));
@@ -153,7 +155,9 @@ public class AttributeRecorderTest {
   @Test(description = "JSACTION816")
   public void jsaction816() {
     final HtmlSink sink;
-    sink = new HtmlSink(Util.EMPTY_BYTE_ARRAY, new Object[256]);
+    sink = HtmlSinkY.create(opts -> {
+      opts.objectsIndex(HtmlSink.FIRST_INT16);
+    });
 
     final AttributeRecorder subject;
     subject = new AttributeRecorder(sink);
@@ -173,7 +177,7 @@ public class AttributeRecorderTest {
         sink,
 
         HtmlSinkY.create(opts -> {
-          IntStream.range(0, 256).forEach(_ -> opts.addObject(null));
+          opts.objectsIndex(HtmlSink.FIRST_INT16);
           opts.addByte(HtmlBytes.JSACTION816);
           opts.addInt8(name.index());
           opts.addInt16(opts.addObject(value));
@@ -184,7 +188,9 @@ public class AttributeRecorderTest {
   @Test(description = "JSACTION824")
   public void jsaction824() {
     final HtmlSink sink;
-    sink = new HtmlSink(Util.EMPTY_BYTE_ARRAY, new Object[1 << 16]);
+    sink = HtmlSinkY.create(opts -> {
+      opts.objectsIndex(HtmlSink.FIRST_INT24);
+    });
 
     final AttributeRecorder subject;
     subject = new AttributeRecorder(sink);
@@ -204,7 +210,7 @@ public class AttributeRecorderTest {
         sink,
 
         HtmlSinkY.create(opts -> {
-          IntStream.range(0, 1 << 16).forEach(_ -> opts.addObject(null));
+          opts.objectsIndex(HtmlSink.FIRST_INT24);
           opts.addByte(HtmlBytes.JSACTION824);
           opts.addInt8(name.index());
           opts.addInt24(opts.addObject(value));

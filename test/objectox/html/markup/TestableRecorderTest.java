@@ -17,8 +17,6 @@ package objectox.html.markup;
 
 import static org.testng.Assert.assertEquals;
 
-import java.util.stream.IntStream;
-import objectos.internal.Util;
 import org.testng.annotations.Test;
 
 public class TestableRecorderTest {
@@ -26,7 +24,9 @@ public class TestableRecorderTest {
   @Test(description = "heading: THEADING8")
   public void heading8() {
     final HtmlSink sink;
-    sink = new HtmlSink();
+    sink = HtmlSinkY.create(opts -> {
+      opts.objectsIndex(HtmlSink.FIRST_INT8);
+    });
 
     final TestableRecorder subject;
     subject = new TestableRecorder(sink);
@@ -50,7 +50,9 @@ public class TestableRecorderTest {
   @Test(description = "heading: THEADING16")
   public void heading16() {
     final HtmlSink sink;
-    sink = new HtmlSink(Util.EMPTY_BYTE_ARRAY, new Object[256]);
+    sink = HtmlSinkY.create(opts -> {
+      opts.objectsIndex(HtmlSink.FIRST_INT16);
+    });
 
     final TestableRecorder subject;
     subject = new TestableRecorder(sink);
@@ -61,7 +63,7 @@ public class TestableRecorderTest {
         sink,
 
         HtmlSinkY.create(opts -> {
-          IntStream.range(0, 256).forEach(_ -> opts.addObject(null));
+          opts.objectsIndex(HtmlSink.FIRST_INT16);
           opts.addByte(HtmlBytes.THEADING16);
           opts.addByte((byte) 6);
           opts.addInt16(opts.addObject("Ipsum"));
@@ -72,7 +74,9 @@ public class TestableRecorderTest {
   @Test(description = "heading: THEADING24")
   public void heading24() {
     final HtmlSink sink;
-    sink = new HtmlSink(Util.EMPTY_BYTE_ARRAY, new Object[1 << 16]);
+    sink = HtmlSinkY.create(opts -> {
+      opts.objectsIndex(HtmlSink.FIRST_INT24);
+    });
 
     final TestableRecorder subject;
     subject = new TestableRecorder(sink);
@@ -83,7 +87,7 @@ public class TestableRecorderTest {
         sink,
 
         HtmlSinkY.create(opts -> {
-          IntStream.range(0, 1 << 16).forEach(_ -> opts.addObject(null));
+          opts.objectsIndex(HtmlSink.FIRST_INT24);
           opts.addByte(HtmlBytes.THEADING24);
           opts.addByte((byte) 3);
           opts.addInt24(opts.addObject("Ipsum"));

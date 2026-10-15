@@ -28,6 +28,12 @@ public final class HtmlSink {
 
   public static final int MAX_INT24 = (1 << 24) - 1;
 
+  public static final int FIRST_INT8 = 0;
+
+  public static final int FIRST_INT16 = MAX_INT8 + 1;
+
+  public static final int FIRST_INT24 = MAX_INT16 + 1;
+
   private byte[] code;
 
   private int codeIndex;

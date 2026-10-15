@@ -17,8 +17,6 @@ package objectox.html.markup;
 
 import static org.testng.Assert.assertEquals;
 
-import java.util.stream.IntStream;
-import objectos.internal.Util;
 import org.testng.annotations.Test;
 
 public class RawRecorderTest {
@@ -82,7 +80,9 @@ public class RawRecorderTest {
   @Test(description = "RAW16")
   public void raw16() {
     final HtmlSink sink;
-    sink = new HtmlSink(Util.EMPTY_BYTE_ARRAY, new Object[256]);
+    sink = HtmlSinkY.create(opts -> {
+      opts.objectsIndex(HtmlSink.FIRST_INT16);
+    });
 
     final RawRecorder subject;
     subject = new RawRecorder(sink);
@@ -96,7 +96,7 @@ public class RawRecorderTest {
         sink,
 
         HtmlSinkY.create(opts -> {
-          IntStream.range(0, 256).forEach(_ -> opts.addObject(null));
+          opts.objectsIndex(HtmlSink.FIRST_INT16);
           opts.addByte(HtmlBytes.RAW16);
           opts.addInt16(opts.addObject(value));
         })
@@ -106,7 +106,9 @@ public class RawRecorderTest {
   @Test(description = "RAW24")
   public void raw24() {
     final HtmlSink sink;
-    sink = new HtmlSink(Util.EMPTY_BYTE_ARRAY, new Object[1 << 16]);
+    sink = HtmlSinkY.create(opts -> {
+      opts.objectsIndex(HtmlSink.FIRST_INT24);
+    });
 
     final RawRecorder subject;
     subject = new RawRecorder(sink);
@@ -120,7 +122,7 @@ public class RawRecorderTest {
         sink,
 
         HtmlSinkY.create(opts -> {
-          IntStream.range(0, 1 << 16).forEach(_ -> opts.addObject(null));
+          opts.objectsIndex(HtmlSink.FIRST_INT24);
           opts.addByte(HtmlBytes.RAW24);
           opts.addInt24(opts.addObject(value));
         })
