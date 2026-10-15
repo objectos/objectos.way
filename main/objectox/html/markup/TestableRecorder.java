@@ -63,13 +63,6 @@ final class TestableRecorder {
   }
 
   public final TestableMarkupPointer heading(int level, String value) {
-    if (level < 1 || level > 6) {
-      final String msg;
-      msg = "level must be between 1 and 6";
-
-      throw new IllegalArgumentException(msg);
-    }
-
     final String v;
     v = Objects.requireNonNull(value, "value == null");
 
