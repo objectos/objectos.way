@@ -133,4 +133,116 @@ public class IntSizeTest {
     assertEquals(res, 8);
   }
 
+  @Test(description = "equal values are BIT8")
+  public void max01() {
+    final IntSize res;
+    res = IntSize.max(1, 1);
+
+    assertEquals(res, IntSize.BIT8);
+  }
+
+  @Test(description = "max BIT8 value in a")
+  public void max02() {
+    final IntSize res;
+    res = IntSize.max(255, 0);
+
+    assertEquals(res, IntSize.BIT8);
+  }
+
+  @Test(description = "max BIT8 value in b")
+  public void max03() {
+    final IntSize res;
+    res = IntSize.max(0, 255);
+
+    assertEquals(res, IntSize.BIT8);
+  }
+
+  @Test(description = "max BIT16 value in b")
+  public void max04() {
+    final IntSize res;
+    res = IntSize.max(255, 256);
+
+    assertEquals(res, IntSize.BIT16);
+  }
+
+  @Test(description = "max BIT16 value in a")
+  public void max05() {
+    final IntSize res;
+    res = IntSize.max(256, 255);
+
+    assertEquals(res, IntSize.BIT16);
+  }
+
+  @Test(description = "max BIT16 value in a and b")
+  public void max06() {
+    final IntSize res;
+    res = IntSize.max(65535, 65535);
+
+    assertEquals(res, IntSize.BIT16);
+  }
+
+  @Test(description = "max BIT24 value in b")
+  public void max07() {
+    final IntSize res;
+    res = IntSize.max(65535, 65536);
+
+    assertEquals(res, IntSize.BIT24);
+  }
+
+  @Test(description = "max BIT24 value in a and b")
+  public void max08() {
+    final IntSize res;
+    res = IntSize.max(65536, 16777215);
+
+    assertEquals(res, IntSize.BIT24);
+  }
+
+  @Test(description = "zero values are BIT8")
+  public void max09() {
+    final IntSize res;
+    res = IntSize.max(0, 0);
+
+    assertEquals(res, IntSize.BIT8);
+  }
+
+  @Test(
+      description = "reject negative a and b",
+      expectedExceptions = IllegalArgumentException.class,
+      expectedExceptionsMessageRegExp = "Illegal int value: negative values \\(-1\\) are now allowed")
+  public void max10() {
+    IntSize.max(-1, -1);
+  }
+
+  @Test(
+      description = "reject negative maximum",
+      expectedExceptions = IllegalArgumentException.class,
+      expectedExceptionsMessageRegExp = "Illegal int value: negative values \\(-1\\) are now allowed")
+  public void max11() {
+    IntSize.max(-5, -1);
+  }
+
+  @Test(description = "negative a ignored when b is greater")
+  public void max12() {
+    final IntSize res;
+    res = IntSize.max(-1, 255);
+
+    assertEquals(res, IntSize.BIT8);
+  }
+
+  @Test(
+      description = "reject too large a",
+      expectedExceptions = IllegalArgumentException.class,
+      expectedExceptionsMessageRegExp = "Illegal int value: \\(16777216\\) is too large")
+  public void max13() {
+    IntSize.max(16777216, 0);
+  }
+
+  @Test(
+      description = "reject too large b",
+      expectedExceptions = IllegalArgumentException.class,
+      expectedExceptionsMessageRegExp = "Illegal int value: \\(16777216\\) is too large")
+  public void max14() {
+    IntSize.max(0, 16777216);
+  }
+
 }

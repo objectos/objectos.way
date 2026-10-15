@@ -25,6 +25,13 @@ public enum IntSize {
 
   BIT24;
 
+  public static IntSize max(int a, int b) {
+    final int value;
+    value = Math.max(a, b);
+
+    return of(value);
+  }
+
   public static IntSize of(int value) {
     if (value < 0) {
       final String msg;

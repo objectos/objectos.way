@@ -41,7 +41,7 @@ final class TestableRecorder {
     valueIndex = sink.addObject(v);
 
     final IntSize size;
-    size = IntSize.of(Math.max(width, valueIndex));
+    size = IntSize.max(width, valueIndex);
 
     final byte proto;
     proto = switch (size) {
@@ -119,7 +119,7 @@ final class TestableRecorder {
     valueIndex = sink.addObject(v);
 
     final IntSize size;
-    size = IntSize.of(Math.max(keyIndex, valueIndex));
+    size = IntSize.max(keyIndex, valueIndex);
 
     final byte proto;
     proto = switch (size) {
