@@ -16,201 +16,435 @@
 package objectox.html.markup;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.fail;
 
 import objectox.html.IntSize;
-import objectox.html.attr.AttributeName;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class ValueRecorderTest {
 
-  @Test(description = "ATTRIBUTE88")
-  public void attribute88() {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
+  @DataProvider
+  public Object[][] recordValidProvider() {
+    return new Object[][] {
+        {HtmlBytes.ELEMSTR8, HtmlBytes.xELEMSTR8},
+        {HtmlBytes.ELEMVOID8, HtmlBytes.xELEMVOID8},
+
+        {HtmlBytes.ATTRIBUTE88, HtmlBytes.xATTRIBUTE88},
+        {HtmlBytes.ATTRIBUTE816, HtmlBytes.xATTRIBUTE816},
+        {HtmlBytes.ATTRIBUTE824, HtmlBytes.xATTRIBUTE824},
+        {HtmlBytes.BOOLEAN8, HtmlBytes.xBOOLEAN8},
+
+        {HtmlBytes.JSACTION88, HtmlBytes.xJSACTION88},
+        {HtmlBytes.JSACTION816, HtmlBytes.xJSACTION816},
+        {HtmlBytes.JSACTION824, HtmlBytes.xJSACTION824},
+
+        {HtmlBytes.TEXT8, HtmlBytes.xTEXT8},
+        {HtmlBytes.TEXT16, HtmlBytes.xTEXT16},
+        {HtmlBytes.TEXT24, HtmlBytes.xTEXT24},
+
+        {HtmlBytes.RAW8, HtmlBytes.xRAW8},
+        {HtmlBytes.RAW16, HtmlBytes.xRAW16},
+        {HtmlBytes.RAW24, HtmlBytes.xRAW24},
+
+        {HtmlBytes.THEADING8, HtmlBytes.xTHEADING8},
+        {HtmlBytes.THEADING16, HtmlBytes.xTHEADING16},
+        {HtmlBytes.THEADING24, HtmlBytes.xTHEADING24},
+        {HtmlBytes.TCELL8, HtmlBytes.xTCELL8},
+        {HtmlBytes.TCELL16, HtmlBytes.xTCELL16},
+        {HtmlBytes.TCELL24, HtmlBytes.xTCELL24},
+        {HtmlBytes.TPROP8, HtmlBytes.xTPROP8},
+        {HtmlBytes.TPROP16, HtmlBytes.xTPROP16},
+        {HtmlBytes.TPROP24, HtmlBytes.xTPROP24},
+        {HtmlBytes.TPROPKEY8, HtmlBytes.xTPROPKEY8},
+        {HtmlBytes.TPROPKEY16, HtmlBytes.xTPROPKEY16},
+        {HtmlBytes.TPROPKEY24, HtmlBytes.xTPROPKEY24},
+        {HtmlBytes.TPROPVAL8, HtmlBytes.xTPROPVAL8},
+        {HtmlBytes.TPROPVAL16, HtmlBytes.xTPROPVAL16},
+        {HtmlBytes.TPROPVAL24, HtmlBytes.xTPROPVAL24},
+        {HtmlBytes.TNEWLINE, HtmlBytes.xTNEWLINE},
+
+        {HtmlBytes.xELEMSTR8, HtmlBytes.xELEMSTR8},
+        {HtmlBytes.xELEMVOID8, HtmlBytes.xELEMVOID8},
+
+        {HtmlBytes.xATTRIBUTE88, HtmlBytes.xATTRIBUTE88},
+        {HtmlBytes.xATTRIBUTE816, HtmlBytes.xATTRIBUTE816},
+        {HtmlBytes.xATTRIBUTE824, HtmlBytes.xATTRIBUTE824},
+        {HtmlBytes.xBOOLEAN8, HtmlBytes.xBOOLEAN8},
+
+        {HtmlBytes.xJSACTION88, HtmlBytes.xJSACTION88},
+        {HtmlBytes.xJSACTION816, HtmlBytes.xJSACTION816},
+        {HtmlBytes.xJSACTION824, HtmlBytes.xJSACTION824},
+
+        {HtmlBytes.xTEXT8, HtmlBytes.xTEXT8},
+        {HtmlBytes.xTEXT16, HtmlBytes.xTEXT16},
+        {HtmlBytes.xTEXT24, HtmlBytes.xTEXT24},
+
+        {HtmlBytes.xRAW8, HtmlBytes.xRAW8},
+        {HtmlBytes.xRAW16, HtmlBytes.xRAW16},
+        {HtmlBytes.xRAW24, HtmlBytes.xRAW24},
+
+        {HtmlBytes.xTHEADING8, HtmlBytes.xTHEADING8},
+        {HtmlBytes.xTHEADING16, HtmlBytes.xTHEADING16},
+        {HtmlBytes.xTHEADING24, HtmlBytes.xTHEADING24},
+        {HtmlBytes.xTCELL8, HtmlBytes.xTCELL8},
+        {HtmlBytes.xTCELL16, HtmlBytes.xTCELL16},
+        {HtmlBytes.xTCELL24, HtmlBytes.xTCELL24},
+        {HtmlBytes.xTPROP8, HtmlBytes.xTPROP8},
+        {HtmlBytes.xTPROP16, HtmlBytes.xTPROP16},
+        {HtmlBytes.xTPROP24, HtmlBytes.xTPROP24},
+        {HtmlBytes.xTPROPKEY8, HtmlBytes.xTPROPKEY8},
+        {HtmlBytes.xTPROPKEY16, HtmlBytes.xTPROPKEY16},
+        {HtmlBytes.xTPROPKEY24, HtmlBytes.xTPROPKEY24},
+        {HtmlBytes.xTPROPVAL8, HtmlBytes.xTPROPVAL8},
+        {HtmlBytes.xTPROPVAL16, HtmlBytes.xTPROPVAL16},
+        {HtmlBytes.xTPROPVAL24, HtmlBytes.xTPROPVAL24},
+        {HtmlBytes.xTNEWLINE, HtmlBytes.xTNEWLINE},
+
+        {HtmlBytes.oTHEADING8, HtmlBytes.oTHEADING8},
+        {HtmlBytes.oTHEADING16, HtmlBytes.oTHEADING16},
+        {HtmlBytes.oTHEADING24, HtmlBytes.oTHEADING24},
+        {HtmlBytes.oTCELL8, HtmlBytes.oTCELL8},
+        {HtmlBytes.oTCELL16, HtmlBytes.oTCELL16},
+        {HtmlBytes.oTCELL24, HtmlBytes.oTCELL24},
+        {HtmlBytes.oTPROP8, HtmlBytes.oTPROP8},
+        {HtmlBytes.oTPROP16, HtmlBytes.oTPROP16},
+        {HtmlBytes.oTPROP24, HtmlBytes.oTPROP24},
+        {HtmlBytes.oTPROPKEY8, HtmlBytes.oTPROPKEY8},
+        {HtmlBytes.oTPROPKEY16, HtmlBytes.oTPROPKEY16},
+        {HtmlBytes.oTPROPKEY24, HtmlBytes.oTPROPKEY24},
+        {HtmlBytes.oTPROPVAL8, HtmlBytes.oTPROPVAL8},
+        {HtmlBytes.oTPROPVAL16, HtmlBytes.oTPROPVAL16},
+        {HtmlBytes.oTPROPVAL24, HtmlBytes.oTPROPVAL24}
+    };
+  }
+
+  @Test(dataProvider = "recordValidProvider")
+  public void record01(byte opcode, byte xOpcode) {
+    final HtmlSink in;
+    in = HtmlSinkY.create(opts -> {
       opts.addInt24(HtmlSink.MAX_INT24);
-      opts.addByte(HtmlBytes.ATTRIBUTE88);
-      opts.addInt8(AttributeName.ID.index());
-      opts.addInt8(opts.addObject("foo"));
+      opts.addByte(opcode);
+    });
+
+    final HtmlSink out;
+    out = HtmlSinkY.create(opts -> {
+      opts.addInt24(HtmlSink.MAX_INT24);
+      opts.addByte(xOpcode);
+      opts.addInt8(3);
     });
 
     final ValueRecorder subject;
-    subject = new ValueRecorder(sink);
+    subject = new ValueRecorder(in);
 
     final int res;
     res = subject.record(IntSize.BIT8, 3);
 
     assertEquals(res, 1);
 
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
-          opts.addInt24(HtmlSink.MAX_INT24);
-          opts.addByte(HtmlBytes.xATTRIBUTE88);
-          opts.addInt8(AttributeName.ID.index());
-          opts.addInt8(opts.addObject("foo"));
-          opts.addInt8(3);
-        })
-    );
+    assertEquals(in, out);
   }
 
-  @Test(description = "ATTRIBUTE816")
-  public void attribute816() {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
+  @Test(dataProvider = "recordValidProvider")
+  public void record02(byte opcode, byte xOpcode) {
+    final HtmlSink in;
+    in = HtmlSinkY.create(opts -> {
       opts.addInt24(HtmlSink.MAX_INT24);
-      opts.addByte(HtmlBytes.ATTRIBUTE816);
-      opts.addInt8(AttributeName.ID.index());
-      opts.addInt16(opts.addObject("foo"));
+      opts.addByte(opcode);
+    });
+
+    final HtmlSink out;
+    out = HtmlSinkY.create(opts -> {
+      opts.addInt24(HtmlSink.MAX_INT24);
+      opts.addByte(xOpcode);
+      opts.addInt16(3);
     });
 
     final ValueRecorder subject;
-    subject = new ValueRecorder(sink);
+    subject = new ValueRecorder(in);
 
     final int res;
-    res = subject.record(IntSize.BIT8, 3);
+    res = subject.record(IntSize.BIT16, 3);
 
     assertEquals(res, 1);
 
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
-          opts.addInt24(HtmlSink.MAX_INT24);
-          opts.addByte(HtmlBytes.xATTRIBUTE816);
-          opts.addInt8(AttributeName.ID.index());
-          opts.addInt16(opts.addObject("foo"));
-          opts.addInt8(3);
-        })
-    );
+    assertEquals(in, out);
   }
 
-  @Test(description = "ATTRIBUTE824")
-  public void attribute824() {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
+  @Test(dataProvider = "recordValidProvider")
+  public void record03(byte opcode, byte xOpcode) {
+    final HtmlSink in;
+    in = HtmlSinkY.create(opts -> {
       opts.addInt24(HtmlSink.MAX_INT24);
-      opts.addByte(HtmlBytes.ATTRIBUTE824);
-      opts.addInt8(AttributeName.ID.index());
-      opts.addInt24(opts.addObject("foo"));
+      opts.addByte(opcode);
+    });
+
+    final HtmlSink out;
+    out = HtmlSinkY.create(opts -> {
+      opts.addInt24(HtmlSink.MAX_INT24);
+      opts.addByte(xOpcode);
+      opts.addInt24(3);
     });
 
     final ValueRecorder subject;
-    subject = new ValueRecorder(sink);
+    subject = new ValueRecorder(in);
 
     final int res;
-    res = subject.record(IntSize.BIT8, 3);
+    res = subject.record(IntSize.BIT24, 3);
 
     assertEquals(res, 1);
 
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
-          opts.addInt24(HtmlSink.MAX_INT24);
-          opts.addByte(HtmlBytes.xATTRIBUTE824);
-          opts.addInt8(AttributeName.ID.index());
-          opts.addInt24(opts.addObject("foo"));
-          opts.addInt8(3);
-        })
-    );
+    assertEquals(in, out);
   }
 
-  @Test(description = "THEADING8 is consumed")
-  public void heading8() {
+  @DataProvider
+  public Object[][] recordInvalidProvider() {
+    return new Object[][] {
+        {HtmlBytes.DOCTYPE},
+
+        {HtmlBytes.FRAGSTR},
+        {HtmlBytes.FRAGEND},
+
+        {HtmlBytes.VALUES8},
+        {HtmlBytes.VALUES16},
+        {HtmlBytes.VALUES24},
+
+        {HtmlBytes.xFRAGSTR}
+    };
+  }
+
+  @Test(dataProvider = "recordInvalidProvider")
+  public void recordInvalid(byte opcode) {
     final HtmlSink sink;
     sink = HtmlSinkY.create(opts -> {
       opts.addInt24(HtmlSink.MAX_INT24);
-      opts.addByte(HtmlBytes.THEADING8);
-      opts.addByte((byte) 1);
-      opts.addInt8(opts.addObject("Ipsum"));
+      opts.addByte(opcode);
     });
 
     final ValueRecorder subject;
     subject = new ValueRecorder(sink);
 
-    final int res;
-    res = subject.record(IntSize.BIT8, 3);
+    try {
+      subject.record(IntSize.BIT8, 3);
 
-    assertEquals(res, 1);
+      fail();
+    } catch (IllegalArgumentException e) {
+      final String msg;
+      msg = e.getMessage();
 
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
-          opts.addInt24(HtmlSink.MAX_INT24);
-          opts.addByte(HtmlBytes.xTHEADING8);
-          opts.addByte((byte) 1);
-          opts.addInt8(opts.addObject("Ipsum"));
-          opts.addInt8(3);
-        })
-    );
+      assertEquals(msg, "Invalid opcode: " + opcode);
+    }
   }
 
-  @Test(description = """
-  THEADING8 is not consumed
-  """)
-  public void testableOnly01() {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
+  @DataProvider
+  public Object[][] testableOnlyValidProvider() {
+    return new Object[][] {
+        {HtmlBytes.THEADING8, HtmlBytes.oTHEADING8},
+        {HtmlBytes.THEADING16, HtmlBytes.oTHEADING16},
+        {HtmlBytes.THEADING24, HtmlBytes.oTHEADING24},
+        {HtmlBytes.TCELL8, HtmlBytes.oTCELL8},
+        {HtmlBytes.TCELL16, HtmlBytes.oTCELL16},
+        {HtmlBytes.TCELL24, HtmlBytes.oTCELL24},
+        {HtmlBytes.TPROP8, HtmlBytes.oTPROP8},
+        {HtmlBytes.TPROP16, HtmlBytes.oTPROP16},
+        {HtmlBytes.TPROP24, HtmlBytes.oTPROP24},
+        {HtmlBytes.TPROPKEY8, HtmlBytes.oTPROPKEY8},
+        {HtmlBytes.TPROPKEY16, HtmlBytes.oTPROPKEY16},
+        {HtmlBytes.TPROPKEY24, HtmlBytes.oTPROPKEY24},
+        {HtmlBytes.TPROPVAL8, HtmlBytes.oTPROPVAL8},
+        {HtmlBytes.TPROPVAL16, HtmlBytes.oTPROPVAL16},
+        {HtmlBytes.TPROPVAL24, HtmlBytes.oTPROPVAL24}
+    };
+  }
+
+  @Test(dataProvider = "testableOnlyValidProvider")
+  public void testableOnly01(byte opcode, byte oOpcode) {
+    final HtmlSink in;
+    in = HtmlSinkY.create(opts -> {
       opts.addInt24(HtmlSink.MAX_INT24);
-      opts.addByte(HtmlBytes.THEADING8);
-      opts.addByte((byte) 1);
-      opts.addInt8(opts.addObject("Ipsum"));
+      opts.addByte(opcode);
+    });
+
+    final HtmlSink out;
+    out = HtmlSinkY.create(opts -> {
+      opts.addInt24(HtmlSink.MAX_INT24);
+      opts.addByte(oOpcode);
+      opts.addInt8(3);
     });
 
     final ValueRecorder subject;
-    subject = new ValueRecorder(sink);
+    subject = new ValueRecorder(in);
 
     final int res;
     res = subject.testableOnly(IntSize.BIT8, 3);
 
     assertEquals(res, 1);
 
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
-          opts.addInt24(HtmlSink.MAX_INT24);
-          opts.addByte(HtmlBytes.THEADING8);
-          opts.addByte((byte) 1);
-          opts.addInt8(opts.addObject("Ipsum"));
-          opts.addInt8(3);
-        })
-    );
+    assertEquals(in, out);
   }
 
-  @Test(description = """
-  TCELL24 is not consumed
-  """)
-  public void testableOnly02() {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
+  @Test(dataProvider = "testableOnlyValidProvider")
+  public void testableOnly02(byte opcode, byte oOpcode) {
+    final HtmlSink in;
+    in = HtmlSinkY.create(opts -> {
       opts.addInt24(HtmlSink.MAX_INT24);
-      opts.addByte(HtmlBytes.TCELL24);
-      opts.addInt24(5);
-      opts.addInt24(opts.addObject("12345"));
+      opts.addByte(opcode);
+    });
+
+    final HtmlSink out;
+    out = HtmlSinkY.create(opts -> {
+      opts.addInt24(HtmlSink.MAX_INT24);
+      opts.addByte(oOpcode);
+      opts.addInt16(3);
     });
 
     final ValueRecorder subject;
-    subject = new ValueRecorder(sink);
+    subject = new ValueRecorder(in);
+
+    final int res;
+    res = subject.testableOnly(IntSize.BIT16, 3);
+
+    assertEquals(res, 1);
+
+    assertEquals(in, out);
+  }
+
+  @Test(dataProvider = "testableOnlyValidProvider")
+  public void testableOnly03(byte opcode, byte oOpcode) {
+    final HtmlSink in;
+    in = HtmlSinkY.create(opts -> {
+      opts.addInt24(HtmlSink.MAX_INT24);
+      opts.addByte(opcode);
+    });
+
+    final HtmlSink out;
+    out = HtmlSinkY.create(opts -> {
+      opts.addInt24(HtmlSink.MAX_INT24);
+      opts.addByte(oOpcode);
+      opts.addInt24(3);
+    });
+
+    final ValueRecorder subject;
+    subject = new ValueRecorder(in);
 
     final int res;
     res = subject.testableOnly(IntSize.BIT24, 3);
 
     assertEquals(res, 1);
 
-    assertEquals(
-        sink,
+    assertEquals(in, out);
+  }
 
-        HtmlSinkY.create(opts -> {
-          opts.addInt24(HtmlSink.MAX_INT24);
-          opts.addByte(HtmlBytes.TCELL24);
-          opts.addInt24(5);
-          opts.addInt24(opts.addObject("12345"));
-          opts.addInt24(3);
-        })
-    );
+  @DataProvider
+  public Object[][] testableOnlyInvalidProvider() {
+    return new Object[][] {
+        {HtmlBytes.DOCTYPE},
+
+        {HtmlBytes.ELEMSTR8},
+        {HtmlBytes.ELEMVOID8},
+
+        {HtmlBytes.ATTRIBUTE88},
+        {HtmlBytes.ATTRIBUTE816},
+        {HtmlBytes.ATTRIBUTE824},
+        {HtmlBytes.BOOLEAN8},
+        {HtmlBytes.JSACTION88},
+        {HtmlBytes.JSACTION816},
+        {HtmlBytes.JSACTION824},
+
+        {HtmlBytes.FRAGSTR},
+        {HtmlBytes.FRAGEND},
+
+        {HtmlBytes.TNEWLINE},
+
+        {HtmlBytes.TEXT8},
+        {HtmlBytes.TEXT16},
+        {HtmlBytes.TEXT24},
+
+        {HtmlBytes.RAW8},
+        {HtmlBytes.RAW16},
+        {HtmlBytes.RAW24},
+
+        {HtmlBytes.VALUES8},
+        {HtmlBytes.VALUES16},
+        {HtmlBytes.VALUES24},
+
+        {HtmlBytes.xELEMSTR8},
+        {HtmlBytes.xELEMVOID8},
+
+        {HtmlBytes.xATTRIBUTE88},
+        {HtmlBytes.xATTRIBUTE816},
+        {HtmlBytes.xATTRIBUTE824},
+        {HtmlBytes.xBOOLEAN8},
+        {HtmlBytes.xJSACTION88},
+        {HtmlBytes.xJSACTION816},
+        {HtmlBytes.xJSACTION824},
+
+        {HtmlBytes.xFRAGSTR},
+
+        {HtmlBytes.xTHEADING8},
+        {HtmlBytes.xTHEADING16},
+        {HtmlBytes.xTHEADING24},
+        {HtmlBytes.xTCELL8},
+        {HtmlBytes.xTCELL16},
+        {HtmlBytes.xTCELL24},
+        {HtmlBytes.xTPROP8},
+        {HtmlBytes.xTPROP16},
+        {HtmlBytes.xTPROP24},
+        {HtmlBytes.xTPROPKEY8},
+        {HtmlBytes.xTPROPKEY16},
+        {HtmlBytes.xTPROPKEY24},
+        {HtmlBytes.xTPROPVAL8},
+        {HtmlBytes.xTPROPVAL16},
+        {HtmlBytes.xTPROPVAL24},
+        {HtmlBytes.xTNEWLINE},
+
+        {HtmlBytes.oTHEADING8},
+        {HtmlBytes.oTHEADING16},
+        {HtmlBytes.oTHEADING24},
+        {HtmlBytes.oTCELL8},
+        {HtmlBytes.oTCELL16},
+        {HtmlBytes.oTCELL24},
+        {HtmlBytes.oTPROP8},
+        {HtmlBytes.oTPROP16},
+        {HtmlBytes.oTPROP24},
+        {HtmlBytes.oTPROPKEY8},
+        {HtmlBytes.oTPROPKEY16},
+        {HtmlBytes.oTPROPKEY24},
+        {HtmlBytes.oTPROPVAL8},
+        {HtmlBytes.oTPROPVAL16},
+        {HtmlBytes.oTPROPVAL24},
+
+        {HtmlBytes.xTEXT8},
+        {HtmlBytes.xTEXT16},
+        {HtmlBytes.xTEXT24},
+
+        {HtmlBytes.xRAW8},
+        {HtmlBytes.xRAW16},
+        {HtmlBytes.xRAW24}
+    };
+  }
+
+  @Test(dataProvider = "testableOnlyInvalidProvider")
+  public void testableOnlyInvalid(byte opcode) {
+    final HtmlSink sink;
+    sink = HtmlSinkY.create(opts -> {
+      opts.addInt24(HtmlSink.MAX_INT24);
+      opts.addByte(opcode);
+    });
+
+    final ValueRecorder subject;
+    subject = new ValueRecorder(sink);
+
+    try {
+      subject.testableOnly(IntSize.BIT8, 3);
+
+      fail();
+    } catch (IllegalArgumentException e) {
+      final String msg;
+      msg = e.getMessage();
+
+      assertEquals(msg, "Invalid opcode: " + opcode);
+    }
   }
 
 }

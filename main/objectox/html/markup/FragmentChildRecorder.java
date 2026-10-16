@@ -46,26 +46,14 @@ final class FragmentChildRecorder {
       b = sink.getByte(value);
 
       switch (b) {
-        case HtmlBytes.FRAGEND -> {
-          break loop;
-        }
+        case HtmlBytes.FRAGEND -> { break loop; }
 
-        case HtmlBytes.FRAGSTR -> {
-          cursor = sink.getInt24(value + 1);
+        case HtmlBytes.FRAGSTR -> { cursor = sink.getInt24(value + 1); sum += record(size, value); }
 
-          sum += record(size, value);
-        }
-
-        case HtmlBytes.xFRAGSTR -> {
-          cursor = sink.getInt24(value + 1);
-        }
+        case HtmlBytes.xFRAGSTR -> cursor = sink.getInt24(value + 1);
 
         case HtmlBytes.ELEMSTR8,
-             HtmlBytes.ELEMVOID8 -> {
-          sum += valueRecorder.record(size, value);
-
-          cursor = skipElement(value);
-        }
+             HtmlBytes.ELEMVOID8 -> { sum += valueRecorder.record(size, value); cursor = skipElement(value); }
 
         case HtmlBytes.THEADING8 -> { sum += valueRecorder.testableOnly(size, value); cursor += 2; }
         case HtmlBytes.THEADING16 -> { sum += valueRecorder.testableOnly(size, value); cursor += 3; }

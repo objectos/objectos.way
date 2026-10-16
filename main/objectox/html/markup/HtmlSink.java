@@ -139,13 +139,6 @@ public final class HtmlSink {
     return IntSize.of(codeIndex);
   }
 
-  public final void consume(int value) {
-    final byte original;
-    original = code[value];
-
-    code[value] = HtmlBytes.consume(original);
-  }
-
   @Override
   public final boolean equals(Object obj) {
     return obj == this || obj instanceof HtmlSink that
