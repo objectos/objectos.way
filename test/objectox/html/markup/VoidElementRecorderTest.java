@@ -17,7 +17,9 @@ package objectox.html.markup;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.function.Consumer;
 import objectos.html.Id;
+import objectos.html.markup.VoidElementValue;
 import objectos.script.Js;
 import objectos.script.JsAction;
 import objectox.html.attr.AttributeName;
@@ -29,30 +31,19 @@ public class VoidElementRecorderTest {
   @Test(description = """
   ElementAttributesRecorder delegation
   """)
-  public void attrs01() {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.addInt24(HtmlSink.MAX_INT24);
-      opts.addByte(HtmlBytes.ATTRIBUTE88);
-      opts.addInt8(AttributeName.ID.index());
-      opts.addInt8(opts.addObject("foo"));
-    });
+  public void testCase01() {
+    test(
+        opts -> {
+          opts.addInt24(HtmlSink.MAX_INT24);
+          opts.addByte(HtmlBytes.ATTRIBUTE88);
+          opts.addInt8(AttributeName.ID.index());
+          opts.addInt8(opts.addObject("foo"));
+        },
 
-    final VoidElementRecorder subject;
-    subject = create(sink);
+        ElementName.IMG, v(new AttributePointer(3)),
+        6,
 
-    final AttributePointer pointer;
-    pointer = new AttributePointer(3);
-
-    final ElementPointer res;
-    res = subject.record(ElementName.IMG, pointer);
-
-    assertEquals(res.value(), 6);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
+        opts -> {
           opts.addInt24(HtmlSink.MAX_INT24);
           opts.addByte(HtmlBytes.xATTRIBUTE88);
           opts.addInt8(AttributeName.ID.index());
@@ -62,34 +53,23 @@ public class VoidElementRecorderTest {
           opts.addByte(HtmlBytes.VALUES8);
           opts.addInt8(1);
           opts.addInt8(3);
-        })
+        }
     );
   }
 
   @Test(description = """
   Attribute object (savepoint rollback + pre-record)
   """)
-  public void regularAttribute04() {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.addInt24(HtmlSink.MAX_INT24);
-    });
+  public void testCase02() {
+    test(
+        opts -> {
+          opts.addInt24(HtmlSink.MAX_INT24);
+        },
 
-    final VoidElementRecorder subject;
-    subject = create(sink);
+        ElementName.INPUT, v(Id.of("foo")),
+        6,
 
-    final Id id;
-    id = Id.of("foo");
-
-    final ElementPointer res;
-    res = subject.record(ElementName.INPUT, id);
-
-    assertEquals(res.value(), 6);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
+        opts -> {
           opts.addInt24(HtmlSink.MAX_INT24);
           opts.addByte(HtmlBytes.xATTRIBUTE88);
           opts.addInt8(AttributeName.ID.index());
@@ -99,7 +79,7 @@ public class VoidElementRecorderTest {
           opts.addByte(HtmlBytes.VALUES8);
           opts.addInt8(1);
           opts.addInt8(3);
-        })
+        }
     );
   }
 
@@ -110,36 +90,22 @@ public class VoidElementRecorderTest {
   - name (8 bit)
   - void elem
   """)
-  public void regularAttribute06() {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.addInt24(HtmlSink.MAX_INT24);
-      opts.addByte(HtmlBytes.ATTRIBUTE88);
-      opts.addInt8(AttributeName.TYPE.index());
-      opts.addInt8(opts.addObject("text"));
-      opts.addByte(HtmlBytes.ATTRIBUTE88);
-      opts.addInt8(AttributeName.SIZE.index());
-      opts.addInt8(opts.addObject("30"));
-    });
+  public void testCase03() {
+    test(
+        opts -> {
+          opts.addInt24(HtmlSink.MAX_INT24);
+          opts.addByte(HtmlBytes.ATTRIBUTE88);
+          opts.addInt8(AttributeName.TYPE.index());
+          opts.addInt8(opts.addObject("text"));
+          opts.addByte(HtmlBytes.ATTRIBUTE88);
+          opts.addInt8(AttributeName.SIZE.index());
+          opts.addInt8(opts.addObject("30"));
+        },
 
-    final VoidElementRecorder subject;
-    subject = create(sink);
+        ElementName.INPUT, v(new AttributePointer(3), new AttributePointer(6)),
+        9,
 
-    final AttributePointer type;
-    type = new AttributePointer(3);
-
-    final AttributePointer size;
-    size = new AttributePointer(6);
-
-    final ElementPointer res;
-    res = subject.record(ElementName.INPUT, type, size);
-
-    assertEquals(res.value(), 9);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
+        opts -> {
           opts.addInt24(HtmlSink.MAX_INT24);
           opts.addByte(HtmlBytes.xATTRIBUTE88);
           opts.addInt8(AttributeName.TYPE.index());
@@ -153,40 +119,29 @@ public class VoidElementRecorderTest {
           opts.addInt8(2);
           opts.addInt8(3);
           opts.addInt8(6);
-        })
+        }
     );
   }
 
   @Test(description = """
   Attribute jsaction (savepoint rollback + pre-record)
   """)
-  public void jsActionAttribute02() {
+  public void testCase04() {
     final JsAction action;
     action = Js.noop();
 
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.addInt24(HtmlSink.MAX_INT24);
-      opts.addByte(HtmlBytes.JSACTION88);
-      opts.addInt8(AttributeName.ONCLICK.index());
-      opts.addInt8(opts.addObject(action));
-    });
+    test(
+        opts -> {
+          opts.addInt24(HtmlSink.MAX_INT24);
+          opts.addByte(HtmlBytes.JSACTION88);
+          opts.addInt8(AttributeName.ONCLICK.index());
+          opts.addInt8(opts.addObject(action));
+        },
 
-    final VoidElementRecorder subject;
-    subject = create(sink);
+        ElementName.INPUT, v(new AttributePointer(3)),
+        6,
 
-    final AttributePointer pointer;
-    pointer = new AttributePointer(3);
-
-    final ElementPointer res;
-    res = subject.record(ElementName.INPUT, pointer);
-
-    assertEquals(res.value(), 6);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
+        opts -> {
           opts.addInt24(HtmlSink.MAX_INT24);
           opts.addByte(HtmlBytes.xJSACTION88);
           opts.addInt8(AttributeName.ONCLICK.index());
@@ -196,41 +151,41 @@ public class VoidElementRecorderTest {
           opts.addByte(HtmlBytes.VALUES8);
           opts.addInt8(1);
           opts.addInt8(3);
-        })
+        }
     );
   }
 
   @Test(description = """
   void element without values
   """)
-  public void void01() {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.addInt24(HtmlSink.MAX_INT24);
-    });
+  public void testCase05() {
+    test(
+        opts -> {
+          opts.addInt24(HtmlSink.MAX_INT24);
+        },
 
-    final VoidElementRecorder subject;
-    subject = create(sink);
+        ElementName.HR, v(),
+        3,
 
-    final ElementPointer res;
-    res = subject.record(ElementName.HR);
-
-    assertEquals(res.value(), 3);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
+        opts -> {
           opts.addInt24(HtmlSink.MAX_INT24);
           opts.addByte(HtmlBytes.ELEMVOID8);
           opts.addInt8(ElementName.HR.index());
           opts.addByte(HtmlBytes.VALUES8);
           opts.addInt8(0);
-        })
+        }
     );
   }
 
-  private VoidElementRecorder create(HtmlSink sink) {
+  private void test(
+      Consumer<? super HtmlSink> input,
+      ElementName name, VoidElementValue[] values,
+      int pointer,
+      Consumer<? super HtmlSink> expected
+  ) {
+    final HtmlSink sink;
+    sink = HtmlSinkY.create(input);
+
     final ValueRecorder valueRecorder;
     valueRecorder = new ValueRecorder(sink);
 
@@ -252,7 +207,22 @@ public class VoidElementRecorderTest {
     final ElementPreRecorder elementPreRecorder;
     elementPreRecorder = new ElementPreRecorder(attributeRecorder, booleanAttributeRecorder, fragmentRecorder);
 
-    return new VoidElementRecorder(sink, attributesRecorder, elementPreRecorder);
+    final VoidElementRecorder subject;
+    subject = new VoidElementRecorder(sink, attributesRecorder, elementPreRecorder);
+
+    final ElementPointer res;
+    res = subject.record(name, values);
+
+    assertEquals(res.value(), pointer);
+
+    final HtmlSink out;
+    out = HtmlSinkY.create(expected);
+
+    assertEquals(sink, out);
+  }
+
+  private VoidElementValue[] v(VoidElementValue... values) {
+    return values;
   }
 
 }

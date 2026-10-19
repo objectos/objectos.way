@@ -17,9 +17,122 @@ package objectox.html;
 
 import static org.testng.Assert.assertEquals;
 
+import objectox.html.markup.HtmlBytes;
 import org.testng.annotations.Test;
 
 public class IntSizeTest {
+
+  @Test(description = "equal values are BIT8")
+  public void max01() {
+    final IntSize res;
+    res = IntSize.max(1, 1);
+
+    assertEquals(res, IntSize.BIT8);
+  }
+
+  @Test(description = "max BIT8 value in a")
+  public void max02() {
+    final IntSize res;
+    res = IntSize.max(255, 0);
+
+    assertEquals(res, IntSize.BIT8);
+  }
+
+  @Test(description = "max BIT8 value in b")
+  public void max03() {
+    final IntSize res;
+    res = IntSize.max(0, 255);
+
+    assertEquals(res, IntSize.BIT8);
+  }
+
+  @Test(description = "max BIT16 value in b")
+  public void max04() {
+    final IntSize res;
+    res = IntSize.max(255, 256);
+
+    assertEquals(res, IntSize.BIT16);
+  }
+
+  @Test(description = "max BIT16 value in a")
+  public void max05() {
+    final IntSize res;
+    res = IntSize.max(256, 255);
+
+    assertEquals(res, IntSize.BIT16);
+  }
+
+  @Test(description = "max BIT16 value in a and b")
+  public void max06() {
+    final IntSize res;
+    res = IntSize.max(65535, 65535);
+
+    assertEquals(res, IntSize.BIT16);
+  }
+
+  @Test(description = "max BIT24 value in b")
+  public void max07() {
+    final IntSize res;
+    res = IntSize.max(65535, 65536);
+
+    assertEquals(res, IntSize.BIT24);
+  }
+
+  @Test(description = "max BIT24 value in a and b")
+  public void max08() {
+    final IntSize res;
+    res = IntSize.max(65536, 16777215);
+
+    assertEquals(res, IntSize.BIT24);
+  }
+
+  @Test(description = "zero values are BIT8")
+  public void max09() {
+    final IntSize res;
+    res = IntSize.max(0, 0);
+
+    assertEquals(res, IntSize.BIT8);
+  }
+
+  @Test(
+      description = "reject negative a and b",
+      expectedExceptions = IllegalArgumentException.class,
+      expectedExceptionsMessageRegExp = "Illegal int value: negative values \\(-1\\) are now allowed")
+  public void max10() {
+    IntSize.max(-1, -1);
+  }
+
+  @Test(
+      description = "reject negative maximum",
+      expectedExceptions = IllegalArgumentException.class,
+      expectedExceptionsMessageRegExp = "Illegal int value: negative values \\(-1\\) are now allowed")
+  public void max11() {
+    IntSize.max(-5, -1);
+  }
+
+  @Test(description = "negative a ignored when b is greater")
+  public void max12() {
+    final IntSize res;
+    res = IntSize.max(-1, 255);
+
+    assertEquals(res, IntSize.BIT8);
+  }
+
+  @Test(
+      description = "reject too large a",
+      expectedExceptions = IllegalArgumentException.class,
+      expectedExceptionsMessageRegExp = "Illegal int value: \\(16777216\\) is too large")
+  public void max13() {
+    IntSize.max(16777216, 0);
+  }
+
+  @Test(
+      description = "reject too large b",
+      expectedExceptions = IllegalArgumentException.class,
+      expectedExceptionsMessageRegExp = "Illegal int value: \\(16777216\\) is too large")
+  public void max14() {
+    IntSize.max(0, 16777216);
+  }
 
   @Test(
       description = "reject negative value",
@@ -133,116 +246,76 @@ public class IntSizeTest {
     assertEquals(res, 8);
   }
 
-  @Test(description = "equal values are BIT8")
-  public void max01() {
-    final IntSize res;
-    res = IntSize.max(1, 1);
+  @Test(description = "BIT8 is ELEMSTR8")
+  public void toRegularStartTagByte01() {
+    final byte res;
+    res = IntSize.BIT8.toRegularStartTagByte();
 
-    assertEquals(res, IntSize.BIT8);
-  }
-
-  @Test(description = "max BIT8 value in a")
-  public void max02() {
-    final IntSize res;
-    res = IntSize.max(255, 0);
-
-    assertEquals(res, IntSize.BIT8);
-  }
-
-  @Test(description = "max BIT8 value in b")
-  public void max03() {
-    final IntSize res;
-    res = IntSize.max(0, 255);
-
-    assertEquals(res, IntSize.BIT8);
-  }
-
-  @Test(description = "max BIT16 value in b")
-  public void max04() {
-    final IntSize res;
-    res = IntSize.max(255, 256);
-
-    assertEquals(res, IntSize.BIT16);
-  }
-
-  @Test(description = "max BIT16 value in a")
-  public void max05() {
-    final IntSize res;
-    res = IntSize.max(256, 255);
-
-    assertEquals(res, IntSize.BIT16);
-  }
-
-  @Test(description = "max BIT16 value in a and b")
-  public void max06() {
-    final IntSize res;
-    res = IntSize.max(65535, 65535);
-
-    assertEquals(res, IntSize.BIT16);
-  }
-
-  @Test(description = "max BIT24 value in b")
-  public void max07() {
-    final IntSize res;
-    res = IntSize.max(65535, 65536);
-
-    assertEquals(res, IntSize.BIT24);
-  }
-
-  @Test(description = "max BIT24 value in a and b")
-  public void max08() {
-    final IntSize res;
-    res = IntSize.max(65536, 16777215);
-
-    assertEquals(res, IntSize.BIT24);
-  }
-
-  @Test(description = "zero values are BIT8")
-  public void max09() {
-    final IntSize res;
-    res = IntSize.max(0, 0);
-
-    assertEquals(res, IntSize.BIT8);
+    assertEquals(res, HtmlBytes.ELEMSTR8);
   }
 
   @Test(
-      description = "reject negative a and b",
-      expectedExceptions = IllegalArgumentException.class,
-      expectedExceptionsMessageRegExp = "Illegal int value: negative values \\(-1\\) are now allowed")
-  public void max10() {
-    IntSize.max(-1, -1);
+      description = "BIT16 is unsupported",
+      expectedExceptions = UnsupportedOperationException.class,
+      expectedExceptionsMessageRegExp = "toRegularStartTagByte: BIT16")
+  public void toRegularStartTagByte02() {
+    IntSize.BIT16.toRegularStartTagByte();
   }
 
   @Test(
-      description = "reject negative maximum",
-      expectedExceptions = IllegalArgumentException.class,
-      expectedExceptionsMessageRegExp = "Illegal int value: negative values \\(-1\\) are now allowed")
-  public void max11() {
-    IntSize.max(-5, -1);
+      description = "BIT24 is unsupported",
+      expectedExceptions = UnsupportedOperationException.class,
+      expectedExceptionsMessageRegExp = "toRegularStartTagByte: BIT24")
+  public void toRegularStartTagByte03() {
+    IntSize.BIT24.toRegularStartTagByte();
   }
 
-  @Test(description = "negative a ignored when b is greater")
-  public void max12() {
-    final IntSize res;
-    res = IntSize.max(-1, 255);
+  @Test(description = "BIT8 is VALUES8")
+  public void toValuesByte01() {
+    final byte res;
+    res = IntSize.BIT8.toValuesByte();
 
-    assertEquals(res, IntSize.BIT8);
+    assertEquals(res, HtmlBytes.VALUES8);
+  }
+
+  @Test(description = "BIT16 is VALUES16")
+  public void toValuesByte02() {
+    final byte res;
+    res = IntSize.BIT16.toValuesByte();
+
+    assertEquals(res, HtmlBytes.VALUES16);
+  }
+
+  @Test(description = "BIT24 is VALUES24")
+  public void toValuesByte03() {
+    final byte res;
+    res = IntSize.BIT24.toValuesByte();
+
+    assertEquals(res, HtmlBytes.VALUES24);
+  }
+
+  @Test(description = "BIT8 is ELEMVOID8")
+  public void toVoidStartTagByte01() {
+    final byte res;
+    res = IntSize.BIT8.toVoidStartTagByte();
+
+    assertEquals(res, HtmlBytes.ELEMVOID8);
   }
 
   @Test(
-      description = "reject too large a",
-      expectedExceptions = IllegalArgumentException.class,
-      expectedExceptionsMessageRegExp = "Illegal int value: \\(16777216\\) is too large")
-  public void max13() {
-    IntSize.max(16777216, 0);
+      description = "BIT16 is unsupported",
+      expectedExceptions = UnsupportedOperationException.class,
+      expectedExceptionsMessageRegExp = "toVoidStartTagByte: BIT16")
+  public void toVoidStartTagByte02() {
+    IntSize.BIT16.toVoidStartTagByte();
   }
 
   @Test(
-      description = "reject too large b",
-      expectedExceptions = IllegalArgumentException.class,
-      expectedExceptionsMessageRegExp = "Illegal int value: \\(16777216\\) is too large")
-  public void max14() {
-    IntSize.max(0, 16777216);
+      description = "BIT24 is unsupported",
+      expectedExceptions = UnsupportedOperationException.class,
+      expectedExceptionsMessageRegExp = "toVoidStartTagByte: BIT24")
+  public void toVoidStartTagByte03() {
+    IntSize.BIT24.toVoidStartTagByte();
   }
 
 }

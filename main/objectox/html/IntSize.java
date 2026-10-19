@@ -15,6 +15,7 @@
  */
 package objectox.html;
 
+import objectox.html.markup.HtmlBytes;
 import objectox.html.markup.HtmlSink;
 
 public enum IntSize {
@@ -77,6 +78,32 @@ public enum IntSize {
       case BIT16 -> index + 2;
 
       case BIT24 -> index + 3;
+    };
+  }
+
+  public final byte toRegularStartTagByte() {
+    return switch (this) {
+      case BIT8 -> HtmlBytes.ELEMSTR8;
+
+      case BIT16, BIT24 -> throw new UnsupportedOperationException("toRegularStartTagByte: " + name());
+    };
+  }
+
+  public final byte toValuesByte() {
+    return switch (this) {
+      case BIT8 -> HtmlBytes.VALUES8;
+
+      case BIT16 -> HtmlBytes.VALUES16;
+
+      case BIT24 -> HtmlBytes.VALUES24;
+    };
+  }
+
+  public final byte toVoidStartTagByte() {
+    return switch (this) {
+      case BIT8 -> HtmlBytes.ELEMVOID8;
+
+      case BIT16, BIT24 -> throw new UnsupportedOperationException("toVoidStartTagByte: " + name());
     };
   }
 

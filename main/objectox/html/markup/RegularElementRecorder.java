@@ -47,21 +47,21 @@ final class RegularElementRecorder {
     return record(elementName, values);
   }
 
-  public final ElementPointer record(ElementName name, RegularElementValue... $values) {
-    final RegularElementValue[] values;
-    values = Objects.requireNonNull($values, "values == null");
+  public final ElementPointer record(ElementName name, RegularElementValue... values) {
+    final RegularElementValue[] vals;
+    vals = Objects.requireNonNull(values, "values == null");
 
     final int savepoint;
     savepoint = sink.codeIndex();
 
     try {
-      return record0(name, values);
+      return record0(name, vals);
     } catch (ObjectAttributeDetected e) {
       sink.codeIndex(savepoint);
 
-      preRecorder.record(values);
+      preRecorder.record(vals);
 
-      return record0(name, values);
+      return record0(name, vals);
     }
   }
 
@@ -72,14 +72,24 @@ final class RegularElementRecorder {
     final IntSize nameSize;
     nameSize = IntSize.of(nameIndex);
 
+    final byte opcode;
+    opcode = nameSize.toRegularStartTagByte();
+
     final int startIndex;
-    startIndex = startTag(nameIndex, nameSize);
+    startIndex = sink.addByte(opcode);
+
+    sink.addInt8(nameIndex);
 
     final IntSize valuesSize;
     valuesSize = sink.codeSize();
 
+    final byte valuesByte;
+    valuesByte = valuesSize.toValuesByte();
+
+    sink.addByte(valuesByte);
+
     final int valuesIndex;
-    valuesIndex = valuesBytes(valuesSize);
+    valuesIndex = sink.addInt(valuesSize, 0);
 
     final int attributes;
     attributes = attributesRecorder.record(name, valuesSize, values);
@@ -93,38 +103,6 @@ final class RegularElementRecorder {
     sink.setInt(valuesSize, valuesIndex, size);
 
     return new ElementPointer(startIndex);
-  }
-
-  private int startTag(int nameIndex, IntSize nameSize) {
-    return switch (nameSize) {
-      case BIT8 -> startTag8(nameIndex);
-
-      case BIT16, BIT24 -> throw new UnsupportedOperationException();
-    };
-  }
-
-  private int startTag8(int nameIndex) {
-    final int startIndex;
-    startIndex = sink.addByte(HtmlBytes.ELEMSTR8);
-
-    sink.addInt8(nameIndex);
-
-    return startIndex;
-  }
-
-  private int valuesBytes(IntSize size) {
-    final byte values;
-    values = switch (size) {
-      case BIT8 -> HtmlBytes.VALUES8;
-
-      case BIT16 -> HtmlBytes.VALUES16;
-
-      case BIT24 -> HtmlBytes.VALUES24;
-    };
-
-    sink.addByte(values);
-
-    return sink.addInt(size, 0);
   }
 
 }
