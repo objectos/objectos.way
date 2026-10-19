@@ -17,230 +17,243 @@ package objectox.html.markup;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.function.Consumer;
+import objectos.html.ClassName;
+import objectos.html.Component;
+import objectos.html.Id;
+import objectos.html.Markup;
 import objectox.html.IntSize;
-import objectox.html.attr.AttributeName;
 import objectox.html.elem.ElementName;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class ElementChildrenRecorderTest {
 
-  @Test(description = "attribute is not a child; sink unchanged")
-  public void attribute01() {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.addInt24(HtmlSink.MAX_INT24);
-      opts.addByte(HtmlBytes.ATTRIBUTE88);
-      opts.addInt8(AttributeName.ID.index());
-      opts.addInt8(opts.addObject("foo"));
-    });
+  @DataProvider
+  public Object[][] testCase01Provider() {
+    final Component component;
+    component = _ -> {};
 
-    final ElementChildrenRecorder subject;
-    subject = create(sink);
+    return new Object[][] {
+        {new AttributePointer(3)},
+        {Markup.checked},
+        {ClassName.of("block")},
+        {component},
+        {Id.of("foo")},
+        {NoOpMarkupPojo.INSTANCE}
+    };
+  }
 
-    final IntSize size;
-    size = IntSize.BIT8;
-
-    final AttributePointer pointer;
-    pointer = new AttributePointer(3);
-
-    final int res;
-    res = subject.record(size, pointer);
-
-    assertEquals(res, 0);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
+  @Test(dataProvider = "testCase01Provider", description = "not a child; sink unchanged")
+  public void testCase01(ElementValue value) {
+    test(
+        opts -> {
           opts.addInt24(HtmlSink.MAX_INT24);
-          opts.addByte(HtmlBytes.ATTRIBUTE88);
-          opts.addInt8(AttributeName.ID.index());
-          opts.addInt8(opts.addObject("foo"));
-        })
+        },
+
+        IntSize.BIT8, value,
+        0,
+
+        opts -> {
+          opts.addInt24(HtmlSink.MAX_INT24);
+        }
     );
   }
 
-  @Test
-  public void element01() {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.addInt24(HtmlSink.MAX_INT24);
-      opts.addByte(HtmlBytes.ELEMSTR8);
-      opts.addInt8(ElementName.HEAD.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt24(0);
-    });
+  @Test(description = "ValueRecorder delegation (ElementPointer)")
+  public void testCase02() {
+    test(
+        opts -> {
+          opts.addInt24(HtmlSink.MAX_INT24);
+          opts.addByte(HtmlBytes.ELEMSTR8);
+          opts.addInt8(ElementName.HEAD.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt24(0);
+        },
 
-    final ElementChildrenRecorder subject;
-    subject = create(sink);
+        IntSize.BIT8, new ElementPointer(3),
+        1,
 
-    final IntSize size;
-    size = IntSize.BIT8;
-
-    final ElementPointer pointer;
-    pointer = new ElementPointer(3);
-
-    final int res;
-    res = subject.record(size, pointer);
-
-    assertEquals(res, 1);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
+        opts -> {
           opts.addInt24(HtmlSink.MAX_INT24);
           opts.addByte(HtmlBytes.xELEMSTR8);
           opts.addInt8(ElementName.HEAD.index());
           opts.addByte(HtmlBytes.VALUES8);
           opts.addInt24(0);
           opts.addInt8(3);
-        })
+        }
     );
   }
 
-  @Test(description = "no-op is not a child; sink unchanged")
-  public void noop01() {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.addInt24(HtmlSink.MAX_INT24);
-    });
-
-    final ElementChildrenRecorder subject;
-    subject = create(sink);
-
-    final IntSize size;
-    size = IntSize.BIT8;
-
-    final int res;
-    res = subject.record(size, NoOpMarkupPojo.INSTANCE);
-
-    assertEquals(res, 0);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
+  @Test(description = "ValueRecorder delegation (RawPointer)")
+  public void testCase03() {
+    test(
+        opts -> {
           opts.addInt24(HtmlSink.MAX_INT24);
-        })
-    );
-  }
+          opts.addByte(HtmlBytes.RAW8);
+          opts.addInt8(opts.addObject("ipsum"));
+        },
 
-  @Test(description = "raw node child")
-  public void raw01() {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.addInt24(HtmlSink.MAX_INT24);
-      opts.addByte(HtmlBytes.RAW8);
-      opts.addInt8(opts.addObject("ipsum"));
-    });
+        IntSize.BIT8, new RawPointer(3),
+        1,
 
-    final ElementChildrenRecorder subject;
-    subject = create(sink);
-
-    final IntSize size;
-    size = IntSize.BIT8;
-
-    final RawPointer pointer;
-    pointer = new RawPointer(3);
-
-    final int res;
-    res = subject.record(size, pointer);
-
-    assertEquals(res, 1);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
+        opts -> {
           opts.addInt24(HtmlSink.MAX_INT24);
           opts.addByte(HtmlBytes.xRAW8);
           opts.addInt8(opts.addObject("ipsum"));
           opts.addInt8(3);
-        })
+        }
     );
   }
 
-  @Test(description = "text node child")
-  public void text01() {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.addInt24(HtmlSink.MAX_INT24);
-      opts.addByte(HtmlBytes.TEXT8);
-      opts.addInt8(opts.addObject("ipsum"));
-    });
-
-    final ElementChildrenRecorder subject;
-    subject = create(sink);
-
-    final IntSize size;
-    size = IntSize.BIT8;
-
-    final TextPointer pointer;
-    pointer = new TextPointer(3);
-
-    final int res;
-    res = subject.record(size, pointer);
-
-    assertEquals(res, 1);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
+  @Test(description = "ValueRecorder delegation (TestableMarkupPointer)")
+  public void testCase04() {
+    test(
+        opts -> {
           opts.addInt24(HtmlSink.MAX_INT24);
-          opts.addByte(HtmlBytes.xTEXT8);
+          opts.addByte(HtmlBytes.THEADING8);
+          opts.addByte((byte) 1);
           opts.addInt8(opts.addObject("ipsum"));
-          opts.addInt8(3);
-        })
-    );
-  }
+        },
 
-  @Test(description = "testable node child")
-  public void test01() {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.addInt24(HtmlSink.MAX_INT24);
-      opts.addByte(HtmlBytes.THEADING8);
-      opts.addByte((byte) 1);
-      opts.addInt8(opts.addObject("ipsum"));
-    });
+        IntSize.BIT8, new TestableMarkupPointer(3),
+        1,
 
-    final ElementChildrenRecorder subject;
-    subject = create(sink);
-
-    final IntSize size;
-    size = IntSize.BIT8;
-
-    final TestableMarkupPointer pointer;
-    pointer = new TestableMarkupPointer(3);
-
-    final int res;
-    res = subject.record(size, pointer);
-
-    assertEquals(res, 1);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
+        opts -> {
           opts.addInt24(HtmlSink.MAX_INT24);
           opts.addByte(HtmlBytes.xTHEADING8);
           opts.addByte((byte) 1);
           opts.addInt8(opts.addObject("ipsum"));
           opts.addInt8(3);
-        })
+        }
     );
   }
 
-  private ElementChildrenRecorder create(HtmlSink sink) {
+  @Test(description = "ValueRecorder delegation (TextPointer)")
+  public void testCase05() {
+    test(
+        opts -> {
+          opts.addInt24(HtmlSink.MAX_INT24);
+          opts.addByte(HtmlBytes.TEXT8);
+          opts.addInt8(opts.addObject("ipsum"));
+        },
+
+        IntSize.BIT8, new TextPointer(3),
+        1,
+
+        opts -> {
+          opts.addInt24(HtmlSink.MAX_INT24);
+          opts.addByte(HtmlBytes.xTEXT8);
+          opts.addInt8(opts.addObject("ipsum"));
+          opts.addInt8(3);
+        }
+    );
+  }
+
+  @Test(description = "FragmentChildRecorder delegation (FragmentPointer)")
+  public void testCase06() {
+    test(
+        opts -> {
+          opts.addInt24(HtmlSink.MAX_INT24);
+          opts.addByte(HtmlBytes.FRAGSTR);
+          opts.addInt24(0);
+          opts.addByte(HtmlBytes.ELEMSTR8);
+          opts.addInt8(2);
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(0);
+          opts.addByte(HtmlBytes.FRAGEND);
+        },
+
+        IntSize.BIT8, new FragmentPointer(3),
+        1,
+
+        opts -> {
+          opts.addInt24(HtmlSink.MAX_INT24);
+          opts.addByte(HtmlBytes.xFRAGSTR);
+          opts.addInt24(0);
+          opts.addByte(HtmlBytes.xELEMSTR8);
+          opts.addInt8(2);
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(0);
+          opts.addByte(HtmlBytes.FRAGEND);
+          opts.addInt8(7);
+        }
+    );
+  }
+
+  @Test(description = "returns the sum of the processing of each input value")
+  public void testCase07() {
+    final ElementValue[] values;
+    values = new ElementValue[] {
+        NoOpMarkupPojo.INSTANCE,
+        new TextPointer(3),
+        new RawPointer(5),
+        new ElementPointer(7)
+    };
+
+    test(
+        opts -> {
+          opts.addInt24(HtmlSink.MAX_INT24);
+          opts.addByte(HtmlBytes.TEXT8);
+          opts.addInt8(opts.addObject("ipsum"));
+          opts.addByte(HtmlBytes.RAW8);
+          opts.addInt8(opts.addObject("more"));
+          opts.addByte(HtmlBytes.ELEMSTR8);
+        },
+
+        IntSize.BIT8, values,
+        3,
+
+        opts -> {
+          opts.addInt24(HtmlSink.MAX_INT24);
+          opts.addByte(HtmlBytes.xTEXT8);
+          opts.addInt8(opts.addObject("ipsum"));
+          opts.addByte(HtmlBytes.xRAW8);
+          opts.addInt8(opts.addObject("more"));
+          opts.addByte(HtmlBytes.xELEMSTR8);
+          opts.addInt8(3);
+          opts.addInt8(5);
+          opts.addInt8(7);
+        }
+    );
+  }
+
+  private void test(
+      Consumer<? super HtmlSink> input,
+      IntSize size, ElementValue value,
+      int sum,
+      Consumer<? super HtmlSink> expected
+  ) {
+    test(input, size, new ElementValue[] {value}, sum, expected);
+  }
+
+  private void test(
+      Consumer<? super HtmlSink> input,
+      IntSize size, ElementValue[] values,
+      int sum,
+      Consumer<? super HtmlSink> expected
+  ) {
+    final HtmlSink sink;
+    sink = HtmlSinkY.create(input);
+
     final ValueRecorder valueRecorder;
     valueRecorder = new ValueRecorder(sink);
 
     final FragmentChildRecorder fragmentChildRecorder;
     fragmentChildRecorder = new FragmentChildRecorder(sink, valueRecorder);
 
-    return new ElementChildrenRecorder(fragmentChildRecorder, valueRecorder);
+    final ElementChildrenRecorder subject;
+    subject = new ElementChildrenRecorder(fragmentChildRecorder, valueRecorder);
+
+    final int res;
+    res = subject.record(size, values);
+
+    assertEquals(res, sum);
+
+    final HtmlSink out;
+    out = HtmlSinkY.create(expected);
+
+    assertEquals(sink, out);
   }
 
 }
