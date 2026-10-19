@@ -89,6 +89,56 @@ public enum IntSize {
     };
   }
 
+  public final byte toTestableCellByte() {
+    return switch (this) {
+      case BIT8 -> HtmlBytes.TCELL8;
+
+      case BIT16 -> HtmlBytes.TCELL16;
+
+      case BIT24 -> HtmlBytes.TCELL24;
+    };
+  }
+
+  public final byte toTestableHeadingByte() {
+    return switch (this) {
+      case BIT8 -> HtmlBytes.THEADING8;
+
+      case BIT16 -> HtmlBytes.THEADING16;
+
+      case BIT24 -> HtmlBytes.THEADING24;
+    };
+  }
+
+  public final byte toTestablePropKeyByte() {
+    return switch (this) {
+      case BIT8 -> HtmlBytes.TPROPKEY8;
+
+      case BIT16 -> HtmlBytes.TPROPKEY16;
+
+      case BIT24 -> HtmlBytes.TPROPKEY24;
+    };
+  }
+
+  public final byte toTestablePropValueByte() {
+    return switch (this) {
+      case BIT8 -> HtmlBytes.TPROPVAL8;
+
+      case BIT16 -> HtmlBytes.TPROPVAL16;
+
+      case BIT24 -> HtmlBytes.TPROPVAL24;
+    };
+  }
+
+  public final byte toTestablePropertyByte() {
+    return switch (this) {
+      case BIT8 -> HtmlBytes.TPROP8;
+
+      case BIT16 -> HtmlBytes.TPROP16;
+
+      case BIT24 -> HtmlBytes.TPROP24;
+    };
+  }
+
   public final byte toValuesByte() {
     return switch (this) {
       case BIT8 -> HtmlBytes.VALUES8;

@@ -44,13 +44,7 @@ final class TestableRecorder {
     size = IntSize.max(width, valueIndex);
 
     final byte proto;
-    proto = switch (size) {
-      case BIT8 -> HtmlBytes.TCELL8;
-
-      case BIT16 -> HtmlBytes.TCELL16;
-
-      case BIT24 -> HtmlBytes.TCELL24;
-    };
+    proto = size.toTestableCellByte();
 
     final int startIndex;
     startIndex = sink.addByte(proto);
@@ -73,13 +67,7 @@ final class TestableRecorder {
     size = IntSize.of(valueIndex);
 
     final byte proto;
-    proto = switch (size) {
-      case BIT8 -> HtmlBytes.THEADING8;
-
-      case BIT16 -> HtmlBytes.THEADING16;
-
-      case BIT24 -> HtmlBytes.THEADING24;
-    };
+    proto = size.toTestableHeadingByte();
 
     final int startIndex;
     startIndex = sink.addByte(proto);
@@ -115,13 +103,7 @@ final class TestableRecorder {
     size = IntSize.max(keyIndex, valueIndex);
 
     final byte proto;
-    proto = switch (size) {
-      case BIT8 -> HtmlBytes.TPROP8;
-
-      case BIT16 -> HtmlBytes.TPROP16;
-
-      case BIT24 -> HtmlBytes.TPROP24;
-    };
+    proto = size.toTestablePropertyByte();
 
     final int startIndex;
     startIndex = sink.addByte(proto);
@@ -144,13 +126,7 @@ final class TestableRecorder {
     size = IntSize.of(keyIndex);
 
     final byte proto;
-    proto = switch (size) {
-      case BIT8 -> HtmlBytes.TPROPKEY8;
-
-      case BIT16 -> HtmlBytes.TPROPKEY16;
-
-      case BIT24 -> HtmlBytes.TPROPKEY24;
-    };
+    proto = size.toTestablePropKeyByte();
 
     final int startIndex;
     startIndex = sink.addByte(proto);
@@ -171,13 +147,7 @@ final class TestableRecorder {
     size = IntSize.of(valueIndex);
 
     final byte proto;
-    proto = switch (size) {
-      case BIT8 -> HtmlBytes.TPROPVAL8;
-
-      case BIT16 -> HtmlBytes.TPROPVAL16;
-
-      case BIT24 -> HtmlBytes.TPROPVAL24;
-    };
+    proto = size.toTestablePropValueByte();
 
     final int startIndex;
     startIndex = sink.addByte(proto);

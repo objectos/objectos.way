@@ -17,6 +17,8 @@ package objectox.html.markup;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.function.Consumer;
+import java.util.function.Function;
 import org.testng.annotations.Test;
 
 public class TestableRecorderTest {
@@ -39,27 +41,17 @@ public class TestableRecorderTest {
   a testable heading is recorded with the THEADING8 opcode when the object index fits in 1 byte
   """)
   public void heading02() {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.objectsIndex(HtmlSink.FIRST_INT8);
-    });
+    test(
+        _ -> {},
 
-    final TestableRecorder subject;
-    subject = new TestableRecorder(sink);
+        subject -> subject.heading(1, "Ipsum"),
+        0,
 
-    final TestableMarkupPointer res;
-    res = subject.heading(1, "Ipsum");
-
-    assertEquals(res.value(), 0);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
+        opts -> {
           opts.addByte(HtmlBytes.THEADING8);
           opts.addByte((byte) 1);
           opts.addInt8(opts.addObject("Ipsum"));
-        })
+        }
     );
   }
 
@@ -67,28 +59,20 @@ public class TestableRecorderTest {
   a testable heading is recorded with the THEADING16 opcode when the object index fits in 2 bytes
   """)
   public void heading03() {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.objectsIndex(HtmlSink.FIRST_INT16);
-    });
+    test(
+        opts -> {
+          opts.objectsIndex(HtmlSink.FIRST_INT16);
+        },
 
-    final TestableRecorder subject;
-    subject = new TestableRecorder(sink);
+        subject -> subject.heading(6, "Ipsum"),
+        0,
 
-    final TestableMarkupPointer res;
-    res = subject.heading(6, "Ipsum");
-
-    assertEquals(res.value(), 0);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
+        opts -> {
           opts.objectsIndex(HtmlSink.FIRST_INT16);
           opts.addByte(HtmlBytes.THEADING16);
           opts.addByte((byte) 6);
           opts.addInt16(opts.addObject("Ipsum"));
-        })
+        }
     );
   }
 
@@ -96,55 +80,39 @@ public class TestableRecorderTest {
   a testable heading is recorded with the THEADING24 opcode when the object index fits in 3 bytes
   """)
   public void heading04() {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.objectsIndex(HtmlSink.FIRST_INT24);
-    });
+    test(
+        opts -> {
+          opts.objectsIndex(HtmlSink.FIRST_INT24);
+        },
 
-    final TestableRecorder subject;
-    subject = new TestableRecorder(sink);
+        subject -> subject.heading(3, "Ipsum"),
+        0,
 
-    final TestableMarkupPointer res;
-    res = subject.heading(3, "Ipsum");
-
-    assertEquals(res.value(), 0);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
+        opts -> {
           opts.objectsIndex(HtmlSink.FIRST_INT24);
           opts.addByte(HtmlBytes.THEADING24);
           opts.addByte((byte) 3);
           opts.addInt24(opts.addObject("Ipsum"));
-        })
+        }
     );
   }
 
   @Test(description = "the returned markup pointer is the first available index in the code array")
   public void heading05() {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.addInt24(0);
-    });
+    test(
+        opts -> {
+          opts.addInt24(0);
+        },
 
-    final TestableRecorder subject;
-    subject = new TestableRecorder(sink);
+        subject -> subject.heading(1, "Ipsum"),
+        3,
 
-    final TestableMarkupPointer res;
-    res = subject.heading(1, "Ipsum");
-
-    assertEquals(res.value(), 3);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
+        opts -> {
           opts.addInt24(0);
           opts.addByte(HtmlBytes.THEADING8);
           opts.addByte((byte) 1);
           opts.addInt8(opts.addObject("Ipsum"));
-        })
+        }
     );
   }
 
@@ -180,25 +148,17 @@ public class TestableRecorderTest {
   a testable cell is recorded with the TCELL8 opcode when both the width and the object index fit in 1 byte
   """)
   public void cell03() {
-    final HtmlSink sink;
-    sink = new HtmlSink();
+    test(
+        _ -> {},
 
-    final TestableRecorder subject;
-    subject = new TestableRecorder(sink);
+        subject -> subject.cell(3, "Ipsum"),
+        0,
 
-    final TestableMarkupPointer res;
-    res = subject.cell(3, "Ipsum");
-
-    assertEquals(res.value(), 0);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
+        opts -> {
           opts.addByte(HtmlBytes.TCELL8);
           opts.addInt8(3);
           opts.addInt8(opts.addObject("Ipsum"));
-        })
+        }
     );
   }
 
@@ -206,25 +166,17 @@ public class TestableRecorderTest {
   a testable cell is recorded with the TCELL16 opcode when the width does not fit in 1 byte
   """)
   public void cell04() {
-    final HtmlSink sink;
-    sink = new HtmlSink();
+    test(
+        _ -> {},
 
-    final TestableRecorder subject;
-    subject = new TestableRecorder(sink);
+        subject -> subject.cell(256, "Ipsum"),
+        0,
 
-    final TestableMarkupPointer res;
-    res = subject.cell(256, "Ipsum");
-
-    assertEquals(res.value(), 0);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
+        opts -> {
           opts.addByte(HtmlBytes.TCELL16);
           opts.addInt16(256);
           opts.addInt16(opts.addObject("Ipsum"));
-        })
+        }
     );
   }
 
@@ -232,28 +184,20 @@ public class TestableRecorderTest {
   a testable cell is recorded with the TCELL16 opcode when the object index does not fit in 1 byte
   """)
   public void cell05() {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.objectsIndex(HtmlSink.FIRST_INT16);
-    });
+    test(
+        opts -> {
+          opts.objectsIndex(HtmlSink.FIRST_INT16);
+        },
 
-    final TestableRecorder subject;
-    subject = new TestableRecorder(sink);
+        subject -> subject.cell(1, "Ipsum"),
+        0,
 
-    final TestableMarkupPointer res;
-    res = subject.cell(1, "Ipsum");
-
-    assertEquals(res.value(), 0);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
+        opts -> {
           opts.objectsIndex(HtmlSink.FIRST_INT16);
           opts.addByte(HtmlBytes.TCELL16);
           opts.addInt16(1);
           opts.addInt16(opts.addObject("Ipsum"));
-        })
+        }
     );
   }
 
@@ -261,25 +205,17 @@ public class TestableRecorderTest {
   a testable cell is recorded with the TCELL24 opcode when the width does not fit in 2 bytes
   """)
   public void cell06() {
-    final HtmlSink sink;
-    sink = new HtmlSink();
+    test(
+        _ -> {},
 
-    final TestableRecorder subject;
-    subject = new TestableRecorder(sink);
+        subject -> subject.cell(65536, "Ipsum"),
+        0,
 
-    final TestableMarkupPointer res;
-    res = subject.cell(65536, "Ipsum");
-
-    assertEquals(res.value(), 0);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
+        opts -> {
           opts.addByte(HtmlBytes.TCELL24);
           opts.addInt24(65536);
           opts.addInt24(opts.addObject("Ipsum"));
-        })
+        }
     );
   }
 
@@ -287,55 +223,39 @@ public class TestableRecorderTest {
   a testable cell is recorded with the TCELL24 opcode when the object index does not fit in 2 bytes
   """)
   public void cell07() {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.objectsIndex(HtmlSink.FIRST_INT24);
-    });
+    test(
+        opts -> {
+          opts.objectsIndex(HtmlSink.FIRST_INT24);
+        },
 
-    final TestableRecorder subject;
-    subject = new TestableRecorder(sink);
+        subject -> subject.cell(1, "Ipsum"),
+        0,
 
-    final TestableMarkupPointer res;
-    res = subject.cell(1, "Ipsum");
-
-    assertEquals(res.value(), 0);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
+        opts -> {
           opts.objectsIndex(HtmlSink.FIRST_INT24);
           opts.addByte(HtmlBytes.TCELL24);
           opts.addInt24(1);
           opts.addInt24(opts.addObject("Ipsum"));
-        })
+        }
     );
   }
 
   @Test(description = "the returned markup pointer is the first available index in the code array")
   public void cell08() {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.addInt24(0);
-    });
+    test(
+        opts -> {
+          opts.addInt24(0);
+        },
 
-    final TestableRecorder subject;
-    subject = new TestableRecorder(sink);
+        subject -> subject.cell(3, "Ipsum"),
+        3,
 
-    final TestableMarkupPointer res;
-    res = subject.cell(3, "Ipsum");
-
-    assertEquals(res.value(), 3);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
+        opts -> {
           opts.addInt24(0);
           opts.addByte(HtmlBytes.TCELL8);
           opts.addInt8(3);
           opts.addInt8(opts.addObject("Ipsum"));
-        })
+        }
     );
   }
 
@@ -371,25 +291,17 @@ public class TestableRecorderTest {
   a testable property is recorded with the TPROP8 opcode when both object indices fit in 1 byte
   """)
   public void property03() {
-    final HtmlSink sink;
-    sink = new HtmlSink();
+    test(
+        _ -> {},
 
-    final TestableRecorder subject;
-    subject = new TestableRecorder(sink);
+        subject -> subject.property("foo", "bar"),
+        0,
 
-    final TestableMarkupPointer res;
-    res = subject.property("foo", "bar");
-
-    assertEquals(res.value(), 0);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
+        opts -> {
           opts.addByte(HtmlBytes.TPROP8);
           opts.addInt8(opts.addObject("foo"));
           opts.addInt8(opts.addObject("bar"));
-        })
+        }
     );
   }
 
@@ -397,28 +309,20 @@ public class TestableRecorderTest {
   a testable property is recorded with the TPROP16 opcode when the object indices fit in 2 bytes
   """)
   public void property04() {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.objectsIndex(HtmlSink.FIRST_INT16);
-    });
+    test(
+        opts -> {
+          opts.objectsIndex(HtmlSink.FIRST_INT16);
+        },
 
-    final TestableRecorder subject;
-    subject = new TestableRecorder(sink);
+        subject -> subject.property("foo", "bar"),
+        0,
 
-    final TestableMarkupPointer res;
-    res = subject.property("foo", "bar");
-
-    assertEquals(res.value(), 0);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
+        opts -> {
           opts.objectsIndex(HtmlSink.FIRST_INT16);
           opts.addByte(HtmlBytes.TPROP16);
           opts.addInt16(opts.addObject("foo"));
           opts.addInt16(opts.addObject("bar"));
-        })
+        }
     );
   }
 
@@ -426,55 +330,39 @@ public class TestableRecorderTest {
   a testable property is recorded with the TPROP24 opcode when the object indices fit in 3 bytes
   """)
   public void property05() {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.objectsIndex(HtmlSink.FIRST_INT24);
-    });
+    test(
+        opts -> {
+          opts.objectsIndex(HtmlSink.FIRST_INT24);
+        },
 
-    final TestableRecorder subject;
-    subject = new TestableRecorder(sink);
+        subject -> subject.property("foo", "bar"),
+        0,
 
-    final TestableMarkupPointer res;
-    res = subject.property("foo", "bar");
-
-    assertEquals(res.value(), 0);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
+        opts -> {
           opts.objectsIndex(HtmlSink.FIRST_INT24);
           opts.addByte(HtmlBytes.TPROP24);
           opts.addInt24(opts.addObject("foo"));
           opts.addInt24(opts.addObject("bar"));
-        })
+        }
     );
   }
 
   @Test(description = "the returned markup pointer is the first available index in the code array")
   public void property06() {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.addInt24(0);
-    });
+    test(
+        opts -> {
+          opts.addInt24(0);
+        },
 
-    final TestableRecorder subject;
-    subject = new TestableRecorder(sink);
+        subject -> subject.property("foo", "bar"),
+        3,
 
-    final TestableMarkupPointer res;
-    res = subject.property("foo", "bar");
-
-    assertEquals(res.value(), 3);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
+        opts -> {
           opts.addInt24(0);
           opts.addByte(HtmlBytes.TPROP8);
           opts.addInt8(opts.addObject("foo"));
           opts.addInt8(opts.addObject("bar"));
-        })
+        }
     );
   }
 
@@ -496,24 +384,16 @@ public class TestableRecorderTest {
   a testable property key is recorded with the TPROPKEY8 opcode when the object index fits in 1 byte
   """)
   public void propKey02() {
-    final HtmlSink sink;
-    sink = new HtmlSink();
+    test(
+        _ -> {},
 
-    final TestableRecorder subject;
-    subject = new TestableRecorder(sink);
+        subject -> subject.propKey("foo"),
+        0,
 
-    final TestableMarkupPointer res;
-    res = subject.propKey("foo");
-
-    assertEquals(res.value(), 0);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
+        opts -> {
           opts.addByte(HtmlBytes.TPROPKEY8);
           opts.addInt8(opts.addObject("foo"));
-        })
+        }
     );
   }
 
@@ -521,27 +401,19 @@ public class TestableRecorderTest {
   a testable property key is recorded with the TPROPKEY16 opcode when the object index fits in 2 bytes
   """)
   public void propKey03() {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.objectsIndex(HtmlSink.FIRST_INT16);
-    });
+    test(
+        opts -> {
+          opts.objectsIndex(HtmlSink.FIRST_INT16);
+        },
 
-    final TestableRecorder subject;
-    subject = new TestableRecorder(sink);
+        subject -> subject.propKey("foo"),
+        0,
 
-    final TestableMarkupPointer res;
-    res = subject.propKey("foo");
-
-    assertEquals(res.value(), 0);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
+        opts -> {
           opts.objectsIndex(HtmlSink.FIRST_INT16);
           opts.addByte(HtmlBytes.TPROPKEY16);
           opts.addInt16(opts.addObject("foo"));
-        })
+        }
     );
   }
 
@@ -549,53 +421,37 @@ public class TestableRecorderTest {
   a testable property key is recorded with the TPROPKEY24 opcode when the object index fits in 3 bytes
   """)
   public void propKey04() {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.objectsIndex(HtmlSink.FIRST_INT24);
-    });
+    test(
+        opts -> {
+          opts.objectsIndex(HtmlSink.FIRST_INT24);
+        },
 
-    final TestableRecorder subject;
-    subject = new TestableRecorder(sink);
+        subject -> subject.propKey("foo"),
+        0,
 
-    final TestableMarkupPointer res;
-    res = subject.propKey("foo");
-
-    assertEquals(res.value(), 0);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
+        opts -> {
           opts.objectsIndex(HtmlSink.FIRST_INT24);
           opts.addByte(HtmlBytes.TPROPKEY24);
           opts.addInt24(opts.addObject("foo"));
-        })
+        }
     );
   }
 
   @Test(description = "the returned markup pointer is the first available index in the code array")
   public void propKey05() {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.addInt24(0);
-    });
+    test(
+        opts -> {
+          opts.addInt24(0);
+        },
 
-    final TestableRecorder subject;
-    subject = new TestableRecorder(sink);
+        subject -> subject.propKey("foo"),
+        3,
 
-    final TestableMarkupPointer res;
-    res = subject.propKey("foo");
-
-    assertEquals(res.value(), 3);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
+        opts -> {
           opts.addInt24(0);
           opts.addByte(HtmlBytes.TPROPKEY8);
           opts.addInt8(opts.addObject("foo"));
-        })
+        }
     );
   }
 
@@ -617,24 +473,16 @@ public class TestableRecorderTest {
   a testable property value is recorded with the TPROPVAL8 opcode when the object index fits in 1 byte
   """)
   public void propValue02() {
-    final HtmlSink sink;
-    sink = new HtmlSink();
+    test(
+        _ -> {},
 
-    final TestableRecorder subject;
-    subject = new TestableRecorder(sink);
+        subject -> subject.propValue("bar"),
+        0,
 
-    final TestableMarkupPointer res;
-    res = subject.propValue("bar");
-
-    assertEquals(res.value(), 0);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
+        opts -> {
           opts.addByte(HtmlBytes.TPROPVAL8);
           opts.addInt8(opts.addObject("bar"));
-        })
+        }
     );
   }
 
@@ -642,27 +490,19 @@ public class TestableRecorderTest {
   a testable property value is recorded with the TPROPVAL16 opcode when the object index fits in 2 bytes
   """)
   public void propValue03() {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.objectsIndex(HtmlSink.FIRST_INT16);
-    });
+    test(
+        opts -> {
+          opts.objectsIndex(HtmlSink.FIRST_INT16);
+        },
 
-    final TestableRecorder subject;
-    subject = new TestableRecorder(sink);
+        subject -> subject.propValue("bar"),
+        0,
 
-    final TestableMarkupPointer res;
-    res = subject.propValue("bar");
-
-    assertEquals(res.value(), 0);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
+        opts -> {
           opts.objectsIndex(HtmlSink.FIRST_INT16);
           opts.addByte(HtmlBytes.TPROPVAL16);
           opts.addInt16(opts.addObject("bar"));
-        })
+        }
     );
   }
 
@@ -670,53 +510,37 @@ public class TestableRecorderTest {
   a testable property value is recorded with the TPROPVAL24 opcode when the object index fits in 3 bytes
   """)
   public void propValue04() {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.objectsIndex(HtmlSink.FIRST_INT24);
-    });
+    test(
+        opts -> {
+          opts.objectsIndex(HtmlSink.FIRST_INT24);
+        },
 
-    final TestableRecorder subject;
-    subject = new TestableRecorder(sink);
+        subject -> subject.propValue("bar"),
+        0,
 
-    final TestableMarkupPointer res;
-    res = subject.propValue("bar");
-
-    assertEquals(res.value(), 0);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
+        opts -> {
           opts.objectsIndex(HtmlSink.FIRST_INT24);
           opts.addByte(HtmlBytes.TPROPVAL24);
           opts.addInt24(opts.addObject("bar"));
-        })
+        }
     );
   }
 
   @Test(description = "the returned markup pointer is the first available index in the code array")
   public void propValue05() {
-    final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.addInt24(0);
-    });
+    test(
+        opts -> {
+          opts.addInt24(0);
+        },
 
-    final TestableRecorder subject;
-    subject = new TestableRecorder(sink);
+        subject -> subject.propValue("bar"),
+        3,
 
-    final TestableMarkupPointer res;
-    res = subject.propValue("bar");
-
-    assertEquals(res.value(), 3);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
+        opts -> {
           opts.addInt24(0);
           opts.addByte(HtmlBytes.TPROPVAL8);
           opts.addInt8(opts.addObject("bar"));
-        })
+        }
     );
   }
 
@@ -724,49 +548,56 @@ public class TestableRecorderTest {
   a testable newline is recorded with the TNEWLINE opcode
   """)
   public void newLine01() {
-    final HtmlSink sink;
-    sink = new HtmlSink();
+    test(
+        _ -> {},
 
-    final TestableRecorder subject;
-    subject = new TestableRecorder(sink);
+        subject -> subject.newLine(),
+        0,
 
-    final TestableMarkupPointer res;
-    res = subject.newLine();
-
-    assertEquals(res.value(), 0);
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
+        opts -> {
           opts.addByte(HtmlBytes.TNEWLINE);
-        })
+        }
     );
   }
 
   @Test(description = "the returned markup pointer is the first available index in the code array")
   public void newLine02() {
+    test(
+        opts -> {
+          opts.addInt24(0);
+        },
+
+        subject -> subject.newLine(),
+        3,
+
+        opts -> {
+          opts.addInt24(0);
+          opts.addByte(HtmlBytes.TNEWLINE);
+        }
+    );
+  }
+
+  private void test(
+      Consumer<? super HtmlSink> input,
+      Function<? super TestableRecorder, ? extends TestableMarkupPointer> action,
+      int pointer,
+      Consumer<? super HtmlSink> expected
+  ) {
     final HtmlSink sink;
-    sink = HtmlSinkY.create(opts -> {
-      opts.addInt24(0);
-    });
+    sink = HtmlSinkY.create(input);
 
     final TestableRecorder subject;
     subject = new TestableRecorder(sink);
 
     final TestableMarkupPointer res;
-    res = subject.newLine();
+    res = action.apply(subject);
 
-    assertEquals(res.value(), 3);
+    assertEquals(res.value(), pointer);
 
-    assertEquals(
-        sink,
+    final HtmlSink out;
+    out = HtmlSinkY.create(expected);
 
-        HtmlSinkY.create(opts -> {
-          opts.addInt24(0);
-          opts.addByte(HtmlBytes.TNEWLINE);
-        })
-    );
+    assertEquals(sink, out);
   }
 
 }

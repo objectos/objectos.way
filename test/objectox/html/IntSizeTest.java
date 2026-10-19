@@ -18,87 +18,40 @@ package objectox.html;
 import static org.testng.Assert.assertEquals;
 
 import objectox.html.markup.HtmlBytes;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class IntSizeTest {
 
-  @Test(description = "equal values are BIT8")
-  public void max01() {
-    final IntSize res;
-    res = IntSize.max(1, 1);
-
-    assertEquals(res, IntSize.BIT8);
+  @DataProvider
+  public Object[][] max01Provider() {
+    return new Object[][] {
+        {1, 1, IntSize.BIT8},
+        {255, 0, IntSize.BIT8},
+        {0, 255, IntSize.BIT8},
+        {255, 256, IntSize.BIT16},
+        {256, 255, IntSize.BIT16},
+        {65535, 65535, IntSize.BIT16},
+        {65535, 65536, IntSize.BIT24},
+        {65536, 16777215, IntSize.BIT24},
+        {0, 0, IntSize.BIT8},
+        {-1, 255, IntSize.BIT8}
+    };
   }
 
-  @Test(description = "max BIT8 value in a")
-  public void max02() {
+  @Test(dataProvider = "max01Provider", description = "returns the size of the greater of the two values")
+  public void max01(int a, int b, IntSize expected) {
     final IntSize res;
-    res = IntSize.max(255, 0);
+    res = IntSize.max(a, b);
 
-    assertEquals(res, IntSize.BIT8);
-  }
-
-  @Test(description = "max BIT8 value in b")
-  public void max03() {
-    final IntSize res;
-    res = IntSize.max(0, 255);
-
-    assertEquals(res, IntSize.BIT8);
-  }
-
-  @Test(description = "max BIT16 value in b")
-  public void max04() {
-    final IntSize res;
-    res = IntSize.max(255, 256);
-
-    assertEquals(res, IntSize.BIT16);
-  }
-
-  @Test(description = "max BIT16 value in a")
-  public void max05() {
-    final IntSize res;
-    res = IntSize.max(256, 255);
-
-    assertEquals(res, IntSize.BIT16);
-  }
-
-  @Test(description = "max BIT16 value in a and b")
-  public void max06() {
-    final IntSize res;
-    res = IntSize.max(65535, 65535);
-
-    assertEquals(res, IntSize.BIT16);
-  }
-
-  @Test(description = "max BIT24 value in b")
-  public void max07() {
-    final IntSize res;
-    res = IntSize.max(65535, 65536);
-
-    assertEquals(res, IntSize.BIT24);
-  }
-
-  @Test(description = "max BIT24 value in a and b")
-  public void max08() {
-    final IntSize res;
-    res = IntSize.max(65536, 16777215);
-
-    assertEquals(res, IntSize.BIT24);
-  }
-
-  @Test(description = "zero values are BIT8")
-  public void max09() {
-    final IntSize res;
-    res = IntSize.max(0, 0);
-
-    assertEquals(res, IntSize.BIT8);
+    assertEquals(res, expected);
   }
 
   @Test(
       description = "reject negative a and b",
       expectedExceptions = IllegalArgumentException.class,
       expectedExceptionsMessageRegExp = "Illegal int value: negative values \\(-1\\) are now allowed")
-  public void max10() {
+  public void max02() {
     IntSize.max(-1, -1);
   }
 
@@ -106,23 +59,15 @@ public class IntSizeTest {
       description = "reject negative maximum",
       expectedExceptions = IllegalArgumentException.class,
       expectedExceptionsMessageRegExp = "Illegal int value: negative values \\(-1\\) are now allowed")
-  public void max11() {
+  public void max03() {
     IntSize.max(-5, -1);
-  }
-
-  @Test(description = "negative a ignored when b is greater")
-  public void max12() {
-    final IntSize res;
-    res = IntSize.max(-1, 255);
-
-    assertEquals(res, IntSize.BIT8);
   }
 
   @Test(
       description = "reject too large a",
       expectedExceptions = IllegalArgumentException.class,
       expectedExceptionsMessageRegExp = "Illegal int value: \\(16777216\\) is too large")
-  public void max13() {
+  public void max04() {
     IntSize.max(16777216, 0);
   }
 
@@ -130,120 +75,64 @@ public class IntSizeTest {
       description = "reject too large b",
       expectedExceptions = IllegalArgumentException.class,
       expectedExceptionsMessageRegExp = "Illegal int value: \\(16777216\\) is too large")
-  public void max14() {
+  public void max05() {
     IntSize.max(0, 16777216);
+  }
+
+  @DataProvider
+  public Object[][] of01Provider() {
+    return new Object[][] {
+        {0, IntSize.BIT8},
+        {255, IntSize.BIT8},
+        {256, IntSize.BIT16},
+        {65535, IntSize.BIT16},
+        {65536, IntSize.BIT24},
+        {16777215, IntSize.BIT24}
+    };
+  }
+
+  @Test(dataProvider = "of01Provider", description = "returns the size associated with the value")
+  public void of01(int value, IntSize expected) {
+    final IntSize res;
+    res = IntSize.of(value);
+
+    assertEquals(res, expected);
   }
 
   @Test(
       description = "reject negative value",
       expectedExceptions = IllegalArgumentException.class,
       expectedExceptionsMessageRegExp = "Illegal int value: negative values \\(-1\\) are now allowed")
-  public void of01() {
-    IntSize.of(-1);
-  }
-
-  @Test(description = "zero is BIT8")
   public void of02() {
-    final IntSize res;
-    res = IntSize.of(0);
-
-    assertEquals(res, IntSize.BIT8);
-  }
-
-  @Test(description = "max BIT8 value")
-  public void of03() {
-    final IntSize res;
-    res = IntSize.of(255);
-
-    assertEquals(res, IntSize.BIT8);
-  }
-
-  @Test(description = "min BIT16 value")
-  public void of04() {
-    final IntSize res;
-    res = IntSize.of(256);
-
-    assertEquals(res, IntSize.BIT16);
-  }
-
-  @Test(description = "max BIT16 value")
-  public void of05() {
-    final IntSize res;
-    res = IntSize.of(65535);
-
-    assertEquals(res, IntSize.BIT16);
-  }
-
-  @Test(description = "min BIT24 value")
-  public void of06() {
-    final IntSize res;
-    res = IntSize.of(65536);
-
-    assertEquals(res, IntSize.BIT24);
-  }
-
-  @Test(description = "max BIT24 value")
-  public void of07() {
-    final IntSize res;
-    res = IntSize.of(16777215);
-
-    assertEquals(res, IntSize.BIT24);
+    IntSize.of(-1);
   }
 
   @Test(
       description = "reject too large value",
       expectedExceptions = IllegalArgumentException.class,
       expectedExceptionsMessageRegExp = "Illegal int value: \\(16777216\\) is too large")
-  public void of08() {
+  public void of03() {
     IntSize.of(16777216);
   }
 
-  @Test(description = "BIT8 skip 0")
-  public void skip01() {
-    final int res;
-    res = IntSize.BIT8.skip(0);
-
-    assertEquals(res, 1);
+  @DataProvider
+  public Object[][] skip01Provider() {
+    return new Object[][] {
+        {IntSize.BIT8, 0, 1},
+        {IntSize.BIT8, 5, 6},
+        {IntSize.BIT16, 0, 2},
+        {IntSize.BIT16, 5, 7},
+        {IntSize.BIT24, 0, 3},
+        {IntSize.BIT24, 5, 8}
+    };
   }
 
-  @Test(description = "BIT8 skip non-zero")
-  public void skip02() {
+  @Test(dataProvider = "skip01Provider", description = "returns the index incremented by the number of bytes the size occupies")
+  public void skip01(IntSize size, int index, int expected) {
     final int res;
-    res = IntSize.BIT8.skip(5);
+    res = size.skip(index);
 
-    assertEquals(res, 6);
-  }
-
-  @Test(description = "BIT16 skip 0")
-  public void skip03() {
-    final int res;
-    res = IntSize.BIT16.skip(0);
-
-    assertEquals(res, 2);
-  }
-
-  @Test(description = "BIT16 skip non-zero")
-  public void skip04() {
-    final int res;
-    res = IntSize.BIT16.skip(5);
-
-    assertEquals(res, 7);
-  }
-
-  @Test(description = "BIT24 skip 0")
-  public void skip05() {
-    final int res;
-    res = IntSize.BIT24.skip(0);
-
-    assertEquals(res, 3);
-  }
-
-  @Test(description = "BIT24 skip non-zero")
-  public void skip06() {
-    final int res;
-    res = IntSize.BIT24.skip(5);
-
-    assertEquals(res, 8);
+    assertEquals(res, expected);
   }
 
   @Test(description = "BIT8 is ELEMSTR8")
@@ -270,28 +159,106 @@ public class IntSizeTest {
     IntSize.BIT24.toRegularStartTagByte();
   }
 
-  @Test(description = "BIT8 is VALUES8")
-  public void toValuesByte01() {
-    final byte res;
-    res = IntSize.BIT8.toValuesByte();
-
-    assertEquals(res, HtmlBytes.VALUES8);
+  @DataProvider
+  public Object[][] toTestableCellByteProvider() {
+    return new Object[][] {
+        {IntSize.BIT8, HtmlBytes.TCELL8},
+        {IntSize.BIT16, HtmlBytes.TCELL16},
+        {IntSize.BIT24, HtmlBytes.TCELL24}
+    };
   }
 
-  @Test(description = "BIT16 is VALUES16")
-  public void toValuesByte02() {
+  @Test(dataProvider = "toTestableCellByteProvider", description = "each size is associated with its TCELL opcode")
+  public void toTestableCellByte(IntSize size, byte expected) {
     final byte res;
-    res = IntSize.BIT16.toValuesByte();
+    res = size.toTestableCellByte();
 
-    assertEquals(res, HtmlBytes.VALUES16);
+    assertEquals(res, expected);
   }
 
-  @Test(description = "BIT24 is VALUES24")
-  public void toValuesByte03() {
-    final byte res;
-    res = IntSize.BIT24.toValuesByte();
+  @DataProvider
+  public Object[][] toTestableHeadingByteProvider() {
+    return new Object[][] {
+        {IntSize.BIT8, HtmlBytes.THEADING8},
+        {IntSize.BIT16, HtmlBytes.THEADING16},
+        {IntSize.BIT24, HtmlBytes.THEADING24}
+    };
+  }
 
-    assertEquals(res, HtmlBytes.VALUES24);
+  @Test(dataProvider = "toTestableHeadingByteProvider", description = "each size is associated with its THEADING opcode")
+  public void toTestableHeadingByte(IntSize size, byte expected) {
+    final byte res;
+    res = size.toTestableHeadingByte();
+
+    assertEquals(res, expected);
+  }
+
+  @DataProvider
+  public Object[][] toTestablePropKeyByteProvider() {
+    return new Object[][] {
+        {IntSize.BIT8, HtmlBytes.TPROPKEY8},
+        {IntSize.BIT16, HtmlBytes.TPROPKEY16},
+        {IntSize.BIT24, HtmlBytes.TPROPKEY24}
+    };
+  }
+
+  @Test(dataProvider = "toTestablePropKeyByteProvider", description = "each size is associated with its TPROPKEY opcode")
+  public void toTestablePropKeyByte(IntSize size, byte expected) {
+    final byte res;
+    res = size.toTestablePropKeyByte();
+
+    assertEquals(res, expected);
+  }
+
+  @DataProvider
+  public Object[][] toTestablePropValueByteProvider() {
+    return new Object[][] {
+        {IntSize.BIT8, HtmlBytes.TPROPVAL8},
+        {IntSize.BIT16, HtmlBytes.TPROPVAL16},
+        {IntSize.BIT24, HtmlBytes.TPROPVAL24}
+    };
+  }
+
+  @Test(dataProvider = "toTestablePropValueByteProvider", description = "each size is associated with its TPROPVAL opcode")
+  public void toTestablePropValueByte(IntSize size, byte expected) {
+    final byte res;
+    res = size.toTestablePropValueByte();
+
+    assertEquals(res, expected);
+  }
+
+  @DataProvider
+  public Object[][] toTestablePropertyByteProvider() {
+    return new Object[][] {
+        {IntSize.BIT8, HtmlBytes.TPROP8},
+        {IntSize.BIT16, HtmlBytes.TPROP16},
+        {IntSize.BIT24, HtmlBytes.TPROP24}
+    };
+  }
+
+  @Test(dataProvider = "toTestablePropertyByteProvider", description = "each size is associated with its TPROP opcode")
+  public void toTestablePropertyByte(IntSize size, byte expected) {
+    final byte res;
+    res = size.toTestablePropertyByte();
+
+    assertEquals(res, expected);
+  }
+
+  @DataProvider
+  public Object[][] toValuesByteProvider() {
+    return new Object[][] {
+        {IntSize.BIT8, HtmlBytes.VALUES8},
+        {IntSize.BIT16, HtmlBytes.VALUES16},
+        {IntSize.BIT24, HtmlBytes.VALUES24}
+    };
+  }
+
+  @Test(dataProvider = "toValuesByteProvider", description = "each size is associated with its VALUES opcode")
+  public void toValuesByte(IntSize size, byte expected) {
+    final byte res;
+    res = size.toValuesByte();
+
+    assertEquals(res, expected);
   }
 
   @Test(description = "BIT8 is ELEMVOID8")
