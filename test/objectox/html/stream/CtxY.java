@@ -82,6 +82,13 @@ final class CtxY {
     stack[index] = value;
   }
 
+  public final void push(Consumer<? super FrameY> opts) {
+    final Frame frame;
+    frame = FrameY.create(opts);
+
+    push(frame);
+  }
+
   public final void result(Event value) {
     result = value;
   }

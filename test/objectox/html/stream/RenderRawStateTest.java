@@ -16,7 +16,10 @@
 package objectox.html.stream;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.fail;
 
+import java.util.function.Consumer;
+import java.util.function.Function;
 import objectox.html.IntSize;
 import objectox.html.elem.ElementName;
 import objectox.html.markup.HtmlSink;
@@ -29,34 +32,27 @@ public class RenderRawStateTest {
   - 8 bit
   - document level
   """)
-  public void compute08() {
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.addInt8(opts.addObject("Ipsum"));
+  public void compute01() {
+    test(
+        RenderRawState::compute,
 
-      opts.push(FrameY.create(f -> {
-        f.index = 0;
-      }));
-    });
+        opts -> {
+          opts.addInt8(opts.addObject("Ipsum"));
 
-    final RenderRawState subject;
-    subject = new RenderRawState(ctx, ScanLevel.TOP_LEVEL, IntSize.BIT8);
+          opts.push(f -> {
+            f.index = 0;
+          });
+        },
 
-    final State res;
-    res = subject.compute();
+        ScanLevel.TOP_LEVEL, IntSize.BIT8,
 
-    assertEquals(res, new EndNodeState(ctx, FrameY.create(f -> {
-      f.index = 1;
-    })));
-
-    assertEquals(
-        ctx,
-
-        CtxY.create(opts -> {
-          opts.sink(ctx);
-
+        opts -> {
           opts.result(RenderRawEvent.of(0, "Ipsum"));
-        })
+        },
+
+        ctx -> new EndNodeState(ctx, FrameY.create(f -> {
+          f.index = 1;
+        }))
     );
   }
 
@@ -65,36 +61,29 @@ public class RenderRawStateTest {
   - 16 bit
   - document level
   """)
-  public void compute16() {
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
+  public void compute02() {
+    test(
+        RenderRawState::compute,
 
-      opts.addInt16(opts.addObject("Ipsum"));
+        opts -> {
+          opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
 
-      opts.push(FrameY.create(f -> {
-        f.index = 0;
-      }));
-    });
+          opts.addInt16(opts.addObject("Ipsum"));
 
-    final RenderRawState subject;
-    subject = new RenderRawState(ctx, ScanLevel.TOP_LEVEL, IntSize.BIT16);
+          opts.push(f -> {
+            f.index = 0;
+          });
+        },
 
-    final State res;
-    res = subject.compute();
+        ScanLevel.TOP_LEVEL, IntSize.BIT16,
 
-    assertEquals(res, new EndNodeState(ctx, FrameY.create(f -> {
-      f.index = 2;
-    })));
-
-    assertEquals(
-        ctx,
-
-        CtxY.create(opts -> {
-          opts.sink(ctx);
-
+        opts -> {
           opts.result(RenderRawEvent.of(0, "Ipsum"));
-        })
+        },
+
+        ctx -> new EndNodeState(ctx, FrameY.create(f -> {
+          f.index = 2;
+        }))
     );
   }
 
@@ -103,36 +92,29 @@ public class RenderRawStateTest {
   - 24 bit
   - document level
   """)
-  public void compute24() {
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
+  public void compute03() {
+    test(
+        RenderRawState::compute,
 
-      opts.addInt24(opts.addObject("Ipsum"));
+        opts -> {
+          opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
 
-      opts.push(FrameY.create(f -> {
-        f.index = 0;
-      }));
-    });
+          opts.addInt24(opts.addObject("Ipsum"));
 
-    final RenderRawState subject;
-    subject = new RenderRawState(ctx, ScanLevel.TOP_LEVEL, IntSize.BIT24);
+          opts.push(f -> {
+            f.index = 0;
+          });
+        },
 
-    final State res;
-    res = subject.compute();
+        ScanLevel.TOP_LEVEL, IntSize.BIT24,
 
-    assertEquals(res, new EndNodeState(ctx, FrameY.create(f -> {
-      f.index = 3;
-    })));
-
-    assertEquals(
-        ctx,
-
-        CtxY.create(opts -> {
-          opts.sink(ctx);
-
+        opts -> {
           opts.result(RenderRawEvent.of(0, "Ipsum"));
-        })
+        },
+
+        ctx -> new EndNodeState(ctx, FrameY.create(f -> {
+          f.index = 3;
+        }))
     );
   }
 
@@ -141,49 +123,274 @@ public class RenderRawStateTest {
   - 8 bit
   - element level
   """)
-  public void element08() {
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.addInt8(opts.addObject("Ipsum"));
+  public void compute04() {
+    test(
+        RenderRawState::compute,
 
-      opts.push(FrameY.create(f -> {
-        f.index = 5;
+        opts -> {
+          opts.addInt8(opts.addObject("Ipsum"));
 
-        f.regular(ElementName.DIV);
-
-        f.values8(0, 1);
-      }));
-
-      opts.push(FrameY.create(f -> {
-        f.index = 0;
-      }));
-    });
-
-    final RenderRawState subject;
-    subject = new RenderRawState(ctx, ScanLevel.NESTED, IntSize.BIT8);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res, new EndNodeState(ctx, FrameY.create(f -> {
-      f.index = 1;
-    })));
-
-    assertEquals(
-        ctx,
-
-        CtxY.create(opts -> {
-          opts.sink(ctx);
-
-          opts.push(FrameY.create(f -> {
+          opts.push(f -> {
             f.index = 5;
 
             f.regular(ElementName.DIV);
 
             f.values8(0, 1);
-          }));
+          });
+
+          opts.push(f -> {
+            f.index = 0;
+          });
+        },
+
+        ScanLevel.NESTED, IntSize.BIT8,
+
+        opts -> {
+          opts.push(f -> {
+            f.index = 5;
+
+            f.regular(ElementName.DIV);
+
+            f.values8(0, 1);
+          });
 
           opts.result(RenderRawEvent.of(1, "Ipsum"));
+        },
+
+        ctx -> new EndNodeState(ctx, FrameY.create(f -> {
+          f.index = 1;
+        }))
+    );
+  }
+
+  @Test(description = """
+  raw node:
+  - documentNode
+  - top level
+  """)
+  public void documentNode01() {
+    test(
+        RenderRawState::documentNode,
+
+        opts -> {
+          opts.addInt8(opts.addObject("Ipsum"));
+        },
+
+        ScanLevel.TOP_LEVEL, IntSize.BIT8,
+
+        _ -> {},
+
+        ctx -> new RenderRawState(ctx, ScanLevel.TOP_LEVEL, IntSize.BIT8)
+    );
+  }
+
+  @Test(description = """
+  raw node:
+  - documentNode
+  - 8 bit
+  - nested level
+  """)
+  public void documentNode02() {
+    test(
+        RenderRawState::documentNode,
+
+        opts -> {
+          opts.addInt8(opts.addObject("Ipsum"));
+        },
+
+        ScanLevel.NESTED, IntSize.BIT8,
+
+        _ -> {},
+
+        ctx -> new SkipState(ctx, 1)
+    );
+  }
+
+  @Test(description = """
+  raw node:
+  - documentNode
+  - 16 bit
+  - nested level
+  """)
+  public void documentNode03() {
+    test(
+        RenderRawState::documentNode,
+
+        opts -> {
+          opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
+
+          opts.addInt16(opts.addObject("Ipsum"));
+        },
+
+        ScanLevel.NESTED, IntSize.BIT16,
+
+        _ -> {},
+
+        ctx -> new SkipState(ctx, 2)
+    );
+  }
+
+  @Test(description = """
+  raw node:
+  - documentNode
+  - 24 bit
+  - nested level
+  """)
+  public void documentNode04() {
+    test(
+        RenderRawState::documentNode,
+
+        opts -> {
+          opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
+
+          opts.addInt24(opts.addObject("Ipsum"));
+        },
+
+        ScanLevel.NESTED, IntSize.BIT24,
+
+        _ -> {},
+
+        ctx -> new SkipState(ctx, 3)
+    );
+  }
+
+  @Test(description = """
+  raw node:
+  - elementAttribute
+  - top level
+  - throws
+  """)
+  public void elementAttribute01() {
+    testError(
+        RenderRawState::elementAttribute,
+
+        opts -> {
+          opts.addInt8(opts.addObject("Ipsum"));
+        },
+
+        ScanLevel.TOP_LEVEL, IntSize.BIT8,
+
+        "Not an element attribute op"
+    );
+  }
+
+  @Test(description = """
+  raw node:
+  - elementAttribute
+  - nested level
+  """)
+  public void elementAttribute02() {
+    test(
+        RenderRawState::elementAttribute,
+
+        opts -> {
+          opts.addInt8(opts.addObject("Ipsum"));
+        },
+
+        ScanLevel.NESTED, IntSize.BIT8,
+
+        _ -> {},
+
+        ctx -> new RenderRawState(ctx, ScanLevel.NESTED, IntSize.BIT8)
+    );
+  }
+
+  @Test(description = """
+  raw node:
+  - elementNode
+  - top level
+  - throws
+  """)
+  public void elementNode01() {
+    testError(
+        RenderRawState::elementNode,
+
+        opts -> {
+          opts.addInt8(opts.addObject("Ipsum"));
+        },
+
+        ScanLevel.TOP_LEVEL, IntSize.BIT8,
+
+        "Not an element node op"
+    );
+  }
+
+  @Test(description = """
+  raw node:
+  - elementNode
+  - nested level
+  """)
+  public void elementNode02() {
+    test(
+        RenderRawState::elementNode,
+
+        opts -> {
+          opts.addInt8(opts.addObject("Ipsum"));
+        },
+
+        ScanLevel.NESTED, IntSize.BIT8,
+
+        _ -> {},
+
+        ctx -> new RenderRawState(ctx, ScanLevel.NESTED, IntSize.BIT8)
+    );
+  }
+
+  private void test(
+      Function<RenderRawState, State> op,
+      Consumer<? super CtxY> opts, ScanLevel scanLevel, IntSize rawSize,
+      Consumer<? super CtxY> expected, Function<Ctx, State> state) {
+    final Ctx ctx;
+    ctx = CtxY.create(opts);
+
+    final RenderRawState subject;
+    subject = new RenderRawState(ctx, scanLevel, rawSize);
+
+    final State res;
+    res = op.apply(subject);
+
+    final State expectedState;
+    expectedState = state.apply(ctx);
+
+    assertEquals(res, expectedState);
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(expectedOpts -> {
+          expectedOpts.sink(ctx);
+
+          expected.accept(expectedOpts);
+        })
+    );
+  }
+
+  private void testError(
+      Function<RenderRawState, State> op,
+      Consumer<? super CtxY> opts, ScanLevel scanLevel, IntSize rawSize,
+      String expected) {
+    final Ctx ctx;
+    ctx = CtxY.create(opts);
+
+    final RenderRawState subject;
+    subject = new RenderRawState(ctx, scanLevel, rawSize);
+
+    try {
+      op.apply(subject);
+
+      fail();
+    } catch (IllegalStateException e) {
+      final String msg;
+      msg = e.getMessage();
+
+      assertEquals(msg, expected);
+    }
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(expectedOpts -> {
+          expectedOpts.sink(ctx);
         })
     );
   }
