@@ -37,13 +37,7 @@ final class ScanElementAttributeState implements State {
     if (elem.hasValue()) {
       return compute0Value(elem);
     } else {
-      final ElementName elementName;
-      elementName = elem.elementName;
-
-      final ElementKind elementKind;
-      elementKind = elem.elementKind;
-
-      return elementKind.endStartTagStateEmpty(ctx, elementName);
+      return compute1Empty(elem);
     }
   }
 
@@ -73,6 +67,43 @@ final class ScanElementAttributeState implements State {
     }
 
     return op.elementAttribute();
+  }
+
+  private State compute1Empty(ElementFrame elem) {
+    final ElementName elementName;
+    elementName = elem.elementName;
+
+    final int level;
+    level = ctx.stackIndex();
+
+    final ElementKind elementKind;
+    elementKind = elem.elementKind;
+
+    return switch (elementKind) {
+      case REGULAR -> {
+        final EndStartTagKind kind;
+        kind = EndStartTagKind.EMPTY_ELEMENT;
+
+        final EndStartTagEvent event;
+        event = new EndStartTagEvent(level, kind);
+
+        ctx.result(event);
+
+        yield new RenderEndTagState(ctx, elementName);
+      }
+
+      case VOID -> {
+        final EndStartTagKind kind;
+        kind = EndStartTagKind.VOID_ELEMENT;
+
+        final EndStartTagEvent event;
+        event = new EndStartTagEvent(level, kind);
+
+        ctx.result(event);
+
+        yield new EndElementState(ctx);
+      }
+    };
   }
 
   private void nodes(ElementFrame elem) {
