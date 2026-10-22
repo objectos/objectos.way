@@ -18,9 +18,12 @@ package objectox.html.stream;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
 
+import java.util.function.Consumer;
+import java.util.function.Function;
 import objectox.html.IntSize;
 import objectox.html.elem.ElementName;
 import objectox.html.markup.HtmlBytes;
+import objectox.html.markup.HtmlSink;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -28,369 +31,330 @@ public class ScanElementNodeStateTest {
 
   @Test(description = """
   element:
-  - elem
-  - x
+  - no values left
   """)
-  public void testCase01() {
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.push(FrameY.create(f -> {
-        f.index = 0;
+  public void compute01() {
+    test(
+        ScanElementNodeState::compute,
 
-        f.regular(ElementName.DIV);
-
-        f.values8(1, 1);
-      }));
-    });
-
-    final ScanElementNodeState subject;
-    subject = new ScanElementNodeState(ctx);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res, new EndElementState(ctx));
-
-    assertEquals(
-        ctx,
-
-        CtxY.create(opts -> {
-          opts.sink(ctx);
-
-          opts.push(FrameY.create(f -> {
+        opts -> {
+          opts.push(f -> {
             f.index = 0;
 
             f.regular(ElementName.DIV);
 
             f.values8(1, 1);
-          }));
+          });
+        },
+
+        opts -> {
+          opts.push(f -> {
+            f.index = 0;
+
+            f.regular(ElementName.DIV);
+
+            f.values8(1, 1);
+          });
 
           final RenderEndTagEvent event;
           event = new RenderEndTagEvent(0, ElementName.DIV);
 
           opts.result(event);
-        })
+        },
+
+        ctx -> new EndElementState(ctx)
     );
   }
 
   @DataProvider
-  public Object[][] testCase02Provider() {
+  public Object[][] elementNodeProvider() {
     return new Object[][] {
-        {HtmlBytes.xELEMSTR8, ElementKind.REGULAR, IntSize.BIT8},
-        {HtmlBytes.xELEMVOID8, ElementKind.VOID, IntSize.BIT8}
+        {HtmlBytes.xELEMSTR8, s(ctx -> new BeginStartTagState(ctx, ScanLevel.NESTED, ElementKind.REGULAR, IntSize.BIT8))},
+        {HtmlBytes.xELEMVOID8, s(ctx -> new BeginStartTagState(ctx, ScanLevel.NESTED, ElementKind.VOID, IntSize.BIT8))},
+
+        {HtmlBytes.xTEXT8, s(ctx -> new RenderTextState(ctx, ScanLevel.NESTED, IntSize.BIT8))},
+        {HtmlBytes.xTEXT16, s(ctx -> new RenderTextState(ctx, ScanLevel.NESTED, IntSize.BIT16))},
+        {HtmlBytes.xTEXT24, s(ctx -> new RenderTextState(ctx, ScanLevel.NESTED, IntSize.BIT24))},
+
+        {HtmlBytes.xRAW8, s(ctx -> new RenderRawState(ctx, ScanLevel.NESTED, IntSize.BIT8))},
+        {HtmlBytes.xRAW16, s(ctx -> new RenderRawState(ctx, ScanLevel.NESTED, IntSize.BIT16))},
+        {HtmlBytes.xRAW24, s(ctx -> new RenderRawState(ctx, ScanLevel.NESTED, IntSize.BIT24))},
+
+        {HtmlBytes.xTHEADING8, s(ctx -> new RenderTestableTextState(ctx, TestableKind.HEADING, IntSize.BIT8))},
+        {HtmlBytes.xTHEADING16, s(ctx -> new RenderTestableTextState(ctx, TestableKind.HEADING, IntSize.BIT16))},
+        {HtmlBytes.xTHEADING24, s(ctx -> new RenderTestableTextState(ctx, TestableKind.HEADING, IntSize.BIT24))},
+
+        {HtmlBytes.xTCELL8, s(ctx -> new RenderTestableTextState(ctx, TestableKind.CELL, IntSize.BIT8))},
+        {HtmlBytes.xTCELL16, s(ctx -> new RenderTestableTextState(ctx, TestableKind.CELL, IntSize.BIT16))},
+        {HtmlBytes.xTCELL24, s(ctx -> new RenderTestableTextState(ctx, TestableKind.CELL, IntSize.BIT24))},
+
+        {HtmlBytes.xTPROP8, s(ctx -> new RenderTestableTextState(ctx, TestableKind.PROP, IntSize.BIT8))},
+        {HtmlBytes.xTPROP16, s(ctx -> new RenderTestableTextState(ctx, TestableKind.PROP, IntSize.BIT16))},
+        {HtmlBytes.xTPROP24, s(ctx -> new RenderTestableTextState(ctx, TestableKind.PROP, IntSize.BIT24))},
+
+        {HtmlBytes.xTPROPKEY8, s(ctx -> new RenderTestableTextState(ctx, TestableKind.PROP_KEY, IntSize.BIT8))},
+        {HtmlBytes.xTPROPKEY16, s(ctx -> new RenderTestableTextState(ctx, TestableKind.PROP_KEY, IntSize.BIT16))},
+        {HtmlBytes.xTPROPKEY24, s(ctx -> new RenderTestableTextState(ctx, TestableKind.PROP_KEY, IntSize.BIT24))},
+
+        {HtmlBytes.xTPROPVAL8, s(ctx -> new RenderTestableTextState(ctx, TestableKind.PROP_VALUE, IntSize.BIT8))},
+        {HtmlBytes.xTPROPVAL16, s(ctx -> new RenderTestableTextState(ctx, TestableKind.PROP_VALUE, IntSize.BIT16))},
+        {HtmlBytes.xTPROPVAL24, s(ctx -> new RenderTestableTextState(ctx, TestableKind.PROP_VALUE, IntSize.BIT24))},
+
+        {HtmlBytes.xTNEWLINE, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.NESTED, TestableKind.NEWLINE, IntSize.BIT8))},
+
+        {HtmlBytes.THEADING8, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.HEADING, IntSize.BIT8))},
+        {HtmlBytes.THEADING16, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.HEADING, IntSize.BIT16))},
+        {HtmlBytes.THEADING24, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.HEADING, IntSize.BIT24))},
+
+        {HtmlBytes.TCELL8, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.CELL, IntSize.BIT8))},
+        {HtmlBytes.TCELL16, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.CELL, IntSize.BIT16))},
+        {HtmlBytes.TCELL24, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.CELL, IntSize.BIT24))},
+
+        {HtmlBytes.TPROP8, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.PROP, IntSize.BIT8))},
+        {HtmlBytes.TPROP16, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.PROP, IntSize.BIT16))},
+        {HtmlBytes.TPROP24, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.PROP, IntSize.BIT24))},
+
+        {HtmlBytes.TPROPKEY8, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.PROP_KEY, IntSize.BIT8))},
+        {HtmlBytes.TPROPKEY16, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.PROP_KEY, IntSize.BIT16))},
+        {HtmlBytes.TPROPKEY24, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.PROP_KEY, IntSize.BIT24))},
+
+        {HtmlBytes.TPROPVAL8, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.PROP_VALUE, IntSize.BIT8))},
+        {HtmlBytes.TPROPVAL16, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.PROP_VALUE, IntSize.BIT16))},
+        {HtmlBytes.TPROPVAL24, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.PROP_VALUE, IntSize.BIT24))},
+
+        {HtmlBytes.TNEWLINE, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.NEWLINE, IntSize.BIT8))}
     };
   }
 
-  @Test(dataProvider = "testCase02Provider", description = """
+  @Test(dataProvider = "elementNodeProvider", description = """
   element:
-  - element
-  - element
+  - values8
+  - element node
   """)
-  public void testCase02(byte proto, ElementKind elementKind, IntSize nameSize) {
+  public void compute02(byte proto, Function<Ctx, State> state) {
     final int frameIndex = 1, valueIndex = 0;
 
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.addByte(proto);
-      opts.addInt8(valueIndex);
+    test(
+        ScanElementNodeState::compute,
 
-      opts.push(FrameY.create(f -> {
-        f.index = frameIndex;
+        opts -> {
+          opts.addByte(proto);
+          opts.addInt8(valueIndex);
 
-        f.regular(ElementName.DIV);
+          opts.push(f -> {
+            f.index = frameIndex;
 
-        f.values8(1, 2);
-      }));
-    });
+            f.regular(ElementName.SPAN);
 
-    final ScanElementNodeState subject;
-    subject = new ScanElementNodeState(ctx);
+            f.values8(0, 1);
+          });
+        },
 
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res, new BeginStartTagState(ctx, ScanLevel.NESTED, elementKind, nameSize));
-
-    assertEquals(
-        ctx,
-
-        CtxY.create(opts -> {
-          opts.sink(ctx);
-
-          opts.push(FrameY.create(f -> {
+        opts -> {
+          opts.push(f -> {
             f.index = frameIndex + 1;
 
-            f.regular(ElementName.DIV);
+            f.regular(ElementName.SPAN);
 
-            f.values8(2, 2);
-          }));
+            f.values8(1, 1);
+          });
 
-          opts.push(FrameY.create(f -> {
+          opts.push(f -> {
             f.index = valueIndex + 1;
-          }));
-        })
+          });
+        },
+
+        state
     );
   }
 
-  @DataProvider
-  public Object[][] testCase03Provider() {
-    return new Object[][] {
-        {HtmlBytes.xTEXT8, IntSize.BIT8},
-        {HtmlBytes.xTEXT16, IntSize.BIT16},
-        {HtmlBytes.xTEXT24, IntSize.BIT24}
-    };
-  }
-
-  @Test(dataProvider = "testCase03Provider", description = """
+  @Test(dataProvider = "elementNodeProvider", description = """
   element:
-  - element
-  - text node
+  - values16
+  - element node
   """)
-  public void textCase03(byte proto, IntSize textSize) {
-    final int frameIndex = 1, valueIndex = 0;
+  public void compute03(byte proto, Function<Ctx, State> state) {
+    final int offset = HtmlSink.MAX_INT8 + 1;
 
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.addByte(proto);
-      opts.addInt8(valueIndex);
+    final int frameIndex = offset + 1, valueIndex = offset;
 
-      opts.push(FrameY.create(f -> {
-        f.index = frameIndex;
+    test(
+        ScanElementNodeState::compute,
 
-        f.regular(ElementName.DIV);
+        opts -> {
+          opts.codeIndex(offset);
+          opts.addByte(proto);
+          opts.addInt16(valueIndex);
 
-        f.values8(1, 2);
-      }));
-    });
+          opts.push(f -> {
+            f.index = frameIndex;
 
-    final ScanElementNodeState subject;
-    subject = new ScanElementNodeState(ctx);
+            f.regular(ElementName.SPAN);
 
-    final State res;
-    res = subject.compute();
+            f.values16(0, 1);
+          });
+        },
 
-    assertEquals(res, new RenderTextState(ctx, ScanLevel.NESTED, textSize));
+        opts -> {
+          opts.push(f -> {
+            f.index = frameIndex + 2;
 
-    assertEquals(
-        ctx,
+            f.regular(ElementName.SPAN);
 
-        CtxY.create(opts -> {
-          opts.sink(ctx);
+            f.values16(1, 1);
+          });
 
-          opts.push(FrameY.create(f -> {
-            f.index = frameIndex + 1;
-
-            f.regular(ElementName.DIV);
-
-            f.values8(2, 2);
-          }));
-
-          opts.push(FrameY.create(f -> {
+          opts.push(f -> {
             f.index = valueIndex + 1;
-          }));
-        })
+          });
+        },
+
+        state
     );
   }
 
-  @DataProvider
-  public Object[][] rawCase03Provider() {
-    return new Object[][] {
-        {HtmlBytes.xRAW8, IntSize.BIT8},
-        {HtmlBytes.xRAW16, IntSize.BIT16},
-        {HtmlBytes.xRAW24, IntSize.BIT24}
-    };
-  }
-
-  @Test(dataProvider = "rawCase03Provider", description = """
+  @Test(dataProvider = "elementNodeProvider", description = """
   element:
-  - element
-  - raw node
+  - values24
+  - element node
   """)
-  public void rawCase03(byte proto, IntSize rawSize) {
-    final int frameIndex = 1, valueIndex = 0;
+  public void compute04(byte proto, Function<Ctx, State> state) {
+    final int offset = HtmlSink.MAX_INT16 + 1;
 
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.addByte(proto);
-      opts.addInt8(valueIndex);
+    final int frameIndex = offset + 1, valueIndex = offset;
 
-      opts.push(FrameY.create(f -> {
-        f.index = frameIndex;
+    test(
+        ScanElementNodeState::compute,
 
-        f.regular(ElementName.DIV);
+        opts -> {
+          opts.codeIndex(offset);
+          opts.addByte(proto);
+          opts.addInt24(valueIndex);
 
-        f.values8(1, 2);
-      }));
-    });
+          opts.push(f -> {
+            f.index = frameIndex;
 
-    final ScanElementNodeState subject;
-    subject = new ScanElementNodeState(ctx);
+            f.regular(ElementName.SPAN);
 
-    final State res;
-    res = subject.compute();
+            f.values24(0, 1);
+          });
+        },
 
-    assertEquals(res, new RenderRawState(ctx, ScanLevel.NESTED, rawSize));
+        opts -> {
+          opts.push(f -> {
+            f.index = frameIndex + 3;
 
-    assertEquals(
-        ctx,
+            f.regular(ElementName.SPAN);
 
-        CtxY.create(opts -> {
-          opts.sink(ctx);
+            f.values24(1, 1);
+          });
 
-          opts.push(FrameY.create(f -> {
-            f.index = frameIndex + 1;
-
-            f.regular(ElementName.DIV);
-
-            f.values8(2, 2);
-          }));
-
-          opts.push(FrameY.create(f -> {
+          opts.push(f -> {
             f.index = valueIndex + 1;
-          }));
-        })
-    );
-  }
+          });
+        },
 
-  @DataProvider
-  public Object[][] testCase04Provider() {
-    return new Object[][] {
-        {HtmlBytes.xTHEADING8, IntSize.BIT8},
-        {HtmlBytes.xTHEADING16, IntSize.BIT16},
-        {HtmlBytes.xTHEADING24, IntSize.BIT24}
-    };
-  }
-
-  @Test(dataProvider = "testCase04Provider", description = """
-  element:
-  - element
-  - testable node
-  """)
-  public void testCase04(byte proto, IntSize testSize) {
-    final int frameIndex = 1, valueIndex = 0;
-
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.addByte(proto);
-      opts.addInt8(valueIndex);
-
-      opts.push(FrameY.create(f -> {
-        f.index = frameIndex;
-
-        f.regular(ElementName.DIV);
-
-        f.values8(1, 2);
-      }));
-    });
-
-    final ScanElementNodeState subject;
-    subject = new ScanElementNodeState(ctx);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res, new RenderTestableTextState(ctx, TestableKind.HEADING, testSize));
-
-    assertEquals(
-        ctx,
-
-        CtxY.create(opts -> {
-          opts.sink(ctx);
-
-          opts.push(FrameY.create(f -> {
-            f.index = frameIndex + 1;
-
-            f.regular(ElementName.DIV);
-
-            f.values8(2, 2);
-          }));
-
-          opts.push(FrameY.create(f -> {
-            f.index = valueIndex + 1;
-          }));
-        })
-    );
-  }
-
-  @DataProvider
-  public Object[][] testCase05Provider() {
-    return new Object[][] {
-        {HtmlBytes.THEADING8, IntSize.BIT8},
-        {HtmlBytes.THEADING16, IntSize.BIT16},
-        {HtmlBytes.THEADING24, IntSize.BIT24}
-    };
-  }
-
-  @Test(dataProvider = "testCase05Provider", description = """
-  element:
-  - element
-  - testable-only node
-  """)
-  public void testCase05(byte proto, IntSize testSize) {
-    final int frameIndex = 1, valueIndex = 0;
-
-    final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.addByte(proto);
-      opts.addInt8(valueIndex);
-
-      opts.push(FrameY.create(f -> {
-        f.index = frameIndex;
-
-        f.regular(ElementName.DIV);
-
-        f.values8(1, 2);
-      }));
-    });
-
-    final ScanElementNodeState subject;
-    subject = new ScanElementNodeState(ctx);
-
-    final State res;
-    res = subject.compute();
-
-    assertEquals(res, new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.HEADING, testSize));
-
-    assertEquals(
-        ctx,
-
-        CtxY.create(opts -> {
-          opts.sink(ctx);
-
-          opts.push(FrameY.create(f -> {
-            f.index = frameIndex + 1;
-
-            f.regular(ElementName.DIV);
-
-            f.values8(2, 2);
-          }));
-
-          opts.push(FrameY.create(f -> {
-            f.index = valueIndex + 1;
-          }));
-        })
+        state
     );
   }
 
   @Test(description = """
   element:
+  - no values left
+  - level 1
+  """)
+  public void compute05() {
+    test(
+        ScanElementNodeState::compute,
+
+        opts -> {
+          opts.push(f -> {
+            f.index = 0;
+          });
+
+          opts.push(f -> {
+            f.index = 0;
+
+            f.regular(ElementName.DIV);
+
+            f.values8(1, 1);
+          });
+        },
+
+        opts -> {
+          opts.push(f -> {
+            f.index = 0;
+          });
+
+          opts.push(f -> {
+            f.index = 0;
+
+            f.regular(ElementName.DIV);
+
+            f.values8(1, 1);
+          });
+
+          final RenderEndTagEvent event;
+          event = new RenderEndTagEvent(1, ElementName.DIV);
+
+          opts.result(event);
+        },
+
+        ctx -> new EndElementState(ctx)
+    );
+  }
+
+  @DataProvider
+  public Object[][] illegalStateExceptionProvider() {
+    return new Object[][] {
+        {HtmlBytes.DOCTYPE},
+
+        {HtmlBytes.ELEMSTR8},
+        {HtmlBytes.ELEMVOID8},
+
+        {HtmlBytes.FRAGSTR},
+        {HtmlBytes.FRAGEND},
+
+        {HtmlBytes.TEXT8},
+        {HtmlBytes.TEXT16},
+        {HtmlBytes.TEXT24},
+
+        {HtmlBytes.RAW8},
+        {HtmlBytes.RAW16},
+        {HtmlBytes.RAW24},
+
+        {HtmlBytes.xATTRIBUTE88},
+        {HtmlBytes.xATTRIBUTE816},
+        {HtmlBytes.xATTRIBUTE824},
+
+        {HtmlBytes.xBOOLEAN8},
+
+        {HtmlBytes.xJSACTION88},
+        {HtmlBytes.xJSACTION816},
+        {HtmlBytes.xJSACTION824},
+
+        {HtmlBytes.xFRAGSTR}
+    };
+  }
+
+  @Test(dataProvider = "illegalStateExceptionProvider", description = """
+  element:
   - element
-  - attribute op code
   - not an element node op
   """)
-  public void testCase06() {
+  public void compute06(byte proto) {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
+      opts.addByte(proto);
       opts.addInt8(0);
 
-      opts.push(FrameY.create(f -> {
+      opts.push(f -> {
         f.index = 1;
 
         f.regular(ElementName.DIV);
 
         f.values8(1, 2);
-      }));
+      });
     });
 
     final ScanElementNodeState subject;
@@ -410,22 +374,21 @@ public class ScanElementNodeStateTest {
 
   @Test(description = """
   element:
-  - element
   - unknown op code
   """)
-  public void testCase07() {
+  public void compute07() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
       opts.addByte((byte) 0x7F);
       opts.addInt8(0);
 
-      opts.push(FrameY.create(f -> {
+      opts.push(f -> {
         f.index = 1;
 
         f.regular(ElementName.DIV);
 
         f.values8(1, 2);
-      }));
+      });
     });
 
     final ScanElementNodeState subject;
@@ -441,6 +404,38 @@ public class ScanElementNodeStateTest {
 
       assertEquals(msg, "Invalid compiled HTML code");
     }
+  }
+
+  private Function<Ctx, State> s(Function<Ctx, State> state) {
+    return state;
+  }
+
+  private void test(
+      Function<ScanElementNodeState, State> op,
+      Consumer<? super CtxY> opts, Consumer<? super CtxY> expected, Function<Ctx, State> state) {
+    final Ctx ctx;
+    ctx = CtxY.create(opts);
+
+    final ScanElementNodeState subject;
+    subject = new ScanElementNodeState(ctx);
+
+    final State res;
+    res = op.apply(subject);
+
+    final State expectedState;
+    expectedState = state.apply(ctx);
+
+    assertEquals(res, expectedState);
+
+    assertEquals(
+        ctx,
+
+        CtxY.create(expectedOpts -> {
+          expectedOpts.sink(ctx);
+
+          expected.accept(expectedOpts);
+        })
+    );
   }
 
 }
