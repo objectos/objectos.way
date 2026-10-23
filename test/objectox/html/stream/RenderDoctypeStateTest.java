@@ -47,7 +47,7 @@ public class RenderDoctypeStateTest {
         CtxY.create(opts -> {
           opts.sink(ctx);
 
-          opts.result(RenderDoctypeEvent.of(0));
+          opts.result(new RenderDoctypeEvent(0));
 
           opts.push(new Frame(1));
         })

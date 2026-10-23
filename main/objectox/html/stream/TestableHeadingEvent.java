@@ -19,10 +19,6 @@ import objectos.html.stream.TestableHeading;
 
 public record TestableHeadingEvent(int level, int heading, String value) implements TestableHeading {
 
-  public static TestableHeadingEvent of(int level, int heading, String value) {
-    return new TestableHeadingEvent(level, heading, value);
-  }
-
   @Override
   public final String toString() {
     return "TestableHeading(" + heading + ", " + value + ")";

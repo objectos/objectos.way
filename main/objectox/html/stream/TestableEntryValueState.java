@@ -101,7 +101,7 @@ final class TestableEntryValueState implements State, ScanOp {
     frame.index = startIndex;
 
     final RenderTextEvent event;
-    event = RenderTextEvent.of(level, value);
+    event = new RenderTextEvent(level, value);
 
     ctx.result(event);
 
@@ -119,7 +119,7 @@ final class TestableEntryValueState implements State, ScanOp {
     value = ctx.objString(valueIndex);
 
     final TestableEntryValueEvent event;
-    event = TestableEntryValueEvent.of(level, value);
+    event = new TestableEntryValueEvent(level, value);
 
     ctx.result(event);
 

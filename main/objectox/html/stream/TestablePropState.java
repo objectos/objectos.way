@@ -103,7 +103,7 @@ final class TestablePropState implements State, ScanOp {
     frame.index = startIndex;
 
     final RenderTextEvent event;
-    event = RenderTextEvent.of(level, value);
+    event = new RenderTextEvent(level, value);
 
     ctx.result(event);
 
@@ -127,7 +127,7 @@ final class TestablePropState implements State, ScanOp {
     value = ctx.objString(valueIndex);
 
     final TestablePropEvent event;
-    event = TestablePropEvent.of(level, key, value);
+    event = new TestablePropEvent(level, key, value);
 
     ctx.result(event);
 

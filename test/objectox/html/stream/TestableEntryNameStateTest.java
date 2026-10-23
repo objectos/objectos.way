@@ -57,7 +57,7 @@ public class TestableEntryNameStateTest {
         level, IntSize.BIT8,
 
         opts -> {
-          opts.result(TestableEntryNameEvent.of(0, "foo"));
+          opts.result(new TestableEntryNameEvent(0, "foo"));
         },
 
         ctx -> new EndNodeState(ctx, FrameY.create(f -> {
@@ -106,7 +106,7 @@ public class TestableEntryNameStateTest {
             f.index = 0;
           });
 
-          opts.result(RenderTextEvent.of(1, "foo"));
+          opts.result(new RenderTextEvent(1, "foo"));
         },
 
         ctx -> new TestableEntryNameState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT8)

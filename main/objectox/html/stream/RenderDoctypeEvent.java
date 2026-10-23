@@ -19,10 +19,6 @@ import objectos.html.stream.RenderDoctype;
 
 public record RenderDoctypeEvent(int level) implements RenderDoctype {
 
-  public static RenderDoctypeEvent of(int level) {
-    return new RenderDoctypeEvent(level);
-  }
-
   @Override
   public final String toString() {
     return "RenderDoctype";

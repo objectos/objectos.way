@@ -45,7 +45,7 @@ final class RenderRawState implements State, ScanOp {
     raw = ctx.objString(rawIndex);
 
     final RenderRawEvent event;
-    event = RenderRawEvent.of(level, raw);
+    event = new RenderRawEvent(level, raw);
 
     ctx.result(event);
 

@@ -20,10 +20,6 @@ import objectox.html.elem.ElementName;
 
 public record BeginStartTagEvent(int level, ElementName elementName) implements BeginStartTag {
 
-  static BeginStartTagEvent of(int level, ElementName elementName) {
-    return new BeginStartTagEvent(level, elementName);
-  }
-
   @Override
   public final String name() {
     return elementName.name();

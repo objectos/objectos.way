@@ -19,10 +19,6 @@ import objectos.html.stream.TestableNewLine;
 
 public record TestableNewLineEvent(int level) implements TestableNewLine {
 
-  public static TestableNewLineEvent of(int level) {
-    return new TestableNewLineEvent(level);
-  }
-
   @Override
   public final String toString() {
     return "TestableNewLine()";

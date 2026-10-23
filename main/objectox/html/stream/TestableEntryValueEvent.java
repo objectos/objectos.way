@@ -19,10 +19,6 @@ import objectos.html.stream.TestableEntryValue;
 
 public record TestableEntryValueEvent(int level, String value) implements TestableEntryValue {
 
-  public static TestableEntryValueEvent of(int level, String value) {
-    return new TestableEntryValueEvent(level, value);
-  }
-
   @Override
   public final String toString() {
     return "TestableEntryValue(" + value + ")";

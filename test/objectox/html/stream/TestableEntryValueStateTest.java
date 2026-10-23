@@ -57,7 +57,7 @@ public class TestableEntryValueStateTest {
         level, IntSize.BIT8,
 
         opts -> {
-          opts.result(TestableEntryValueEvent.of(0, "bar"));
+          opts.result(new TestableEntryValueEvent(0, "bar"));
         },
 
         ctx -> new EndNodeState(ctx, FrameY.create(f -> {
@@ -106,7 +106,7 @@ public class TestableEntryValueStateTest {
             f.index = 0;
           });
 
-          opts.result(RenderTextEvent.of(1, "bar"));
+          opts.result(new RenderTextEvent(1, "bar"));
         },
 
         ctx -> new TestableEntryValueState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT8)

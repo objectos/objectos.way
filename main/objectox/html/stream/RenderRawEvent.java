@@ -19,10 +19,6 @@ import objectos.html.stream.RenderRaw;
 
 public record RenderRawEvent(int level, String value) implements RenderRaw {
 
-  public static RenderRawEvent of(int level, String value) {
-    return new RenderRawEvent(level, value);
-  }
-
   @Override
   public final String toString() {
     return "RenderRaw(" + value + ")";

@@ -64,7 +64,7 @@ public class RenderEndTagStateTest {
             f.values8(0, 0);
           }));
 
-          opts.result(RenderEndTagEvent.of(0, ElementName.DIV));
+          opts.result(new RenderEndTagEvent(0, ElementName.DIV));
         })
     );
   }

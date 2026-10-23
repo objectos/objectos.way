@@ -42,7 +42,7 @@ public class TestableNewLineStateTest {
         ScanLevel.TOP_LEVEL,
 
         opts -> {
-          opts.result(TestableNewLineEvent.of(0));
+          opts.result(new TestableNewLineEvent(0));
         },
 
         ctx -> new EndNodeState(ctx, FrameY.create(f -> {
@@ -84,7 +84,7 @@ public class TestableNewLineStateTest {
             f.values8(0, 1);
           });
 
-          opts.result(TestableNewLineEvent.of(1));
+          opts.result(new TestableNewLineEvent(1));
         },
 
         ctx -> new EndNodeState(ctx, FrameY.create(f -> {

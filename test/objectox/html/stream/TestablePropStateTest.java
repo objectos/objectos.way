@@ -59,7 +59,7 @@ public class TestablePropStateTest {
         level, IntSize.BIT8,
 
         opts -> {
-          opts.result(TestablePropEvent.of(0, "foo", "bar"));
+          opts.result(new TestablePropEvent(0, "foo", "bar"));
         },
 
         ctx -> new EndNodeState(ctx, FrameY.create(f -> {
@@ -110,7 +110,7 @@ public class TestablePropStateTest {
             f.index = 0;
           });
 
-          opts.result(RenderTextEvent.of(1, "bar"));
+          opts.result(new RenderTextEvent(1, "bar"));
         },
 
         ctx -> new TestablePropState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT8)

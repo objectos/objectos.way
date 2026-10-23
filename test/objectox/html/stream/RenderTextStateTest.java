@@ -47,7 +47,7 @@ public class RenderTextStateTest {
         ScanLevel.TOP_LEVEL, IntSize.BIT8,
 
         opts -> {
-          opts.result(RenderTextEvent.of(0, "Ipsum"));
+          opts.result(new RenderTextEvent(0, "Ipsum"));
         },
 
         ctx -> new EndNodeState(ctx, FrameY.create(f -> {
@@ -78,7 +78,7 @@ public class RenderTextStateTest {
         ScanLevel.TOP_LEVEL, IntSize.BIT16,
 
         opts -> {
-          opts.result(RenderTextEvent.of(0, "Ipsum"));
+          opts.result(new RenderTextEvent(0, "Ipsum"));
         },
 
         ctx -> new EndNodeState(ctx, FrameY.create(f -> {
@@ -109,7 +109,7 @@ public class RenderTextStateTest {
         ScanLevel.TOP_LEVEL, IntSize.BIT24,
 
         opts -> {
-          opts.result(RenderTextEvent.of(0, "Ipsum"));
+          opts.result(new RenderTextEvent(0, "Ipsum"));
         },
 
         ctx -> new EndNodeState(ctx, FrameY.create(f -> {
@@ -154,7 +154,7 @@ public class RenderTextStateTest {
             f.values8(0, 1);
           });
 
-          opts.result(RenderTextEvent.of(1, "Ipsum"));
+          opts.result(new RenderTextEvent(1, "Ipsum"));
         },
 
         ctx -> new EndNodeState(ctx, FrameY.create(f -> {

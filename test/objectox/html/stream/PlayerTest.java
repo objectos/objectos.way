@@ -651,7 +651,7 @@ public class PlayerTest {
     });
 
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), TestableHeadingEvent.of(0, 1, "Heading 1"));
+    assertEquals(subject.next(), new TestableHeadingEvent(0, 1, "Heading 1"));
     assertEquals(subject.hasNext(), false);
   }
 
@@ -673,7 +673,7 @@ public class PlayerTest {
     });
 
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), TestableHeadingEvent.of(0, 2, "Heading 2"));
+    assertEquals(subject.next(), new TestableHeadingEvent(0, 2, "Heading 2"));
     assertEquals(subject.hasNext(), false);
   }
 
@@ -703,9 +703,9 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new EndStartTagEvent(0, EndStartTagKind.ELEMENT));
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), RenderTextEvent.of(1, "Ipsum"));
+    assertEquals(subject.next(), new RenderTextEvent(1, "Ipsum"));
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), TestableHeadingEvent.of(1, 1, "Ipsum"));
+    assertEquals(subject.next(), new TestableHeadingEvent(1, 1, "Ipsum"));
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new RenderEndTagEvent(0, ElementName.DIV));
     assertEquals(subject.hasNext(), false);
@@ -737,9 +737,9 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new EndStartTagEvent(0, EndStartTagKind.ELEMENT));
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), RenderTextEvent.of(1, "bar"));
+    assertEquals(subject.next(), new RenderTextEvent(1, "bar"));
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), TestablePropEvent.of(1, "foo", "bar"));
+    assertEquals(subject.next(), new TestablePropEvent(1, "foo", "bar"));
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new RenderEndTagEvent(0, ElementName.DIV));
     assertEquals(subject.hasNext(), false);
@@ -767,7 +767,7 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new EndStartTagEvent(0, EndStartTagKind.ELEMENT));
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), TestableNewLineEvent.of(1));
+    assertEquals(subject.next(), new TestableNewLineEvent(1));
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new RenderEndTagEvent(0, ElementName.DIV));
     assertEquals(subject.hasNext(), false);
@@ -791,7 +791,7 @@ public class PlayerTest {
     });
 
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), TestableCellEvent.of(0, 5, "12345"));
+    assertEquals(subject.next(), new TestableCellEvent(0, 5, "12345"));
     assertEquals(subject.hasNext(), false);
   }
 
@@ -827,7 +827,7 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new EndStartTagEvent(0, EndStartTagKind.ELEMENT));
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), TestableHeadingEvent.of(1, 1, "Ipsum"));
+    assertEquals(subject.next(), new TestableHeadingEvent(1, 1, "Ipsum"));
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new RenderEndTagEvent(0, ElementName.DIV));
     assertEquals(subject.hasNext(), false);

@@ -19,10 +19,6 @@ import objectos.html.stream.TestableCell;
 
 public record TestableCellEvent(int level, int width, String value) implements TestableCell {
 
-  public static TestableCellEvent of(int level, int width, String value) {
-    return new TestableCellEvent(level, width, value);
-  }
-
   @Override
   public final String toString() {
     return "TestableCell(" + width + ", " + value + ")";

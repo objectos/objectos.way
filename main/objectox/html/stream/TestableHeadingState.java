@@ -103,7 +103,7 @@ final class TestableHeadingState implements State, ScanOp {
     frame.index = startIndex;
 
     final RenderTextEvent event;
-    event = RenderTextEvent.of(level, value);
+    event = new RenderTextEvent(level, value);
 
     ctx.result(event);
 
@@ -127,7 +127,7 @@ final class TestableHeadingState implements State, ScanOp {
     value = ctx.objString(valueIndex);
 
     final TestableHeadingEvent event;
-    event = TestableHeadingEvent.of(level, heading, value);
+    event = new TestableHeadingEvent(level, heading, value);
 
     ctx.result(event);
 

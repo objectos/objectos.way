@@ -20,10 +20,6 @@ import objectox.html.elem.ElementName;
 
 public record RenderEndTagEvent(int level, ElementName elementName) implements RenderEndTag {
 
-  public static RenderEndTagEvent of(int level, ElementName elementName) {
-    return new RenderEndTagEvent(level, elementName);
-  }
-
   @Override
   public final String name() {
     return elementName.name();

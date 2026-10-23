@@ -20,10 +20,6 @@ import objectox.html.attr.AttributeName;
 
 public record RenderBooleanAttributeEvent(int level, AttributeName attributeName) implements RenderBooleanAttribute {
 
-  static RenderBooleanAttributeEvent of(int level, AttributeName attributeName) {
-    return new RenderBooleanAttributeEvent(level, attributeName);
-  }
-
   @Override
   public final String name() {
     return attributeName.name();

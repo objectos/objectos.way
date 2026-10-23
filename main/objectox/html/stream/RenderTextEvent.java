@@ -19,10 +19,6 @@ import objectos.html.stream.RenderText;
 
 public record RenderTextEvent(int level, String value) implements RenderText {
 
-  public static RenderTextEvent of(int level, String value) {
-    return new RenderTextEvent(level, value);
-  }
-
   @Override
   public final String toString() {
     return "RenderText(" + value + ")";

@@ -22,10 +22,6 @@ import objectox.html.attr.AttributeName;
 public record RenderJsActionAttributeEvent(int level, AttributeName attributeName, JsAction action)
     implements RenderJsActionAttribute {
 
-  static RenderJsActionAttributeEvent of(int level, AttributeName attributeName, JsAction action) {
-    return new RenderJsActionAttributeEvent(level, attributeName, action);
-  }
-
   @Override
   public final String name() {
     return attributeName.name();

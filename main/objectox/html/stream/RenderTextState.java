@@ -45,7 +45,7 @@ final class RenderTextState implements State, ScanOp {
     text = ctx.objString(textIndex);
 
     final RenderTextEvent event;
-    event = RenderTextEvent.of(level, text);
+    event = new RenderTextEvent(level, text);
 
     ctx.result(event);
 

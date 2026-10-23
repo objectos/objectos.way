@@ -33,7 +33,7 @@ final class TestableNewLineState implements State, ScanOp {
     level = ctx.stackIndex();
 
     final TestableNewLineEvent event;
-    event = TestableNewLineEvent.of(level);
+    event = new TestableNewLineEvent(level);
 
     ctx.result(event);
 

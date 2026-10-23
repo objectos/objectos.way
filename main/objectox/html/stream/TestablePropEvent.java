@@ -19,10 +19,6 @@ import objectos.html.stream.TestableProp;
 
 public record TestablePropEvent(int level, String key, String value) implements TestableProp {
 
-  public static TestablePropEvent of(int level, String key, String value) {
-    return new TestablePropEvent(level, key, value);
-  }
-
   @Override
   public final String toString() {
     return "TestableProp(" + key + ", " + value + ")";

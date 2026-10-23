@@ -29,7 +29,7 @@ final class RenderDoctypeState implements State, ScanOp {
     level = ctx.stackIndex();
 
     final RenderDoctypeEvent event;
-    event = RenderDoctypeEvent.of(level);
+    event = new RenderDoctypeEvent(level);
 
     ctx.result(event);
 

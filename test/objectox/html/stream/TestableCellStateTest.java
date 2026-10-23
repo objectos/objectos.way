@@ -59,7 +59,7 @@ public class TestableCellStateTest {
         level, IntSize.BIT8,
 
         opts -> {
-          opts.result(TestableCellEvent.of(0, 1, "Ipsum"));
+          opts.result(new TestableCellEvent(0, 1, "Ipsum"));
         },
 
         ctx -> new EndNodeState(ctx, FrameY.create(f -> {
@@ -110,7 +110,7 @@ public class TestableCellStateTest {
             f.index = 0;
           });
 
-          opts.result(RenderTextEvent.of(1, "Ipsum"));
+          opts.result(new RenderTextEvent(1, "Ipsum"));
         },
 
         ctx -> new TestableCellState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT8)

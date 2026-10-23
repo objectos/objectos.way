@@ -20,10 +20,6 @@ import objectos.html.stream.EndStartTagKind;
 
 public record EndStartTagEvent(int level, EndStartTagKind kind) implements EndStartTag {
 
-  public static EndStartTagEvent of(int level, EndStartTagKind kind) {
-    return new EndStartTagEvent(level, kind);
-  }
-
   @Override
   public final String toString() {
     return "EndStartTag" + suffix();
