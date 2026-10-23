@@ -195,9 +195,9 @@ public class ScanElementAttributeStateTest {
         {HtmlBytes.xTHEADING16, s(ctx -> new TestableHeadingState(ctx, TestableLevel.REGULAR, IntSize.BIT16))},
         {HtmlBytes.xTHEADING24, s(ctx -> new TestableHeadingState(ctx, TestableLevel.REGULAR, IntSize.BIT24))},
 
-        {HtmlBytes.xTCELL8, s(ctx -> new RenderTestableTextState(ctx, TestableKind.CELL, IntSize.BIT8))},
-        {HtmlBytes.xTCELL16, s(ctx -> new RenderTestableTextState(ctx, TestableKind.CELL, IntSize.BIT16))},
-        {HtmlBytes.xTCELL24, s(ctx -> new RenderTestableTextState(ctx, TestableKind.CELL, IntSize.BIT24))},
+        {HtmlBytes.xTCELL8, s(ctx -> new TestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT8))},
+        {HtmlBytes.xTCELL16, s(ctx -> new TestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT16))},
+        {HtmlBytes.xTCELL24, s(ctx -> new TestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT24))},
 
         {HtmlBytes.xTPROP8, s(ctx -> new RenderTestableTextState(ctx, TestableKind.PROP, IntSize.BIT8))},
         {HtmlBytes.xTPROP16, s(ctx -> new RenderTestableTextState(ctx, TestableKind.PROP, IntSize.BIT16))},
@@ -212,10 +212,6 @@ public class ScanElementAttributeStateTest {
         {HtmlBytes.xTPROPVAL24, s(ctx -> new RenderTestableTextState(ctx, TestableKind.PROP_VALUE, IntSize.BIT24))},
 
         {HtmlBytes.xTNEWLINE, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.NESTED, TestableKind.NEWLINE, IntSize.BIT8))},
-
-        {HtmlBytes.TCELL8, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.CELL, IntSize.BIT8))},
-        {HtmlBytes.TCELL16, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.CELL, IntSize.BIT16))},
-        {HtmlBytes.TCELL24, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.CELL, IntSize.BIT24))},
 
         {HtmlBytes.TPROP8, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.PROP, IntSize.BIT8))},
         {HtmlBytes.TPROP16, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.PROP, IntSize.BIT16))},
@@ -547,6 +543,10 @@ public class ScanElementAttributeStateTest {
         {HtmlBytes.THEADING8},
         {HtmlBytes.THEADING16},
         {HtmlBytes.THEADING24},
+
+        {HtmlBytes.TCELL8},
+        {HtmlBytes.TCELL16},
+        {HtmlBytes.TCELL24},
 
         {HtmlBytes.xFRAGSTR}
     };

@@ -60,9 +60,9 @@ public class ScanDocumentNodeStateTest {
         {HtmlBytes.THEADING16, s(ctx -> new TestableHeadingState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT16))},
         {HtmlBytes.THEADING24, s(ctx -> new TestableHeadingState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT24))},
 
-        {HtmlBytes.TCELL8, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.CELL, IntSize.BIT8))},
-        {HtmlBytes.TCELL16, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.CELL, IntSize.BIT16))},
-        {HtmlBytes.TCELL24, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.CELL, IntSize.BIT24))},
+        {HtmlBytes.TCELL8, s(ctx -> new TestableCellState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT8))},
+        {HtmlBytes.TCELL16, s(ctx -> new TestableCellState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT16))},
+        {HtmlBytes.TCELL24, s(ctx -> new TestableCellState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT24))},
 
         {HtmlBytes.TPROP8, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.PROP, IntSize.BIT8))},
         {HtmlBytes.TPROP16, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.PROP, IntSize.BIT16))},
@@ -162,7 +162,11 @@ public class ScanDocumentNodeStateTest {
 
         {HtmlBytes.oTHEADING8, 2},
         {HtmlBytes.oTHEADING16, 3},
-        {HtmlBytes.oTHEADING24, 4}
+        {HtmlBytes.oTHEADING24, 4},
+
+        {HtmlBytes.oTCELL8, 2},
+        {HtmlBytes.oTCELL16, 4},
+        {HtmlBytes.oTCELL24, 6}
     };
   }
 
@@ -203,10 +207,6 @@ public class ScanDocumentNodeStateTest {
         {HtmlBytes.VALUES8},
         {HtmlBytes.VALUES16},
         {HtmlBytes.VALUES24},
-
-        {HtmlBytes.oTCELL8},
-        {HtmlBytes.oTCELL16},
-        {HtmlBytes.oTCELL24},
 
         {HtmlBytes.oTPROP8},
         {HtmlBytes.oTPROP16},
