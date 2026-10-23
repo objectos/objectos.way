@@ -92,19 +92,15 @@ public class ScanElementNodeStateTest {
         {HtmlBytes.xTPROP16, s(ctx -> new TestablePropState(ctx, TestableLevel.REGULAR, IntSize.BIT16))},
         {HtmlBytes.xTPROP24, s(ctx -> new TestablePropState(ctx, TestableLevel.REGULAR, IntSize.BIT24))},
 
-        {HtmlBytes.xTPROPKEY8, s(ctx -> new RenderTestableTextState(ctx, TestableKind.PROP_KEY, IntSize.BIT8))},
-        {HtmlBytes.xTPROPKEY16, s(ctx -> new RenderTestableTextState(ctx, TestableKind.PROP_KEY, IntSize.BIT16))},
-        {HtmlBytes.xTPROPKEY24, s(ctx -> new RenderTestableTextState(ctx, TestableKind.PROP_KEY, IntSize.BIT24))},
+        {HtmlBytes.xTPROPKEY8, s(ctx -> new TestableEntryNameState(ctx, TestableLevel.REGULAR, IntSize.BIT8))},
+        {HtmlBytes.xTPROPKEY16, s(ctx -> new TestableEntryNameState(ctx, TestableLevel.REGULAR, IntSize.BIT16))},
+        {HtmlBytes.xTPROPKEY24, s(ctx -> new TestableEntryNameState(ctx, TestableLevel.REGULAR, IntSize.BIT24))},
 
         {HtmlBytes.xTPROPVAL8, s(ctx -> new RenderTestableTextState(ctx, TestableKind.PROP_VALUE, IntSize.BIT8))},
         {HtmlBytes.xTPROPVAL16, s(ctx -> new RenderTestableTextState(ctx, TestableKind.PROP_VALUE, IntSize.BIT16))},
         {HtmlBytes.xTPROPVAL24, s(ctx -> new RenderTestableTextState(ctx, TestableKind.PROP_VALUE, IntSize.BIT24))},
 
         {HtmlBytes.xTNEWLINE, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.NESTED, TestableKind.NEWLINE, IntSize.BIT8))},
-
-        {HtmlBytes.TPROPKEY8, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.PROP_KEY, IntSize.BIT8))},
-        {HtmlBytes.TPROPKEY16, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.PROP_KEY, IntSize.BIT16))},
-        {HtmlBytes.TPROPKEY24, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.PROP_KEY, IntSize.BIT24))},
 
         {HtmlBytes.TPROPVAL8, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.PROP_VALUE, IntSize.BIT8))},
         {HtmlBytes.TPROPVAL16, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.PROP_VALUE, IntSize.BIT16))},
@@ -322,6 +318,10 @@ public class ScanElementNodeStateTest {
         {HtmlBytes.TPROP8},
         {HtmlBytes.TPROP16},
         {HtmlBytes.TPROP24},
+
+        {HtmlBytes.TPROPKEY8},
+        {HtmlBytes.TPROPKEY16},
+        {HtmlBytes.TPROPKEY24},
 
         {HtmlBytes.xATTRIBUTE88},
         {HtmlBytes.xATTRIBUTE816},
