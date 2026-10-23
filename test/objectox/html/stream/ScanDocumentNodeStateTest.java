@@ -56,9 +56,9 @@ public class ScanDocumentNodeStateTest {
 
         {HtmlBytes.FRAGEND, s(ctx -> new ScanDocumentNodeState(ctx))},
 
-        {HtmlBytes.THEADING8, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.HEADING, IntSize.BIT8))},
-        {HtmlBytes.THEADING16, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.HEADING, IntSize.BIT16))},
-        {HtmlBytes.THEADING24, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.HEADING, IntSize.BIT24))},
+        {HtmlBytes.THEADING8, s(ctx -> new TestableHeadingState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT8))},
+        {HtmlBytes.THEADING16, s(ctx -> new TestableHeadingState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT16))},
+        {HtmlBytes.THEADING24, s(ctx -> new TestableHeadingState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT24))},
 
         {HtmlBytes.TCELL8, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.CELL, IntSize.BIT8))},
         {HtmlBytes.TCELL16, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.CELL, IntSize.BIT16))},
@@ -158,7 +158,11 @@ public class ScanDocumentNodeStateTest {
 
         {HtmlBytes.xTPROPVAL8, 1},
         {HtmlBytes.xTPROPVAL16, 2},
-        {HtmlBytes.xTPROPVAL24, 3}
+        {HtmlBytes.xTPROPVAL24, 3},
+
+        {HtmlBytes.oTHEADING8, 2},
+        {HtmlBytes.oTHEADING16, 3},
+        {HtmlBytes.oTHEADING24, 4}
     };
   }
 
@@ -199,10 +203,6 @@ public class ScanDocumentNodeStateTest {
         {HtmlBytes.VALUES8},
         {HtmlBytes.VALUES16},
         {HtmlBytes.VALUES24},
-
-        {HtmlBytes.oTHEADING8},
-        {HtmlBytes.oTHEADING16},
-        {HtmlBytes.oTHEADING24},
 
         {HtmlBytes.oTCELL8},
         {HtmlBytes.oTCELL16},

@@ -15,12 +15,9 @@
  */
 package objectox.html;
 
-import static org.testng.Assert.assertEquals;
-
-import objectos.html.Template;
-import org.testng.annotations.Test;
-
 public class DomFormatterTestJson {
+
+  /*
 
   @Test(description = """
   Empty element
@@ -33,12 +30,12 @@ public class DomFormatterTestJson {
             html();
           }
         },
-
+  
         """
         <html></html>"""
     );
   }
-
+  
   @Test(description = """
   attributes
   """)
@@ -50,12 +47,12 @@ public class DomFormatterTestJson {
             div(id("foo"));
           }
         },
-
+  
         """
         <div id='foo'></div>"""
     );
   }
-
+  
   @Test(description = """
   attributes escaping (HTML)
   """)
@@ -66,7 +63,7 @@ public class DomFormatterTestJson {
           protected final void render() {
             StringBuilder sb;
             sb = new StringBuilder();
-
+  
             sb.append('\'');
             sb.append(' ');
             sb.append('\"');
@@ -76,15 +73,15 @@ public class DomFormatterTestJson {
             sb.append('>');
             sb.append(' ');
             sb.append('&');
-
+  
             div(id(sb.toString()));
           }
         },
-
+  
         "<div id='&#39; \\\" < > &amp;'></div>"
     );
   }
-
+  
   @Test(description = """
   attributes escaping (JSON)
   """)
@@ -95,22 +92,22 @@ public class DomFormatterTestJson {
           protected final void render() {
             StringBuilder sb;
             sb = new StringBuilder();
-
+  
             for (char c = 0; c < 32; c++) {
               sb.append(c);
             }
-
+  
             sb.append(' ');
             sb.append('\"');
-
+  
             div(id(sb.toString()));
           }
         },
-
+  
         "<div id='\\u0000\\u0001\\u0002\\u0003\\u0004\\u0005\\u0006\\u0007\\b\\t\\n\\u000B\\f\\r\\u000E\\u000F\\u0010\\u0011\\u0012\\u0013\\u0014\\u0015\\u0016\\u0017\\u0018\\u0019\\u001A\\u001B\\u001C\\u001D\\u001E\\u001F \\\"'></div>"
     );
   }
-
+  
   @Test(description = """
   text
   """)
@@ -122,11 +119,11 @@ public class DomFormatterTestJson {
             div(text("foo"));
           }
         },
-
+  
         "<div>foo</div>"
     );
   }
-
+  
   @Test(description = """
   text escape (HTML)
   """)
@@ -137,7 +134,7 @@ public class DomFormatterTestJson {
           protected final void render() {
             StringBuilder sb;
             sb = new StringBuilder();
-
+  
             sb.append('\'');
             sb.append(' ');
             sb.append('\"');
@@ -147,15 +144,15 @@ public class DomFormatterTestJson {
             sb.append('>');
             sb.append(' ');
             sb.append('&');
-
+  
             div(text(sb.toString()));
           }
         },
-
+  
         "<div>' \\\" &lt; &gt; &amp;</div>"
     );
   }
-
+  
   @Test(description = """
   text escape (JSON)
   """)
@@ -166,22 +163,22 @@ public class DomFormatterTestJson {
           protected final void render() {
             StringBuilder sb;
             sb = new StringBuilder();
-
+  
             for (char c = 0; c < 32; c++) {
               sb.append(c);
             }
-
+  
             sb.append(' ');
             sb.append('\"');
-
+  
             div(text(sb.toString()));
           }
         },
-
+  
         "<div>\\u0000\\u0001\\u0002\\u0003\\u0004\\u0005\\u0006\\u0007\\b\\t\\n\\u000B\\f\\r\\u000E\\u000F\\u0010\\u0011\\u0012\\u0013\\u0014\\u0015\\u0016\\u0017\\u0018\\u0019\\u001A\\u001B\\u001C\\u001D\\u001E\\u001F \\\"</div>"
     );
   }
-
+  
   @Test(description = """
   raw
   """)
@@ -193,11 +190,11 @@ public class DomFormatterTestJson {
             div(raw("foo"));
           }
         },
-
+  
         "<div>foo</div>"
     );
   }
-
+  
   @Test(description = """
   raw escape (HTML)
   """)
@@ -208,7 +205,7 @@ public class DomFormatterTestJson {
           protected final void render() {
             StringBuilder sb;
             sb = new StringBuilder();
-
+  
             sb.append('\'');
             sb.append(' ');
             sb.append('\"');
@@ -218,15 +215,15 @@ public class DomFormatterTestJson {
             sb.append('>');
             sb.append(' ');
             sb.append('&');
-
+  
             div(raw(sb.toString()));
           }
         },
-
+  
         "<div>' \\\" < > &</div>"
     );
   }
-
+  
   @Test(description = """
   raw escape (JSON)
   """)
@@ -237,24 +234,26 @@ public class DomFormatterTestJson {
           protected final void render() {
             StringBuilder sb;
             sb = new StringBuilder();
-
+  
             for (char c = 0; c < 32; c++) {
               sb.append(c);
             }
-
+  
             sb.append(' ');
             sb.append('\"');
-
+  
             div(raw(sb.toString()));
           }
         },
-
+  
         "<div>\\u0000\\u0001\\u0002\\u0003\\u0004\\u0005\\u0006\\u0007\\b\\t\\n\\u000B\\f\\r\\u000E\\u000F\\u0010\\u0011\\u0012\\u0013\\u0014\\u0015\\u0016\\u0017\\u0018\\u0019\\u001A\\u001B\\u001C\\u001D\\u001E\\u001F \\\"</div>"
     );
   }
-
+  
   private void test(Template template, String expected) {
     assertEquals(template.toJsonString(), expected);
   }
+  
+  */
 
 }

@@ -191,9 +191,9 @@ public class ScanElementAttributeStateTest {
         {HtmlBytes.xRAW16, s(ctx -> new RenderRawState(ctx, ScanLevel.NESTED, IntSize.BIT16))},
         {HtmlBytes.xRAW24, s(ctx -> new RenderRawState(ctx, ScanLevel.NESTED, IntSize.BIT24))},
 
-        {HtmlBytes.xTHEADING8, s(ctx -> new RenderTestableTextState(ctx, TestableKind.HEADING, IntSize.BIT8))},
-        {HtmlBytes.xTHEADING16, s(ctx -> new RenderTestableTextState(ctx, TestableKind.HEADING, IntSize.BIT16))},
-        {HtmlBytes.xTHEADING24, s(ctx -> new RenderTestableTextState(ctx, TestableKind.HEADING, IntSize.BIT24))},
+        {HtmlBytes.xTHEADING8, s(ctx -> new TestableHeadingState(ctx, TestableLevel.REGULAR, IntSize.BIT8))},
+        {HtmlBytes.xTHEADING16, s(ctx -> new TestableHeadingState(ctx, TestableLevel.REGULAR, IntSize.BIT16))},
+        {HtmlBytes.xTHEADING24, s(ctx -> new TestableHeadingState(ctx, TestableLevel.REGULAR, IntSize.BIT24))},
 
         {HtmlBytes.xTCELL8, s(ctx -> new RenderTestableTextState(ctx, TestableKind.CELL, IntSize.BIT8))},
         {HtmlBytes.xTCELL16, s(ctx -> new RenderTestableTextState(ctx, TestableKind.CELL, IntSize.BIT16))},
@@ -212,10 +212,6 @@ public class ScanElementAttributeStateTest {
         {HtmlBytes.xTPROPVAL24, s(ctx -> new RenderTestableTextState(ctx, TestableKind.PROP_VALUE, IntSize.BIT24))},
 
         {HtmlBytes.xTNEWLINE, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.NESTED, TestableKind.NEWLINE, IntSize.BIT8))},
-
-        {HtmlBytes.THEADING8, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.HEADING, IntSize.BIT8))},
-        {HtmlBytes.THEADING16, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.HEADING, IntSize.BIT16))},
-        {HtmlBytes.THEADING24, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.HEADING, IntSize.BIT24))},
 
         {HtmlBytes.TCELL8, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.CELL, IntSize.BIT8))},
         {HtmlBytes.TCELL16, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.CELL, IntSize.BIT16))},
@@ -547,6 +543,10 @@ public class ScanElementAttributeStateTest {
         {HtmlBytes.RAW8},
         {HtmlBytes.RAW16},
         {HtmlBytes.RAW24},
+
+        {HtmlBytes.THEADING8},
+        {HtmlBytes.THEADING16},
+        {HtmlBytes.THEADING24},
 
         {HtmlBytes.xFRAGSTR}
     };

@@ -139,9 +139,9 @@ class Ctx {
       case HtmlBytes.RAW16 -> new RenderRawState(this, ScanLevel.TOP_LEVEL, IntSize.BIT16);
       case HtmlBytes.RAW24 -> new RenderRawState(this, ScanLevel.TOP_LEVEL, IntSize.BIT24);
 
-      case HtmlBytes.THEADING8 -> new RenderTestableOnlyState(this, ScanLevel.TOP_LEVEL, TestableKind.HEADING, IntSize.BIT8);
-      case HtmlBytes.THEADING16 -> new RenderTestableOnlyState(this, ScanLevel.TOP_LEVEL, TestableKind.HEADING, IntSize.BIT16);
-      case HtmlBytes.THEADING24 -> new RenderTestableOnlyState(this, ScanLevel.TOP_LEVEL, TestableKind.HEADING, IntSize.BIT24);
+      case HtmlBytes.THEADING8 -> new TestableHeadingState(this, TestableLevel.TOP_LEVEL, IntSize.BIT8);
+      case HtmlBytes.THEADING16 -> new TestableHeadingState(this, TestableLevel.TOP_LEVEL, IntSize.BIT16);
+      case HtmlBytes.THEADING24 -> new TestableHeadingState(this, TestableLevel.TOP_LEVEL, IntSize.BIT24);
 
       case HtmlBytes.TCELL8 -> new RenderTestableOnlyState(this, ScanLevel.TOP_LEVEL, TestableKind.CELL, IntSize.BIT8);
       case HtmlBytes.TCELL16 -> new RenderTestableOnlyState(this, ScanLevel.TOP_LEVEL, TestableKind.CELL, IntSize.BIT16);
@@ -184,9 +184,9 @@ class Ctx {
       case HtmlBytes.xRAW16 -> new RenderRawState(this, ScanLevel.NESTED, IntSize.BIT16);
       case HtmlBytes.xRAW24 -> new RenderRawState(this, ScanLevel.NESTED, IntSize.BIT24);
 
-      case HtmlBytes.xTHEADING8 -> new RenderTestableTextState(this, TestableKind.HEADING, IntSize.BIT8);
-      case HtmlBytes.xTHEADING16 -> new RenderTestableTextState(this, TestableKind.HEADING, IntSize.BIT16);
-      case HtmlBytes.xTHEADING24 -> new RenderTestableTextState(this, TestableKind.HEADING, IntSize.BIT24);
+      case HtmlBytes.xTHEADING8 -> new TestableHeadingState(this, TestableLevel.REGULAR, IntSize.BIT8);
+      case HtmlBytes.xTHEADING16 -> new TestableHeadingState(this, TestableLevel.REGULAR, IntSize.BIT16);
+      case HtmlBytes.xTHEADING24 -> new TestableHeadingState(this, TestableLevel.REGULAR, IntSize.BIT24);
 
       case HtmlBytes.xTCELL8 -> new RenderTestableTextState(this, TestableKind.CELL, IntSize.BIT8);
       case HtmlBytes.xTCELL16 -> new RenderTestableTextState(this, TestableKind.CELL, IntSize.BIT16);
@@ -205,6 +205,10 @@ class Ctx {
       case HtmlBytes.xTPROPVAL24 -> new RenderTestableTextState(this, TestableKind.PROP_VALUE, IntSize.BIT24);
 
       case HtmlBytes.xTNEWLINE -> new RenderTestableOnlyState(this, ScanLevel.NESTED, TestableKind.NEWLINE, IntSize.BIT8);
+
+      case HtmlBytes.oTHEADING8 -> new TestableHeadingState(this, TestableLevel.TEST_ONLY, IntSize.BIT8);
+      case HtmlBytes.oTHEADING16 -> new TestableHeadingState(this, TestableLevel.TEST_ONLY, IntSize.BIT16);
+      case HtmlBytes.oTHEADING24 -> new TestableHeadingState(this, TestableLevel.TEST_ONLY, IntSize.BIT24);
 
       default -> throw State.malformed();
     };

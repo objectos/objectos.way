@@ -807,7 +807,7 @@ public class PlayerTest {
       opts.addByte(HtmlBytes.xFRAGSTR);
       opts.addInt24(8);
 
-      opts.addByte(HtmlBytes.THEADING8);
+      opts.addByte(HtmlBytes.oTHEADING8);
 
       opts.addByte((byte) 1);
 
