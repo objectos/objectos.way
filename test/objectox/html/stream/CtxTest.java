@@ -53,9 +53,9 @@ public class CtxTest {
         {HtmlBytes.TCELL16, op(ctx -> new TestableCellState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT16))},
         {HtmlBytes.TCELL24, op(ctx -> new TestableCellState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT24))},
 
-        {HtmlBytes.TPROP8, op(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.PROP, IntSize.BIT8))},
-        {HtmlBytes.TPROP16, op(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.PROP, IntSize.BIT16))},
-        {HtmlBytes.TPROP24, op(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.PROP, IntSize.BIT24))},
+        {HtmlBytes.TPROP8, op(ctx -> new TestablePropState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT8))},
+        {HtmlBytes.TPROP16, op(ctx -> new TestablePropState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT16))},
+        {HtmlBytes.TPROP24, op(ctx -> new TestablePropState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT24))},
 
         {HtmlBytes.TPROPKEY8, op(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.PROP_KEY, IntSize.BIT8))},
         {HtmlBytes.TPROPKEY16, op(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.PROP_KEY, IntSize.BIT16))},
@@ -98,9 +98,9 @@ public class CtxTest {
         {HtmlBytes.xTCELL16, op(ctx -> new TestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT16))},
         {HtmlBytes.xTCELL24, op(ctx -> new TestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT24))},
 
-        {HtmlBytes.xTPROP8, op(ctx -> new RenderTestableTextState(ctx, TestableKind.PROP, IntSize.BIT8))},
-        {HtmlBytes.xTPROP16, op(ctx -> new RenderTestableTextState(ctx, TestableKind.PROP, IntSize.BIT16))},
-        {HtmlBytes.xTPROP24, op(ctx -> new RenderTestableTextState(ctx, TestableKind.PROP, IntSize.BIT24))},
+        {HtmlBytes.xTPROP8, op(ctx -> new TestablePropState(ctx, TestableLevel.REGULAR, IntSize.BIT8))},
+        {HtmlBytes.xTPROP16, op(ctx -> new TestablePropState(ctx, TestableLevel.REGULAR, IntSize.BIT16))},
+        {HtmlBytes.xTPROP24, op(ctx -> new TestablePropState(ctx, TestableLevel.REGULAR, IntSize.BIT24))},
 
         {HtmlBytes.xTPROPKEY8, op(ctx -> new RenderTestableTextState(ctx, TestableKind.PROP_KEY, IntSize.BIT8))},
         {HtmlBytes.xTPROPKEY16, op(ctx -> new RenderTestableTextState(ctx, TestableKind.PROP_KEY, IntSize.BIT16))},
@@ -118,7 +118,11 @@ public class CtxTest {
 
         {HtmlBytes.oTCELL8, op(ctx -> new TestableCellState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT8))},
         {HtmlBytes.oTCELL16, op(ctx -> new TestableCellState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT16))},
-        {HtmlBytes.oTCELL24, op(ctx -> new TestableCellState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT24))}
+        {HtmlBytes.oTCELL24, op(ctx -> new TestableCellState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT24))},
+
+        {HtmlBytes.oTPROP8, op(ctx -> new TestablePropState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT8))},
+        {HtmlBytes.oTPROP16, op(ctx -> new TestablePropState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT16))},
+        {HtmlBytes.oTPROP24, op(ctx -> new TestablePropState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT24))}
     };
   }
 
