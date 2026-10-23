@@ -155,9 +155,9 @@ class Ctx {
       case HtmlBytes.TPROPKEY16 -> new TestableEntryNameState(this, TestableLevel.TOP_LEVEL, IntSize.BIT16);
       case HtmlBytes.TPROPKEY24 -> new TestableEntryNameState(this, TestableLevel.TOP_LEVEL, IntSize.BIT24);
 
-      case HtmlBytes.TPROPVAL8 -> new RenderTestableOnlyState(this, ScanLevel.TOP_LEVEL, TestableKind.PROP_VALUE, IntSize.BIT8);
-      case HtmlBytes.TPROPVAL16 -> new RenderTestableOnlyState(this, ScanLevel.TOP_LEVEL, TestableKind.PROP_VALUE, IntSize.BIT16);
-      case HtmlBytes.TPROPVAL24 -> new RenderTestableOnlyState(this, ScanLevel.TOP_LEVEL, TestableKind.PROP_VALUE, IntSize.BIT24);
+      case HtmlBytes.TPROPVAL8 -> new TestableEntryValueState(this, TestableLevel.TOP_LEVEL, IntSize.BIT8);
+      case HtmlBytes.TPROPVAL16 -> new TestableEntryValueState(this, TestableLevel.TOP_LEVEL, IntSize.BIT16);
+      case HtmlBytes.TPROPVAL24 -> new TestableEntryValueState(this, TestableLevel.TOP_LEVEL, IntSize.BIT24);
 
       case HtmlBytes.TNEWLINE -> new RenderTestableOnlyState(this, ScanLevel.TOP_LEVEL, TestableKind.NEWLINE, IntSize.BIT8);
 
@@ -200,9 +200,9 @@ class Ctx {
       case HtmlBytes.xTPROPKEY16 -> new TestableEntryNameState(this, TestableLevel.REGULAR, IntSize.BIT16);
       case HtmlBytes.xTPROPKEY24 -> new TestableEntryNameState(this, TestableLevel.REGULAR, IntSize.BIT24);
 
-      case HtmlBytes.xTPROPVAL8 -> new RenderTestableTextState(this, TestableKind.PROP_VALUE, IntSize.BIT8);
-      case HtmlBytes.xTPROPVAL16 -> new RenderTestableTextState(this, TestableKind.PROP_VALUE, IntSize.BIT16);
-      case HtmlBytes.xTPROPVAL24 -> new RenderTestableTextState(this, TestableKind.PROP_VALUE, IntSize.BIT24);
+      case HtmlBytes.xTPROPVAL8 -> new TestableEntryValueState(this, TestableLevel.REGULAR, IntSize.BIT8);
+      case HtmlBytes.xTPROPVAL16 -> new TestableEntryValueState(this, TestableLevel.REGULAR, IntSize.BIT16);
+      case HtmlBytes.xTPROPVAL24 -> new TestableEntryValueState(this, TestableLevel.REGULAR, IntSize.BIT24);
 
       case HtmlBytes.xTNEWLINE -> new RenderTestableOnlyState(this, ScanLevel.NESTED, TestableKind.NEWLINE, IntSize.BIT8);
 
@@ -221,6 +221,10 @@ class Ctx {
       case HtmlBytes.oTPROPKEY8 -> new TestableEntryNameState(this, TestableLevel.TEST_ONLY, IntSize.BIT8);
       case HtmlBytes.oTPROPKEY16 -> new TestableEntryNameState(this, TestableLevel.TEST_ONLY, IntSize.BIT16);
       case HtmlBytes.oTPROPKEY24 -> new TestableEntryNameState(this, TestableLevel.TEST_ONLY, IntSize.BIT24);
+
+      case HtmlBytes.oTPROPVAL8 -> new TestableEntryValueState(this, TestableLevel.TEST_ONLY, IntSize.BIT8);
+      case HtmlBytes.oTPROPVAL16 -> new TestableEntryValueState(this, TestableLevel.TEST_ONLY, IntSize.BIT16);
+      case HtmlBytes.oTPROPVAL24 -> new TestableEntryValueState(this, TestableLevel.TEST_ONLY, IntSize.BIT24);
 
       default -> throw State.malformed();
     };
