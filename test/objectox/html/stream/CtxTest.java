@@ -65,7 +65,7 @@ public class CtxTest {
         {HtmlBytes.TPROPVAL16, op(ctx -> new TestableEntryValueState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT16))},
         {HtmlBytes.TPROPVAL24, op(ctx -> new TestableEntryValueState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT24))},
 
-        {HtmlBytes.TNEWLINE, op(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.NEWLINE, IntSize.BIT8))},
+        {HtmlBytes.TNEWLINE, op(ctx -> new TestableNewLineState(ctx, ScanLevel.TOP_LEVEL))},
 
         {HtmlBytes.xELEMSTR8, op(ctx -> new BeginStartTagState(ctx, ScanLevel.NESTED, ElementKind.REGULAR, IntSize.BIT8))},
         {HtmlBytes.xELEMVOID8, op(ctx -> new BeginStartTagState(ctx, ScanLevel.NESTED, ElementKind.VOID, IntSize.BIT8))},
@@ -110,7 +110,7 @@ public class CtxTest {
         {HtmlBytes.xTPROPVAL16, op(ctx -> new TestableEntryValueState(ctx, TestableLevel.REGULAR, IntSize.BIT16))},
         {HtmlBytes.xTPROPVAL24, op(ctx -> new TestableEntryValueState(ctx, TestableLevel.REGULAR, IntSize.BIT24))},
 
-        {HtmlBytes.xTNEWLINE, op(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.NESTED, TestableKind.NEWLINE, IntSize.BIT8))},
+        {HtmlBytes.xTNEWLINE, op(ctx -> new TestableNewLineState(ctx, ScanLevel.NESTED))},
 
         {HtmlBytes.oTHEADING8, op(ctx -> new TestableHeadingState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT8))},
         {HtmlBytes.oTHEADING16, op(ctx -> new TestableHeadingState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT16))},

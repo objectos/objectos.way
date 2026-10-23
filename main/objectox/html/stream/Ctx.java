@@ -159,7 +159,7 @@ class Ctx {
       case HtmlBytes.TPROPVAL16 -> new TestableEntryValueState(this, TestableLevel.TOP_LEVEL, IntSize.BIT16);
       case HtmlBytes.TPROPVAL24 -> new TestableEntryValueState(this, TestableLevel.TOP_LEVEL, IntSize.BIT24);
 
-      case HtmlBytes.TNEWLINE -> new RenderTestableOnlyState(this, ScanLevel.TOP_LEVEL, TestableKind.NEWLINE, IntSize.BIT8);
+      case HtmlBytes.TNEWLINE -> new TestableNewLineState(this, ScanLevel.TOP_LEVEL);
 
       case HtmlBytes.xELEMSTR8 -> new BeginStartTagState(this, ScanLevel.NESTED, ElementKind.REGULAR, IntSize.BIT8);
       case HtmlBytes.xELEMVOID8 -> new BeginStartTagState(this, ScanLevel.NESTED, ElementKind.VOID, IntSize.BIT8);
@@ -204,7 +204,7 @@ class Ctx {
       case HtmlBytes.xTPROPVAL16 -> new TestableEntryValueState(this, TestableLevel.REGULAR, IntSize.BIT16);
       case HtmlBytes.xTPROPVAL24 -> new TestableEntryValueState(this, TestableLevel.REGULAR, IntSize.BIT24);
 
-      case HtmlBytes.xTNEWLINE -> new RenderTestableOnlyState(this, ScanLevel.NESTED, TestableKind.NEWLINE, IntSize.BIT8);
+      case HtmlBytes.xTNEWLINE -> new TestableNewLineState(this, ScanLevel.NESTED);
 
       case HtmlBytes.oTHEADING8 -> new TestableHeadingState(this, TestableLevel.TEST_ONLY, IntSize.BIT8);
       case HtmlBytes.oTHEADING16 -> new TestableHeadingState(this, TestableLevel.TEST_ONLY, IntSize.BIT16);

@@ -100,9 +100,7 @@ public class ScanElementNodeStateTest {
         {HtmlBytes.xTPROPVAL16, s(ctx -> new TestableEntryValueState(ctx, TestableLevel.REGULAR, IntSize.BIT16))},
         {HtmlBytes.xTPROPVAL24, s(ctx -> new TestableEntryValueState(ctx, TestableLevel.REGULAR, IntSize.BIT24))},
 
-        {HtmlBytes.xTNEWLINE, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.NESTED, TestableKind.NEWLINE, IntSize.BIT8))},
-
-        {HtmlBytes.TNEWLINE, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.NEWLINE, IntSize.BIT8))}
+        {HtmlBytes.xTNEWLINE, s(ctx -> new TestableNewLineState(ctx, ScanLevel.NESTED))}
     };
   }
 
@@ -322,6 +320,8 @@ public class ScanElementNodeStateTest {
         {HtmlBytes.TPROPVAL8},
         {HtmlBytes.TPROPVAL16},
         {HtmlBytes.TPROPVAL24},
+
+        {HtmlBytes.TNEWLINE},
 
         {HtmlBytes.xATTRIBUTE88},
         {HtmlBytes.xATTRIBUTE816},

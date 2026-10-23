@@ -76,7 +76,7 @@ public class ScanDocumentNodeStateTest {
         {HtmlBytes.TPROPVAL16, s(ctx -> new TestableEntryValueState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT16))},
         {HtmlBytes.TPROPVAL24, s(ctx -> new TestableEntryValueState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT24))},
 
-        {HtmlBytes.TNEWLINE, s(ctx -> new RenderTestableOnlyState(ctx, ScanLevel.TOP_LEVEL, TestableKind.NEWLINE, IntSize.BIT8))},
+        {HtmlBytes.TNEWLINE, s(ctx -> new TestableNewLineState(ctx, ScanLevel.TOP_LEVEL))},
 
         {HtmlBytes.TEXT8, s(ctx -> new RenderTextState(ctx, ScanLevel.TOP_LEVEL, IntSize.BIT8))},
         {HtmlBytes.TEXT16, s(ctx -> new RenderTextState(ctx, ScanLevel.TOP_LEVEL, IntSize.BIT16))},
