@@ -39,11 +39,8 @@ public class StandardFormatterTest {
 
   @Test(description = "BeginStartTag events are formatted in a single line")
   public void beginStartTag01() throws IOException {
-    final Event event;
-    event = new BeginStartTagEvent(0, ElementName.DIV);
-
-    assertEquals(
-        format(event),
+    test(
+        new BeginStartTagEvent(0, ElementName.DIV),
 
         """
         <div\
@@ -53,11 +50,8 @@ public class StandardFormatterTest {
 
   @Test(description = "EndStartTag events emit only the end of the start tag")
   public void endStartTag01() throws IOException {
-    final Event event;
-    event = new EndStartTagEvent(0, EndStartTagKind.ELEMENT);
-
-    assertEquals(
-        format(event),
+    test(
+        new EndStartTagEvent(0, EndStartTagKind.ELEMENT),
 
         """
         >\
@@ -67,11 +61,8 @@ public class StandardFormatterTest {
 
   @Test(description = "RenderAttribute events are formatted with double quotation marks")
   public void renderAttribute01() throws IOException {
-    final Event event;
-    event = new RenderAttributeEvent(0, AttributeName.ID, "foo");
-
-    assertEquals(
-        format(event),
+    test(
+        new RenderAttributeEvent(0, AttributeName.ID, "foo"),
 
         """
          id="foo"\
@@ -81,11 +72,8 @@ public class StandardFormatterTest {
 
   @Test(description = "RenderAttribute values are escaped")
   public void renderAttribute02() throws IOException {
-    final Event event;
-    event = new RenderAttributeEvent(0, AttributeName.ID, "a\"b&c<d>e");
-
-    assertEquals(
-        format(event),
+    test(
+        new RenderAttributeEvent(0, AttributeName.ID, "a\"b&c<d>e"),
 
         """
          id="a&quot;b&amp;c&lt;d&gt;e"\
@@ -95,11 +83,8 @@ public class StandardFormatterTest {
 
   @Test(description = "RenderBooleanAttribute events are formatted without a value")
   public void renderBooleanAttribute01() throws IOException {
-    final Event event;
-    event = new RenderBooleanAttributeEvent(0, AttributeName.AUTOFOCUS);
-
-    assertEquals(
-        format(event),
+    test(
+        new RenderBooleanAttributeEvent(0, AttributeName.AUTOFOCUS),
 
         """
          autofocus\
@@ -109,11 +94,8 @@ public class StandardFormatterTest {
 
   @Test(description = "RenderDoctype events emit the upper case doctype")
   public void renderDoctype01() throws IOException {
-    final Event event;
-    event = new RenderDoctypeEvent(0);
-
-    assertEquals(
-        format(event),
+    test(
+        new RenderDoctypeEvent(0),
 
         """
         <!DOCTYPE html>\
@@ -123,11 +105,8 @@ public class StandardFormatterTest {
 
   @Test(description = "RenderEndTag events are formatted in a single line")
   public void renderEndTag01() throws IOException {
-    final Event event;
-    event = new RenderEndTagEvent(0, ElementName.DIV);
-
-    assertEquals(
-        format(event),
+    test(
+        new RenderEndTagEvent(0, ElementName.DIV),
 
         """
         </div>\
@@ -140,11 +119,8 @@ public class StandardFormatterTest {
     final JsAction action;
     action = Js.noop();
 
-    final Event event;
-    event = new RenderJsActionAttributeEvent(0, AttributeName.ONCLICK, action);
-
-    assertEquals(
-        format(event),
+    test(
+        new RenderJsActionAttributeEvent(0, AttributeName.ONCLICK, action),
 
         """
          onclick='way.on(event,["NO"])'\
@@ -154,11 +130,8 @@ public class StandardFormatterTest {
 
   @Test(description = "RenderRaw events are formatted as is")
   public void renderRaw01() throws IOException {
-    final Event event;
-    event = new RenderRawEvent(0, "<br/>");
-
-    assertEquals(
-        format(event),
+    test(
+        new RenderRawEvent(0, "<br/>"),
 
         """
         <br/>\
@@ -168,11 +141,8 @@ public class StandardFormatterTest {
 
   @Test(description = "RenderText events are escaped")
   public void renderText01() throws IOException {
-    final Event event;
-    event = new RenderTextEvent(0, "<xml></xml>&copy;");
-
-    assertEquals(
-        format(event),
+    test(
+        new RenderTextEvent(0, "<xml></xml>&copy;"),
 
         """
         &lt;xml&gt;&lt;/xml&gt;&amp;copy;\
@@ -182,11 +152,8 @@ public class StandardFormatterTest {
 
   @Test(description = "RenderText events preserve new line characters")
   public void renderText02() throws IOException {
-    final Event event;
-    event = new RenderTextEvent(0, "a\nb");
-
-    assertEquals(
-        format(event),
+    test(
+        new RenderTextEvent(0, "a\nb"),
 
         """
         a
@@ -195,7 +162,7 @@ public class StandardFormatterTest {
     );
   }
 
-  private String format(Event event) throws IOException {
+  private void test(Event event, String expected) throws IOException {
     final StandardFormatter subject;
     subject = new StandardFormatter();
 
@@ -204,7 +171,11 @@ public class StandardFormatterTest {
 
     subject.formatTo(event, out);
 
-    return out.toString();
+    assertEquals(
+        out.toString(),
+
+        expected
+    );
   }
 
 }
