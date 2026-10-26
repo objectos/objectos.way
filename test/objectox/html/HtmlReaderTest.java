@@ -16,84 +16,159 @@
 package objectox.html;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 
 import java.io.IOException;
-import java.io.Reader;
-import objectos.html.Html;
-import objectos.html.Markup;
-import objectos.html.markup.ElementMarkup;
+import java.util.Iterator;
+import java.util.List;
+import objectos.html.stream.Event;
+import objectox.html.format.StandardFormatter;
+import objectox.html.stream.RenderTextEvent;
 import org.testng.annotations.Test;
 
 public class HtmlReaderTest {
 
-  @Test(description = """
-  read(char[], int, int) must not return more characters than the length of
-  the target buffer
-  """)
+  @Test(
+      description = "read(char[], int, int) throws if the reader is closed",
+      expectedExceptions = IOException.class,
+      expectedExceptionsMessageRegExp = "Stream closed"
+  )
   public void read01() throws IOException {
-    readImpl(1024, 64);
+    final Iterator<Event> events;
+    events = evts(
+        new RenderTextEvent(0, "foo")
+    );
+
+    final StandardFormatter formatter;
+    formatter = new StandardFormatter();
+
+    final HtmlReader subject;
+    subject = new HtmlReader(events, formatter);
+
+    subject.close();
+
+    final char[] cbuf;
+    cbuf = new char[8];
+
+    subject.read(cbuf, 0, cbuf.length);
   }
 
-  @Test(description = """
-  read(char[], int, int) with a target buffer much smaller than the formatted
-  output
-  """)
+  @Test(
+      description = "read(char[], int, int) throws if off is negative",
+      expectedExceptions = IndexOutOfBoundsException.class
+  )
   public void read02() throws IOException {
-    readImpl(256, 8);
+    testError(
+        evts(
+            new RenderTextEvent(0, "foo")
+        ),
+
+        8, -1, 1
+    );
   }
 
-  private void readImpl(int count, int bufferSize) throws IOException {
-    final Markup markup;
-    markup = MarkupImpl.create();
+  @Test(
+      description = "read(char[], int, int) throws if len is negative",
+      expectedExceptions = IndexOutOfBoundsException.class
+  )
+  public void read03() throws IOException {
+    testError(
+        evts(
+            new RenderTextEvent(0, "foo")
+        ),
 
-    final ElementMarkup[] items;
-    items = new ElementMarkup[count];
+        8, 0, -1
+    );
+  }
 
-    for (int i = 0; i < count; i++) {
-      items[i] = markup.li(markup.text(Integer.toString(i)));
-    }
+  @Test(
+      description = "read(char[], int, int) throws if off plus len exceeds the buffer length",
+      expectedExceptions = IndexOutOfBoundsException.class
+  )
+  public void read04() throws IOException {
+    testError(
+        evts(
+            new RenderTextEvent(0, "foo")
+        ),
 
-    markup.ul(items);
+        8, 7, 2
+    );
+  }
 
-    final Html html;
-    html = markup.compile();
+  @Test(
+      description = "read(char[], int, int) throws if off exceeds the buffer length",
+      expectedExceptions = IndexOutOfBoundsException.class
+  )
+  public void read05() throws IOException {
+    testError(
+        evts(
+            new RenderTextEvent(0, "foo")
+        ),
 
-    final StringBuilder expected;
-    expected = new StringBuilder();
+        8, 9, 0
+    );
+  }
 
-    expected.append("<ul>");
+  @Test(description = "read(char[], int, int) returns 0 if len is 0")
+  public void read06() throws IOException {
+    test(
+        evts(
+            new RenderTextEvent(0, "foo")
+        ),
 
-    for (int i = 0; i < count; i++) {
-      expected.append("<li>");
-      expected.append(i);
-      expected.append("</li>");
-    }
+        8, 0, 0,
 
-    expected.append("</ul>\n");
+        0
+    );
+  }
 
-    final Reader reader;
-    reader = html.openStream();
+  @Test(description = "read(char[], int, int) returns 0 if len is 0 at the end of the buffer")
+  public void read07() throws IOException {
+    test(
+        evts(
+            new RenderTextEvent(0, "foo")
+        ),
 
-    final StringBuilder result;
-    result = new StringBuilder();
+        8, 8, 0,
+
+        0
+    );
+  }
+
+  private Iterator<Event> evts(Event... events) {
+    final List<Event> list;
+    list = List.of(events);
+
+    return list.iterator();
+  }
+
+  private void test(Iterator<Event> events, int bufferSize, int off, int len, int expected) throws IOException {
+    final StandardFormatter formatter;
+    formatter = new StandardFormatter();
 
     final char[] cbuf;
     cbuf = new char[bufferSize];
 
-    int nread;
+    try (HtmlReader subject = new HtmlReader(events, formatter)) {
+      final int nread;
+      nread = subject.read(cbuf, off, len);
 
-    while ((nread = reader.read(cbuf, 0, cbuf.length)) != -1) {
-      assertTrue(nread > 0, "read() returned " + nread);
-
-      assertTrue(nread <= cbuf.length, "read() returned " + nread);
-
-      result.append(cbuf, 0, nread);
+      assertEquals(nread, expected);
     }
+  }
 
-    reader.close();
+  private void testError(Iterator<Event> events, int bufferSize, int off, int len) throws IOException {
+    final StandardFormatter formatter;
+    formatter = new StandardFormatter();
 
-    assertEquals(result.toString(), expected.toString());
+    final char[] cbuf;
+    cbuf = new char[bufferSize];
+
+    try (HtmlReader subject = new HtmlReader(events, formatter)) {
+      subject.read(cbuf, off, len);
+
+      fail("It should have thrown");
+    }
   }
 
 }

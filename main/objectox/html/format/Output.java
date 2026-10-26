@@ -132,28 +132,6 @@ public final class Output implements Appendable {
     return level;
   }
 
-  public final boolean startOfLine() {
-    if (written == 0) {
-      return true;
-    }
-
-    final char lastChar;
-
-    if (sb.length() > 0) {
-      final int lastIndex;
-      lastIndex = sb.length() - 1;
-
-      lastChar = sb.charAt(lastIndex);
-    } else {
-      final int lastIndex;
-      lastIndex = index - 1;
-
-      lastChar = buffer[lastIndex];
-    }
-
-    return lastChar == '\n' || lastChar == '\r';
-  }
-
   public final String overflow() {
     return sb.toString();
   }

@@ -33,136 +33,101 @@ import objectox.html.stream.RenderEndTagEvent;
 import objectox.html.stream.RenderJsActionAttributeEvent;
 import objectox.html.stream.RenderRawEvent;
 import objectox.html.stream.RenderTextEvent;
+import objectox.html.stream.TestableCellEvent;
+import objectox.html.stream.TestableEntryNameEvent;
+import objectox.html.stream.TestableEntryValueEvent;
+import objectox.html.stream.TestableHeadingEvent;
+import objectox.html.stream.TestableNewLineEvent;
+import objectox.html.stream.TestablePropEvent;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class StandardFormatterTest {
 
-  @Test(description = "BeginStartTag events are formatted in a single line")
-  public void beginStartTag01() throws IOException {
-    test(
-        new BeginStartTagEvent(0, ElementName.DIV),
-
-        """
-        <div\
-        """
-    );
-  }
-
-  @Test(description = "EndStartTag events emit only the end of the start tag")
-  public void endStartTag01() throws IOException {
-    test(
-        new EndStartTagEvent(0, EndStartTagKind.ELEMENT),
-
-        """
-        >\
-        """
-    );
-  }
-
-  @Test(description = "RenderAttribute events are formatted with double quotation marks")
-  public void renderAttribute01() throws IOException {
-    test(
-        new RenderAttributeEvent(0, AttributeName.ID, "foo"),
-
-        """
-         id="foo"\
-        """
-    );
-  }
-
-  @Test(description = "RenderAttribute values are escaped")
-  public void renderAttribute02() throws IOException {
-    test(
-        new RenderAttributeEvent(0, AttributeName.ID, "a\"b&c<d>e"),
-
-        """
-         id="a&quot;b&amp;c&lt;d&gt;e"\
-        """
-    );
-  }
-
-  @Test(description = "RenderBooleanAttribute events are formatted without a value")
-  public void renderBooleanAttribute01() throws IOException {
-    test(
-        new RenderBooleanAttributeEvent(0, AttributeName.AUTOFOCUS),
-
-        """
-         autofocus\
-        """
-    );
-  }
-
-  @Test(description = "RenderDoctype events emit the upper case doctype")
-  public void renderDoctype01() throws IOException {
-    test(
-        new RenderDoctypeEvent(0),
-
-        """
-        <!DOCTYPE html>\
-        """
-    );
-  }
-
-  @Test(description = "RenderEndTag events are formatted in a single line")
-  public void renderEndTag01() throws IOException {
-    test(
-        new RenderEndTagEvent(0, ElementName.DIV),
-
-        """
-        </div>\
-        """
-    );
-  }
-
-  @Test(description = "RenderJsActionAttribute events are formatted with single quotation marks")
-  public void renderJsActionAttribute01() throws IOException {
+  @DataProvider
+  public Object[][] formatToProvider() {
     final JsAction action;
     action = Js.noop();
 
-    test(
+    return new Object[][] {{
+        new BeginStartTagEvent(0, ElementName.DIV),
+        """
+        <div\
+        """
+    }, {
+        new EndStartTagEvent(0, EndStartTagKind.ELEMENT),
+        """
+        >\
+        """
+    }, {
+        new RenderAttributeEvent(0, AttributeName.ID, "foo"),
+        """
+         id="foo"\
+        """
+    }, {
+        new RenderAttributeEvent(0, AttributeName.ID, "a\"b&c<d>e"),
+        """
+         id="a&quot;b&amp;c&lt;d&gt;e"\
+        """
+    }, {
+        new RenderBooleanAttributeEvent(0, AttributeName.AUTOFOCUS),
+        """
+         autofocus\
+        """
+    }, {
+        new RenderDoctypeEvent(0),
+        """
+        <!DOCTYPE html>\
+        """
+    }, {
+        new RenderEndTagEvent(0, ElementName.DIV),
+        """
+        </div>\
+        """
+    }, {
         new RenderJsActionAttributeEvent(0, AttributeName.ONCLICK, action),
-
         """
          onclick='way.on(event,["NO"])'\
         """
-    );
-  }
-
-  @Test(description = "RenderRaw events are formatted as is")
-  public void renderRaw01() throws IOException {
-    test(
+    }, {
         new RenderRawEvent(0, "<br/>"),
-
         """
         <br/>\
         """
-    );
-  }
-
-  @Test(description = "RenderText events are escaped")
-  public void renderText01() throws IOException {
-    test(
+    }, {
         new RenderTextEvent(0, "<xml></xml>&copy;"),
-
         """
         &lt;xml&gt;&lt;/xml&gt;&amp;copy;\
         """
-    );
-  }
-
-  @Test(description = "RenderText events preserve new line characters")
-  public void renderText02() throws IOException {
-    test(
+    }, {
         new RenderTextEvent(0, "a\nb"),
-
         """
         a
         b\
         """
-    );
+    }, {
+        new TestableCellEvent(0, 10, "foo"),
+        ""
+    }, {
+        new TestableEntryNameEvent(0, "foo"),
+        ""
+    }, {
+        new TestableEntryValueEvent(0, "foo"),
+        ""
+    }, {
+        new TestableHeadingEvent(0, 1, "foo"),
+        ""
+    }, {
+        new TestableNewLineEvent(0),
+        ""
+    }, {
+        new TestablePropEvent(0, "key", "value"),
+        ""
+    }};
   }
 
-  private void test(Event event, String expected) throws IOException {
+  @Test(dataProvider = "formatToProvider")
+  public void formatTo(Event event, String expected) throws IOException {
     final StandardFormatter subject;
     subject = new StandardFormatter();
 
