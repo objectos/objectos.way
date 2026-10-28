@@ -19,13 +19,21 @@ final class StopState implements State {
 
   private final Ctx ctx;
 
+  private boolean endDocument;
+
   StopState(Ctx ctx) {
     this.ctx = ctx;
   }
 
   @Override
   public final State compute() {
-    ctx.result(new EndDocumentEvent());
+    if (endDocument) {
+      ctx.result(null);
+    } else {
+      endDocument = true;
+
+      ctx.result(new EndDocumentEvent());
+    }
 
     return this;
   }
