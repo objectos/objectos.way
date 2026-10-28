@@ -15,8 +15,6 @@
  */
 package objectox.html.format;
 
-import java.io.IOException;
-
 public final class Output implements Appendable {
 
   private char[] buffer;
@@ -40,7 +38,7 @@ public final class Output implements Appendable {
   }
 
   @Override
-  public final Output append(char c) throws IOException {
+  public final Output append(char c) {
     if (index < limit) {
       buffer[index++] = c;
 
@@ -53,7 +51,7 @@ public final class Output implements Appendable {
   }
 
   @Override
-  public final Output append(CharSequence csq) throws IOException {
+  public final Output append(CharSequence csq) {
     final int len;
     len = csq.length();
 
@@ -80,7 +78,7 @@ public final class Output implements Appendable {
   }
 
   @Override
-  public final Output append(CharSequence csq, int start, int end) throws IOException {
+  public final Output append(CharSequence csq, int start, int end) {
     final int len;
     len = end - start;
 
@@ -136,7 +134,7 @@ public final class Output implements Appendable {
     return sb.toString();
   }
 
-  public final void rewrap(char[] cbuf, int off, int len) throws IOException {
+  public final void rewrap(char[] cbuf, int off, int len) {
     final String overflow;
     overflow = sb.toString();
 
@@ -178,6 +176,10 @@ public final class Output implements Appendable {
     else {
       return fromBuffer + overflow();
     }
+  }
+
+  final void overflow(String value) {
+    sb.append(value);
   }
 
 }

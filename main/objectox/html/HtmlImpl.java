@@ -31,6 +31,7 @@ import java.util.stream.StreamSupport;
 import objectos.html.Html;
 import objectos.html.format.Formatter;
 import objectos.html.stream.Event;
+import objectox.html.format.Output;
 import objectox.html.format.StandardFormatter;
 import objectox.html.markup.HtmlSink;
 import objectox.html.stream.Player;
@@ -89,7 +90,10 @@ public final class HtmlImpl implements Html {
     final Player player;
     player = Player.of(code, objects);
 
-    return new HtmlReader(player, pojo);
+    final Output output;
+    output = new Output();
+
+    return new HtmlReader(player, pojo, output);
   }
 
   @Override

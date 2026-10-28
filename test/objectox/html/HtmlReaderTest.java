@@ -21,12 +21,18 @@ import static org.testng.Assert.fail;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
 import objectos.html.stream.Event;
+import objectox.html.format.Output;
+import objectox.html.format.OutputY;
 import objectox.html.format.StandardFormatter;
 import objectox.html.stream.RenderTextEvent;
 import org.testng.annotations.Test;
 
 public class HtmlReaderTest {
+
+  private record Read(
+      int bufferSize, int off, int len, int expected, String expectedBuffer) {}
 
   @Test(
       description = "read(char[], int, int) throws if the reader is closed",
@@ -39,18 +45,20 @@ public class HtmlReaderTest {
         new RenderTextEvent(0, "foo")
     );
 
+    final Output output;
+    output = new Output();
+
     final StandardFormatter formatter;
     formatter = new StandardFormatter();
-
-    final HtmlReader subject;
-    subject = new HtmlReader(events, formatter);
-
-    subject.close();
 
     final char[] cbuf;
     cbuf = new char[8];
 
-    subject.read(cbuf, 0, cbuf.length);
+    try (HtmlReader subject = new HtmlReader(events, formatter, output)) {
+      subject.close();
+
+      subject.read(cbuf, 0, cbuf.length);
+    }
   }
 
   @Test(
@@ -116,9 +124,9 @@ public class HtmlReaderTest {
             new RenderTextEvent(0, "foo")
         ),
 
-        8, 0, 0,
+        output(_ -> {}),
 
-        0
+        read(8, 0, 0, 0, "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000")
     );
   }
 
@@ -129,9 +137,9 @@ public class HtmlReaderTest {
             new RenderTextEvent(0, "foo")
         ),
 
-        8, 8, 0,
+        output(_ -> {}),
 
-        0
+        read(8, 8, 0, 0, "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000")
     );
   }
 
@@ -142,29 +150,47 @@ public class HtmlReaderTest {
     return list.iterator();
   }
 
-  private void test(Iterator<Event> events, int bufferSize, int off, int len, int expected) throws IOException {
+  private Output output(Consumer<? super OutputY> opts) {
+    return OutputY.create(opts);
+  }
+
+  private Read read(int bufferSize, int off, int len, int expected, String expectedBuffer) {
+    return new Read(bufferSize, off, len, expected, expectedBuffer);
+  }
+
+  private void test(Iterator<Event> events, Output output, Read... reads) throws IOException {
     final StandardFormatter formatter;
     formatter = new StandardFormatter();
 
-    final char[] cbuf;
-    cbuf = new char[bufferSize];
+    try (HtmlReader subject = new HtmlReader(events, formatter, output)) {
+      for (Read spec : reads) {
+        final char[] cbuf;
+        cbuf = new char[spec.bufferSize()];
 
-    try (HtmlReader subject = new HtmlReader(events, formatter)) {
-      final int nread;
-      nread = subject.read(cbuf, off, len);
+        final int nread;
+        nread = subject.read(cbuf, spec.off(), spec.len());
 
-      assertEquals(nread, expected);
+        assertEquals(nread, spec.expected());
+
+        final String actual;
+        actual = new String(cbuf);
+
+        assertEquals(actual, spec.expectedBuffer());
+      }
     }
   }
 
   private void testError(Iterator<Event> events, int bufferSize, int off, int len) throws IOException {
+    final Output output;
+    output = new Output();
+
     final StandardFormatter formatter;
     formatter = new StandardFormatter();
 
     final char[] cbuf;
     cbuf = new char[bufferSize];
 
-    try (HtmlReader subject = new HtmlReader(events, formatter)) {
+    try (HtmlReader subject = new HtmlReader(events, formatter, output)) {
       subject.read(cbuf, off, len);
 
       fail("It should have thrown");

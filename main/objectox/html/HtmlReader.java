@@ -33,18 +33,20 @@ public final class HtmlReader extends Reader {
 
   private final StandardFormatter formatter;
 
-  private final Output output = new Output();
+  private final Output output;
 
   private boolean written;
 
-  public HtmlReader(Iterator<Event> events, StandardFormatter formatter) {
+  public HtmlReader(Iterator<Event> events, StandardFormatter formatter, Output output) {
     this.events = events;
 
     this.formatter = formatter;
+
+    this.output = output;
   }
 
   @Override
-  public final void close() throws IOException {
+  public final void close() {
     closed = true;
   }
 

@@ -17,7 +17,6 @@ package objectox.html.format;
 
 import static org.testng.Assert.assertEquals;
 
-import java.io.IOException;
 import objectos.html.stream.EndStartTagKind;
 import objectos.html.stream.Event;
 import objectos.script.Js;
@@ -127,7 +126,7 @@ public class StandardFormatterTest {
   }
 
   @Test(dataProvider = "formatToProvider")
-  public void formatTo(Event event, String expected) throws IOException {
+  public void formatTo(Event event, String expected) {
     final StandardFormatter subject;
     subject = new StandardFormatter();
 

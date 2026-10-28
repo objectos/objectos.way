@@ -15,7 +15,6 @@
  */
 package objectox.html.format;
 
-import java.io.IOException;
 import objectos.html.format.Formatter;
 import objectos.html.stream.BeginStartTag;
 import objectos.html.stream.EndStartTag;
@@ -54,7 +53,7 @@ public final class StandardFormatter implements Formatter {
 
   public StandardFormatter() {}
 
-  public final void formatTo(Event event, Output out) throws IOException {
+  public final void formatTo(Event event, Output out) {
     switch (event) {
       case BeginStartTag begin -> beginStartTag(begin, out);
 
@@ -78,7 +77,7 @@ public final class StandardFormatter implements Formatter {
     }
   }
 
-  private void beginStartTag(BeginStartTag event, Output out) throws IOException {
+  private void beginStartTag(BeginStartTag event, Output out) {
     final String name;
     name = event.name();
 
@@ -87,11 +86,11 @@ public final class StandardFormatter implements Formatter {
     out.append(name);
   }
 
-  private void endStartTag(EndStartTag event, Output out) throws IOException {
+  private void endStartTag(EndStartTag event, Output out) {
     out.append('>');
   }
 
-  private void renderAttribute(RenderAttribute attr, Output out) throws IOException {
+  private void renderAttribute(RenderAttribute attr, Output out) {
     final String name;
     name = attr.name();
 
@@ -114,7 +113,7 @@ public final class StandardFormatter implements Formatter {
     out.append('"');
   }
 
-  private void renderBooleanAttribute(RenderBooleanAttribute attr, Output out) throws IOException {
+  private void renderBooleanAttribute(RenderBooleanAttribute attr, Output out) {
     final String name;
     name = attr.name();
 
@@ -123,11 +122,11 @@ public final class StandardFormatter implements Formatter {
     out.append(name);
   }
 
-  private void renderDoctype(RenderDoctype event, Output out) throws IOException {
+  private void renderDoctype(RenderDoctype event, Output out) {
     out.append("<!DOCTYPE html>");
   }
 
-  private void renderEndTag(RenderEndTag endTag, Output out) throws IOException {
+  private void renderEndTag(RenderEndTag endTag, Output out) {
     final String name;
     name = endTag.name();
 
@@ -138,7 +137,7 @@ public final class StandardFormatter implements Formatter {
     out.append('>');
   }
 
-  private void renderJsActionAttribute(RenderJsActionAttribute attr, Output out) throws IOException {
+  private void renderJsActionAttribute(RenderJsActionAttribute attr, Output out) {
     final String name;
     name = attr.name();
 
@@ -161,14 +160,14 @@ public final class StandardFormatter implements Formatter {
     out.append('\'');
   }
 
-  private void renderRaw(RenderRaw raw, Output out) throws IOException {
+  private void renderRaw(RenderRaw raw, Output out) {
     final String value;
     value = raw.value();
 
     out.append(value);
   }
 
-  private void renderText(RenderText text, Output out) throws IOException {
+  private void renderText(RenderText text, Output out) {
     final String value;
     value = text.value();
 

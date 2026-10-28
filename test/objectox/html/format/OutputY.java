@@ -15,22 +15,23 @@
  */
 package objectox.html.format;
 
-import java.io.IOException;
 import java.util.function.Consumer;
 
-final class OutputY {
+public final class OutputY {
 
-  int bufferSize = 256;
+  public int bufferSize = 256;
 
-  int level = 0;
+  public int level = 0;
 
-  String text = "";
+  public String overflow = "";
 
-  public static Output create() throws IOException {
+  public String text = "";
+
+  public static Output create() {
     return create(_ -> {});
   }
 
-  public static Output create(Consumer<? super OutputY> opts) throws IOException {
+  public static Output create(Consumer<? super OutputY> opts) {
     final OutputY y;
     y = new OutputY();
 
@@ -39,7 +40,7 @@ final class OutputY {
     return y.build();
   }
 
-  private Output build() throws IOException {
+  private Output build() {
     final char[] buf;
     buf = new char[bufferSize];
 
@@ -48,6 +49,10 @@ final class OutputY {
 
     for (int i = 0; i < level; i++) {
       out.inc();
+    }
+
+    if (!overflow.isEmpty()) {
+      out.overflow(overflow);
     }
 
     if (!text.isEmpty()) {
