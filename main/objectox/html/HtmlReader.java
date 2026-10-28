@@ -62,7 +62,18 @@ public final class HtmlReader extends Reader {
 
     output.rewrap(cbuf, off, len);
 
-    while (!output.exhausted() && events.hasNext()) {
+    if (output.exhausted()) {
+      return output.written();
+    }
+
+    if (!events.hasNext()) {
+      final int nread;
+      nread = output.written();
+
+      return nread == 0 ? -1 : nread;
+    }
+
+    while (events.hasNext()) {
       final Event event;
       event = events.next();
 
@@ -77,7 +88,10 @@ public final class HtmlReader extends Reader {
       finalNewLine = true;
     }
 
-    return output.written();
+    final int nread;
+    nread = output.written();
+
+    return nread == 0 ? -1 : nread;
   }
 
   private void ensureOpen() throws IOException {

@@ -152,7 +152,7 @@ public final class Output implements Appendable {
   }
 
   public final int written() {
-    return written == 0 ? -1 : written;
+    return written;
   }
 
   @Override

@@ -143,6 +143,130 @@ public class HtmlReaderTest {
     );
   }
 
+  @Test(description = "read(char[], int, int) returns the number of characters written, including the final newline")
+  public void read08() throws IOException {
+    test(
+        evts(
+            new RenderTextEvent(0, "ab"),
+            new RenderTextEvent(0, "cd")
+        ),
+
+        output(_ -> {}),
+
+        read(8, 0, 8, 5, "abcd\n\u0000\u0000\u0000"),
+        read(8, 0, 8, -1, "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000")
+    );
+  }
+
+  @Test(description = "read(char[], int, int) returns len when the buffer is exhausted while formatting an event")
+  public void read09() throws IOException {
+    test(
+        evts(
+            new RenderTextEvent(0, "abcdefghij")
+        ),
+
+        output(_ -> {}),
+
+        read(4, 0, 4, 4, "abcd"),
+        read(4, 0, 4, 4, "efgh"),
+        read(4, 0, 4, 3, "ij\n\u0000"),
+        read(4, 0, 4, -1, "\u0000\u0000\u0000\u0000")
+    );
+  }
+
+  @Test(description = "read returns len when the rewritten buffer is already exhausted, then formats the remaining events")
+  public void read10() throws IOException {
+    test(
+        evts(
+            new RenderTextEvent(0, "x")
+        ),
+
+        output(y -> y.overflow = "abcdef"),
+
+        read(4, 0, 4, 4, "abcd"),
+        read(4, 0, 4, 4, "efx\n"),
+        read(4, 0, 4, -1, "\u0000\u0000\u0000\u0000")
+    );
+  }
+
+  @Test(description = "read returns len while draining the overflow and -1 after it is exhausted")
+  public void read11() throws IOException {
+    test(
+        evts(),
+
+        output(y -> y.overflow = "abcdefgh"),
+
+        read(4, 0, 4, 4, "abcd"),
+        read(4, 0, 4, 4, "efgh"),
+        read(4, 0, 4, -1, "\u0000\u0000\u0000\u0000")
+    );
+  }
+
+  @Test(description = "read returns the number of characters written at the given offset when the buffer is exhausted after rewrap")
+  public void read12() throws IOException {
+    test(
+        evts(),
+
+        output(y -> y.overflow = "abcdefgh"),
+
+        read(8, 2, 4, 4, "\u0000\u0000abcd\u0000\u0000"),
+        read(8, 6, 2, 2, "\u0000\u0000\u0000\u0000\u0000\u0000ef"),
+        read(8, 0, 8, 2, "gh\u0000\u0000\u0000\u0000\u0000\u0000"),
+        read(8, 0, 8, -1, "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000")
+    );
+  }
+
+  @Test(description = "read returns 1 when the rewritten buffer is exhausted and len is 1")
+  public void read13() throws IOException {
+    test(
+        evts(),
+
+        output(y -> y.overflow = "ab"),
+
+        read(4, 0, 1, 1, "a\u0000\u0000\u0000"),
+        read(4, 0, 1, 1, "b\u0000\u0000\u0000"),
+        read(4, 0, 4, -1, "\u0000\u0000\u0000\u0000")
+    );
+  }
+
+  @Test(description = "read returns len when the pending newline fills the rewritten buffer exactly")
+  public void read14() throws IOException {
+    test(
+        evts(
+            new RenderTextEvent(0, "abcdefg")
+        ),
+
+        output(_ -> {}),
+
+        read(4, 0, 4, 4, "abcd"),
+        read(4, 0, 4, 4, "efg\n"),
+        read(4, 0, 4, -1, "\u0000\u0000\u0000\u0000")
+    );
+  }
+
+  @Test(description = "read returns -1 when there are no events and no overflow")
+  public void read15() throws IOException {
+    test(
+        evts(),
+
+        output(_ -> {}),
+
+        read(8, 0, 8, -1, "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000")
+    );
+  }
+
+  @Test(description = "read returns the pending overflow count when there are no events left")
+  public void read16() throws IOException {
+    test(
+        evts(),
+
+        output(y -> y.overflow = "ab"),
+
+        read(8, 0, 8, 2, "ab\u0000\u0000\u0000\u0000\u0000\u0000"),
+        read(8, 0, 8, -1, "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000")
+    );
+  }
+
   private Iterator<Event> evts(Event... events) {
     final List<Event> list;
     list = List.of(events);

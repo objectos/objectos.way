@@ -17,6 +17,7 @@ package objectox.html.format;
 
 import objectos.html.format.Formatter;
 import objectos.html.stream.BeginStartTag;
+import objectos.html.stream.EndDocument;
 import objectos.html.stream.EndStartTag;
 import objectos.html.stream.Event;
 import objectos.html.stream.RenderAttribute;
@@ -56,6 +57,8 @@ public final class StandardFormatter implements Formatter {
   public final void formatTo(Event event, Output out) {
     switch (event) {
       case BeginStartTag begin -> beginStartTag(begin, out);
+
+      case EndDocument _ -> {}
 
       case EndStartTag end -> endStartTag(end, out);
 

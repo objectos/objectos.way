@@ -23,7 +23,7 @@ import org.testng.annotations.Test;
 
 public class OutputTest {
 
-  @Test(description = "no writes returns -1")
+  @Test(description = "no writes returns 0")
   public void written01() {
     final char[] buf;
     buf = new char[10];
@@ -31,7 +31,7 @@ public class OutputTest {
     final Output subject;
     subject = new Output(buf);
 
-    assertEquals(subject.written(), -1);
+    assertEquals(subject.written(), 0);
   }
 
   @Test(description = "written does not count chars diverted to the overflow")
@@ -45,7 +45,7 @@ public class OutputTest {
     subject.append("world");
 
     assertEquals(subject.overflow(), "world");
-    assertEquals(subject.written(), -1);
+    assertEquals(subject.written(), 0);
   }
 
   @Test(description = "written counts only the chars stored in the buffer")
@@ -257,7 +257,7 @@ public class OutputTest {
 
     subject.append("");
 
-    assertEquals(subject.written(), -1);
+    assertEquals(subject.written(), 0);
     assertFalse(subject.exhausted());
   }
 
@@ -527,7 +527,7 @@ public class OutputTest {
 
     subject.rewrap(buf2, 0, 10);
 
-    assertEquals(subject.written(), -1);
+    assertEquals(subject.written(), 0);
   }
 
 }

@@ -19,6 +19,7 @@ package objectos.html.stream;
 public sealed interface Event
     permits
     BeginStartTag,
+    EndDocument,
     EndStartTag,
     RenderAttribute,
     RenderBooleanAttribute,

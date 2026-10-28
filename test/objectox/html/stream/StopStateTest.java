@@ -44,6 +44,7 @@ public class StopStateTest {
         CtxY.create(opts -> {
           opts.sink(ctx);
           opts.push(new Frame(0));
+          opts.result(new EndDocumentEvent());
         })
     );
   }

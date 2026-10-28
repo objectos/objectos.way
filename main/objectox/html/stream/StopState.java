@@ -25,7 +25,7 @@ final class StopState implements State {
 
   @Override
   public final State compute() {
-    ctx.result(null);
+    ctx.result(new EndDocumentEvent());
 
     return this;
   }
