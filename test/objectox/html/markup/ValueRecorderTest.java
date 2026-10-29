@@ -53,16 +53,6 @@ public class ValueRecorderTest {
         {HtmlBytes.TCELL8, HtmlBytes.xTCELL8},
         {HtmlBytes.TCELL16, HtmlBytes.xTCELL16},
         {HtmlBytes.TCELL24, HtmlBytes.xTCELL24},
-        {HtmlBytes.TPROP8, HtmlBytes.xTPROP8},
-        {HtmlBytes.TPROP16, HtmlBytes.xTPROP16},
-        {HtmlBytes.TPROP24, HtmlBytes.xTPROP24},
-        {HtmlBytes.TPROPKEY8, HtmlBytes.xTPROPKEY8},
-        {HtmlBytes.TPROPKEY16, HtmlBytes.xTPROPKEY16},
-        {HtmlBytes.TPROPKEY24, HtmlBytes.xTPROPKEY24},
-        {HtmlBytes.TPROPVAL8, HtmlBytes.xTPROPVAL8},
-        {HtmlBytes.TPROPVAL16, HtmlBytes.xTPROPVAL16},
-        {HtmlBytes.TPROPVAL24, HtmlBytes.xTPROPVAL24},
-        {HtmlBytes.TNEWLINE, HtmlBytes.xTNEWLINE},
 
         {HtmlBytes.xELEMSTR8, HtmlBytes.xELEMSTR8},
         {HtmlBytes.xELEMVOID8, HtmlBytes.xELEMVOID8},
@@ -90,32 +80,13 @@ public class ValueRecorderTest {
         {HtmlBytes.xTCELL8, HtmlBytes.xTCELL8},
         {HtmlBytes.xTCELL16, HtmlBytes.xTCELL16},
         {HtmlBytes.xTCELL24, HtmlBytes.xTCELL24},
-        {HtmlBytes.xTPROP8, HtmlBytes.xTPROP8},
-        {HtmlBytes.xTPROP16, HtmlBytes.xTPROP16},
-        {HtmlBytes.xTPROP24, HtmlBytes.xTPROP24},
-        {HtmlBytes.xTPROPKEY8, HtmlBytes.xTPROPKEY8},
-        {HtmlBytes.xTPROPKEY16, HtmlBytes.xTPROPKEY16},
-        {HtmlBytes.xTPROPKEY24, HtmlBytes.xTPROPKEY24},
-        {HtmlBytes.xTPROPVAL8, HtmlBytes.xTPROPVAL8},
-        {HtmlBytes.xTPROPVAL16, HtmlBytes.xTPROPVAL16},
-        {HtmlBytes.xTPROPVAL24, HtmlBytes.xTPROPVAL24},
-        {HtmlBytes.xTNEWLINE, HtmlBytes.xTNEWLINE},
 
         {HtmlBytes.oTHEADING8, HtmlBytes.oTHEADING8},
         {HtmlBytes.oTHEADING16, HtmlBytes.oTHEADING16},
         {HtmlBytes.oTHEADING24, HtmlBytes.oTHEADING24},
         {HtmlBytes.oTCELL8, HtmlBytes.oTCELL8},
         {HtmlBytes.oTCELL16, HtmlBytes.oTCELL16},
-        {HtmlBytes.oTCELL24, HtmlBytes.oTCELL24},
-        {HtmlBytes.oTPROP8, HtmlBytes.oTPROP8},
-        {HtmlBytes.oTPROP16, HtmlBytes.oTPROP16},
-        {HtmlBytes.oTPROP24, HtmlBytes.oTPROP24},
-        {HtmlBytes.oTPROPKEY8, HtmlBytes.oTPROPKEY8},
-        {HtmlBytes.oTPROPKEY16, HtmlBytes.oTPROPKEY16},
-        {HtmlBytes.oTPROPKEY24, HtmlBytes.oTPROPKEY24},
-        {HtmlBytes.oTPROPVAL8, HtmlBytes.oTPROPVAL8},
-        {HtmlBytes.oTPROPVAL16, HtmlBytes.oTPROPVAL16},
-        {HtmlBytes.oTPROPVAL24, HtmlBytes.oTPROPVAL24}
+        {HtmlBytes.oTCELL24, HtmlBytes.oTCELL24}
     };
   }
 
@@ -244,16 +215,7 @@ public class ValueRecorderTest {
         {HtmlBytes.THEADING24, HtmlBytes.oTHEADING24},
         {HtmlBytes.TCELL8, HtmlBytes.oTCELL8},
         {HtmlBytes.TCELL16, HtmlBytes.oTCELL16},
-        {HtmlBytes.TCELL24, HtmlBytes.oTCELL24},
-        {HtmlBytes.TPROP8, HtmlBytes.oTPROP8},
-        {HtmlBytes.TPROP16, HtmlBytes.oTPROP16},
-        {HtmlBytes.TPROP24, HtmlBytes.oTPROP24},
-        {HtmlBytes.TPROPKEY8, HtmlBytes.oTPROPKEY8},
-        {HtmlBytes.TPROPKEY16, HtmlBytes.oTPROPKEY16},
-        {HtmlBytes.TPROPKEY24, HtmlBytes.oTPROPKEY24},
-        {HtmlBytes.TPROPVAL8, HtmlBytes.oTPROPVAL8},
-        {HtmlBytes.TPROPVAL16, HtmlBytes.oTPROPVAL16},
-        {HtmlBytes.TPROPVAL24, HtmlBytes.oTPROPVAL24}
+        {HtmlBytes.TCELL24, HtmlBytes.oTCELL24}
     };
   }
 
@@ -354,8 +316,6 @@ public class ValueRecorderTest {
         {HtmlBytes.FRAGSTR},
         {HtmlBytes.FRAGEND},
 
-        {HtmlBytes.TNEWLINE},
-
         {HtmlBytes.TEXT8},
         {HtmlBytes.TEXT16},
         {HtmlBytes.TEXT24},
@@ -387,16 +347,6 @@ public class ValueRecorderTest {
         {HtmlBytes.xTCELL8},
         {HtmlBytes.xTCELL16},
         {HtmlBytes.xTCELL24},
-        {HtmlBytes.xTPROP8},
-        {HtmlBytes.xTPROP16},
-        {HtmlBytes.xTPROP24},
-        {HtmlBytes.xTPROPKEY8},
-        {HtmlBytes.xTPROPKEY16},
-        {HtmlBytes.xTPROPKEY24},
-        {HtmlBytes.xTPROPVAL8},
-        {HtmlBytes.xTPROPVAL16},
-        {HtmlBytes.xTPROPVAL24},
-        {HtmlBytes.xTNEWLINE},
 
         {HtmlBytes.oTHEADING8},
         {HtmlBytes.oTHEADING16},
@@ -404,15 +354,6 @@ public class ValueRecorderTest {
         {HtmlBytes.oTCELL8},
         {HtmlBytes.oTCELL16},
         {HtmlBytes.oTCELL24},
-        {HtmlBytes.oTPROP8},
-        {HtmlBytes.oTPROP16},
-        {HtmlBytes.oTPROP24},
-        {HtmlBytes.oTPROPKEY8},
-        {HtmlBytes.oTPROPKEY16},
-        {HtmlBytes.oTPROPKEY24},
-        {HtmlBytes.oTPROPVAL8},
-        {HtmlBytes.oTPROPVAL16},
-        {HtmlBytes.oTPROPVAL24},
 
         {HtmlBytes.xTEXT8},
         {HtmlBytes.xTEXT16},

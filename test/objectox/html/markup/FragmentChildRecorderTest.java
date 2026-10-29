@@ -231,15 +231,6 @@ public class FragmentChildRecorderTest {
         {bytes(HtmlBytes.xTCELL8, 1, 0), "unconsumed testable cell (1-byte operands)"},
         {bytes(HtmlBytes.xTCELL16, 0, 1, 0, 0), "unconsumed testable cell (2-byte operands)"},
         {bytes(HtmlBytes.xTCELL24, 0, 0, 1, 0, 0, 0), "unconsumed testable cell (3-byte operands)"},
-        {bytes(HtmlBytes.xTPROP8, 0, 0), "unconsumed testable property (1-byte operands)"},
-        {bytes(HtmlBytes.xTPROP16, 0, 0, 0, 0), "unconsumed testable property (2-byte operands)"},
-        {bytes(HtmlBytes.xTPROP24, 0, 0, 0, 0, 0, 0), "unconsumed testable property (3-byte operands)"},
-        {bytes(HtmlBytes.xTPROPKEY8, 0), "unconsumed testable property key (1-byte key index)"},
-        {bytes(HtmlBytes.xTPROPKEY16, 0, 0), "unconsumed testable property key (2-byte key index)"},
-        {bytes(HtmlBytes.xTPROPKEY24, 0, 0, 0), "unconsumed testable property key (3-byte key index)"},
-        {bytes(HtmlBytes.xTPROPVAL8, 0), "unconsumed testable property value (1-byte value index)"},
-        {bytes(HtmlBytes.xTPROPVAL16, 0, 0), "unconsumed testable property value (2-byte value index)"},
-        {bytes(HtmlBytes.xTPROPVAL24, 0, 0, 0), "unconsumed testable property value (3-byte value index)"},
         {bytes(HtmlBytes.xTEXT8, 0x7F), "unconsumed text (1-byte value index)"},
         {bytes(HtmlBytes.xTEXT16, 0x7F, 0x7F), "unconsumed text (2-byte value index)"},
         {bytes(HtmlBytes.xTEXT24, 0x7F, 0x7F, 0x7F), "unconsumed text (3-byte value index)"},
@@ -438,16 +429,7 @@ public class FragmentChildRecorderTest {
         {HtmlBytes.THEADING24, HtmlBytes.oTHEADING24, 4, "testable heading (4 operand bytes)"},
         {HtmlBytes.TCELL8, HtmlBytes.oTCELL8, 2, "testable cell (2 operand bytes)"},
         {HtmlBytes.TCELL16, HtmlBytes.oTCELL16, 4, "testable cell (4 operand bytes)"},
-        {HtmlBytes.TCELL24, HtmlBytes.oTCELL24, 6, "testable cell (6 operand bytes)"},
-        {HtmlBytes.TPROP8, HtmlBytes.oTPROP8, 2, "testable property (2 operand bytes)"},
-        {HtmlBytes.TPROP16, HtmlBytes.oTPROP16, 4, "testable property (4 operand bytes)"},
-        {HtmlBytes.TPROP24, HtmlBytes.oTPROP24, 6, "testable property (6 operand bytes)"},
-        {HtmlBytes.TPROPKEY8, HtmlBytes.oTPROPKEY8, 1, "testable property key (1 operand byte)"},
-        {HtmlBytes.TPROPKEY16, HtmlBytes.oTPROPKEY16, 2, "testable property key (2 operand bytes)"},
-        {HtmlBytes.TPROPKEY24, HtmlBytes.oTPROPKEY24, 3, "testable property key (3 operand bytes)"},
-        {HtmlBytes.TPROPVAL8, HtmlBytes.oTPROPVAL8, 1, "testable property value (1 operand byte)"},
-        {HtmlBytes.TPROPVAL16, HtmlBytes.oTPROPVAL16, 2, "testable property value (2 operand bytes)"},
-        {HtmlBytes.TPROPVAL24, HtmlBytes.oTPROPVAL24, 3, "testable property value (3 operand bytes)"}
+        {HtmlBytes.TCELL24, HtmlBytes.oTCELL24, 6, "testable cell (6 operand bytes)"}
     };
   }
 
@@ -472,31 +454,6 @@ public class FragmentChildRecorderTest {
           opts.addInt24(0);
           opts.addByte(oOpcode);
           IntStream.range(0, operands).forEach(i -> opts.addByte((byte) i));
-          opts.addByte(HtmlBytes.FRAGEND);
-          opts.addInt8(7);
-        }
-    );
-  }
-
-  @Test(description = "fragment root testable new line is consumed")
-  public void testCase12() {
-    test(
-        opts -> {
-          opts.addInt24(HtmlSink.MAX_INT24);
-          opts.addByte(HtmlBytes.FRAGSTR);
-          opts.addInt24(0);
-          opts.addByte(HtmlBytes.TNEWLINE);
-          opts.addByte(HtmlBytes.FRAGEND);
-        },
-
-        IntSize.BIT8, 3,
-        1,
-
-        opts -> {
-          opts.addInt24(HtmlSink.MAX_INT24);
-          opts.addByte(HtmlBytes.xFRAGSTR);
-          opts.addInt24(0);
-          opts.addByte(HtmlBytes.xTNEWLINE);
           opts.addByte(HtmlBytes.FRAGEND);
           opts.addInt8(7);
         }

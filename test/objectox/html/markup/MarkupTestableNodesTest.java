@@ -67,8 +67,8 @@ public class MarkupTestableNodesTest {
     );
   }
 
-  @Test(description = "TestableRecorder delegation (cell, br)")
-  public void cellAndBr01() {
+  @Test(description = "TestableRecorder delegation (cell)")
+  public void cell01() {
     final HtmlSink sink;
     sink = new HtmlSink();
 
@@ -76,7 +76,6 @@ public class MarkupTestableNodesTest {
     subject = create(sink);
 
     subject.cell(2, "x");
-    subject.br();
 
     assertEquals(
         sink,
@@ -85,37 +84,6 @@ public class MarkupTestableNodesTest {
           opts.addByte(HtmlBytes.TCELL8);
           opts.addInt8(2);
           opts.addInt8(opts.addObject("x"));
-
-          opts.addByte(HtmlBytes.TNEWLINE);
-        })
-    );
-  }
-
-  @Test(description = "TestableRecorder delegation (prop, propkey, propval)")
-  public void properties01() {
-    final HtmlSink sink;
-    sink = new HtmlSink();
-
-    final MarkupTestableNodes subject;
-    subject = create(sink);
-
-    subject.prop("foo", "bar");
-    subject.propkey("key");
-    subject.propval("value");
-
-    assertEquals(
-        sink,
-
-        HtmlSinkY.create(opts -> {
-          opts.addByte(HtmlBytes.TPROP8);
-          opts.addInt8(opts.addObject("foo"));
-          opts.addInt8(opts.addObject("bar"));
-
-          opts.addByte(HtmlBytes.TPROPKEY8);
-          opts.addInt8(opts.addObject("key"));
-
-          opts.addByte(HtmlBytes.TPROPVAL8);
-          opts.addInt8(opts.addObject("value"));
         })
     );
   }

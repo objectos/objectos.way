@@ -123,8 +123,6 @@ public class ResponseTest {
       @Override
       protected void render() {
         t.h1("Heading 1");
-
-        t.prop("foo", "bar");
       }
     };
 
@@ -141,7 +139,6 @@ public class ResponseTest {
         text/html; charset=utf-8
         # Heading 1
 
-        foo: bar
         """
     );
   }

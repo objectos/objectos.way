@@ -86,21 +86,7 @@ public class ScanElementNodeStateTest {
 
         {HtmlBytes.xTCELL8, s(ctx -> new TestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT8))},
         {HtmlBytes.xTCELL16, s(ctx -> new TestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT16))},
-        {HtmlBytes.xTCELL24, s(ctx -> new TestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT24))},
-
-        {HtmlBytes.xTPROP8, s(ctx -> new TestablePropState(ctx, TestableLevel.REGULAR, IntSize.BIT8))},
-        {HtmlBytes.xTPROP16, s(ctx -> new TestablePropState(ctx, TestableLevel.REGULAR, IntSize.BIT16))},
-        {HtmlBytes.xTPROP24, s(ctx -> new TestablePropState(ctx, TestableLevel.REGULAR, IntSize.BIT24))},
-
-        {HtmlBytes.xTPROPKEY8, s(ctx -> new TestableEntryNameState(ctx, TestableLevel.REGULAR, IntSize.BIT8))},
-        {HtmlBytes.xTPROPKEY16, s(ctx -> new TestableEntryNameState(ctx, TestableLevel.REGULAR, IntSize.BIT16))},
-        {HtmlBytes.xTPROPKEY24, s(ctx -> new TestableEntryNameState(ctx, TestableLevel.REGULAR, IntSize.BIT24))},
-
-        {HtmlBytes.xTPROPVAL8, s(ctx -> new TestableEntryValueState(ctx, TestableLevel.REGULAR, IntSize.BIT8))},
-        {HtmlBytes.xTPROPVAL16, s(ctx -> new TestableEntryValueState(ctx, TestableLevel.REGULAR, IntSize.BIT16))},
-        {HtmlBytes.xTPROPVAL24, s(ctx -> new TestableEntryValueState(ctx, TestableLevel.REGULAR, IntSize.BIT24))},
-
-        {HtmlBytes.xTNEWLINE, s(ctx -> new TestableNewLineState(ctx, ScanLevel.NESTED))}
+        {HtmlBytes.xTCELL24, s(ctx -> new TestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT24))}
     };
   }
 
@@ -308,20 +294,6 @@ public class ScanElementNodeStateTest {
         {HtmlBytes.TCELL8},
         {HtmlBytes.TCELL16},
         {HtmlBytes.TCELL24},
-
-        {HtmlBytes.TPROP8},
-        {HtmlBytes.TPROP16},
-        {HtmlBytes.TPROP24},
-
-        {HtmlBytes.TPROPKEY8},
-        {HtmlBytes.TPROPKEY16},
-        {HtmlBytes.TPROPKEY24},
-
-        {HtmlBytes.TPROPVAL8},
-        {HtmlBytes.TPROPVAL16},
-        {HtmlBytes.TPROPVAL24},
-
-        {HtmlBytes.TNEWLINE},
 
         {HtmlBytes.xATTRIBUTE88},
         {HtmlBytes.xATTRIBUTE816},

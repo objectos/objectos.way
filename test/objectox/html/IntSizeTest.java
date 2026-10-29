@@ -194,57 +194,6 @@ public class IntSizeTest {
   }
 
   @DataProvider
-  public Object[][] toTestablePropKeyByteProvider() {
-    return new Object[][] {
-        {IntSize.BIT8, HtmlBytes.TPROPKEY8},
-        {IntSize.BIT16, HtmlBytes.TPROPKEY16},
-        {IntSize.BIT24, HtmlBytes.TPROPKEY24}
-    };
-  }
-
-  @Test(dataProvider = "toTestablePropKeyByteProvider", description = "each size is associated with its TPROPKEY opcode")
-  public void toTestablePropKeyByte(IntSize size, byte expected) {
-    final byte res;
-    res = size.toTestablePropKeyByte();
-
-    assertEquals(res, expected);
-  }
-
-  @DataProvider
-  public Object[][] toTestablePropValueByteProvider() {
-    return new Object[][] {
-        {IntSize.BIT8, HtmlBytes.TPROPVAL8},
-        {IntSize.BIT16, HtmlBytes.TPROPVAL16},
-        {IntSize.BIT24, HtmlBytes.TPROPVAL24}
-    };
-  }
-
-  @Test(dataProvider = "toTestablePropValueByteProvider", description = "each size is associated with its TPROPVAL opcode")
-  public void toTestablePropValueByte(IntSize size, byte expected) {
-    final byte res;
-    res = size.toTestablePropValueByte();
-
-    assertEquals(res, expected);
-  }
-
-  @DataProvider
-  public Object[][] toTestablePropertyByteProvider() {
-    return new Object[][] {
-        {IntSize.BIT8, HtmlBytes.TPROP8},
-        {IntSize.BIT16, HtmlBytes.TPROP16},
-        {IntSize.BIT24, HtmlBytes.TPROP24}
-    };
-  }
-
-  @Test(dataProvider = "toTestablePropertyByteProvider", description = "each size is associated with its TPROP opcode")
-  public void toTestablePropertyByte(IntSize size, byte expected) {
-    final byte res;
-    res = size.toTestablePropertyByte();
-
-    assertEquals(res, expected);
-  }
-
-  @DataProvider
   public Object[][] toValuesByteProvider() {
     return new Object[][] {
         {IntSize.BIT8, HtmlBytes.VALUES8},

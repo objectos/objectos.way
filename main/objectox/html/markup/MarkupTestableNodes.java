@@ -27,11 +27,6 @@ public final class MarkupTestableNodes implements TestableNodes {
   }
 
   @Override
-  public final TestableMarkup br() {
-    return recorder.newLine();
-  }
-
-  @Override
   public final TestableMarkup cell(int width, String value) {
     return recorder.cell(width, value);
   }
@@ -64,21 +59,6 @@ public final class MarkupTestableNodes implements TestableNodes {
   @Override
   public final TestableMarkup h6(String value) {
     return recorder.heading(6, value);
-  }
-
-  @Override
-  public final TestableMarkup prop(String key, String value) {
-    return recorder.property(key, value);
-  }
-
-  @Override
-  public final TestableMarkup propkey(String value) {
-    return recorder.propKey(value);
-  }
-
-  @Override
-  public final TestableMarkup propval(String value) {
-    return recorder.propValue(value);
   }
 
 }

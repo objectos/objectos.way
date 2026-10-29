@@ -63,20 +63,6 @@ final class FragmentChildRecorder {
         case HtmlBytes.TCELL16 -> { sum += valueRecorder.testableOnly(size, value); cursor += 4; }
         case HtmlBytes.TCELL24 -> { sum += valueRecorder.testableOnly(size, value); cursor += 6; }
 
-        case HtmlBytes.TPROP8 -> { sum += valueRecorder.testableOnly(size, value); cursor += 2; }
-        case HtmlBytes.TPROP16 -> { sum += valueRecorder.testableOnly(size, value); cursor += 4; }
-        case HtmlBytes.TPROP24 -> { sum += valueRecorder.testableOnly(size, value); cursor += 6; }
-
-        case HtmlBytes.TPROPKEY8 -> { sum += valueRecorder.testableOnly(size, value); cursor += 1; }
-        case HtmlBytes.TPROPKEY16 -> { sum += valueRecorder.testableOnly(size, value); cursor += 2; }
-        case HtmlBytes.TPROPKEY24 -> { sum += valueRecorder.testableOnly(size, value); cursor += 3; }
-
-        case HtmlBytes.TPROPVAL8 -> { sum += valueRecorder.testableOnly(size, value); cursor += 1; }
-        case HtmlBytes.TPROPVAL16 -> { sum += valueRecorder.testableOnly(size, value); cursor += 2; }
-        case HtmlBytes.TPROPVAL24 -> { sum += valueRecorder.testableOnly(size, value); cursor += 3; }
-
-        case HtmlBytes.TNEWLINE -> { sum += valueRecorder.record(size, value); }
-
         case HtmlBytes.TEXT8 -> { sum += valueRecorder.record(size, value); cursor += 1; }
         case HtmlBytes.TEXT16 -> { sum += valueRecorder.record(size, value); cursor += 2; }
         case HtmlBytes.TEXT24 -> { sum += valueRecorder.record(size, value); cursor += 3; }
@@ -95,18 +81,6 @@ final class FragmentChildRecorder {
         case HtmlBytes.xTCELL8 -> cursor += 2;
         case HtmlBytes.xTCELL16 -> cursor += 4;
         case HtmlBytes.xTCELL24 -> cursor += 6;
-
-        case HtmlBytes.xTPROP8 -> cursor += 2;
-        case HtmlBytes.xTPROP16 -> cursor += 4;
-        case HtmlBytes.xTPROP24 -> cursor += 6;
-
-        case HtmlBytes.xTPROPKEY8 -> cursor += 1;
-        case HtmlBytes.xTPROPKEY16 -> cursor += 2;
-        case HtmlBytes.xTPROPKEY24 -> cursor += 3;
-
-        case HtmlBytes.xTPROPVAL8 -> cursor += 1;
-        case HtmlBytes.xTPROPVAL16 -> cursor += 2;
-        case HtmlBytes.xTPROPVAL24 -> cursor += 3;
 
         case HtmlBytes.xTEXT8 -> cursor += 1;
         case HtmlBytes.xTEXT16 -> cursor += 2;

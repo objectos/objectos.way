@@ -80,20 +80,6 @@ public class ScanDocumentNodeStateTest {
         {HtmlBytes.TCELL16, s(ctx -> new TestableCellState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT16))},
         {HtmlBytes.TCELL24, s(ctx -> new TestableCellState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT24))},
 
-        {HtmlBytes.TPROP8, s(ctx -> new TestablePropState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT8))},
-        {HtmlBytes.TPROP16, s(ctx -> new TestablePropState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT16))},
-        {HtmlBytes.TPROP24, s(ctx -> new TestablePropState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT24))},
-
-        {HtmlBytes.TPROPKEY8, s(ctx -> new TestableEntryNameState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT8))},
-        {HtmlBytes.TPROPKEY16, s(ctx -> new TestableEntryNameState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT16))},
-        {HtmlBytes.TPROPKEY24, s(ctx -> new TestableEntryNameState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT24))},
-
-        {HtmlBytes.TPROPVAL8, s(ctx -> new TestableEntryValueState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT8))},
-        {HtmlBytes.TPROPVAL16, s(ctx -> new TestableEntryValueState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT16))},
-        {HtmlBytes.TPROPVAL24, s(ctx -> new TestableEntryValueState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT24))},
-
-        {HtmlBytes.TNEWLINE, s(ctx -> new TestableNewLineState(ctx, ScanLevel.TOP_LEVEL))},
-
         {HtmlBytes.TEXT8, s(ctx -> new RenderTextState(ctx, ScanLevel.TOP_LEVEL, IntSize.BIT8))},
         {HtmlBytes.TEXT16, s(ctx -> new RenderTextState(ctx, ScanLevel.TOP_LEVEL, IntSize.BIT16))},
         {HtmlBytes.TEXT24, s(ctx -> new RenderTextState(ctx, ScanLevel.TOP_LEVEL, IntSize.BIT24))},
@@ -106,9 +92,7 @@ public class ScanDocumentNodeStateTest {
 
         {HtmlBytes.xELEMVOID8, s(ctx -> new SkipVoidElementState(ctx, IntSize.BIT8))},
 
-        {HtmlBytes.xFRAGSTR, s(ctx -> new SkipFragmentState(ctx))},
-
-        {HtmlBytes.xTNEWLINE, s(ctx -> new ScanDocumentNodeState(ctx))}
+        {HtmlBytes.xFRAGSTR, s(ctx -> new SkipFragmentState(ctx))}
     };
   }
 
@@ -168,37 +152,13 @@ public class ScanDocumentNodeStateTest {
         {HtmlBytes.xTCELL16, 4},
         {HtmlBytes.xTCELL24, 6},
 
-        {HtmlBytes.xTPROP8, 2},
-        {HtmlBytes.xTPROP16, 4},
-        {HtmlBytes.xTPROP24, 6},
-
-        {HtmlBytes.xTPROPKEY8, 1},
-        {HtmlBytes.xTPROPKEY16, 2},
-        {HtmlBytes.xTPROPKEY24, 3},
-
-        {HtmlBytes.xTPROPVAL8, 1},
-        {HtmlBytes.xTPROPVAL16, 2},
-        {HtmlBytes.xTPROPVAL24, 3},
-
         {HtmlBytes.oTHEADING8, 2},
         {HtmlBytes.oTHEADING16, 3},
         {HtmlBytes.oTHEADING24, 4},
 
         {HtmlBytes.oTCELL8, 2},
         {HtmlBytes.oTCELL16, 4},
-        {HtmlBytes.oTCELL24, 6},
-
-        {HtmlBytes.oTPROP8, 2},
-        {HtmlBytes.oTPROP16, 4},
-        {HtmlBytes.oTPROP24, 6},
-
-        {HtmlBytes.oTPROPKEY8, 1},
-        {HtmlBytes.oTPROPKEY16, 2},
-        {HtmlBytes.oTPROPKEY24, 3},
-
-        {HtmlBytes.oTPROPVAL8, 1},
-        {HtmlBytes.oTPROPVAL16, 2},
-        {HtmlBytes.oTPROPVAL24, 3}
+        {HtmlBytes.oTCELL24, 6}
     };
   }
 

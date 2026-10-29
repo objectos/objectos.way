@@ -101,10 +101,10 @@ public class TestableNodesTest {
   }
 
   @Test(description = """
-  testable cell and new line nodes:
+  testable cell node:
   - document level
   """)
-  public void cellAndNewLine01() {
+  public void cell01() {
     final Markup subject;
     subject = Markup.of();
 
@@ -112,7 +112,6 @@ public class TestableNodesTest {
     t = subject.t();
 
     t.cell(2, "x");
-    t.br();
 
     assertEquals(
         subject.compile(),
@@ -121,40 +120,6 @@ public class TestableNodesTest {
           opts.addByte(HtmlBytes.TCELL8);
           opts.addInt8(2);
           opts.addInt8(opts.addObject("x"));
-
-          opts.addByte(HtmlBytes.TNEWLINE);
-        })
-    );
-  }
-
-  @Test(description = """
-  testable property nodes:
-  - document level
-  """)
-  public void property01() {
-    final Markup subject;
-    subject = Markup.of();
-
-    final TestableNodes t;
-    t = subject.t();
-
-    t.prop("foo", "bar");
-    t.propkey("key");
-    t.propval("value");
-
-    assertEquals(
-        subject.compile(),
-
-        HtmlY.create(opts -> {
-          opts.addByte(HtmlBytes.TPROP8);
-          opts.addInt8(opts.addObject("foo"));
-          opts.addInt8(opts.addObject("bar"));
-
-          opts.addByte(HtmlBytes.TPROPKEY8);
-          opts.addInt8(opts.addObject("key"));
-
-          opts.addByte(HtmlBytes.TPROPVAL8);
-          opts.addInt8(opts.addObject("value"));
         })
     );
   }

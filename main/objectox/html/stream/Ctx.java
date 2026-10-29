@@ -154,20 +154,6 @@ class Ctx {
       case HtmlBytes.TCELL16 -> new TestableCellState(this, TestableLevel.TOP_LEVEL, IntSize.BIT16);
       case HtmlBytes.TCELL24 -> new TestableCellState(this, TestableLevel.TOP_LEVEL, IntSize.BIT24);
 
-      case HtmlBytes.TPROP8 -> new TestablePropState(this, TestableLevel.TOP_LEVEL, IntSize.BIT8);
-      case HtmlBytes.TPROP16 -> new TestablePropState(this, TestableLevel.TOP_LEVEL, IntSize.BIT16);
-      case HtmlBytes.TPROP24 -> new TestablePropState(this, TestableLevel.TOP_LEVEL, IntSize.BIT24);
-
-      case HtmlBytes.TPROPKEY8 -> new TestableEntryNameState(this, TestableLevel.TOP_LEVEL, IntSize.BIT8);
-      case HtmlBytes.TPROPKEY16 -> new TestableEntryNameState(this, TestableLevel.TOP_LEVEL, IntSize.BIT16);
-      case HtmlBytes.TPROPKEY24 -> new TestableEntryNameState(this, TestableLevel.TOP_LEVEL, IntSize.BIT24);
-
-      case HtmlBytes.TPROPVAL8 -> new TestableEntryValueState(this, TestableLevel.TOP_LEVEL, IntSize.BIT8);
-      case HtmlBytes.TPROPVAL16 -> new TestableEntryValueState(this, TestableLevel.TOP_LEVEL, IntSize.BIT16);
-      case HtmlBytes.TPROPVAL24 -> new TestableEntryValueState(this, TestableLevel.TOP_LEVEL, IntSize.BIT24);
-
-      case HtmlBytes.TNEWLINE -> new TestableNewLineState(this, ScanLevel.TOP_LEVEL);
-
       case HtmlBytes.xELEMSTR8 -> new BeginStartTagState(this, ScanLevel.NESTED, ElementKind.REGULAR, IntSize.BIT8);
       case HtmlBytes.xELEMVOID8 -> new BeginStartTagState(this, ScanLevel.NESTED, ElementKind.VOID, IntSize.BIT8);
 
@@ -199,20 +185,6 @@ class Ctx {
       case HtmlBytes.xTCELL16 -> new TestableCellState(this, TestableLevel.REGULAR, IntSize.BIT16);
       case HtmlBytes.xTCELL24 -> new TestableCellState(this, TestableLevel.REGULAR, IntSize.BIT24);
 
-      case HtmlBytes.xTPROP8 -> new TestablePropState(this, TestableLevel.REGULAR, IntSize.BIT8);
-      case HtmlBytes.xTPROP16 -> new TestablePropState(this, TestableLevel.REGULAR, IntSize.BIT16);
-      case HtmlBytes.xTPROP24 -> new TestablePropState(this, TestableLevel.REGULAR, IntSize.BIT24);
-
-      case HtmlBytes.xTPROPKEY8 -> new TestableEntryNameState(this, TestableLevel.REGULAR, IntSize.BIT8);
-      case HtmlBytes.xTPROPKEY16 -> new TestableEntryNameState(this, TestableLevel.REGULAR, IntSize.BIT16);
-      case HtmlBytes.xTPROPKEY24 -> new TestableEntryNameState(this, TestableLevel.REGULAR, IntSize.BIT24);
-
-      case HtmlBytes.xTPROPVAL8 -> new TestableEntryValueState(this, TestableLevel.REGULAR, IntSize.BIT8);
-      case HtmlBytes.xTPROPVAL16 -> new TestableEntryValueState(this, TestableLevel.REGULAR, IntSize.BIT16);
-      case HtmlBytes.xTPROPVAL24 -> new TestableEntryValueState(this, TestableLevel.REGULAR, IntSize.BIT24);
-
-      case HtmlBytes.xTNEWLINE -> new TestableNewLineState(this, ScanLevel.NESTED);
-
       case HtmlBytes.oTHEADING8 -> new TestableHeadingState(this, TestableLevel.TEST_ONLY, IntSize.BIT8);
       case HtmlBytes.oTHEADING16 -> new TestableHeadingState(this, TestableLevel.TEST_ONLY, IntSize.BIT16);
       case HtmlBytes.oTHEADING24 -> new TestableHeadingState(this, TestableLevel.TEST_ONLY, IntSize.BIT24);
@@ -220,18 +192,6 @@ class Ctx {
       case HtmlBytes.oTCELL8 -> new TestableCellState(this, TestableLevel.TEST_ONLY, IntSize.BIT8);
       case HtmlBytes.oTCELL16 -> new TestableCellState(this, TestableLevel.TEST_ONLY, IntSize.BIT16);
       case HtmlBytes.oTCELL24 -> new TestableCellState(this, TestableLevel.TEST_ONLY, IntSize.BIT24);
-
-      case HtmlBytes.oTPROP8 -> new TestablePropState(this, TestableLevel.TEST_ONLY, IntSize.BIT8);
-      case HtmlBytes.oTPROP16 -> new TestablePropState(this, TestableLevel.TEST_ONLY, IntSize.BIT16);
-      case HtmlBytes.oTPROP24 -> new TestablePropState(this, TestableLevel.TEST_ONLY, IntSize.BIT24);
-
-      case HtmlBytes.oTPROPKEY8 -> new TestableEntryNameState(this, TestableLevel.TEST_ONLY, IntSize.BIT8);
-      case HtmlBytes.oTPROPKEY16 -> new TestableEntryNameState(this, TestableLevel.TEST_ONLY, IntSize.BIT16);
-      case HtmlBytes.oTPROPKEY24 -> new TestableEntryNameState(this, TestableLevel.TEST_ONLY, IntSize.BIT24);
-
-      case HtmlBytes.oTPROPVAL8 -> new TestableEntryValueState(this, TestableLevel.TEST_ONLY, IntSize.BIT8);
-      case HtmlBytes.oTPROPVAL16 -> new TestableEntryValueState(this, TestableLevel.TEST_ONLY, IntSize.BIT16);
-      case HtmlBytes.oTPROPVAL24 -> new TestableEntryValueState(this, TestableLevel.TEST_ONLY, IntSize.BIT24);
 
       default -> throw State.malformed();
     };

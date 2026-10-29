@@ -34,11 +34,7 @@ import objectox.html.stream.RenderJsActionAttributeEvent;
 import objectox.html.stream.RenderRawEvent;
 import objectox.html.stream.RenderTextEvent;
 import objectox.html.stream.TestableCellEvent;
-import objectox.html.stream.TestableEntryNameEvent;
-import objectox.html.stream.TestableEntryValueEvent;
 import objectox.html.stream.TestableHeadingEvent;
-import objectox.html.stream.TestableNewLineEvent;
-import objectox.html.stream.TestablePropEvent;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -115,19 +111,7 @@ public class StandardFormatterTest {
         new TestableCellEvent(0, 10, "foo"),
         ""
     }, {
-        new TestableEntryNameEvent(0, "foo"),
-        ""
-    }, {
-        new TestableEntryValueEvent(0, "foo"),
-        ""
-    }, {
         new TestableHeadingEvent(0, 1, "foo"),
-        ""
-    }, {
-        new TestableNewLineEvent(0),
-        ""
-    }, {
-        new TestablePropEvent(0, "key", "value"),
         ""
     }};
   }

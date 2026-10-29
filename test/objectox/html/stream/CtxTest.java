@@ -101,20 +101,6 @@ public class CtxTest {
         {HtmlBytes.TCELL16, op(ctx -> new TestableCellState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT16))},
         {HtmlBytes.TCELL24, op(ctx -> new TestableCellState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT24))},
 
-        {HtmlBytes.TPROP8, op(ctx -> new TestablePropState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT8))},
-        {HtmlBytes.TPROP16, op(ctx -> new TestablePropState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT16))},
-        {HtmlBytes.TPROP24, op(ctx -> new TestablePropState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT24))},
-
-        {HtmlBytes.TPROPKEY8, op(ctx -> new TestableEntryNameState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT8))},
-        {HtmlBytes.TPROPKEY16, op(ctx -> new TestableEntryNameState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT16))},
-        {HtmlBytes.TPROPKEY24, op(ctx -> new TestableEntryNameState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT24))},
-
-        {HtmlBytes.TPROPVAL8, op(ctx -> new TestableEntryValueState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT8))},
-        {HtmlBytes.TPROPVAL16, op(ctx -> new TestableEntryValueState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT16))},
-        {HtmlBytes.TPROPVAL24, op(ctx -> new TestableEntryValueState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT24))},
-
-        {HtmlBytes.TNEWLINE, op(ctx -> new TestableNewLineState(ctx, ScanLevel.TOP_LEVEL))},
-
         {HtmlBytes.xELEMSTR8, op(ctx -> new BeginStartTagState(ctx, ScanLevel.NESTED, ElementKind.REGULAR, IntSize.BIT8))},
         {HtmlBytes.xELEMVOID8, op(ctx -> new BeginStartTagState(ctx, ScanLevel.NESTED, ElementKind.VOID, IntSize.BIT8))},
 
@@ -146,39 +132,13 @@ public class CtxTest {
         {HtmlBytes.xTCELL16, op(ctx -> new TestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT16))},
         {HtmlBytes.xTCELL24, op(ctx -> new TestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT24))},
 
-        {HtmlBytes.xTPROP8, op(ctx -> new TestablePropState(ctx, TestableLevel.REGULAR, IntSize.BIT8))},
-        {HtmlBytes.xTPROP16, op(ctx -> new TestablePropState(ctx, TestableLevel.REGULAR, IntSize.BIT16))},
-        {HtmlBytes.xTPROP24, op(ctx -> new TestablePropState(ctx, TestableLevel.REGULAR, IntSize.BIT24))},
-
-        {HtmlBytes.xTPROPKEY8, op(ctx -> new TestableEntryNameState(ctx, TestableLevel.REGULAR, IntSize.BIT8))},
-        {HtmlBytes.xTPROPKEY16, op(ctx -> new TestableEntryNameState(ctx, TestableLevel.REGULAR, IntSize.BIT16))},
-        {HtmlBytes.xTPROPKEY24, op(ctx -> new TestableEntryNameState(ctx, TestableLevel.REGULAR, IntSize.BIT24))},
-
-        {HtmlBytes.xTPROPVAL8, op(ctx -> new TestableEntryValueState(ctx, TestableLevel.REGULAR, IntSize.BIT8))},
-        {HtmlBytes.xTPROPVAL16, op(ctx -> new TestableEntryValueState(ctx, TestableLevel.REGULAR, IntSize.BIT16))},
-        {HtmlBytes.xTPROPVAL24, op(ctx -> new TestableEntryValueState(ctx, TestableLevel.REGULAR, IntSize.BIT24))},
-
-        {HtmlBytes.xTNEWLINE, op(ctx -> new TestableNewLineState(ctx, ScanLevel.NESTED))},
-
         {HtmlBytes.oTHEADING8, op(ctx -> new TestableHeadingState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT8))},
         {HtmlBytes.oTHEADING16, op(ctx -> new TestableHeadingState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT16))},
         {HtmlBytes.oTHEADING24, op(ctx -> new TestableHeadingState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT24))},
 
         {HtmlBytes.oTCELL8, op(ctx -> new TestableCellState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT8))},
         {HtmlBytes.oTCELL16, op(ctx -> new TestableCellState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT16))},
-        {HtmlBytes.oTCELL24, op(ctx -> new TestableCellState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT24))},
-
-        {HtmlBytes.oTPROP8, op(ctx -> new TestablePropState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT8))},
-        {HtmlBytes.oTPROP16, op(ctx -> new TestablePropState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT16))},
-        {HtmlBytes.oTPROP24, op(ctx -> new TestablePropState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT24))},
-
-        {HtmlBytes.oTPROPKEY8, op(ctx -> new TestableEntryNameState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT8))},
-        {HtmlBytes.oTPROPKEY16, op(ctx -> new TestableEntryNameState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT16))},
-        {HtmlBytes.oTPROPKEY24, op(ctx -> new TestableEntryNameState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT24))},
-
-        {HtmlBytes.oTPROPVAL8, op(ctx -> new TestableEntryValueState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT8))},
-        {HtmlBytes.oTPROPVAL16, op(ctx -> new TestableEntryValueState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT16))},
-        {HtmlBytes.oTPROPVAL24, op(ctx -> new TestableEntryValueState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT24))}
+        {HtmlBytes.oTCELL24, op(ctx -> new TestableCellState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT24))}
     };
   }
 

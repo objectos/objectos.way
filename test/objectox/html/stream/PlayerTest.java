@@ -123,23 +123,6 @@ public class PlayerTest {
   }
 
   @Test(description = """
-  document:
-  - only a testable event
-  """)
-  public void document03() {
-    final Player subject;
-    subject = PlayerY.create(opts -> {
-      opts.addByte(HtmlBytes.TNEWLINE);
-    });
-
-    assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new TestableNewLineEvent(0));
-    assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new EndDocumentEvent(false));
-    assertEquals(subject.hasNext(), false);
-  }
-
-  @Test(description = """
   js action attr:
   - count: 1
   - markup
@@ -786,72 +769,6 @@ public class PlayerTest {
     assertEquals(subject.next(), new RenderTextEvent(1, "Ipsum"));
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new TestableHeadingEvent(1, 1, "Ipsum"));
-    assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new RenderEndTagEvent(0, ElementName.DIV));
-    assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new EndDocumentEvent(false));
-    assertEquals(subject.hasNext(), false);
-  }
-
-  @Test(description = """
-  testable property:
-  - element child
-  - regular elem
-  """)
-  public void testable04() {
-    final Player subject;
-    subject = PlayerY.create(opts -> {
-      opts.addByte(HtmlBytes.xTPROP8);
-
-      opts.addInt8(opts.addObject("foo"));
-
-      opts.addInt8(opts.addObject("bar"));
-
-      opts.addByte(HtmlBytes.ELEMSTR8);
-      opts.addInt8(ElementName.DIV.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-    });
-
-    assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new BeginStartTagEvent(0, ElementName.DIV));
-    assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new EndStartTagEvent(0, EndStartTagKind.ELEMENT));
-    assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new RenderTextEvent(1, "bar"));
-    assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new TestablePropEvent(1, "foo", "bar"));
-    assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new RenderEndTagEvent(0, ElementName.DIV));
-    assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new EndDocumentEvent(false));
-    assertEquals(subject.hasNext(), false);
-  }
-
-  @Test(description = """
-  testable new line:
-  - element child
-  - regular elem
-  """)
-  public void testable05() {
-    final Player subject;
-    subject = PlayerY.create(opts -> {
-      opts.addByte(HtmlBytes.xTNEWLINE);
-
-      opts.addByte(HtmlBytes.ELEMSTR8);
-      opts.addInt8(ElementName.DIV.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-    });
-
-    assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new BeginStartTagEvent(0, ElementName.DIV));
-    assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new EndStartTagEvent(0, EndStartTagKind.ELEMENT));
-    assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new TestableNewLineEvent(1));
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new RenderEndTagEvent(0, ElementName.DIV));
     assertEquals(subject.hasNext(), true);

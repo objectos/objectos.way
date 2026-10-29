@@ -83,20 +83,6 @@ final class ValueRecorder {
       case HtmlBytes.TCELL16 -> HtmlBytes.xTCELL16;
       case HtmlBytes.TCELL24 -> HtmlBytes.xTCELL24;
 
-      case HtmlBytes.TPROP8 -> HtmlBytes.xTPROP8;
-      case HtmlBytes.TPROP16 -> HtmlBytes.xTPROP16;
-      case HtmlBytes.TPROP24 -> HtmlBytes.xTPROP24;
-
-      case HtmlBytes.TPROPKEY8 -> HtmlBytes.xTPROPKEY8;
-      case HtmlBytes.TPROPKEY16 -> HtmlBytes.xTPROPKEY16;
-      case HtmlBytes.TPROPKEY24 -> HtmlBytes.xTPROPKEY24;
-
-      case HtmlBytes.TPROPVAL8 -> HtmlBytes.xTPROPVAL8;
-      case HtmlBytes.TPROPVAL16 -> HtmlBytes.xTPROPVAL16;
-      case HtmlBytes.TPROPVAL24 -> HtmlBytes.xTPROPVAL24;
-
-      case HtmlBytes.TNEWLINE -> HtmlBytes.xTNEWLINE;
-
       case HtmlBytes.xELEMSTR8 -> HtmlBytes.xELEMSTR8;
       case HtmlBytes.xELEMVOID8 -> HtmlBytes.xELEMVOID8;
 
@@ -125,20 +111,6 @@ final class ValueRecorder {
       case HtmlBytes.xTCELL16 -> HtmlBytes.xTCELL16;
       case HtmlBytes.xTCELL24 -> HtmlBytes.xTCELL24;
 
-      case HtmlBytes.xTPROP8 -> HtmlBytes.xTPROP8;
-      case HtmlBytes.xTPROP16 -> HtmlBytes.xTPROP16;
-      case HtmlBytes.xTPROP24 -> HtmlBytes.xTPROP24;
-
-      case HtmlBytes.xTPROPKEY8 -> HtmlBytes.xTPROPKEY8;
-      case HtmlBytes.xTPROPKEY16 -> HtmlBytes.xTPROPKEY16;
-      case HtmlBytes.xTPROPKEY24 -> HtmlBytes.xTPROPKEY24;
-
-      case HtmlBytes.xTPROPVAL8 -> HtmlBytes.xTPROPVAL8;
-      case HtmlBytes.xTPROPVAL16 -> HtmlBytes.xTPROPVAL16;
-      case HtmlBytes.xTPROPVAL24 -> HtmlBytes.xTPROPVAL24;
-
-      case HtmlBytes.xTNEWLINE -> HtmlBytes.xTNEWLINE;
-
       case HtmlBytes.oTHEADING8 -> HtmlBytes.oTHEADING8;
       case HtmlBytes.oTHEADING16 -> HtmlBytes.oTHEADING16;
       case HtmlBytes.oTHEADING24 -> HtmlBytes.oTHEADING24;
@@ -146,18 +118,6 @@ final class ValueRecorder {
       case HtmlBytes.oTCELL8 -> HtmlBytes.oTCELL8;
       case HtmlBytes.oTCELL16 -> HtmlBytes.oTCELL16;
       case HtmlBytes.oTCELL24 -> HtmlBytes.oTCELL24;
-
-      case HtmlBytes.oTPROP8 -> HtmlBytes.oTPROP8;
-      case HtmlBytes.oTPROP16 -> HtmlBytes.oTPROP16;
-      case HtmlBytes.oTPROP24 -> HtmlBytes.oTPROP24;
-
-      case HtmlBytes.oTPROPKEY8 -> HtmlBytes.oTPROPKEY8;
-      case HtmlBytes.oTPROPKEY16 -> HtmlBytes.oTPROPKEY16;
-      case HtmlBytes.oTPROPKEY24 -> HtmlBytes.oTPROPKEY24;
-
-      case HtmlBytes.oTPROPVAL8 -> HtmlBytes.oTPROPVAL8;
-      case HtmlBytes.oTPROPVAL16 -> HtmlBytes.oTPROPVAL16;
-      case HtmlBytes.oTPROPVAL24 -> HtmlBytes.oTPROPVAL24;
 
       default -> throw new IllegalArgumentException("Invalid opcode: " + opcode);
     };
@@ -172,18 +132,6 @@ final class ValueRecorder {
       case HtmlBytes.TCELL8 -> HtmlBytes.oTCELL8;
       case HtmlBytes.TCELL16 -> HtmlBytes.oTCELL16;
       case HtmlBytes.TCELL24 -> HtmlBytes.oTCELL24;
-
-      case HtmlBytes.TPROP8 -> HtmlBytes.oTPROP8;
-      case HtmlBytes.TPROP16 -> HtmlBytes.oTPROP16;
-      case HtmlBytes.TPROP24 -> HtmlBytes.oTPROP24;
-
-      case HtmlBytes.TPROPKEY8 -> HtmlBytes.oTPROPKEY8;
-      case HtmlBytes.TPROPKEY16 -> HtmlBytes.oTPROPKEY16;
-      case HtmlBytes.TPROPKEY24 -> HtmlBytes.oTPROPKEY24;
-
-      case HtmlBytes.TPROPVAL8 -> HtmlBytes.oTPROPVAL8;
-      case HtmlBytes.TPROPVAL16 -> HtmlBytes.oTPROPVAL16;
-      case HtmlBytes.TPROPVAL24 -> HtmlBytes.oTPROPVAL24;
 
       default -> throw new IllegalArgumentException("Invalid opcode: " + opcode);
     };

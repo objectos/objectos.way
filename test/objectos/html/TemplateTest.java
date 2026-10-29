@@ -2040,8 +2040,6 @@ x\
       @Override
       protected final void render() {
         t.h1("Heading 1");
-
-        t.prop("foo", "bar");
       }
     };
 
@@ -2051,7 +2049,6 @@ x\
         """
         # Heading 1
 
-        foo: bar
         """
     );
   }

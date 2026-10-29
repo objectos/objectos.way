@@ -27,11 +27,7 @@ import objectos.html.stream.RenderRaw;
 import objectos.html.stream.RenderTestable;
 import objectos.html.stream.RenderText;
 import objectos.html.stream.TestableCell;
-import objectos.html.stream.TestableEntryName;
-import objectos.html.stream.TestableEntryValue;
 import objectos.html.stream.TestableHeading;
-import objectos.html.stream.TestableNewLine;
-import objectos.html.stream.TestableProp;
 
 public final class TestableFormatter extends BaseFormatter {
 
@@ -69,40 +65,12 @@ public final class TestableFormatter extends BaseFormatter {
     switch (event) {
       case TestableCell _ -> {}
 
-      case TestableEntryName entry -> renderEntryName(entry, out);
-
-      case TestableEntryValue entry -> renderEntryValue(entry, out);
-
       case TestableHeading heading -> renderHeading(heading, out);
-
-      case TestableNewLine _ -> renderNewLine(out);
-
-      case TestableProp prop -> renderProp(prop, out);
     }
   }
 
   @Override
   final void renderText(RenderText text, Output out) {}
-
-  private void renderEntryName(TestableEntryName entry, Output out) {
-    final String value;
-    value = entry.value();
-
-    out.append(value);
-
-    out.append(':');
-
-    out.append(' ');
-  }
-
-  private void renderEntryValue(TestableEntryValue entry, Output out) {
-    final String value;
-    value = entry.value();
-
-    out.append(value);
-
-    out.append('\n');
-  }
 
   private void renderHeading(TestableHeading heading, Output out) {
     final int level;
@@ -120,28 +88,6 @@ public final class TestableFormatter extends BaseFormatter {
     out.append(value);
 
     out.append('\n');
-
-    out.append('\n');
-  }
-
-  private void renderNewLine(Output out) {
-    out.append('\n');
-  }
-
-  private void renderProp(TestableProp prop, Output out) {
-    final String key;
-    key = prop.key();
-
-    out.append(key);
-
-    out.append(':');
-
-    out.append(' ');
-
-    final String value;
-    value = prop.value();
-
-    out.append(value);
 
     out.append('\n');
   }

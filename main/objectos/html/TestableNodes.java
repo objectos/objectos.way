@@ -25,11 +25,6 @@ import objectox.html.markup.MarkupTestableNodes;
 /// testable nodes are rendered as text nodes with the specified value.
 public sealed interface TestableNodes permits MarkupTestableNodes {
 
-  /// Formats a line separator at the testable output exclusively.
-  ///
-  /// @return an object representing the encoded testable node
-  TestableMarkup br();
-
   /// Encodes a testable cell node with the specified width and value.
   ///
   /// @param width the fixed width of the cell, must be greater than zero
@@ -79,27 +74,5 @@ public sealed interface TestableNodes permits MarkupTestableNodes {
   ///
   /// @return an object representing the encoded testable node
   TestableMarkup h6(String value);
-
-  /// Encodes a testable property node with the specified key and value.
-  ///
-  /// @param key the testable property key
-  /// @param value the testable property value
-  ///
-  /// @return an object representing the encoded testable node
-  TestableMarkup prop(String key, String value);
-
-  /// Encodes a testable property key node with the specified value.
-  ///
-  /// @param value the testable property key value
-  ///
-  /// @return an object representing the encoded testable node
-  TestableMarkup propkey(String value);
-
-  /// Encodes a testable property value node with the specified value.
-  ///
-  /// @param value the testable property value
-  ///
-  /// @return an object representing the encoded testable node
-  TestableMarkup propval(String value);
 
 }

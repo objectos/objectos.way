@@ -20,8 +20,4 @@ public sealed interface RenderTestable
     extends Event
     permits
     TestableHeading,
-    TestableCell,
-    TestableProp,
-    TestableEntryName,
-    TestableEntryValue,
-    TestableNewLine {}
+    TestableCell {}
