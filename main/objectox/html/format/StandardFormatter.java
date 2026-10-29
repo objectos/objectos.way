@@ -58,7 +58,7 @@ public final class StandardFormatter implements Formatter {
     switch (event) {
       case BeginStartTag begin -> beginStartTag(begin, out);
 
-      case EndDocument _ -> {}
+      case EndDocument end -> endDocument(end, out);
 
       case EndStartTag end -> endStartTag(end, out);
 
@@ -87,6 +87,14 @@ public final class StandardFormatter implements Formatter {
     out.append('<');
 
     out.append(name);
+  }
+
+  private void endDocument(EndDocument event, Output out) {
+    if (event.empty()) {
+      return;
+    }
+
+    out.append('\n');
   }
 
   private void endStartTag(EndStartTag event, Output out) {

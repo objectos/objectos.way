@@ -32,9 +32,9 @@ public class SkipFragmentStateTest {
       opts.addByte(HtmlBytes.FRAGEND);
       opts.addByte(HtmlBytes.xBOOLEAN8);
 
-      opts.push(FrameY.create(f -> {
+      opts.push(f -> {
         f.index = 1;
-      }));
+      });
     });
 
     final SkipFragmentState subject;
@@ -51,9 +51,9 @@ public class SkipFragmentStateTest {
         CtxY.create(opts -> {
           opts.sink(ctx);
 
-          opts.push(FrameY.create(f -> {
+          opts.push(f -> {
             f.index = 5;
-          }));
+          });
         })
     );
   }
@@ -73,9 +73,9 @@ public class SkipFragmentStateTest {
       opts.addByte(HtmlBytes.FRAGEND);
       opts.addByte(HtmlBytes.xBOOLEAN8);
 
-      opts.push(FrameY.create(f -> {
+      opts.push(f -> {
         f.index = 1;
-      }));
+      });
     });
 
     final SkipFragmentState subject;
@@ -92,9 +92,9 @@ public class SkipFragmentStateTest {
         CtxY.create(opts -> {
           opts.sink(ctx);
 
-          opts.push(FrameY.create(f -> {
+          opts.push(f -> {
             f.index = 8;
-          }));
+          });
         })
     );
   }

@@ -24,6 +24,7 @@ import objectos.script.JsAction;
 import objectox.html.attr.AttributeName;
 import objectox.html.elem.ElementName;
 import objectox.html.stream.BeginStartTagEvent;
+import objectox.html.stream.EndDocumentEvent;
 import objectox.html.stream.EndStartTagEvent;
 import objectox.html.stream.RenderAttributeEvent;
 import objectox.html.stream.RenderBooleanAttributeEvent;
@@ -53,6 +54,12 @@ public class StandardFormatterTest {
         """
         <div\
         """
+    }, {
+        new EndDocumentEvent(false),
+        "\n"
+    }, {
+        new EndDocumentEvent(true),
+        ""
     }, {
         new EndStartTagEvent(0, EndStartTagKind.ELEMENT),
         """

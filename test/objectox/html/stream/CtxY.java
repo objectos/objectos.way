@@ -24,6 +24,8 @@ import objectox.html.markup.HtmlSinkY;
 
 final class CtxY {
 
+  public boolean emitted = false;
+
   private Event result;
 
   private HtmlSink sink = new HtmlSink();
@@ -73,20 +75,20 @@ final class CtxY {
     sink.objectsIndex(value);
   }
 
-  public final void push(Frame value) {
+  public final void push(Consumer<? super FrameY> opts) {
+    final Frame frame;
+    frame = FrameY.create(opts);
+
+    push(frame);
+  }
+
+  private void push(Frame value) {
     final int index;
     index = ++stackIndex;
 
     stack = Util.growIfNecessary(stack, index);
 
     stack[index] = value;
-  }
-
-  public final void push(Consumer<? super FrameY> opts) {
-    final Frame frame;
-    frame = FrameY.create(opts);
-
-    push(frame);
   }
 
   public final void result(Event value) {
@@ -108,6 +110,8 @@ final class CtxY {
 
         stackIndex
     );
+
+    ctx.emitted(emitted);
 
     if (result != null) {
       ctx.result(result);

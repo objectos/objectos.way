@@ -34,13 +34,13 @@ public class EndElementStateTest {
       opts.addByte(HtmlBytes.VALUES8);
       opts.addInt8(0);
 
-      opts.push(FrameY.create(f -> {
+      opts.push(f -> {
         f.index = 5;
 
         f.regular(ElementName.DIV);
 
         f.values8(0, 0);
-      }));
+      });
     });
 
     final EndElementState subject;

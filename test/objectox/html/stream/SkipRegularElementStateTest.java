@@ -42,7 +42,9 @@ public class SkipRegularElementStateTest {
       opts.addInt8(1);
       opts.addInt8(0);
 
-      opts.push(new Frame(1));
+      opts.push(f -> {
+        f.index = 1;
+      });
     });
 
     final SkipRegularElementState subject;
@@ -59,7 +61,9 @@ public class SkipRegularElementStateTest {
         CtxY.create(opts -> {
           opts.sink(ctx);
 
-          opts.push(new Frame(4));
+          opts.push(f -> {
+            f.index = 4;
+          });
         })
     );
   }

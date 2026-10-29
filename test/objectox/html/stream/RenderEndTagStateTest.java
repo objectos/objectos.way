@@ -33,13 +33,13 @@ public class RenderEndTagStateTest {
       opts.addInt8(1);
       opts.addInt8(0);
 
-      opts.push(FrameY.create(f -> {
+      opts.push(f -> {
         f.index = 5;
 
         f.regular(ElementName.DIV);
 
         f.values8(0, 0);
-      }));
+      });
     });
 
     final RenderEndTagState subject;
@@ -56,13 +56,13 @@ public class RenderEndTagStateTest {
         CtxY.create(opts -> {
           opts.sink(ctx);
 
-          opts.push(FrameY.create(f -> {
+          opts.push(f -> {
             f.index = 5;
 
             f.regular(ElementName.DIV);
 
             f.values8(0, 0);
-          }));
+          });
 
           opts.result(new RenderEndTagEvent(0, ElementName.DIV));
         })

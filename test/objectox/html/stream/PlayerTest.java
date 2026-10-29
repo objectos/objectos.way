@@ -56,7 +56,7 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new RenderEndTagEvent(0, ElementName.SPAN));
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new EndDocumentEvent());
+    assertEquals(subject.next(), new EndDocumentEvent(false));
     assertEquals(subject.hasNext(), false);
   }
 
@@ -86,7 +86,7 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new EndStartTagEvent(0, EndStartTagKind.VOID_ELEMENT));
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new EndDocumentEvent());
+    assertEquals(subject.next(), new EndDocumentEvent(false));
     assertEquals(subject.hasNext(), false);
   }
 
@@ -101,7 +101,41 @@ public class PlayerTest {
     });
 
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new EndDocumentEvent());
+    assertEquals(subject.next(), new EndDocumentEvent(true));
+    assertEquals(subject.hasNext(), false);
+  }
+
+  @Test(description = """
+  document:
+  - no events emitted
+  """)
+  public void document02() {
+    final Player subject;
+    subject = PlayerY.create(opts -> {
+      opts.addByte(HtmlBytes.FRAGSTR);
+
+      opts.addInt24(0);
+    });
+
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EndDocumentEvent(true));
+    assertEquals(subject.hasNext(), false);
+  }
+
+  @Test(description = """
+  document:
+  - only a testable event
+  """)
+  public void document03() {
+    final Player subject;
+    subject = PlayerY.create(opts -> {
+      opts.addByte(HtmlBytes.TNEWLINE);
+    });
+
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new TestableNewLineEvent(0));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EndDocumentEvent(false));
     assertEquals(subject.hasNext(), false);
   }
 
@@ -137,7 +171,7 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new RenderEndTagEvent(0, ElementName.DIV));
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new EndDocumentEvent());
+    assertEquals(subject.next(), new EndDocumentEvent(false));
     assertEquals(subject.hasNext(), false);
   }
 
@@ -156,7 +190,7 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new RenderRawEvent(0, "<br/>"));
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new EndDocumentEvent());
+    assertEquals(subject.next(), new EndDocumentEvent(false));
     assertEquals(subject.hasNext(), false);
   }
 
@@ -186,7 +220,7 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new RenderEndTagEvent(0, ElementName.DIV));
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new EndDocumentEvent());
+    assertEquals(subject.next(), new EndDocumentEvent(false));
     assertEquals(subject.hasNext(), false);
   }
 
@@ -207,7 +241,7 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new RenderRawEvent(0, "Ipsum"));
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new EndDocumentEvent());
+    assertEquals(subject.next(), new EndDocumentEvent(false));
     assertEquals(subject.hasNext(), false);
   }
 
@@ -228,7 +262,7 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new RenderRawEvent(0, "Ipsum"));
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new EndDocumentEvent());
+    assertEquals(subject.next(), new EndDocumentEvent(false));
     assertEquals(subject.hasNext(), false);
   }
 
@@ -261,7 +295,7 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new RenderEndTagEvent(0, ElementName.DIV));
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new EndDocumentEvent());
+    assertEquals(subject.next(), new EndDocumentEvent(false));
     assertEquals(subject.hasNext(), false);
   }
 
@@ -296,7 +330,7 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new RenderEndTagEvent(0, ElementName.DIV));
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new EndDocumentEvent());
+    assertEquals(subject.next(), new EndDocumentEvent(false));
     assertEquals(subject.hasNext(), false);
   }
 
@@ -331,7 +365,7 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new RenderEndTagEvent(0, ElementName.DIV));
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new EndDocumentEvent());
+    assertEquals(subject.next(), new EndDocumentEvent(false));
     assertEquals(subject.hasNext(), false);
   }
 
@@ -362,7 +396,7 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new EndStartTagEvent(0, EndStartTagKind.VOID_ELEMENT));
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new EndDocumentEvent());
+    assertEquals(subject.next(), new EndDocumentEvent(false));
     assertEquals(subject.hasNext(), false);
   }
 
@@ -395,7 +429,7 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new EndStartTagEvent(0, EndStartTagKind.VOID_ELEMENT));
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new EndDocumentEvent());
+    assertEquals(subject.next(), new EndDocumentEvent(false));
     assertEquals(subject.hasNext(), false);
   }
 
@@ -428,7 +462,7 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new EndStartTagEvent(0, EndStartTagKind.VOID_ELEMENT));
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new EndDocumentEvent());
+    assertEquals(subject.next(), new EndDocumentEvent(false));
     assertEquals(subject.hasNext(), false);
   }
 
@@ -461,7 +495,7 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new RenderEndTagEvent(0, ElementName.DIV));
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new EndDocumentEvent());
+    assertEquals(subject.next(), new EndDocumentEvent(false));
     assertEquals(subject.hasNext(), false);
   }
 
@@ -492,7 +526,7 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new EndStartTagEvent(0, EndStartTagKind.VOID_ELEMENT));
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new EndDocumentEvent());
+    assertEquals(subject.next(), new EndDocumentEvent(false));
     assertEquals(subject.hasNext(), false);
   }
 
@@ -531,7 +565,7 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new RenderEndTagEvent(0, ElementName.HTML));
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new EndDocumentEvent());
+    assertEquals(subject.next(), new EndDocumentEvent(false));
     assertEquals(subject.hasNext(), false);
   }
 
@@ -556,7 +590,7 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new RenderEndTagEvent(0, ElementName.DIV));
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new EndDocumentEvent());
+    assertEquals(subject.next(), new EndDocumentEvent(false));
     assertEquals(subject.hasNext(), false);
   }
 
@@ -592,7 +626,7 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new RenderEndTagEvent(0, ElementName.DIV));
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new EndDocumentEvent());
+    assertEquals(subject.next(), new EndDocumentEvent(false));
     assertEquals(subject.hasNext(), false);
   }
 
@@ -626,7 +660,7 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new RenderEndTagEvent(0, ElementName.ARTICLE));
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new EndDocumentEvent());
+    assertEquals(subject.next(), new EndDocumentEvent(false));
     assertEquals(subject.hasNext(), false);
   }
 
@@ -672,7 +706,7 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new RenderEndTagEvent(0, ElementName.HTML));
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new EndDocumentEvent());
+    assertEquals(subject.next(), new EndDocumentEvent(false));
     assertEquals(subject.hasNext(), false);
   }
 
@@ -695,7 +729,7 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new TestableHeadingEvent(0, 1, "Heading 1"));
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new EndDocumentEvent());
+    assertEquals(subject.next(), new EndDocumentEvent(false));
     assertEquals(subject.hasNext(), false);
   }
 
@@ -719,7 +753,7 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new TestableHeadingEvent(0, 2, "Heading 2"));
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new EndDocumentEvent());
+    assertEquals(subject.next(), new EndDocumentEvent(false));
     assertEquals(subject.hasNext(), false);
   }
 
@@ -755,7 +789,7 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new RenderEndTagEvent(0, ElementName.DIV));
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new EndDocumentEvent());
+    assertEquals(subject.next(), new EndDocumentEvent(false));
     assertEquals(subject.hasNext(), false);
   }
 
@@ -791,7 +825,7 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new RenderEndTagEvent(0, ElementName.DIV));
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new EndDocumentEvent());
+    assertEquals(subject.next(), new EndDocumentEvent(false));
     assertEquals(subject.hasNext(), false);
   }
 
@@ -821,7 +855,7 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new RenderEndTagEvent(0, ElementName.DIV));
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new EndDocumentEvent());
+    assertEquals(subject.next(), new EndDocumentEvent(false));
     assertEquals(subject.hasNext(), false);
   }
 
@@ -845,7 +879,7 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new TestableCellEvent(0, 5, "12345"));
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new EndDocumentEvent());
+    assertEquals(subject.next(), new EndDocumentEvent(false));
     assertEquals(subject.hasNext(), false);
   }
 
@@ -885,7 +919,7 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new RenderEndTagEvent(0, ElementName.DIV));
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new EndDocumentEvent());
+    assertEquals(subject.next(), new EndDocumentEvent(false));
     assertEquals(subject.hasNext(), false);
   }
 

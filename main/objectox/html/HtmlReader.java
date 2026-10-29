@@ -29,13 +29,9 @@ public final class HtmlReader extends Reader {
 
   private final Iterator<Event> events;
 
-  private boolean finalNewLine;
-
   private final StandardFormatter formatter;
 
   private final Output output;
-
-  private boolean written;
 
   public HtmlReader(Iterator<Event> events, StandardFormatter formatter, Output output) {
     this.events = events;
@@ -62,30 +58,11 @@ public final class HtmlReader extends Reader {
 
     output.rewrap(cbuf, off, len);
 
-    if (output.exhausted()) {
-      return output.written();
-    }
-
-    if (!events.hasNext()) {
-      final int nread;
-      nread = output.written();
-
-      return nread == 0 ? -1 : nread;
-    }
-
-    while (events.hasNext()) {
+    while (!output.exhausted() && events.hasNext()) {
       final Event event;
       event = events.next();
 
       formatter.formatTo(event, output);
-
-      written = true;
-    }
-
-    if (written && !finalNewLine && !events.hasNext()) {
-      output.append('\n');
-
-      finalNewLine = true;
     }
 
     final int nread;

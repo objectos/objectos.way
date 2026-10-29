@@ -26,6 +26,7 @@ import objectos.html.stream.Event;
 import objectox.html.format.Output;
 import objectox.html.format.OutputY;
 import objectox.html.format.StandardFormatter;
+import objectox.html.stream.EndDocumentEvent;
 import objectox.html.stream.RenderTextEvent;
 import org.testng.annotations.Test;
 
@@ -148,7 +149,8 @@ public class HtmlReaderTest {
     test(
         evts(
             new RenderTextEvent(0, "ab"),
-            new RenderTextEvent(0, "cd")
+            new RenderTextEvent(0, "cd"),
+            new EndDocumentEvent(false)
         ),
 
         output(_ -> {}),
@@ -162,7 +164,8 @@ public class HtmlReaderTest {
   public void read09() throws IOException {
     test(
         evts(
-            new RenderTextEvent(0, "abcdefghij")
+            new RenderTextEvent(0, "abcdefghij"),
+            new EndDocumentEvent(false)
         ),
 
         output(_ -> {}),
@@ -178,7 +181,8 @@ public class HtmlReaderTest {
   public void read10() throws IOException {
     test(
         evts(
-            new RenderTextEvent(0, "x")
+            new RenderTextEvent(0, "x"),
+            new EndDocumentEvent(false)
         ),
 
         output(y -> y.overflow = "abcdef"),
@@ -192,12 +196,15 @@ public class HtmlReaderTest {
   @Test(description = "read returns len while draining the overflow and -1 after it is exhausted")
   public void read11() throws IOException {
     test(
-        evts(),
+        evts(
+            new EndDocumentEvent(false)
+        ),
 
         output(y -> y.overflow = "abcdefgh"),
 
         read(4, 0, 4, 4, "abcd"),
         read(4, 0, 4, 4, "efgh"),
+        read(4, 0, 4, 1, "\n\u0000\u0000\u0000"),
         read(4, 0, 4, -1, "\u0000\u0000\u0000\u0000")
     );
   }
@@ -205,13 +212,15 @@ public class HtmlReaderTest {
   @Test(description = "read returns the number of characters written at the given offset when the buffer is exhausted after rewrap")
   public void read12() throws IOException {
     test(
-        evts(),
+        evts(
+            new EndDocumentEvent(false)
+        ),
 
         output(y -> y.overflow = "abcdefgh"),
 
         read(8, 2, 4, 4, "\u0000\u0000abcd\u0000\u0000"),
         read(8, 6, 2, 2, "\u0000\u0000\u0000\u0000\u0000\u0000ef"),
-        read(8, 0, 8, 2, "gh\u0000\u0000\u0000\u0000\u0000\u0000"),
+        read(8, 0, 8, 3, "gh\n\u0000\u0000\u0000\u0000\u0000"),
         read(8, 0, 8, -1, "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000")
     );
   }
@@ -219,12 +228,15 @@ public class HtmlReaderTest {
   @Test(description = "read returns 1 when the rewritten buffer is exhausted and len is 1")
   public void read13() throws IOException {
     test(
-        evts(),
+        evts(
+            new EndDocumentEvent(false)
+        ),
 
         output(y -> y.overflow = "ab"),
 
         read(4, 0, 1, 1, "a\u0000\u0000\u0000"),
         read(4, 0, 1, 1, "b\u0000\u0000\u0000"),
+        read(4, 0, 1, 1, "\n\u0000\u0000\u0000"),
         read(4, 0, 4, -1, "\u0000\u0000\u0000\u0000")
     );
   }
@@ -233,7 +245,8 @@ public class HtmlReaderTest {
   public void read14() throws IOException {
     test(
         evts(
-            new RenderTextEvent(0, "abcdefg")
+            new RenderTextEvent(0, "abcdefg"),
+            new EndDocumentEvent(false)
         ),
 
         output(_ -> {}),
@@ -244,10 +257,12 @@ public class HtmlReaderTest {
     );
   }
 
-  @Test(description = "read returns -1 when there are no events and no overflow")
+  @Test(description = "read returns -1 for an empty document")
   public void read15() throws IOException {
     test(
-        evts(),
+        evts(
+            new EndDocumentEvent(true)
+        ),
 
         output(_ -> {}),
 
@@ -255,10 +270,12 @@ public class HtmlReaderTest {
     );
   }
 
-  @Test(description = "read returns the pending overflow count when there are no events left")
+  @Test(description = "read returns the pending overflow count for an empty document")
   public void read16() throws IOException {
     test(
-        evts(),
+        evts(
+            new EndDocumentEvent(true)
+        ),
 
         output(y -> y.overflow = "ab"),
 

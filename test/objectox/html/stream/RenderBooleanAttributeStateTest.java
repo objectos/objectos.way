@@ -29,13 +29,13 @@ public class RenderBooleanAttributeStateTest {
     ctx = CtxY.create(opts -> {
       opts.addInt8(AttributeName.AUTOFOCUS.index());
 
-      opts.push(FrameY.create(f -> {
+      opts.push(f -> {
         f.index = 1;
-      }));
+      });
 
-      opts.push(FrameY.create(f -> {
+      opts.push(f -> {
         f.index = 0;
-      }));
+      });
     });
 
     final RenderBooleanAttributeState subject;
@@ -52,9 +52,9 @@ public class RenderBooleanAttributeStateTest {
         CtxY.create(opts -> {
           opts.sink(ctx);
 
-          opts.push(FrameY.create(f -> {
+          opts.push(f -> {
             f.index = 1;
-          }));
+          });
 
           opts.result(new RenderBooleanAttributeEvent(0, AttributeName.AUTOFOCUS));
         })

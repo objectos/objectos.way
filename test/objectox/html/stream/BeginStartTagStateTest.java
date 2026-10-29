@@ -109,7 +109,9 @@ public class BeginStartTagStateTest {
     ctx = CtxY.create(opts -> {
       prefix.accept(opts);
 
-      opts.push(new Frame(1));
+      opts.push(f -> {
+        f.index = 1;
+      });
     });
 
     final BeginStartTagState subject;
@@ -126,13 +128,23 @@ public class BeginStartTagStateTest {
         CtxY.create(opts -> {
           opts.sink(ctx);
 
-          final ElementFrame elem;
-          elem = new ElementFrame(elementKind, elementName, valueLength, valueSize);
+          opts.push(f -> {
+            f.index = frameIndex;
 
-          final Frame frame;
-          frame = new Frame(frameIndex, elem);
+            if (elementKind == ElementKind.VOID) {
+              f.voidElem(elementName);
+            } else {
+              f.regular(elementName);
+            }
 
-          opts.push(frame);
+            switch (valueSize) {
+              case BIT8 -> f.values8(0, valueLength);
+
+              case BIT16 -> f.values16(0, valueLength);
+
+              case BIT24 -> f.values24(0, valueLength);
+            }
+          });
 
           final BeginStartTagEvent event;
           event = new BeginStartTagEvent(0, elementName);

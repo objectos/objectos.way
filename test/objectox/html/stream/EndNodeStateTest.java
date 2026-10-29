@@ -52,9 +52,9 @@ public class EndNodeStateTest {
         CtxY.create(opts -> {
           opts.sink(ctx);
 
-          opts.push(FrameY.create(f -> {
+          opts.push(f -> {
             f.index = 0;
-          }));
+          });
         })
     );
   }
@@ -66,13 +66,13 @@ public class EndNodeStateTest {
   public void testCase01() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
-      opts.push(FrameY.create(f -> {
+      opts.push(f -> {
         f.index = 5;
 
         f.regular(ElementName.DIV);
 
         f.values8(0, 1);
-      }));
+      });
     });
 
     final Frame top;
@@ -92,13 +92,13 @@ public class EndNodeStateTest {
         ctx,
 
         CtxY.create(opts -> {
-          opts.push(FrameY.create(f -> {
+          opts.push(f -> {
             f.index = 5;
 
             f.regular(ElementName.DIV);
 
             f.values8(0, 1);
-          }));
+          });
         })
     );
   }

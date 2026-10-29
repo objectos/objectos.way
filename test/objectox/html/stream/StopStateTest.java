@@ -17,34 +17,61 @@ package objectox.html.stream;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.function.Consumer;
+import java.util.function.Function;
 import org.testng.annotations.Test;
 
 public class StopStateTest {
 
   @Test(description = """
-  empty document
+  stop:
+  - produces no event
   """)
-  public void testCase00() {
+  public void compute01() {
+    test(
+        StopState::compute,
+
+        opts -> {
+          opts.push(f -> {
+            f.index = 0;
+          });
+        },
+
+        opts -> {
+          opts.push(f -> {
+            f.index = 0;
+          });
+        },
+
+        ctx -> new StopState(ctx)
+    );
+  }
+
+  private void test(
+      Function<StopState, State> op,
+      Consumer<? super CtxY> opts,
+      Consumer<? super CtxY> expected, Function<Ctx, State> state) {
     final Ctx ctx;
-    ctx = CtxY.create(opts -> {
-      opts.push(new Frame(0));
-    });
+    ctx = CtxY.create(opts);
 
     final StopState subject;
     subject = new StopState(ctx);
 
     final State res;
-    res = subject.compute();
+    res = op.apply(subject);
 
-    assertEquals(res, new StopState(ctx));
+    final State expectedState;
+    expectedState = state.apply(ctx);
+
+    assertEquals(res, expectedState);
 
     assertEquals(
         ctx,
 
-        CtxY.create(opts -> {
-          opts.sink(ctx);
-          opts.push(new Frame(0));
-          opts.result(new EndDocumentEvent());
+        CtxY.create(expectedOpts -> {
+          expectedOpts.sink(ctx);
+
+          expected.accept(expectedOpts);
         })
     );
   }

@@ -16,6 +16,8 @@
 package objectox.html.stream;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
 import java.util.function.Function;
@@ -25,6 +27,52 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class CtxTest {
+
+  @Test(description = """
+  - emitted is false initially
+  """)
+  public void emitted01() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.push(f -> {
+        f.index = 0;
+      });
+    });
+
+    assertFalse(ctx.emitted());
+  }
+
+  @Test(description = """
+  - result event marks the context as emitted
+  """)
+  public void emitted02() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.push(f -> {
+        f.index = 0;
+      });
+    });
+
+    ctx.result(new RenderTextEvent(0, "Ipsum"));
+
+    assertTrue(ctx.emitted());
+  }
+
+  @Test(description = """
+  - result null does not mark the context as emitted
+  """)
+  public void emitted03() {
+    final Ctx ctx;
+    ctx = CtxY.create(opts -> {
+      opts.push(f -> {
+        f.index = 0;
+      });
+    });
+
+    ctx.result(null);
+
+    assertFalse(ctx.emitted());
+  }
 
   @DataProvider
   public Object[][] nextScanOpProvider() {
@@ -143,7 +191,9 @@ public class CtxTest {
     ctx = CtxY.create(opts -> {
       opts.addByte(code);
 
-      opts.push(new Frame(0));
+      opts.push(f -> {
+        f.index = 0;
+      });
     });
 
     final ScanOp res;
@@ -153,7 +203,9 @@ public class CtxTest {
     expectedCtx = CtxY.create(opts -> {
       opts.addByte(code);
 
-      opts.push(new Frame(1));
+      opts.push(f -> {
+        f.index = 1;
+      });
     });
 
     assertEquals(ctx, expectedCtx);
@@ -170,7 +222,9 @@ public class CtxTest {
     ctx = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.VALUES8);
 
-      opts.push(new Frame(0));
+      opts.push(f -> {
+        f.index = 0;
+      });
     });
 
     try {

@@ -22,6 +22,11 @@ public sealed interface EndDocument
     extends Event
     permits EndDocumentEvent {
 
+  /// Returns whether the document is empty.
+  ///
+  /// @return `true` if the document is empty; `false` otherwise
+  boolean empty();
+
   /// This event is always at the document root. Because of this, its level is
   /// always `0`.
   ///

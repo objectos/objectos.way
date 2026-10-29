@@ -32,13 +32,13 @@ public class MergeAttributeStateTest {
   public void testCase01() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
-      opts.push(FrameY.create(f -> {
+      opts.push(f -> {
         f.index = 0;
 
         f.regular(ElementName.DIV);
 
         f.values8(1, 1);
-      }));
+      });
     });
 
     final MergeAttributeState subject;
@@ -55,13 +55,13 @@ public class MergeAttributeStateTest {
         CtxY.create(opts -> {
           opts.sink(ctx);
 
-          opts.push(FrameY.create(f -> {
+          opts.push(f -> {
             f.index = 0;
 
             f.regular(ElementName.DIV);
 
             f.values8(1, 1);
-          }));
+          });
 
           opts.result(new RenderAttributeEvent(0, AttributeName.CLASS, "c1"));
         })
@@ -81,13 +81,13 @@ public class MergeAttributeStateTest {
       opts.addInt8(opts.addObject("#"));
       opts.addInt8(valueIndex);
 
-      opts.push(FrameY.create(f -> {
+      opts.push(f -> {
         f.index = frameIndex;
 
         f.regular(ElementName.DIV);
 
         f.values8(1, 2);
-      }));
+      });
     });
 
     final MergeAttributeState subject;
@@ -104,13 +104,13 @@ public class MergeAttributeStateTest {
         CtxY.create(opts -> {
           opts.sink(ctx);
 
-          opts.push(FrameY.create(f -> {
+          opts.push(f -> {
             f.index = frameIndex;
 
             f.regular(ElementName.DIV);
 
             f.values8(1, 2);
-          }));
+          });
 
           opts.result(new RenderAttributeEvent(0, AttributeName.CLASS, "c1"));
         })
@@ -130,13 +130,13 @@ public class MergeAttributeStateTest {
       opts.addInt8(opts.addObject("c2"));
       opts.addInt8(valueIndex);
 
-      opts.push(FrameY.create(f -> {
+      opts.push(f -> {
         f.index = frameIndex;
 
         f.regular(ElementName.DIV);
 
         f.values8(1, 2);
-      }));
+      });
     });
 
     final MergeAttributeState subject;
@@ -153,13 +153,13 @@ public class MergeAttributeStateTest {
         CtxY.create(opts -> {
           opts.sink(ctx);
 
-          opts.push(FrameY.create(f -> {
+          opts.push(f -> {
             f.index = frameIndex + 1;
 
             f.regular(ElementName.DIV);
 
             f.values8(2, 2);
-          }));
+          });
         })
     );
   }
@@ -177,13 +177,13 @@ public class MergeAttributeStateTest {
       opts.addInt8(opts.addObject("t2"));
       opts.addInt8(valueIndex);
 
-      opts.push(FrameY.create(f -> {
+      opts.push(f -> {
         f.index = frameIndex;
 
         f.regular(ElementName.DIV);
 
         f.values8(1, 2);
-      }));
+      });
     });
 
     final MergeAttributeState subject;
@@ -200,13 +200,13 @@ public class MergeAttributeStateTest {
         CtxY.create(opts -> {
           opts.sink(ctx);
 
-          opts.push(FrameY.create(f -> {
+          opts.push(f -> {
             f.index = frameIndex + 1;
 
             f.regular(ElementName.DIV);
 
             f.values8(2, 2);
-          }));
+          });
         })
     );
   }
@@ -225,13 +225,13 @@ public class MergeAttributeStateTest {
       opts.addInt16(opts.addObject("t2"));
       opts.addInt8(valueIndex);
 
-      opts.push(FrameY.create(f -> {
+      opts.push(f -> {
         f.index = frameIndex;
 
         f.regular(ElementName.DIV);
 
         f.values8(1, 2);
-      }));
+      });
     });
 
     final MergeAttributeState subject;
@@ -248,13 +248,13 @@ public class MergeAttributeStateTest {
         CtxY.create(opts -> {
           opts.sink(ctx);
 
-          opts.push(FrameY.create(f -> {
+          opts.push(f -> {
             f.index = frameIndex + 1;
 
             f.regular(ElementName.DIV);
 
             f.values8(2, 2);
-          }));
+          });
         })
     );
   }
@@ -273,13 +273,13 @@ public class MergeAttributeStateTest {
       opts.addInt24(opts.addObject("t2"));
       opts.addInt8(valueIndex);
 
-      opts.push(FrameY.create(f -> {
+      opts.push(f -> {
         f.index = frameIndex;
 
         f.regular(ElementName.DIV);
 
         f.values8(1, 2);
-      }));
+      });
     });
 
     final MergeAttributeState subject;
@@ -296,13 +296,13 @@ public class MergeAttributeStateTest {
         CtxY.create(opts -> {
           opts.sink(ctx);
 
-          opts.push(FrameY.create(f -> {
+          opts.push(f -> {
             f.index = frameIndex + 1;
 
             f.regular(ElementName.DIV);
 
             f.values8(2, 2);
-          }));
+          });
         })
     );
   }

@@ -30,13 +30,13 @@ public class RenderAttributeStateTest {
       opts.addInt8(AttributeName.CONTENTEDITABLE.index());
       opts.addInt8(opts.addObject("false"));
 
-      opts.push(FrameY.create(f -> {
+      opts.push(f -> {
         f.index = 2;
-      }));
+      });
 
-      opts.push(FrameY.create(f -> {
+      opts.push(f -> {
         f.index = 0;
-      }));
+      });
     });
 
     final RenderAttributeState subject;
@@ -53,9 +53,9 @@ public class RenderAttributeStateTest {
         CtxY.create(opts -> {
           opts.sink(ctx);
 
-          opts.push(FrameY.create(f -> {
+          opts.push(f -> {
             f.index = 2;
-          }));
+          });
         })
     );
   }

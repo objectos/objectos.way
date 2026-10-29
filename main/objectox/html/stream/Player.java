@@ -30,7 +30,7 @@ public final class Player extends Ctx implements Iterator<Event> {
   Player(byte[] code, Object[] objects, Frame[] stack, int stackIndex) {
     super(code, objects, stack, stackIndex);
 
-    state = ScanDocumentNodeState.of(this);
+    state = new BeginDocumentState(this);
   }
 
   public static Player of(byte[] code, Object[] objects) {

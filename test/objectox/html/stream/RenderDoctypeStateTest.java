@@ -30,7 +30,9 @@ public class RenderDoctypeStateTest {
     ctx = CtxY.create(opts -> {
       opts.addByte(HtmlBytes.DOCTYPE);
 
-      opts.push(new Frame(1));
+      opts.push(f -> {
+        f.index = 1;
+      });
     });
 
     final RenderDoctypeState subject;
@@ -49,7 +51,9 @@ public class RenderDoctypeStateTest {
 
           opts.result(new RenderDoctypeEvent(0));
 
-          opts.push(new Frame(1));
+          opts.push(f -> {
+            f.index = 1;
+          });
         })
     );
   }

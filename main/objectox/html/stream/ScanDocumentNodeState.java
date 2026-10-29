@@ -23,21 +23,12 @@ final class ScanDocumentNodeState implements State, ScanOp {
     this.ctx = ctx;
   }
 
-  public static ScanDocumentNodeState of(Ctx ctx) {
-    final Frame frame;
-    frame = new Frame(0);
-
-    ctx.push(frame);
-
-    return new ScanDocumentNodeState(ctx);
-  }
-
   @Override
   public final State compute() {
     if (ctx.hasByte()) {
       return compute0();
     } else {
-      return new StopState(ctx);
+      return new EndDocumentState(ctx, !ctx.emitted());
     }
   }
 

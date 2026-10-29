@@ -41,7 +41,9 @@ public class SkipVoidElementStateTest {
       opts.addInt8(1);
       opts.addInt8(0);
 
-      opts.push(new Frame(1));
+      opts.push(f -> {
+        f.index = 1;
+      });
     });
 
     final SkipVoidElementState subject;
@@ -58,7 +60,9 @@ public class SkipVoidElementStateTest {
         CtxY.create(opts -> {
           opts.sink(ctx);
 
-          opts.push(new Frame(4));
+          opts.push(f -> {
+            f.index = 4;
+          });
         })
     );
   }

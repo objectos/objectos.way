@@ -32,7 +32,9 @@ public class SkipStateTest {
       opts.addByte(HtmlBytes.xBOOLEAN8);
       opts.addInt8(AttributeName.AUTOFOCUS.index());
 
-      opts.push(new Frame(0));
+      opts.push(f -> {
+        f.index = 0;
+      });
     });
 
     final SkipState subject;
@@ -49,9 +51,9 @@ public class SkipStateTest {
         CtxY.create(opts -> {
           opts.sink(ctx);
 
-          opts.push(FrameY.create(f -> {
+          opts.push(f -> {
             f.index = 2;
-          }));
+          });
         })
     );
   }

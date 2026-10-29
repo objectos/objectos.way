@@ -32,6 +32,8 @@ class Ctx {
 
   private boolean computed;
 
+  private boolean emitted;
+
   final Object[] objects;
 
   private Event result;
@@ -50,10 +52,15 @@ class Ctx {
     this.stackIndex = stackIndex;
   }
 
+  public final boolean emitted() {
+    return emitted;
+  }
+
   @Override
   public final boolean equals(Object obj) {
     return obj == this || obj instanceof Ctx that
         && Arrays.equals(code, that.code)
+        && emitted == that.emitted
         && Arrays.equals(objects, that.objects)
         && Objects.equals(result, that.result)
         && Arrays.equals(stack, 0, stackIndex + 1, that.stack, 0, that.stackIndex + 1);
@@ -297,6 +304,10 @@ class Ctx {
 
     computed = true;
 
+    if (value != null) {
+      emitted = true;
+    }
+
     result = value;
   }
 
@@ -326,6 +337,10 @@ class Ctx {
         Arrays.toString(objects),
         Arrays.toString(Arrays.copyOf(stack, stackIndex + 1))
     );
+  }
+
+  final void emitted(boolean value) {
+    emitted = value;
   }
 
   private int toInt(int index, int shift) {

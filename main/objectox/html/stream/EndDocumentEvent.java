@@ -17,11 +17,11 @@ package objectox.html.stream;
 
 import objectos.html.stream.EndDocument;
 
-public record EndDocumentEvent() implements EndDocument {
+public record EndDocumentEvent(boolean empty) implements EndDocument {
 
   @Override
   public final String toString() {
-    return "EndDocument()";
+    return "EndDocument(empty=" + empty + ")";
   }
 
 }

@@ -35,13 +35,13 @@ public class RenderJsActionAttributeStateTest {
       opts.addInt8(AttributeName.ONCLICK.index());
       opts.addInt8(opts.addObject(action));
 
-      opts.push(FrameY.create(f -> {
+      opts.push(f -> {
         f.index = 2;
-      }));
+      });
 
-      opts.push(FrameY.create(f -> {
+      opts.push(f -> {
         f.index = 0;
-      }));
+      });
     });
 
     final RenderJsActionAttributeState subject;
@@ -58,9 +58,9 @@ public class RenderJsActionAttributeStateTest {
         CtxY.create(opts -> {
           opts.sink(ctx);
 
-          opts.push(FrameY.create(f -> {
+          opts.push(f -> {
             f.index = 2;
-          }));
+          });
 
           opts.result(new RenderJsActionAttributeEvent(0, AttributeName.ONCLICK, action));
         })

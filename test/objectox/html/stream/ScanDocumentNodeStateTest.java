@@ -27,22 +27,38 @@ import org.testng.annotations.Test;
 
 public class ScanDocumentNodeStateTest {
 
-  @Test(description = """
-  empty document
+  @DataProvider
+  public Object[][] compute01Provider() {
+    return new Object[][] {
+        {false},
+        {true}
+    };
+  }
+
+  @Test(dataProvider = "compute01Provider", description = """
+  end of document
   """)
-  public void compute01() {
+  public void compute01(boolean emitted) {
     test(
         ScanDocumentNodeState::compute,
 
         opts -> {
-          opts.push(new Frame(0));
+          opts.emitted = emitted;
+
+          opts.push(f -> {
+            f.index = 0;
+          });
         },
 
         opts -> {
-          opts.push(new Frame(0));
+          opts.emitted = emitted;
+
+          opts.push(f -> {
+            f.index = 0;
+          });
         },
 
-        ctx -> new StopState(ctx)
+        ctx -> new EndDocumentState(ctx, !emitted)
     );
   }
 
@@ -104,13 +120,17 @@ public class ScanDocumentNodeStateTest {
         ScanDocumentNodeState::compute,
 
         opts -> {
-          opts.push(new Frame(0));
+          opts.push(f -> {
+            f.index = 0;
+          });
 
           opts.addByte(proto);
         },
 
         opts -> {
-          opts.push(new Frame(1));
+          opts.push(f -> {
+            f.index = 1;
+          });
         },
 
         state
@@ -190,13 +210,17 @@ public class ScanDocumentNodeStateTest {
         ScanDocumentNodeState::compute,
 
         opts -> {
-          opts.push(new Frame(0));
+          opts.push(f -> {
+            f.index = 0;
+          });
 
           opts.addByte(proto);
         },
 
         opts -> {
-          opts.push(new Frame(1));
+          opts.push(f -> {
+            f.index = 1;
+          });
         },
 
         ctx -> new SkipState(ctx, expectedCount)
@@ -228,7 +252,9 @@ public class ScanDocumentNodeStateTest {
   public void compute04(byte proto) {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
-      opts.push(new Frame(0));
+      opts.push(f -> {
+        f.index = 0;
+      });
 
       opts.addByte(proto);
     });
@@ -254,7 +280,9 @@ public class ScanDocumentNodeStateTest {
   public void compute05() {
     final Ctx ctx;
     ctx = CtxY.create(opts -> {
-      opts.push(new Frame(0));
+      opts.push(f -> {
+        f.index = 0;
+      });
 
       opts.addByte((byte) 0x7F);
     });
@@ -272,28 +300,6 @@ public class ScanDocumentNodeStateTest {
 
       assertEquals(msg, "Invalid compiled HTML code");
     }
-  }
-
-  @Test(description = """
-  factory:
-  - pushes a scan document node frame
-  """)
-  public void of() {
-    final Ctx ctx;
-    ctx = CtxY.create(_ -> {});
-
-    final ScanDocumentNodeState res;
-    res = ScanDocumentNodeState.of(ctx);
-
-    assertEquals(res, new ScanDocumentNodeState(ctx));
-
-    assertEquals(
-        ctx,
-
-        CtxY.create(opts -> {
-          opts.push(new Frame(0));
-        })
-    );
   }
 
   private Function<Ctx, State> s(Function<Ctx, State> state) {
