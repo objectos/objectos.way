@@ -1398,7 +1398,7 @@ zaz\
   /*
   @Test(description = """
   HtmlTemplate TC46 (A)
-
+  
   - flatten instruction
   """)
   public void testCase46a() {
@@ -1415,16 +1415,16 @@ zaz\
             );
           }
         },
-
+  
         """
         <form disabled><label></label><input></form>
         """
     );
   }
-
+  
   @Test(description = """
   HtmlTemplate TC46 (B)
-
+  
   - flatten instruction
   """)
   public void testCase46b() {
@@ -1434,7 +1434,7 @@ zaz\
               ClassName.of("cn1"),
               ClassName.of("cn2")
           );
-
+  
           @Override
           protected final void render() {
             div(
@@ -1442,7 +1442,7 @@ zaz\
             );
           }
         },
-
+  
         """
         <div class="cn1 cn2"></div>
         """
@@ -2029,6 +2029,29 @@ x\
 
         """
         <hr>
+        """
+    );
+  }
+
+  @Test(enabled = false, description = "testable nodes")
+  public void testableNodes01() {
+    final Template subject;
+    subject = new Template() {
+      @Override
+      protected final void render() {
+        t.h1("Heading 1");
+
+        t.prop("foo", "bar");
+      }
+    };
+
+    assertEquals(
+        subject.toTestableText(),
+
+        """
+        # Heading 1
+
+        foo: bar
         """
     );
   }

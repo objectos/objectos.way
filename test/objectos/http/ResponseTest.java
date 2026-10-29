@@ -122,9 +122,9 @@ public class ResponseTest {
     html = new Template() {
       @Override
       protected void render() {
-        th1("Heading 1");
+        t.h1("Heading 1");
 
-        tprop("foo", "bar");
+        t.prop("foo", "bar");
       }
     };
 

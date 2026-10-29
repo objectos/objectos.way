@@ -16,12 +16,24 @@
 package objectox.html.format;
 
 import objectos.html.format.Formatter;
+import objectos.html.stream.BeginStartTag;
+import objectos.html.stream.EndDocument;
+import objectos.html.stream.EndStartTag;
 import objectos.html.stream.Event;
+import objectos.html.stream.RenderAttribute;
+import objectos.html.stream.RenderBooleanAttribute;
+import objectos.html.stream.RenderDoctype;
+import objectos.html.stream.RenderEndTag;
+import objectos.html.stream.RenderJsActionAttribute;
+import objectos.html.stream.RenderRaw;
+import objectos.html.stream.RenderTestable;
+import objectos.html.stream.RenderText;
 
 public sealed abstract class BaseFormatter
     implements Formatter
     permits
-    StandardFormatter {
+    StandardFormatter,
+    TestableFormatter {
 
   BaseFormatter() {}
 
@@ -29,6 +41,52 @@ public sealed abstract class BaseFormatter
   ///
   /// @param event the event to be formatted
   /// @param out the output to append to
-  public abstract void formatTo(Event event, Output out);
+  public final void formatTo(Event event, Output out) {
+    switch (event) {
+      case BeginStartTag begin -> beginStartTag(begin, out);
+
+      case EndDocument end -> endDocument(end, out);
+
+      case EndStartTag end -> endStartTag(end, out);
+
+      case RenderAttribute attr -> renderAttribute(attr, out);
+
+      case RenderBooleanAttribute attr -> renderBooleanAttribute(attr, out);
+
+      case RenderJsActionAttribute attr -> renderJsActionAttribute(attr, out);
+
+      case RenderDoctype doctype -> renderDoctype(doctype, out);
+
+      case RenderEndTag endTag -> renderEndTag(endTag, out);
+
+      case RenderRaw raw -> renderRaw(raw, out);
+
+      case RenderTestable testable -> renderTestable(testable, out);
+
+      case RenderText text -> renderText(text, out);
+    }
+  }
+
+  abstract void beginStartTag(BeginStartTag event, Output out);
+
+  abstract void endDocument(EndDocument event, Output out);
+
+  abstract void endStartTag(EndStartTag event, Output out);
+
+  abstract void renderAttribute(RenderAttribute attr, Output out);
+
+  abstract void renderBooleanAttribute(RenderBooleanAttribute attr, Output out);
+
+  abstract void renderDoctype(RenderDoctype event, Output out);
+
+  abstract void renderEndTag(RenderEndTag endTag, Output out);
+
+  abstract void renderJsActionAttribute(RenderJsActionAttribute attr, Output out);
+
+  abstract void renderRaw(RenderRaw raw, Output out);
+
+  abstract void renderTestable(RenderTestable event, Output out);
+
+  abstract void renderText(RenderText text, Output out);
 
 }

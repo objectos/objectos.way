@@ -18,7 +18,6 @@ package objectox.html.format;
 import objectos.html.stream.BeginStartTag;
 import objectos.html.stream.EndDocument;
 import objectos.html.stream.EndStartTag;
-import objectos.html.stream.Event;
 import objectos.html.stream.RenderAttribute;
 import objectos.html.stream.RenderBooleanAttribute;
 import objectos.html.stream.RenderDoctype;
@@ -54,33 +53,7 @@ public final class StandardFormatter extends BaseFormatter {
   public StandardFormatter() {}
 
   @Override
-  public final void formatTo(Event event, Output out) {
-    switch (event) {
-      case BeginStartTag begin -> beginStartTag(begin, out);
-
-      case EndDocument end -> endDocument(end, out);
-
-      case EndStartTag end -> endStartTag(end, out);
-
-      case RenderAttribute attr -> renderAttribute(attr, out);
-
-      case RenderBooleanAttribute attr -> renderBooleanAttribute(attr, out);
-
-      case RenderJsActionAttribute attr -> renderJsActionAttribute(attr, out);
-
-      case RenderDoctype doctype -> renderDoctype(doctype, out);
-
-      case RenderEndTag endTag -> renderEndTag(endTag, out);
-
-      case RenderRaw raw -> renderRaw(raw, out);
-
-      case RenderTestable _ -> {}
-
-      case RenderText text -> renderText(text, out);
-    }
-  }
-
-  private void beginStartTag(BeginStartTag event, Output out) {
+  final void beginStartTag(BeginStartTag event, Output out) {
     final String name;
     name = event.name();
 
@@ -89,7 +62,8 @@ public final class StandardFormatter extends BaseFormatter {
     out.append(name);
   }
 
-  private void endDocument(EndDocument event, Output out) {
+  @Override
+  final void endDocument(EndDocument event, Output out) {
     if (event.empty()) {
       return;
     }
@@ -97,11 +71,13 @@ public final class StandardFormatter extends BaseFormatter {
     out.append('\n');
   }
 
-  private void endStartTag(EndStartTag event, Output out) {
+  @Override
+  final void endStartTag(EndStartTag event, Output out) {
     out.append('>');
   }
 
-  private void renderAttribute(RenderAttribute attr, Output out) {
+  @Override
+  final void renderAttribute(RenderAttribute attr, Output out) {
     final String name;
     name = attr.name();
 
@@ -124,7 +100,8 @@ public final class StandardFormatter extends BaseFormatter {
     out.append('"');
   }
 
-  private void renderBooleanAttribute(RenderBooleanAttribute attr, Output out) {
+  @Override
+  final void renderBooleanAttribute(RenderBooleanAttribute attr, Output out) {
     final String name;
     name = attr.name();
 
@@ -133,11 +110,13 @@ public final class StandardFormatter extends BaseFormatter {
     out.append(name);
   }
 
-  private void renderDoctype(RenderDoctype event, Output out) {
+  @Override
+  final void renderDoctype(RenderDoctype event, Output out) {
     out.append("<!DOCTYPE html>");
   }
 
-  private void renderEndTag(RenderEndTag endTag, Output out) {
+  @Override
+  final void renderEndTag(RenderEndTag endTag, Output out) {
     final String name;
     name = endTag.name();
 
@@ -148,7 +127,8 @@ public final class StandardFormatter extends BaseFormatter {
     out.append('>');
   }
 
-  private void renderJsActionAttribute(RenderJsActionAttribute attr, Output out) {
+  @Override
+  final void renderJsActionAttribute(RenderJsActionAttribute attr, Output out) {
     final String name;
     name = attr.name();
 
@@ -171,14 +151,19 @@ public final class StandardFormatter extends BaseFormatter {
     out.append('\'');
   }
 
-  private void renderRaw(RenderRaw raw, Output out) {
+  @Override
+  final void renderRaw(RenderRaw raw, Output out) {
     final String value;
     value = raw.value();
 
     out.append(value);
   }
 
-  private void renderText(RenderText text, Output out) {
+  @Override
+  final void renderTestable(RenderTestable event, Output out) {}
+
+  @Override
+  final void renderText(RenderText text, Output out) {
     final String value;
     value = text.value();
 
