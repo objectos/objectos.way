@@ -15,10 +15,11 @@
  */
 package objectos.html.format;
 
+import objectox.html.format.BaseFormatter;
 import objectox.html.format.StandardFormatter;
 
 /// Formats the string representation of a compiled Objectos HTML document.
-public sealed interface Formatter permits StandardFormatter {
+public sealed interface Formatter permits BaseFormatter {
 
   /// Returns the standard formatter instance.
   ///

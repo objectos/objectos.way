@@ -31,8 +31,8 @@ import java.util.stream.StreamSupport;
 import objectos.html.Html;
 import objectos.html.format.Formatter;
 import objectos.html.stream.Event;
+import objectox.html.format.BaseFormatter;
 import objectox.html.format.Output;
-import objectox.html.format.StandardFormatter;
 import objectox.html.markup.HtmlSink;
 import objectox.html.stream.Player;
 
@@ -84,8 +84,9 @@ public final class HtmlImpl implements Html {
     final Formatter f;
     f = Objects.requireNonNull(formatter, "formatter == null");
 
-    final StandardFormatter pojo;
-    pojo = (StandardFormatter) f;
+    // Formatter implementations must extend BaseFormatter.
+    final BaseFormatter base;
+    base = (BaseFormatter) f;
 
     final Player player;
     player = Player.of(code, objects);
@@ -93,7 +94,7 @@ public final class HtmlImpl implements Html {
     final Output output;
     output = new Output();
 
-    return new HtmlReader(player, pojo, output);
+    return new HtmlReader(player, base, output);
   }
 
   @Override

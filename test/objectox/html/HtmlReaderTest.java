@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
 import objectos.html.stream.Event;
+import objectox.html.format.BaseFormatter;
 import objectox.html.format.Output;
 import objectox.html.format.OutputY;
 import objectox.html.format.StandardFormatter;
@@ -49,7 +50,7 @@ public class HtmlReaderTest {
     final Output output;
     output = new Output();
 
-    final StandardFormatter formatter;
+    final BaseFormatter formatter;
     formatter = new StandardFormatter();
 
     final char[] cbuf;
@@ -300,7 +301,7 @@ public class HtmlReaderTest {
   }
 
   private void test(Iterator<Event> events, Output output, Read... reads) throws IOException {
-    final StandardFormatter formatter;
+    final BaseFormatter formatter;
     formatter = new StandardFormatter();
 
     try (HtmlReader subject = new HtmlReader(events, formatter, output)) {
@@ -325,7 +326,7 @@ public class HtmlReaderTest {
     final Output output;
     output = new Output();
 
-    final StandardFormatter formatter;
+    final BaseFormatter formatter;
     formatter = new StandardFormatter();
 
     final char[] cbuf;

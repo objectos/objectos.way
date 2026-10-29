@@ -15,7 +15,6 @@
  */
 package objectox.html.format;
 
-import objectos.html.format.Formatter;
 import objectos.html.stream.BeginStartTag;
 import objectos.html.stream.EndDocument;
 import objectos.html.stream.EndStartTag;
@@ -30,7 +29,7 @@ import objectos.html.stream.RenderTestable;
 import objectos.html.stream.RenderText;
 import objectox.html.markup.CommonEscaper;
 
-public final class StandardFormatter implements Formatter {
+public final class StandardFormatter extends BaseFormatter {
 
   private static final CommonEscaper ATTRIBUTE_ESCAPER = CommonEscaper.create(opts -> {
     opts.add('&', "&amp;");
@@ -54,6 +53,7 @@ public final class StandardFormatter implements Formatter {
 
   public StandardFormatter() {}
 
+  @Override
   public final void formatTo(Event event, Output out) {
     switch (event) {
       case BeginStartTag begin -> beginStartTag(begin, out);
