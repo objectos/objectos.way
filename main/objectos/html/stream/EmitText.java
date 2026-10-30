@@ -17,7 +17,7 @@ package objectos.html.stream;
 
 import objectox.html.stream.EmitTextEvent;
 
-/// This event renders the value of an HTML text node.
+/// This event emits the value of an HTML text node.
 public sealed interface EmitText
     extends Event
     permits EmitTextEvent {

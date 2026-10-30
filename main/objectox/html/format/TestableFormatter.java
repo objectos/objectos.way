@@ -28,6 +28,7 @@ import objectos.html.stream.EmitTestableHeading;
 import objectos.html.stream.EmitText;
 import objectos.html.stream.EndDocument;
 import objectos.html.stream.EndStartTag;
+import objectox.dev.TestableHeading;
 
 public final class TestableFormatter extends BaseFormatter {
 
@@ -76,16 +77,16 @@ public final class TestableFormatter extends BaseFormatter {
     final int level;
     level = heading.heading();
 
-    for (int i = 0; i < level; i++) {
-      out.append('#');
-    }
-
-    out.append(' ');
-
     final String value;
     value = heading.value();
 
-    out.append(value);
+    final TestableHeading testable;
+    testable = new TestableHeading(level, value);
+
+    final String s;
+    s = testable.toString();
+
+    out.append(s);
 
     out.append('\n');
 

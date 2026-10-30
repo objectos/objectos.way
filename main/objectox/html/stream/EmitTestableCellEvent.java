@@ -17,11 +17,11 @@ package objectox.html.stream;
 
 import objectos.html.stream.EmitTestableCell;
 
-public record EmitTestableCellEvent(int level, int width, String value) implements EmitTestableCell {
+public record EmitTestableCellEvent(int level, String value) implements EmitTestableCell {
 
   @Override
   public final String toString() {
-    return "EmitTestableCell(" + width + ", " + value + ")";
+    return "EmitTestableCell(" + value + ")";
   }
 
 }

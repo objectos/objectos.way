@@ -59,9 +59,9 @@ final class FragmentChildRecorder {
         case HtmlBytes.THEADING16 -> { sum += valueRecorder.testableOnly(size, value); cursor += 3; }
         case HtmlBytes.THEADING24 -> { sum += valueRecorder.testableOnly(size, value); cursor += 4; }
 
-        case HtmlBytes.TCELL8 -> { sum += valueRecorder.testableOnly(size, value); cursor += 2; }
-        case HtmlBytes.TCELL16 -> { sum += valueRecorder.testableOnly(size, value); cursor += 4; }
-        case HtmlBytes.TCELL24 -> { sum += valueRecorder.testableOnly(size, value); cursor += 6; }
+        case HtmlBytes.TCELL8 -> { sum += valueRecorder.testableOnly(size, value); cursor += 1; }
+        case HtmlBytes.TCELL16 -> { sum += valueRecorder.testableOnly(size, value); cursor += 2; }
+        case HtmlBytes.TCELL24 -> { sum += valueRecorder.testableOnly(size, value); cursor += 3; }
 
         case HtmlBytes.TEXT8 -> { sum += valueRecorder.record(size, value); cursor += 1; }
         case HtmlBytes.TEXT16 -> { sum += valueRecorder.record(size, value); cursor += 2; }
@@ -78,9 +78,9 @@ final class FragmentChildRecorder {
         case HtmlBytes.xTHEADING16 -> cursor += 3;
         case HtmlBytes.xTHEADING24 -> cursor += 4;
 
-        case HtmlBytes.xTCELL8 -> cursor += 2;
-        case HtmlBytes.xTCELL16 -> cursor += 4;
-        case HtmlBytes.xTCELL24 -> cursor += 6;
+        case HtmlBytes.xTCELL8 -> cursor += 1;
+        case HtmlBytes.xTCELL16 -> cursor += 2;
+        case HtmlBytes.xTCELL24 -> cursor += 3;
 
         case HtmlBytes.xTEXT8 -> cursor += 1;
         case HtmlBytes.xTEXT16 -> cursor += 2;

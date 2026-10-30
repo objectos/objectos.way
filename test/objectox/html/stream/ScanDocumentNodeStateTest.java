@@ -148,17 +148,17 @@ public class ScanDocumentNodeStateTest {
         {HtmlBytes.xTHEADING16, 3},
         {HtmlBytes.xTHEADING24, 4},
 
-        {HtmlBytes.xTCELL8, 2},
-        {HtmlBytes.xTCELL16, 4},
-        {HtmlBytes.xTCELL24, 6},
+        {HtmlBytes.xTCELL8, 1},
+        {HtmlBytes.xTCELL16, 2},
+        {HtmlBytes.xTCELL24, 3},
 
         {HtmlBytes.oTHEADING8, 2},
         {HtmlBytes.oTHEADING16, 3},
         {HtmlBytes.oTHEADING24, 4},
 
-        {HtmlBytes.oTCELL8, 2},
-        {HtmlBytes.oTCELL16, 4},
-        {HtmlBytes.oTCELL24, 6}
+        {HtmlBytes.oTCELL8, 1},
+        {HtmlBytes.oTCELL16, 2},
+        {HtmlBytes.oTCELL24, 3}
     };
   }
 

@@ -24,62 +24,6 @@ import org.testng.annotations.Test;
 public class IntSizeTest {
 
   @DataProvider
-  public Object[][] max01Provider() {
-    return new Object[][] {
-        {1, 1, IntSize.BIT8},
-        {255, 0, IntSize.BIT8},
-        {0, 255, IntSize.BIT8},
-        {255, 256, IntSize.BIT16},
-        {256, 255, IntSize.BIT16},
-        {65535, 65535, IntSize.BIT16},
-        {65535, 65536, IntSize.BIT24},
-        {65536, 16777215, IntSize.BIT24},
-        {0, 0, IntSize.BIT8},
-        {-1, 255, IntSize.BIT8}
-    };
-  }
-
-  @Test(dataProvider = "max01Provider", description = "returns the size of the greater of the two values")
-  public void max01(int a, int b, IntSize expected) {
-    final IntSize res;
-    res = IntSize.max(a, b);
-
-    assertEquals(res, expected);
-  }
-
-  @Test(
-      description = "reject negative a and b",
-      expectedExceptions = IllegalArgumentException.class,
-      expectedExceptionsMessageRegExp = "Illegal int value: negative values \\(-1\\) are now allowed")
-  public void max02() {
-    IntSize.max(-1, -1);
-  }
-
-  @Test(
-      description = "reject negative maximum",
-      expectedExceptions = IllegalArgumentException.class,
-      expectedExceptionsMessageRegExp = "Illegal int value: negative values \\(-1\\) are now allowed")
-  public void max03() {
-    IntSize.max(-5, -1);
-  }
-
-  @Test(
-      description = "reject too large a",
-      expectedExceptions = IllegalArgumentException.class,
-      expectedExceptionsMessageRegExp = "Illegal int value: \\(16777216\\) is too large")
-  public void max04() {
-    IntSize.max(16777216, 0);
-  }
-
-  @Test(
-      description = "reject too large b",
-      expectedExceptions = IllegalArgumentException.class,
-      expectedExceptionsMessageRegExp = "Illegal int value: \\(16777216\\) is too large")
-  public void max05() {
-    IntSize.max(0, 16777216);
-  }
-
-  @DataProvider
   public Object[][] of01Provider() {
     return new Object[][] {
         {0, IntSize.BIT8},

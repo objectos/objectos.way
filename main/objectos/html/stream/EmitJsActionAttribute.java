@@ -17,7 +17,7 @@ package objectos.html.stream;
 
 import objectox.html.stream.EmitJsActionAttributeEvent;
 
-/// This event renders a JS action attribute in an element start tag.
+/// This event emits a JS action attribute in an element start tag.
 public sealed interface EmitJsActionAttribute
     extends Event
     permits EmitJsActionAttributeEvent {

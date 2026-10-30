@@ -17,7 +17,7 @@ package objectos.html.stream;
 
 import objectox.html.stream.EmitAttributeEvent;
 
-/// This event renders a non-boolean attribute in an element start tag.
+/// This event emits a non-boolean attribute in an element start tag.
 public sealed interface EmitAttribute
     extends Event
     permits EmitAttributeEvent {

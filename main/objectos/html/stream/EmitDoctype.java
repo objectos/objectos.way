@@ -17,7 +17,7 @@ package objectos.html.stream;
 
 import objectox.html.stream.EmitDoctypeEvent;
 
-/// This event renders the doctype preamble of an HTML document.
+/// This event emits the doctype preamble of an HTML document.
 public sealed interface EmitDoctype
     extends Event
     permits EmitDoctypeEvent {}

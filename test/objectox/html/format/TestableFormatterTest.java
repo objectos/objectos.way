@@ -85,7 +85,7 @@ public class TestableFormatterTest {
         new EmitTextEvent(0, "a\nb"),
         ""
     }, {
-        new EmitTestableCellEvent(0, 10, "foo"),
+        new EmitTestableCellEvent(0, "foo"),
         ""
     }, {
         new EmitTestableHeadingEvent(0, 1, "foo"),

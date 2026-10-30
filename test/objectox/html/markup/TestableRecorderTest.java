@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class TestableRecorderTest {
@@ -144,44 +145,51 @@ public class TestableRecorderTest {
     subject.cell(0, "Ipsum");
   }
 
-  @Test(description = """
-  a testable cell is recorded with the TCELL8 opcode when both the width and the object index fit in 1 byte
-  """)
+  @Test(
+      description = "rejects a cell value longer than the width",
+      expectedExceptions = IllegalArgumentException.class,
+      expectedExceptionsMessageRegExp = "Formatted value length will exceed the column width of 4")
   public void cell03() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final TestableRecorder subject;
+    subject = new TestableRecorder(sink);
+
+    subject.cell(4, "Ipsum");
+  }
+
+  @Test(dataProvider = "cell04Provider", description = """
+  a testable cell is recorded with the TCELL8 opcode and the value padded to the specified width
+  """)
+  public void cell04(String value, int width, String expected) {
     test(
         _ -> {},
 
-        subject -> subject.cell(3, "Ipsum"),
+        subject -> subject.cell(width, value),
         0,
 
         opts -> {
           opts.addByte(HtmlBytes.TCELL8);
-          opts.addInt8(3);
-          opts.addInt8(opts.addObject("Ipsum"));
+          opts.addInt8(opts.addObject(expected));
         }
     );
   }
 
-  @Test(description = """
-  a testable cell is recorded with the TCELL16 opcode when the width does not fit in 1 byte
-  """)
-  public void cell04() {
-    test(
-        _ -> {},
-
-        subject -> subject.cell(256, "Ipsum"),
-        0,
-
-        opts -> {
-          opts.addByte(HtmlBytes.TCELL16);
-          opts.addInt16(256);
-          opts.addInt16(opts.addObject("Ipsum"));
-        }
-    );
+  @DataProvider
+  public Object[][] cell04Provider() {
+    return new Object[][] {
+        {"abcde", 5, "abcde"},
+        {"abcd", 5, "abcd "},
+        {"abc", 5, "abc  "},
+        {"ab", 5, "ab   "},
+        {"a", 5, "a    "},
+        {"", 5, "     "}
+    };
   }
 
   @Test(description = """
-  a testable cell is recorded with the TCELL16 opcode when the object index does not fit in 1 byte
+  a testable cell is recorded with the TCELL16 opcode when the object index fits in 2 bytes
   """)
   public void cell05() {
     test(
@@ -189,72 +197,51 @@ public class TestableRecorderTest {
           opts.objectsIndex(HtmlSink.FIRST_INT16);
         },
 
-        subject -> subject.cell(1, "Ipsum"),
+        subject -> subject.cell(8, "Ipsum"),
         0,
 
         opts -> {
           opts.objectsIndex(HtmlSink.FIRST_INT16);
           opts.addByte(HtmlBytes.TCELL16);
-          opts.addInt16(1);
-          opts.addInt16(opts.addObject("Ipsum"));
+          opts.addInt16(opts.addObject("Ipsum   "));
         }
     );
   }
 
   @Test(description = """
-  a testable cell is recorded with the TCELL24 opcode when the width does not fit in 2 bytes
+  a testable cell is recorded with the TCELL24 opcode when the object index fits in 3 bytes
   """)
   public void cell06() {
-    test(
-        _ -> {},
-
-        subject -> subject.cell(65536, "Ipsum"),
-        0,
-
-        opts -> {
-          opts.addByte(HtmlBytes.TCELL24);
-          opts.addInt24(65536);
-          opts.addInt24(opts.addObject("Ipsum"));
-        }
-    );
-  }
-
-  @Test(description = """
-  a testable cell is recorded with the TCELL24 opcode when the object index does not fit in 2 bytes
-  """)
-  public void cell07() {
     test(
         opts -> {
           opts.objectsIndex(HtmlSink.FIRST_INT24);
         },
 
-        subject -> subject.cell(1, "Ipsum"),
+        subject -> subject.cell(8, "Ipsum"),
         0,
 
         opts -> {
           opts.objectsIndex(HtmlSink.FIRST_INT24);
           opts.addByte(HtmlBytes.TCELL24);
-          opts.addInt24(1);
-          opts.addInt24(opts.addObject("Ipsum"));
+          opts.addInt24(opts.addObject("Ipsum   "));
         }
     );
   }
 
   @Test(description = "the returned markup pointer is the first available index in the code array")
-  public void cell08() {
+  public void cell07() {
     test(
         opts -> {
           opts.addInt24(0);
         },
 
-        subject -> subject.cell(3, "Ipsum"),
+        subject -> subject.cell(8, "Ipsum"),
         3,
 
         opts -> {
           opts.addInt24(0);
           opts.addByte(HtmlBytes.TCELL8);
-          opts.addInt8(3);
-          opts.addInt8(opts.addObject("Ipsum"));
+          opts.addInt8(opts.addObject("Ipsum   "));
         }
     );
   }

@@ -228,9 +228,9 @@ public class FragmentChildRecorderTest {
         {bytes(HtmlBytes.xTHEADING8, 1, 0), "unconsumed testable heading (1-byte value index)"},
         {bytes(HtmlBytes.xTHEADING16, 1, 0, 0), "unconsumed testable heading (2-byte value index)"},
         {bytes(HtmlBytes.xTHEADING24, 1, 0, 0, 0), "unconsumed testable heading (3-byte value index)"},
-        {bytes(HtmlBytes.xTCELL8, 1, 0), "unconsumed testable cell (1-byte operands)"},
-        {bytes(HtmlBytes.xTCELL16, 0, 1, 0, 0), "unconsumed testable cell (2-byte operands)"},
-        {bytes(HtmlBytes.xTCELL24, 0, 0, 1, 0, 0, 0), "unconsumed testable cell (3-byte operands)"},
+        {bytes(HtmlBytes.xTCELL8, 0), "unconsumed testable cell (1-byte value index)"},
+        {bytes(HtmlBytes.xTCELL16, 0, 0), "unconsumed testable cell (2-byte value index)"},
+        {bytes(HtmlBytes.xTCELL24, 0, 0, 0), "unconsumed testable cell (3-byte value index)"},
         {bytes(HtmlBytes.xTEXT8, 0x7F), "unconsumed text (1-byte value index)"},
         {bytes(HtmlBytes.xTEXT16, 0x7F, 0x7F), "unconsumed text (2-byte value index)"},
         {bytes(HtmlBytes.xTEXT24, 0x7F, 0x7F, 0x7F), "unconsumed text (3-byte value index)"},
@@ -427,9 +427,9 @@ public class FragmentChildRecorderTest {
         {HtmlBytes.THEADING8, HtmlBytes.oTHEADING8, 2, "testable heading (2 operand bytes)"},
         {HtmlBytes.THEADING16, HtmlBytes.oTHEADING16, 3, "testable heading (3 operand bytes)"},
         {HtmlBytes.THEADING24, HtmlBytes.oTHEADING24, 4, "testable heading (4 operand bytes)"},
-        {HtmlBytes.TCELL8, HtmlBytes.oTCELL8, 2, "testable cell (2 operand bytes)"},
-        {HtmlBytes.TCELL16, HtmlBytes.oTCELL16, 4, "testable cell (4 operand bytes)"},
-        {HtmlBytes.TCELL24, HtmlBytes.oTCELL24, 6, "testable cell (6 operand bytes)"}
+        {HtmlBytes.TCELL8, HtmlBytes.oTCELL8, 1, "testable cell (1 operand byte)"},
+        {HtmlBytes.TCELL16, HtmlBytes.oTCELL16, 2, "testable cell (2 operand bytes)"},
+        {HtmlBytes.TCELL24, HtmlBytes.oTCELL24, 3, "testable cell (3 operand bytes)"}
     };
   }
 

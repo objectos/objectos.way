@@ -23,7 +23,7 @@ public final class TestableCellString {
 
   private final int width;
 
-  TestableCellString(String value, int width) {
+  public TestableCellString(String value, int width) {
     if (width <= 0) {
       throw new IllegalArgumentException("Column width must be greater than zero");
     }

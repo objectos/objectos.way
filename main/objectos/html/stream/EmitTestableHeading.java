@@ -17,7 +17,7 @@ package objectos.html.stream;
 
 import objectox.html.stream.EmitTestableHeadingEvent;
 
-/// This event renders a testable heading node.
+/// This event emits a testable heading node.
 public sealed interface EmitTestableHeading
     extends EmitTestable
     permits EmitTestableHeadingEvent {

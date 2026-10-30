@@ -16,6 +16,7 @@
 package objectox.html.markup;
 
 import java.util.Objects;
+import objectox.dev.TestableCellString;
 import objectox.html.IntSize;
 
 final class TestableRecorder {
@@ -37,19 +38,23 @@ final class TestableRecorder {
     final String v;
     v = Objects.requireNonNull(value, "value == null");
 
+    final TestableCellString cell;
+    cell = new TestableCellString(v, width);
+
+    final String formatted;
+    formatted = cell.toString();
+
     final int valueIndex;
-    valueIndex = sink.addObject(v);
+    valueIndex = sink.addObject(formatted);
 
     final IntSize size;
-    size = IntSize.max(width, valueIndex);
+    size = IntSize.of(valueIndex);
 
     final byte proto;
     proto = size.toTestableCellByte();
 
     final int startIndex;
     startIndex = sink.addByte(proto);
-
-    sink.addInt(size, width);
 
     sink.addInt(size, valueIndex);
 

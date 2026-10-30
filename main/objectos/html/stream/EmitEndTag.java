@@ -17,7 +17,7 @@ package objectos.html.stream;
 
 import objectox.html.stream.EmitEndTagEvent;
 
-/// This event renders the end tag of an HTML element.
+/// This event emits the end tag of an HTML element.
 public sealed interface EmitEndTag
     extends Event
     permits EmitEndTagEvent {

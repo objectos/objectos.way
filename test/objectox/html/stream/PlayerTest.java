@@ -788,13 +788,11 @@ public class PlayerTest {
 
       opts.addByte(HtmlBytes.TCELL24);
 
-      opts.addInt24(5);
-
       opts.addInt24(opts.addObject("12345"));
     });
 
     assertEquals(subject.hasNext(), true);
-    assertEquals(subject.next(), new EmitTestableCellEvent(0, 5, "12345"));
+    assertEquals(subject.next(), new EmitTestableCellEvent(0, "12345"));
     assertEquals(subject.hasNext(), true);
     assertEquals(subject.next(), new EndDocumentEvent(false));
     assertEquals(subject.hasNext(), false);

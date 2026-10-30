@@ -27,10 +27,16 @@ public sealed interface TestableNodes permits MarkupTestableNodes {
 
   /// Encodes a testable cell node with the specified width and value.
   ///
+  /// The value is right-padded with spaces to the specified width.
+  ///
   /// @param width the fixed width of the cell, must be greater than zero
-  /// @param value the testable node value
+  /// @param value the testable node value, must not be longer than the width
   ///
   /// @return an object representing the encoded testable node
+  ///
+  /// @throws IllegalArgumentException if the width is not greater than zero
+  /// or if the value is longer than the width
+  /// @throws NullPointerException if the value is null
   TestableMarkup cell(int width, String value);
 
   /// Encodes a testable heading 1 node with the specified value.

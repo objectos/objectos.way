@@ -15,7 +15,7 @@
  */
 package objectos.html.stream;
 
-/// This event renders a testable node.
+/// This event emits a testable node.
 public sealed interface EmitTestable
     extends Event
     permits

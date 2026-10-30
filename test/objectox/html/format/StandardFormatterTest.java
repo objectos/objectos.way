@@ -108,7 +108,7 @@ public class StandardFormatterTest {
         b\
         """
     }, {
-        new EmitTestableCellEvent(0, 10, "foo"),
+        new EmitTestableCellEvent(0, "foo"),
         ""
     }, {
         new EmitTestableHeadingEvent(0, 1, "foo"),

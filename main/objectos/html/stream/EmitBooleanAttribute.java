@@ -17,7 +17,7 @@ package objectos.html.stream;
 
 import objectox.html.stream.EmitBooleanAttributeEvent;
 
-/// This event renders a boolean attribute in an element start tag.
+/// This event emits a boolean attribute in an element start tag.
 public sealed interface EmitBooleanAttribute
     extends Event
     permits EmitBooleanAttributeEvent {

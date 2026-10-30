@@ -47,8 +47,6 @@ public class EmitTestableCellStateTest {
         EmitTestableCellState::compute,
 
         opts -> {
-          opts.addInt8(1);
-
           opts.addInt8(opts.addObject("Ipsum"));
 
           opts.push(f -> {
@@ -59,11 +57,11 @@ public class EmitTestableCellStateTest {
         level, IntSize.BIT8,
 
         opts -> {
-          opts.result(new EmitTestableCellEvent(0, 1, "Ipsum"));
+          opts.result(new EmitTestableCellEvent(0, "Ipsum"));
         },
 
         ctx -> new EndNodeState(ctx, FrameY.create(f -> {
-          f.index = 2;
+          f.index = 1;
         }))
     );
   }
@@ -78,8 +76,6 @@ public class EmitTestableCellStateTest {
         EmitTestableCellState::compute,
 
         opts -> {
-          opts.addInt8(1);
-
           opts.addInt8(opts.addObject("Ipsum"));
 
           opts.push(f -> {
@@ -127,8 +123,6 @@ public class EmitTestableCellStateTest {
         EmitTestableCellState::documentNode,
 
         opts -> {
-          opts.addInt8(1);
-
           opts.addInt8(opts.addObject("Ipsum"));
         },
 
@@ -160,8 +154,6 @@ public class EmitTestableCellStateTest {
         EmitTestableCellState::documentNode,
 
         opts -> {
-          opts.addInt8(1);
-
           opts.addInt8(opts.addObject("Ipsum"));
         },
 
@@ -169,7 +161,7 @@ public class EmitTestableCellStateTest {
 
         _ -> {},
 
-        ctx -> new SkipState(ctx, 2)
+        ctx -> new SkipState(ctx, 1)
     );
   }
 
@@ -187,8 +179,6 @@ public class EmitTestableCellStateTest {
         opts -> {
           opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
 
-          opts.addInt16(1);
-
           opts.addInt16(opts.addObject("Ipsum"));
         },
 
@@ -196,7 +186,7 @@ public class EmitTestableCellStateTest {
 
         _ -> {},
 
-        ctx -> new SkipState(ctx, 4)
+        ctx -> new SkipState(ctx, 2)
     );
   }
 
@@ -214,8 +204,6 @@ public class EmitTestableCellStateTest {
         opts -> {
           opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
 
-          opts.addInt24(1);
-
           opts.addInt24(opts.addObject("Ipsum"));
         },
 
@@ -223,7 +211,7 @@ public class EmitTestableCellStateTest {
 
         _ -> {},
 
-        ctx -> new SkipState(ctx, 6)
+        ctx -> new SkipState(ctx, 3)
     );
   }
 

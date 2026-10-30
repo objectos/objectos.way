@@ -49,7 +49,7 @@ final class EmitTestableCellState implements State, ScanOp {
         final int bytes;
         bytes = size.bytes();
 
-        yield new SkipState(ctx, 2 * bytes);
+        yield new SkipState(ctx, bytes);
       }
 
       case TOP_LEVEL -> this;
@@ -92,8 +92,6 @@ final class EmitTestableCellState implements State, ScanOp {
     final int startIndex;
     startIndex = frame.index;
 
-    ctx.nextInt(size);
-
     final int valueIndex;
     valueIndex = ctx.nextInt(size);
 
@@ -114,9 +112,6 @@ final class EmitTestableCellState implements State, ScanOp {
     final int level;
     level = ctx.stackIndex();
 
-    final int width;
-    width = ctx.nextInt(size);
-
     final int valueIndex;
     valueIndex = ctx.nextInt(size);
 
@@ -124,7 +119,7 @@ final class EmitTestableCellState implements State, ScanOp {
     value = ctx.objString(valueIndex);
 
     final EmitTestableCellEvent event;
-    event = new EmitTestableCellEvent(level, width, value);
+    event = new EmitTestableCellEvent(level, value);
 
     ctx.result(event);
 

@@ -17,13 +17,13 @@ package objectox.dev;
 
 import java.util.Objects;
 
-final class TestableHeading {
+public final class TestableHeading {
 
   private final String level;
 
   private final String value;
 
-  TestableHeading(int level, String value) {
+  public TestableHeading(int level, String value) {
     this.level = switch (level) {
       case 1 -> "#";
 

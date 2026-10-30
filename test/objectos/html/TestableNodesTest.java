@@ -118,8 +118,7 @@ public class TestableNodesTest {
 
         HtmlY.create(opts -> {
           opts.addByte(HtmlBytes.TCELL8);
-          opts.addInt8(2);
-          opts.addInt8(opts.addObject("x"));
+          opts.addInt8(opts.addObject("x "));
         })
     );
   }
@@ -150,6 +149,20 @@ public class TestableNodesTest {
     t = subject.t();
 
     t.cell(1, null);
+  }
+
+  @Test(
+      description = "testable cell node rejects a value longer than the width",
+      expectedExceptions = IllegalArgumentException.class,
+      expectedExceptionsMessageRegExp = "Formatted value length will exceed the column width of 1")
+  public void cellValidation03() {
+    final Markup subject;
+    subject = Markup.of();
+
+    final TestableNodes t;
+    t = subject.t();
+
+    t.cell(1, "xy");
   }
 
 }

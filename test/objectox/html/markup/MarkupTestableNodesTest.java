@@ -82,8 +82,7 @@ public class MarkupTestableNodesTest {
 
         HtmlSinkY.create(opts -> {
           opts.addByte(HtmlBytes.TCELL8);
-          opts.addInt8(2);
-          opts.addInt8(opts.addObject("x"));
+          opts.addInt8(opts.addObject("x "));
         })
     );
   }

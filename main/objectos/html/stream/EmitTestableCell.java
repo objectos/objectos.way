@@ -17,17 +17,14 @@ package objectos.html.stream;
 
 import objectox.html.stream.EmitTestableCellEvent;
 
-/// This event renders a testable cell node.
+/// This event emits a testable cell node.
 public sealed interface EmitTestableCell
     extends EmitTestable
     permits EmitTestableCellEvent {
 
-  /// Returns the fixed width of the cell.
-  ///
-  /// @return the fixed width of the cell
-  int width();
-
   /// Returns the cell value.
+  ///
+  /// The value is right-padded with spaces to the cell width.
   ///
   /// @return the cell value
   String value();

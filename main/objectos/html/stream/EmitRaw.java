@@ -17,7 +17,7 @@ package objectos.html.stream;
 
 import objectox.html.stream.EmitRawEvent;
 
-/// This event renders the value of an HTML raw text node.
+/// This event emits the value of an HTML raw text node.
 public sealed interface EmitRaw
     extends Event
     permits EmitRawEvent {
