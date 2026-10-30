@@ -113,7 +113,14 @@ public final class HtmlImpl implements Html {
 
   @Override
   public final String toTestableText() {
-    throw new UnsupportedOperationException("Implement me");
+    final Formatter f;
+    f = Formatter.testable();
+
+    try (final Reader r = openStream(f)) {
+      return r.readAllAsString();
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
   }
 
 }

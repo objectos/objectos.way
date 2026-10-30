@@ -2033,7 +2033,7 @@ x\
     );
   }
 
-  @Test(enabled = false, description = "testable nodes")
+  @Test(description = "testable heading")
   public void testableNodes01() {
     final Template subject;
     subject = new Template() {
@@ -2048,8 +2048,46 @@ x\
 
         """
         # Heading 1
+        """
+    );
+  }
+
+  @Test(description = "testable heading followed by testable cell")
+  public void testableNodes02() {
+    final Template subject;
+    subject = new Template() {
+      @Override
+      protected final void render() {
+        t.h1("Heading 1");
+        t.cell(1, "x");
+      }
+    };
+
+    assertEquals(
+        subject.toTestableText(),
 
         """
+        # Heading 1
+
+        | x |
+        """
+    );
+  }
+
+  @Test(description = "template without testable nodes")
+  public void testableNodes03() {
+    final Template subject;
+    subject = new Template() {
+      @Override
+      protected final void render() {
+        div(text("Hello"));
+      }
+    };
+
+    assertEquals(
+        subject.toTestableText(),
+
+        ""
     );
   }
 

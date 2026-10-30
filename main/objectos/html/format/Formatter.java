@@ -17,6 +17,7 @@ package objectos.html.format;
 
 import objectox.html.format.BaseFormatter;
 import objectox.html.format.StandardFormatter;
+import objectox.html.format.TestableFormatter;
 
 /// Formats the string representation of a compiled Objectos HTML document.
 public sealed interface Formatter permits BaseFormatter {
@@ -26,6 +27,13 @@ public sealed interface Formatter permits BaseFormatter {
   /// @return the standard formatter instance
   static Formatter standard() {
     return new StandardFormatter();
+  }
+
+  /// Returns a new testable formatter instance.
+  ///
+  /// @return a new testable formatter instance
+  static Formatter testable() {
+    return new TestableFormatter();
   }
 
 }

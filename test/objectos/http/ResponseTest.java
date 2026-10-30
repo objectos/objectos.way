@@ -138,7 +138,6 @@ public class ResponseTest {
         200 OK
         text/html; charset=utf-8
         # Heading 1
-
         """
     );
   }

@@ -666,6 +666,103 @@ public class HtmlTest {
   }
 
   @Test(description = """
+  toTestableText:
+  - top-level testable heading
+  """)
+  public void toTestableText01() {
+    final Markup markup;
+    markup = Markup.of();
+
+    final TestableNodes t;
+    t = markup.t();
+
+    t.h1("Heading 1");
+
+    final Html subject;
+    subject = markup.compile();
+
+    assertEquals(
+        subject.toTestableText(),
+
+        """
+        # Heading 1
+        """
+    );
+  }
+
+  @Test(description = """
+  toTestableText:
+  - top-level testable cells
+  """)
+  public void toTestableText02() {
+    final Markup markup;
+    markup = Markup.of();
+
+    final TestableNodes t;
+    t = markup.t();
+
+    t.cell(1, "1");
+    t.cell(1, "2");
+
+    final Html subject;
+    subject = markup.compile();
+
+    assertEquals(
+        subject.toTestableText(),
+
+        """
+        | 1 | 2 |
+        """
+    );
+  }
+
+  @Test(description = """
+  toTestableText:
+  - testable heading followed by testable cell
+  """)
+  public void toTestableText03() {
+    final Markup markup;
+    markup = Markup.of();
+
+    final TestableNodes t;
+    t = markup.t();
+
+    t.h1("Heading 1");
+    t.cell(1, "x");
+
+    final Html subject;
+    subject = markup.compile();
+
+    assertEquals(
+        subject.toTestableText(),
+
+        """
+        # Heading 1
+
+        | x |
+        """
+    );
+  }
+
+  @Test(description = """
+  toTestableText:
+  - document without testable nodes
+  """)
+  public void toTestableText04() {
+    final Markup markup;
+    markup = Markup.of();
+
+    final Html subject;
+    subject = markup.compile();
+
+    assertEquals(
+        subject.toTestableText(),
+
+        ""
+    );
+  }
+
+  @Test(description = """
   void elem:
   - no attrs
   """)
