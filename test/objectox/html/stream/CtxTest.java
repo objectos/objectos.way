@@ -53,7 +53,7 @@ public class CtxTest {
       });
     });
 
-    ctx.result(new RenderTextEvent(0, "Ipsum"));
+    ctx.result(new EmitTextEvent(0, "Ipsum"));
 
     assertTrue(ctx.emitted());
   }
@@ -77,7 +77,7 @@ public class CtxTest {
   @DataProvider
   public Object[][] nextScanOpProvider() {
     return new Object[][] {
-        {HtmlBytes.DOCTYPE, op(ctx -> new RenderDoctypeState(ctx))},
+        {HtmlBytes.DOCTYPE, op(ctx -> new EmitDoctypeState(ctx))},
 
         {HtmlBytes.ELEMSTR8, op(ctx -> new BeginStartTagState(ctx, ScanLevel.TOP_LEVEL, ElementKind.REGULAR, IntSize.BIT8))},
         {HtmlBytes.ELEMVOID8, op(ctx -> new BeginStartTagState(ctx, ScanLevel.TOP_LEVEL, ElementKind.VOID, IntSize.BIT8))},
@@ -85,60 +85,60 @@ public class CtxTest {
         {HtmlBytes.FRAGSTR, op(ctx -> new SkipState(ctx, 3))},
         {HtmlBytes.FRAGEND, op(ctx -> new ScanDocumentNodeState(ctx))},
 
-        {HtmlBytes.TEXT8, op(ctx -> new RenderTextState(ctx, ScanLevel.TOP_LEVEL, IntSize.BIT8))},
-        {HtmlBytes.TEXT16, op(ctx -> new RenderTextState(ctx, ScanLevel.TOP_LEVEL, IntSize.BIT16))},
-        {HtmlBytes.TEXT24, op(ctx -> new RenderTextState(ctx, ScanLevel.TOP_LEVEL, IntSize.BIT24))},
+        {HtmlBytes.TEXT8, op(ctx -> new EmitTextState(ctx, ScanLevel.TOP_LEVEL, IntSize.BIT8))},
+        {HtmlBytes.TEXT16, op(ctx -> new EmitTextState(ctx, ScanLevel.TOP_LEVEL, IntSize.BIT16))},
+        {HtmlBytes.TEXT24, op(ctx -> new EmitTextState(ctx, ScanLevel.TOP_LEVEL, IntSize.BIT24))},
 
-        {HtmlBytes.RAW8, op(ctx -> new RenderRawState(ctx, ScanLevel.TOP_LEVEL, IntSize.BIT8))},
-        {HtmlBytes.RAW16, op(ctx -> new RenderRawState(ctx, ScanLevel.TOP_LEVEL, IntSize.BIT16))},
-        {HtmlBytes.RAW24, op(ctx -> new RenderRawState(ctx, ScanLevel.TOP_LEVEL, IntSize.BIT24))},
+        {HtmlBytes.RAW8, op(ctx -> new EmitRawState(ctx, ScanLevel.TOP_LEVEL, IntSize.BIT8))},
+        {HtmlBytes.RAW16, op(ctx -> new EmitRawState(ctx, ScanLevel.TOP_LEVEL, IntSize.BIT16))},
+        {HtmlBytes.RAW24, op(ctx -> new EmitRawState(ctx, ScanLevel.TOP_LEVEL, IntSize.BIT24))},
 
-        {HtmlBytes.THEADING8, op(ctx -> new TestableHeadingState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT8))},
-        {HtmlBytes.THEADING16, op(ctx -> new TestableHeadingState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT16))},
-        {HtmlBytes.THEADING24, op(ctx -> new TestableHeadingState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT24))},
+        {HtmlBytes.THEADING8, op(ctx -> new EmitTestableHeadingState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT8))},
+        {HtmlBytes.THEADING16, op(ctx -> new EmitTestableHeadingState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT16))},
+        {HtmlBytes.THEADING24, op(ctx -> new EmitTestableHeadingState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT24))},
 
-        {HtmlBytes.TCELL8, op(ctx -> new TestableCellState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT8))},
-        {HtmlBytes.TCELL16, op(ctx -> new TestableCellState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT16))},
-        {HtmlBytes.TCELL24, op(ctx -> new TestableCellState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT24))},
+        {HtmlBytes.TCELL8, op(ctx -> new EmitTestableCellState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT8))},
+        {HtmlBytes.TCELL16, op(ctx -> new EmitTestableCellState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT16))},
+        {HtmlBytes.TCELL24, op(ctx -> new EmitTestableCellState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT24))},
 
         {HtmlBytes.xELEMSTR8, op(ctx -> new BeginStartTagState(ctx, ScanLevel.NESTED, ElementKind.REGULAR, IntSize.BIT8))},
         {HtmlBytes.xELEMVOID8, op(ctx -> new BeginStartTagState(ctx, ScanLevel.NESTED, ElementKind.VOID, IntSize.BIT8))},
 
-        {HtmlBytes.xATTRIBUTE88, op(ctx -> new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT8))},
-        {HtmlBytes.xATTRIBUTE816, op(ctx -> new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT16))},
-        {HtmlBytes.xATTRIBUTE824, op(ctx -> new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT24))},
+        {HtmlBytes.xATTRIBUTE88, op(ctx -> new EmitAttributeState(ctx, IntSize.BIT8, IntSize.BIT8))},
+        {HtmlBytes.xATTRIBUTE816, op(ctx -> new EmitAttributeState(ctx, IntSize.BIT8, IntSize.BIT16))},
+        {HtmlBytes.xATTRIBUTE824, op(ctx -> new EmitAttributeState(ctx, IntSize.BIT8, IntSize.BIT24))},
 
-        {HtmlBytes.xBOOLEAN8, op(ctx -> new RenderBooleanAttributeState(ctx, IntSize.BIT8))},
+        {HtmlBytes.xBOOLEAN8, op(ctx -> new EmitBooleanAttributeState(ctx, IntSize.BIT8))},
 
-        {HtmlBytes.xJSACTION88, op(ctx -> new RenderJsActionAttributeState(ctx, IntSize.BIT8, IntSize.BIT8))},
-        {HtmlBytes.xJSACTION816, op(ctx -> new RenderJsActionAttributeState(ctx, IntSize.BIT8, IntSize.BIT16))},
-        {HtmlBytes.xJSACTION824, op(ctx -> new RenderJsActionAttributeState(ctx, IntSize.BIT8, IntSize.BIT24))},
+        {HtmlBytes.xJSACTION88, op(ctx -> new EmitJsActionAttributeState(ctx, IntSize.BIT8, IntSize.BIT8))},
+        {HtmlBytes.xJSACTION816, op(ctx -> new EmitJsActionAttributeState(ctx, IntSize.BIT8, IntSize.BIT16))},
+        {HtmlBytes.xJSACTION824, op(ctx -> new EmitJsActionAttributeState(ctx, IntSize.BIT8, IntSize.BIT24))},
 
         {HtmlBytes.xFRAGSTR, op(ctx -> new SkipFragmentState(ctx))},
 
-        {HtmlBytes.xTEXT8, op(ctx -> new RenderTextState(ctx, ScanLevel.NESTED, IntSize.BIT8))},
-        {HtmlBytes.xTEXT16, op(ctx -> new RenderTextState(ctx, ScanLevel.NESTED, IntSize.BIT16))},
-        {HtmlBytes.xTEXT24, op(ctx -> new RenderTextState(ctx, ScanLevel.NESTED, IntSize.BIT24))},
+        {HtmlBytes.xTEXT8, op(ctx -> new EmitTextState(ctx, ScanLevel.NESTED, IntSize.BIT8))},
+        {HtmlBytes.xTEXT16, op(ctx -> new EmitTextState(ctx, ScanLevel.NESTED, IntSize.BIT16))},
+        {HtmlBytes.xTEXT24, op(ctx -> new EmitTextState(ctx, ScanLevel.NESTED, IntSize.BIT24))},
 
-        {HtmlBytes.xRAW8, op(ctx -> new RenderRawState(ctx, ScanLevel.NESTED, IntSize.BIT8))},
-        {HtmlBytes.xRAW16, op(ctx -> new RenderRawState(ctx, ScanLevel.NESTED, IntSize.BIT16))},
-        {HtmlBytes.xRAW24, op(ctx -> new RenderRawState(ctx, ScanLevel.NESTED, IntSize.BIT24))},
+        {HtmlBytes.xRAW8, op(ctx -> new EmitRawState(ctx, ScanLevel.NESTED, IntSize.BIT8))},
+        {HtmlBytes.xRAW16, op(ctx -> new EmitRawState(ctx, ScanLevel.NESTED, IntSize.BIT16))},
+        {HtmlBytes.xRAW24, op(ctx -> new EmitRawState(ctx, ScanLevel.NESTED, IntSize.BIT24))},
 
-        {HtmlBytes.xTHEADING8, op(ctx -> new TestableHeadingState(ctx, TestableLevel.REGULAR, IntSize.BIT8))},
-        {HtmlBytes.xTHEADING16, op(ctx -> new TestableHeadingState(ctx, TestableLevel.REGULAR, IntSize.BIT16))},
-        {HtmlBytes.xTHEADING24, op(ctx -> new TestableHeadingState(ctx, TestableLevel.REGULAR, IntSize.BIT24))},
+        {HtmlBytes.xTHEADING8, op(ctx -> new EmitTestableHeadingState(ctx, TestableLevel.REGULAR, IntSize.BIT8))},
+        {HtmlBytes.xTHEADING16, op(ctx -> new EmitTestableHeadingState(ctx, TestableLevel.REGULAR, IntSize.BIT16))},
+        {HtmlBytes.xTHEADING24, op(ctx -> new EmitTestableHeadingState(ctx, TestableLevel.REGULAR, IntSize.BIT24))},
 
-        {HtmlBytes.xTCELL8, op(ctx -> new TestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT8))},
-        {HtmlBytes.xTCELL16, op(ctx -> new TestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT16))},
-        {HtmlBytes.xTCELL24, op(ctx -> new TestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT24))},
+        {HtmlBytes.xTCELL8, op(ctx -> new EmitTestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT8))},
+        {HtmlBytes.xTCELL16, op(ctx -> new EmitTestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT16))},
+        {HtmlBytes.xTCELL24, op(ctx -> new EmitTestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT24))},
 
-        {HtmlBytes.oTHEADING8, op(ctx -> new TestableHeadingState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT8))},
-        {HtmlBytes.oTHEADING16, op(ctx -> new TestableHeadingState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT16))},
-        {HtmlBytes.oTHEADING24, op(ctx -> new TestableHeadingState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT24))},
+        {HtmlBytes.oTHEADING8, op(ctx -> new EmitTestableHeadingState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT8))},
+        {HtmlBytes.oTHEADING16, op(ctx -> new EmitTestableHeadingState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT16))},
+        {HtmlBytes.oTHEADING24, op(ctx -> new EmitTestableHeadingState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT24))},
 
-        {HtmlBytes.oTCELL8, op(ctx -> new TestableCellState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT8))},
-        {HtmlBytes.oTCELL16, op(ctx -> new TestableCellState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT16))},
-        {HtmlBytes.oTCELL24, op(ctx -> new TestableCellState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT24))}
+        {HtmlBytes.oTCELL8, op(ctx -> new EmitTestableCellState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT8))},
+        {HtmlBytes.oTCELL16, op(ctx -> new EmitTestableCellState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT16))},
+        {HtmlBytes.oTCELL24, op(ctx -> new EmitTestableCellState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT24))}
     };
   }
 

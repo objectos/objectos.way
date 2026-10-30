@@ -124,8 +124,8 @@ final class MergeAttributeState implements State {
     final int level;
     level = ctx.stackIndex();
 
-    final RenderAttributeEvent event;
-    event = new RenderAttributeEvent(level, attributeName, value);
+    final EmitAttributeEvent event;
+    event = new EmitAttributeEvent(level, attributeName, value);
 
     ctx.result(event);
 

@@ -17,17 +17,17 @@ package objectox.html.format;
 
 import objectos.html.format.Formatter;
 import objectos.html.stream.BeginStartTag;
+import objectos.html.stream.EmitAttribute;
+import objectos.html.stream.EmitBooleanAttribute;
+import objectos.html.stream.EmitDoctype;
+import objectos.html.stream.EmitEndTag;
+import objectos.html.stream.EmitJsActionAttribute;
+import objectos.html.stream.EmitRaw;
+import objectos.html.stream.EmitTestable;
+import objectos.html.stream.EmitText;
 import objectos.html.stream.EndDocument;
 import objectos.html.stream.EndStartTag;
 import objectos.html.stream.Event;
-import objectos.html.stream.RenderAttribute;
-import objectos.html.stream.RenderBooleanAttribute;
-import objectos.html.stream.RenderDoctype;
-import objectos.html.stream.RenderEndTag;
-import objectos.html.stream.RenderJsActionAttribute;
-import objectos.html.stream.RenderRaw;
-import objectos.html.stream.RenderTestable;
-import objectos.html.stream.RenderText;
 
 public sealed abstract class BaseFormatter
     implements Formatter
@@ -49,44 +49,44 @@ public sealed abstract class BaseFormatter
 
       case EndStartTag end -> endStartTag(end, out);
 
-      case RenderAttribute attr -> renderAttribute(attr, out);
+      case EmitAttribute attr -> emitAttribute(attr, out);
 
-      case RenderBooleanAttribute attr -> renderBooleanAttribute(attr, out);
+      case EmitBooleanAttribute attr -> emitBooleanAttribute(attr, out);
 
-      case RenderJsActionAttribute attr -> renderJsActionAttribute(attr, out);
+      case EmitJsActionAttribute attr -> emitJsActionAttribute(attr, out);
 
-      case RenderDoctype doctype -> renderDoctype(doctype, out);
+      case EmitDoctype doctype -> emitDoctype(doctype, out);
 
-      case RenderEndTag endTag -> renderEndTag(endTag, out);
+      case EmitEndTag endTag -> emitEndTag(endTag, out);
 
-      case RenderRaw raw -> renderRaw(raw, out);
+      case EmitRaw raw -> emitRaw(raw, out);
 
-      case RenderTestable testable -> renderTestable(testable, out);
+      case EmitTestable testable -> emitTestable(testable, out);
 
-      case RenderText text -> renderText(text, out);
+      case EmitText text -> emitText(text, out);
     }
   }
 
   abstract void beginStartTag(BeginStartTag event, Output out);
 
+  abstract void emitAttribute(EmitAttribute attr, Output out);
+
+  abstract void emitBooleanAttribute(EmitBooleanAttribute attr, Output out);
+
+  abstract void emitDoctype(EmitDoctype event, Output out);
+
+  abstract void emitEndTag(EmitEndTag endTag, Output out);
+
+  abstract void emitJsActionAttribute(EmitJsActionAttribute attr, Output out);
+
+  abstract void emitRaw(EmitRaw raw, Output out);
+
+  abstract void emitTestable(EmitTestable event, Output out);
+
+  abstract void emitText(EmitText text, Output out);
+
   abstract void endDocument(EndDocument event, Output out);
 
   abstract void endStartTag(EndStartTag event, Output out);
-
-  abstract void renderAttribute(RenderAttribute attr, Output out);
-
-  abstract void renderBooleanAttribute(RenderBooleanAttribute attr, Output out);
-
-  abstract void renderDoctype(RenderDoctype event, Output out);
-
-  abstract void renderEndTag(RenderEndTag endTag, Output out);
-
-  abstract void renderJsActionAttribute(RenderJsActionAttribute attr, Output out);
-
-  abstract void renderRaw(RenderRaw raw, Output out);
-
-  abstract void renderTestable(RenderTestable event, Output out);
-
-  abstract void renderText(RenderText text, Output out);
 
 }

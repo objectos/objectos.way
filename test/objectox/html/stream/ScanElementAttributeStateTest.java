@@ -33,15 +33,15 @@ public class ScanElementAttributeStateTest {
   @DataProvider
   public Object[][] attributesProvider() {
     return new Object[][] {
-        {HtmlBytes.xATTRIBUTE88, s(ctx -> new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT8))},
-        {HtmlBytes.xATTRIBUTE816, s(ctx -> new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT16))},
-        {HtmlBytes.xATTRIBUTE824, s(ctx -> new RenderAttributeState(ctx, IntSize.BIT8, IntSize.BIT24))},
+        {HtmlBytes.xATTRIBUTE88, s(ctx -> new EmitAttributeState(ctx, IntSize.BIT8, IntSize.BIT8))},
+        {HtmlBytes.xATTRIBUTE816, s(ctx -> new EmitAttributeState(ctx, IntSize.BIT8, IntSize.BIT16))},
+        {HtmlBytes.xATTRIBUTE824, s(ctx -> new EmitAttributeState(ctx, IntSize.BIT8, IntSize.BIT24))},
 
-        {HtmlBytes.xBOOLEAN8, s(ctx -> new RenderBooleanAttributeState(ctx, IntSize.BIT8))},
+        {HtmlBytes.xBOOLEAN8, s(ctx -> new EmitBooleanAttributeState(ctx, IntSize.BIT8))},
 
-        {HtmlBytes.xJSACTION88, s(ctx -> new RenderJsActionAttributeState(ctx, IntSize.BIT8, IntSize.BIT8))},
-        {HtmlBytes.xJSACTION816, s(ctx -> new RenderJsActionAttributeState(ctx, IntSize.BIT8, IntSize.BIT16))},
-        {HtmlBytes.xJSACTION824, s(ctx -> new RenderJsActionAttributeState(ctx, IntSize.BIT8, IntSize.BIT24))}
+        {HtmlBytes.xJSACTION88, s(ctx -> new EmitJsActionAttributeState(ctx, IntSize.BIT8, IntSize.BIT8))},
+        {HtmlBytes.xJSACTION816, s(ctx -> new EmitJsActionAttributeState(ctx, IntSize.BIT8, IntSize.BIT16))},
+        {HtmlBytes.xJSACTION824, s(ctx -> new EmitJsActionAttributeState(ctx, IntSize.BIT8, IntSize.BIT24))}
     };
   }
 
@@ -183,21 +183,21 @@ public class ScanElementAttributeStateTest {
         {HtmlBytes.xELEMSTR8, s(ctx -> new BeginStartTagState(ctx, ScanLevel.NESTED, ElementKind.REGULAR, IntSize.BIT8))},
         {HtmlBytes.xELEMVOID8, s(ctx -> new BeginStartTagState(ctx, ScanLevel.NESTED, ElementKind.VOID, IntSize.BIT8))},
 
-        {HtmlBytes.xTEXT8, s(ctx -> new RenderTextState(ctx, ScanLevel.NESTED, IntSize.BIT8))},
-        {HtmlBytes.xTEXT16, s(ctx -> new RenderTextState(ctx, ScanLevel.NESTED, IntSize.BIT16))},
-        {HtmlBytes.xTEXT24, s(ctx -> new RenderTextState(ctx, ScanLevel.NESTED, IntSize.BIT24))},
+        {HtmlBytes.xTEXT8, s(ctx -> new EmitTextState(ctx, ScanLevel.NESTED, IntSize.BIT8))},
+        {HtmlBytes.xTEXT16, s(ctx -> new EmitTextState(ctx, ScanLevel.NESTED, IntSize.BIT16))},
+        {HtmlBytes.xTEXT24, s(ctx -> new EmitTextState(ctx, ScanLevel.NESTED, IntSize.BIT24))},
 
-        {HtmlBytes.xRAW8, s(ctx -> new RenderRawState(ctx, ScanLevel.NESTED, IntSize.BIT8))},
-        {HtmlBytes.xRAW16, s(ctx -> new RenderRawState(ctx, ScanLevel.NESTED, IntSize.BIT16))},
-        {HtmlBytes.xRAW24, s(ctx -> new RenderRawState(ctx, ScanLevel.NESTED, IntSize.BIT24))},
+        {HtmlBytes.xRAW8, s(ctx -> new EmitRawState(ctx, ScanLevel.NESTED, IntSize.BIT8))},
+        {HtmlBytes.xRAW16, s(ctx -> new EmitRawState(ctx, ScanLevel.NESTED, IntSize.BIT16))},
+        {HtmlBytes.xRAW24, s(ctx -> new EmitRawState(ctx, ScanLevel.NESTED, IntSize.BIT24))},
 
-        {HtmlBytes.xTHEADING8, s(ctx -> new TestableHeadingState(ctx, TestableLevel.REGULAR, IntSize.BIT8))},
-        {HtmlBytes.xTHEADING16, s(ctx -> new TestableHeadingState(ctx, TestableLevel.REGULAR, IntSize.BIT16))},
-        {HtmlBytes.xTHEADING24, s(ctx -> new TestableHeadingState(ctx, TestableLevel.REGULAR, IntSize.BIT24))},
+        {HtmlBytes.xTHEADING8, s(ctx -> new EmitTestableHeadingState(ctx, TestableLevel.REGULAR, IntSize.BIT8))},
+        {HtmlBytes.xTHEADING16, s(ctx -> new EmitTestableHeadingState(ctx, TestableLevel.REGULAR, IntSize.BIT16))},
+        {HtmlBytes.xTHEADING24, s(ctx -> new EmitTestableHeadingState(ctx, TestableLevel.REGULAR, IntSize.BIT24))},
 
-        {HtmlBytes.xTCELL8, s(ctx -> new TestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT8))},
-        {HtmlBytes.xTCELL16, s(ctx -> new TestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT16))},
-        {HtmlBytes.xTCELL24, s(ctx -> new TestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT24))}
+        {HtmlBytes.xTCELL8, s(ctx -> new EmitTestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT8))},
+        {HtmlBytes.xTCELL16, s(ctx -> new EmitTestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT16))},
+        {HtmlBytes.xTCELL24, s(ctx -> new EmitTestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT24))}
     };
   }
 
@@ -369,7 +369,7 @@ public class ScanElementAttributeStateTest {
           opts.result(new EndStartTagEvent(0, EndStartTagKind.EMPTY_ELEMENT));
         },
 
-        ctx -> new RenderEndTagState(ctx, ElementName.SPAN)
+        ctx -> new EmitEndTagState(ctx, ElementName.SPAN)
     );
   }
 
@@ -446,7 +446,7 @@ public class ScanElementAttributeStateTest {
           opts.result(new EndStartTagEvent(1, EndStartTagKind.EMPTY_ELEMENT));
         },
 
-        ctx -> new RenderEndTagState(ctx, ElementName.SPAN)
+        ctx -> new EmitEndTagState(ctx, ElementName.SPAN)
     );
   }
 

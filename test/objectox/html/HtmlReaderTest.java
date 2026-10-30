@@ -27,8 +27,8 @@ import objectox.html.format.BaseFormatter;
 import objectox.html.format.Output;
 import objectox.html.format.OutputY;
 import objectox.html.format.StandardFormatter;
+import objectox.html.stream.EmitTextEvent;
 import objectox.html.stream.EndDocumentEvent;
-import objectox.html.stream.RenderTextEvent;
 import org.testng.annotations.Test;
 
 public class HtmlReaderTest {
@@ -44,7 +44,7 @@ public class HtmlReaderTest {
   public void read01() throws IOException {
     final Iterator<Event> events;
     events = evts(
-        new RenderTextEvent(0, "foo")
+        new EmitTextEvent(0, "foo")
     );
 
     final Output output;
@@ -70,7 +70,7 @@ public class HtmlReaderTest {
   public void read02() throws IOException {
     testError(
         evts(
-            new RenderTextEvent(0, "foo")
+            new EmitTextEvent(0, "foo")
         ),
 
         8, -1, 1
@@ -84,7 +84,7 @@ public class HtmlReaderTest {
   public void read03() throws IOException {
     testError(
         evts(
-            new RenderTextEvent(0, "foo")
+            new EmitTextEvent(0, "foo")
         ),
 
         8, 0, -1
@@ -98,7 +98,7 @@ public class HtmlReaderTest {
   public void read04() throws IOException {
     testError(
         evts(
-            new RenderTextEvent(0, "foo")
+            new EmitTextEvent(0, "foo")
         ),
 
         8, 7, 2
@@ -112,7 +112,7 @@ public class HtmlReaderTest {
   public void read05() throws IOException {
     testError(
         evts(
-            new RenderTextEvent(0, "foo")
+            new EmitTextEvent(0, "foo")
         ),
 
         8, 9, 0
@@ -123,7 +123,7 @@ public class HtmlReaderTest {
   public void read06() throws IOException {
     test(
         evts(
-            new RenderTextEvent(0, "foo")
+            new EmitTextEvent(0, "foo")
         ),
 
         output(_ -> {}),
@@ -136,7 +136,7 @@ public class HtmlReaderTest {
   public void read07() throws IOException {
     test(
         evts(
-            new RenderTextEvent(0, "foo")
+            new EmitTextEvent(0, "foo")
         ),
 
         output(_ -> {}),
@@ -149,8 +149,8 @@ public class HtmlReaderTest {
   public void read08() throws IOException {
     test(
         evts(
-            new RenderTextEvent(0, "ab"),
-            new RenderTextEvent(0, "cd"),
+            new EmitTextEvent(0, "ab"),
+            new EmitTextEvent(0, "cd"),
             new EndDocumentEvent(false)
         ),
 
@@ -165,7 +165,7 @@ public class HtmlReaderTest {
   public void read09() throws IOException {
     test(
         evts(
-            new RenderTextEvent(0, "abcdefghij"),
+            new EmitTextEvent(0, "abcdefghij"),
             new EndDocumentEvent(false)
         ),
 
@@ -182,7 +182,7 @@ public class HtmlReaderTest {
   public void read10() throws IOException {
     test(
         evts(
-            new RenderTextEvent(0, "x"),
+            new EmitTextEvent(0, "x"),
             new EndDocumentEvent(false)
         ),
 
@@ -246,7 +246,7 @@ public class HtmlReaderTest {
   public void read14() throws IOException {
     test(
         evts(
-            new RenderTextEvent(0, "abcdefg"),
+            new EmitTextEvent(0, "abcdefg"),
             new EndDocumentEvent(false)
         ),
 

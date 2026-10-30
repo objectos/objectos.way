@@ -39,8 +39,8 @@ final class ScanElementNodeState implements State {
       final ElementName elementName;
       elementName = elem.elementName;
 
-      final RenderEndTagState state;
-      state = new RenderEndTagState(ctx, elementName);
+      final EmitEndTagState state;
+      state = new EmitEndTagState(ctx, elementName);
 
       return state.compute();
     }

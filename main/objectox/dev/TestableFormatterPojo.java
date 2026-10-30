@@ -39,6 +39,26 @@ public final class TestableFormatterPojo implements TestableFormatter {
   }
 
   @Override
+  public final void h3(String value) {
+    h(3, value);
+  }
+
+  @Override
+  public final void h4(String value) {
+    h(4, value);
+  }
+
+  @Override
+  public final void h5(String value) {
+    h(5, value);
+  }
+
+  @Override
+  public final void h6(String value) {
+    h(6, value);
+  }
+
+  @Override
   public final void list(Consumer<? super TestableListFormatter> format) {
     final TestableList list;
     list = new TestableList();

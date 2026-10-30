@@ -63,7 +63,7 @@ public class MergeAttributeStateTest {
             f.values8(1, 1);
           });
 
-          opts.result(new RenderAttributeEvent(0, AttributeName.CLASS, "c1"));
+          opts.result(new EmitAttributeEvent(0, AttributeName.CLASS, "c1"));
         })
     );
   }
@@ -112,7 +112,7 @@ public class MergeAttributeStateTest {
             f.values8(1, 2);
           });
 
-          opts.result(new RenderAttributeEvent(0, AttributeName.CLASS, "c1"));
+          opts.result(new EmitAttributeEvent(0, AttributeName.CLASS, "c1"));
         })
     );
   }

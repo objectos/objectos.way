@@ -130,7 +130,7 @@ class Ctx {
     code = nextByte();
 
     return switch (code) {
-      case HtmlBytes.DOCTYPE -> new RenderDoctypeState(this);
+      case HtmlBytes.DOCTYPE -> new EmitDoctypeState(this);
 
       case HtmlBytes.ELEMSTR8 -> new BeginStartTagState(this, ScanLevel.TOP_LEVEL, ElementKind.REGULAR, IntSize.BIT8);
       case HtmlBytes.ELEMVOID8 -> new BeginStartTagState(this, ScanLevel.TOP_LEVEL, ElementKind.VOID, IntSize.BIT8);
@@ -138,60 +138,60 @@ class Ctx {
       case HtmlBytes.FRAGSTR -> new SkipState(this, 3);
       case HtmlBytes.FRAGEND -> new ScanDocumentNodeState(this);
 
-      case HtmlBytes.TEXT8 -> new RenderTextState(this, ScanLevel.TOP_LEVEL, IntSize.BIT8);
-      case HtmlBytes.TEXT16 -> new RenderTextState(this, ScanLevel.TOP_LEVEL, IntSize.BIT16);
-      case HtmlBytes.TEXT24 -> new RenderTextState(this, ScanLevel.TOP_LEVEL, IntSize.BIT24);
+      case HtmlBytes.TEXT8 -> new EmitTextState(this, ScanLevel.TOP_LEVEL, IntSize.BIT8);
+      case HtmlBytes.TEXT16 -> new EmitTextState(this, ScanLevel.TOP_LEVEL, IntSize.BIT16);
+      case HtmlBytes.TEXT24 -> new EmitTextState(this, ScanLevel.TOP_LEVEL, IntSize.BIT24);
 
-      case HtmlBytes.RAW8 -> new RenderRawState(this, ScanLevel.TOP_LEVEL, IntSize.BIT8);
-      case HtmlBytes.RAW16 -> new RenderRawState(this, ScanLevel.TOP_LEVEL, IntSize.BIT16);
-      case HtmlBytes.RAW24 -> new RenderRawState(this, ScanLevel.TOP_LEVEL, IntSize.BIT24);
+      case HtmlBytes.RAW8 -> new EmitRawState(this, ScanLevel.TOP_LEVEL, IntSize.BIT8);
+      case HtmlBytes.RAW16 -> new EmitRawState(this, ScanLevel.TOP_LEVEL, IntSize.BIT16);
+      case HtmlBytes.RAW24 -> new EmitRawState(this, ScanLevel.TOP_LEVEL, IntSize.BIT24);
 
-      case HtmlBytes.THEADING8 -> new TestableHeadingState(this, TestableLevel.TOP_LEVEL, IntSize.BIT8);
-      case HtmlBytes.THEADING16 -> new TestableHeadingState(this, TestableLevel.TOP_LEVEL, IntSize.BIT16);
-      case HtmlBytes.THEADING24 -> new TestableHeadingState(this, TestableLevel.TOP_LEVEL, IntSize.BIT24);
+      case HtmlBytes.THEADING8 -> new EmitTestableHeadingState(this, TestableLevel.TOP_LEVEL, IntSize.BIT8);
+      case HtmlBytes.THEADING16 -> new EmitTestableHeadingState(this, TestableLevel.TOP_LEVEL, IntSize.BIT16);
+      case HtmlBytes.THEADING24 -> new EmitTestableHeadingState(this, TestableLevel.TOP_LEVEL, IntSize.BIT24);
 
-      case HtmlBytes.TCELL8 -> new TestableCellState(this, TestableLevel.TOP_LEVEL, IntSize.BIT8);
-      case HtmlBytes.TCELL16 -> new TestableCellState(this, TestableLevel.TOP_LEVEL, IntSize.BIT16);
-      case HtmlBytes.TCELL24 -> new TestableCellState(this, TestableLevel.TOP_LEVEL, IntSize.BIT24);
+      case HtmlBytes.TCELL8 -> new EmitTestableCellState(this, TestableLevel.TOP_LEVEL, IntSize.BIT8);
+      case HtmlBytes.TCELL16 -> new EmitTestableCellState(this, TestableLevel.TOP_LEVEL, IntSize.BIT16);
+      case HtmlBytes.TCELL24 -> new EmitTestableCellState(this, TestableLevel.TOP_LEVEL, IntSize.BIT24);
 
       case HtmlBytes.xELEMSTR8 -> new BeginStartTagState(this, ScanLevel.NESTED, ElementKind.REGULAR, IntSize.BIT8);
       case HtmlBytes.xELEMVOID8 -> new BeginStartTagState(this, ScanLevel.NESTED, ElementKind.VOID, IntSize.BIT8);
 
-      case HtmlBytes.xATTRIBUTE88 -> new RenderAttributeState(this, IntSize.BIT8, IntSize.BIT8);
-      case HtmlBytes.xATTRIBUTE816 -> new RenderAttributeState(this, IntSize.BIT8, IntSize.BIT16);
-      case HtmlBytes.xATTRIBUTE824 -> new RenderAttributeState(this, IntSize.BIT8, IntSize.BIT24);
+      case HtmlBytes.xATTRIBUTE88 -> new EmitAttributeState(this, IntSize.BIT8, IntSize.BIT8);
+      case HtmlBytes.xATTRIBUTE816 -> new EmitAttributeState(this, IntSize.BIT8, IntSize.BIT16);
+      case HtmlBytes.xATTRIBUTE824 -> new EmitAttributeState(this, IntSize.BIT8, IntSize.BIT24);
 
-      case HtmlBytes.xBOOLEAN8 -> new RenderBooleanAttributeState(this, IntSize.BIT8);
+      case HtmlBytes.xBOOLEAN8 -> new EmitBooleanAttributeState(this, IntSize.BIT8);
 
-      case HtmlBytes.xJSACTION88 -> new RenderJsActionAttributeState(this, IntSize.BIT8, IntSize.BIT8);
-      case HtmlBytes.xJSACTION816 -> new RenderJsActionAttributeState(this, IntSize.BIT8, IntSize.BIT16);
-      case HtmlBytes.xJSACTION824 -> new RenderJsActionAttributeState(this, IntSize.BIT8, IntSize.BIT24);
+      case HtmlBytes.xJSACTION88 -> new EmitJsActionAttributeState(this, IntSize.BIT8, IntSize.BIT8);
+      case HtmlBytes.xJSACTION816 -> new EmitJsActionAttributeState(this, IntSize.BIT8, IntSize.BIT16);
+      case HtmlBytes.xJSACTION824 -> new EmitJsActionAttributeState(this, IntSize.BIT8, IntSize.BIT24);
 
       case HtmlBytes.xFRAGSTR -> new SkipFragmentState(this);
 
-      case HtmlBytes.xTEXT8 -> new RenderTextState(this, ScanLevel.NESTED, IntSize.BIT8);
-      case HtmlBytes.xTEXT16 -> new RenderTextState(this, ScanLevel.NESTED, IntSize.BIT16);
-      case HtmlBytes.xTEXT24 -> new RenderTextState(this, ScanLevel.NESTED, IntSize.BIT24);
+      case HtmlBytes.xTEXT8 -> new EmitTextState(this, ScanLevel.NESTED, IntSize.BIT8);
+      case HtmlBytes.xTEXT16 -> new EmitTextState(this, ScanLevel.NESTED, IntSize.BIT16);
+      case HtmlBytes.xTEXT24 -> new EmitTextState(this, ScanLevel.NESTED, IntSize.BIT24);
 
-      case HtmlBytes.xRAW8 -> new RenderRawState(this, ScanLevel.NESTED, IntSize.BIT8);
-      case HtmlBytes.xRAW16 -> new RenderRawState(this, ScanLevel.NESTED, IntSize.BIT16);
-      case HtmlBytes.xRAW24 -> new RenderRawState(this, ScanLevel.NESTED, IntSize.BIT24);
+      case HtmlBytes.xRAW8 -> new EmitRawState(this, ScanLevel.NESTED, IntSize.BIT8);
+      case HtmlBytes.xRAW16 -> new EmitRawState(this, ScanLevel.NESTED, IntSize.BIT16);
+      case HtmlBytes.xRAW24 -> new EmitRawState(this, ScanLevel.NESTED, IntSize.BIT24);
 
-      case HtmlBytes.xTHEADING8 -> new TestableHeadingState(this, TestableLevel.REGULAR, IntSize.BIT8);
-      case HtmlBytes.xTHEADING16 -> new TestableHeadingState(this, TestableLevel.REGULAR, IntSize.BIT16);
-      case HtmlBytes.xTHEADING24 -> new TestableHeadingState(this, TestableLevel.REGULAR, IntSize.BIT24);
+      case HtmlBytes.xTHEADING8 -> new EmitTestableHeadingState(this, TestableLevel.REGULAR, IntSize.BIT8);
+      case HtmlBytes.xTHEADING16 -> new EmitTestableHeadingState(this, TestableLevel.REGULAR, IntSize.BIT16);
+      case HtmlBytes.xTHEADING24 -> new EmitTestableHeadingState(this, TestableLevel.REGULAR, IntSize.BIT24);
 
-      case HtmlBytes.xTCELL8 -> new TestableCellState(this, TestableLevel.REGULAR, IntSize.BIT8);
-      case HtmlBytes.xTCELL16 -> new TestableCellState(this, TestableLevel.REGULAR, IntSize.BIT16);
-      case HtmlBytes.xTCELL24 -> new TestableCellState(this, TestableLevel.REGULAR, IntSize.BIT24);
+      case HtmlBytes.xTCELL8 -> new EmitTestableCellState(this, TestableLevel.REGULAR, IntSize.BIT8);
+      case HtmlBytes.xTCELL16 -> new EmitTestableCellState(this, TestableLevel.REGULAR, IntSize.BIT16);
+      case HtmlBytes.xTCELL24 -> new EmitTestableCellState(this, TestableLevel.REGULAR, IntSize.BIT24);
 
-      case HtmlBytes.oTHEADING8 -> new TestableHeadingState(this, TestableLevel.TEST_ONLY, IntSize.BIT8);
-      case HtmlBytes.oTHEADING16 -> new TestableHeadingState(this, TestableLevel.TEST_ONLY, IntSize.BIT16);
-      case HtmlBytes.oTHEADING24 -> new TestableHeadingState(this, TestableLevel.TEST_ONLY, IntSize.BIT24);
+      case HtmlBytes.oTHEADING8 -> new EmitTestableHeadingState(this, TestableLevel.TEST_ONLY, IntSize.BIT8);
+      case HtmlBytes.oTHEADING16 -> new EmitTestableHeadingState(this, TestableLevel.TEST_ONLY, IntSize.BIT16);
+      case HtmlBytes.oTHEADING24 -> new EmitTestableHeadingState(this, TestableLevel.TEST_ONLY, IntSize.BIT24);
 
-      case HtmlBytes.oTCELL8 -> new TestableCellState(this, TestableLevel.TEST_ONLY, IntSize.BIT8);
-      case HtmlBytes.oTCELL16 -> new TestableCellState(this, TestableLevel.TEST_ONLY, IntSize.BIT16);
-      case HtmlBytes.oTCELL24 -> new TestableCellState(this, TestableLevel.TEST_ONLY, IntSize.BIT24);
+      case HtmlBytes.oTCELL8 -> new EmitTestableCellState(this, TestableLevel.TEST_ONLY, IntSize.BIT8);
+      case HtmlBytes.oTCELL16 -> new EmitTestableCellState(this, TestableLevel.TEST_ONLY, IntSize.BIT16);
+      case HtmlBytes.oTCELL24 -> new EmitTestableCellState(this, TestableLevel.TEST_ONLY, IntSize.BIT24);
 
       default -> throw State.malformed();
     };

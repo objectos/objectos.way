@@ -56,8 +56,8 @@ public class ScanElementNodeStateTest {
             f.values8(1, 1);
           });
 
-          final RenderEndTagEvent event;
-          event = new RenderEndTagEvent(0, ElementName.DIV);
+          final EmitEndTagEvent event;
+          event = new EmitEndTagEvent(0, ElementName.DIV);
 
           opts.result(event);
         },
@@ -72,21 +72,21 @@ public class ScanElementNodeStateTest {
         {HtmlBytes.xELEMSTR8, s(ctx -> new BeginStartTagState(ctx, ScanLevel.NESTED, ElementKind.REGULAR, IntSize.BIT8))},
         {HtmlBytes.xELEMVOID8, s(ctx -> new BeginStartTagState(ctx, ScanLevel.NESTED, ElementKind.VOID, IntSize.BIT8))},
 
-        {HtmlBytes.xTEXT8, s(ctx -> new RenderTextState(ctx, ScanLevel.NESTED, IntSize.BIT8))},
-        {HtmlBytes.xTEXT16, s(ctx -> new RenderTextState(ctx, ScanLevel.NESTED, IntSize.BIT16))},
-        {HtmlBytes.xTEXT24, s(ctx -> new RenderTextState(ctx, ScanLevel.NESTED, IntSize.BIT24))},
+        {HtmlBytes.xTEXT8, s(ctx -> new EmitTextState(ctx, ScanLevel.NESTED, IntSize.BIT8))},
+        {HtmlBytes.xTEXT16, s(ctx -> new EmitTextState(ctx, ScanLevel.NESTED, IntSize.BIT16))},
+        {HtmlBytes.xTEXT24, s(ctx -> new EmitTextState(ctx, ScanLevel.NESTED, IntSize.BIT24))},
 
-        {HtmlBytes.xRAW8, s(ctx -> new RenderRawState(ctx, ScanLevel.NESTED, IntSize.BIT8))},
-        {HtmlBytes.xRAW16, s(ctx -> new RenderRawState(ctx, ScanLevel.NESTED, IntSize.BIT16))},
-        {HtmlBytes.xRAW24, s(ctx -> new RenderRawState(ctx, ScanLevel.NESTED, IntSize.BIT24))},
+        {HtmlBytes.xRAW8, s(ctx -> new EmitRawState(ctx, ScanLevel.NESTED, IntSize.BIT8))},
+        {HtmlBytes.xRAW16, s(ctx -> new EmitRawState(ctx, ScanLevel.NESTED, IntSize.BIT16))},
+        {HtmlBytes.xRAW24, s(ctx -> new EmitRawState(ctx, ScanLevel.NESTED, IntSize.BIT24))},
 
-        {HtmlBytes.xTHEADING8, s(ctx -> new TestableHeadingState(ctx, TestableLevel.REGULAR, IntSize.BIT8))},
-        {HtmlBytes.xTHEADING16, s(ctx -> new TestableHeadingState(ctx, TestableLevel.REGULAR, IntSize.BIT16))},
-        {HtmlBytes.xTHEADING24, s(ctx -> new TestableHeadingState(ctx, TestableLevel.REGULAR, IntSize.BIT24))},
+        {HtmlBytes.xTHEADING8, s(ctx -> new EmitTestableHeadingState(ctx, TestableLevel.REGULAR, IntSize.BIT8))},
+        {HtmlBytes.xTHEADING16, s(ctx -> new EmitTestableHeadingState(ctx, TestableLevel.REGULAR, IntSize.BIT16))},
+        {HtmlBytes.xTHEADING24, s(ctx -> new EmitTestableHeadingState(ctx, TestableLevel.REGULAR, IntSize.BIT24))},
 
-        {HtmlBytes.xTCELL8, s(ctx -> new TestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT8))},
-        {HtmlBytes.xTCELL16, s(ctx -> new TestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT16))},
-        {HtmlBytes.xTCELL24, s(ctx -> new TestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT24))}
+        {HtmlBytes.xTCELL8, s(ctx -> new EmitTestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT8))},
+        {HtmlBytes.xTCELL16, s(ctx -> new EmitTestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT16))},
+        {HtmlBytes.xTCELL24, s(ctx -> new EmitTestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT24))}
     };
   }
 
@@ -258,8 +258,8 @@ public class ScanElementNodeStateTest {
             f.values8(1, 1);
           });
 
-          final RenderEndTagEvent event;
-          event = new RenderEndTagEvent(1, ElementName.DIV);
+          final EmitEndTagEvent event;
+          event = new EmitEndTagEvent(1, ElementName.DIV);
 
           opts.result(event);
         },

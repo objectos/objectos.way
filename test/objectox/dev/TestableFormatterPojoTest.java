@@ -26,12 +26,20 @@ public class TestableFormatterPojoTest {
 
   private final BiConsumer<TestableFormatterPojo, String> h1 = (subject, value) -> subject.h1(value);
   private final BiConsumer<TestableFormatterPojo, String> h2 = (subject, value) -> subject.h2(value);
+  private final BiConsumer<TestableFormatterPojo, String> h3 = (subject, value) -> subject.h3(value);
+  private final BiConsumer<TestableFormatterPojo, String> h4 = (subject, value) -> subject.h4(value);
+  private final BiConsumer<TestableFormatterPojo, String> h5 = (subject, value) -> subject.h5(value);
+  private final BiConsumer<TestableFormatterPojo, String> h6 = (subject, value) -> subject.h6(value);
 
   @DataProvider
   public Object[][] heading01Provider() {
     return new Object[][] {
         {h1, "# Title"},
-        {h2, "## Title"}
+        {h2, "## Title"},
+        {h3, "### Title"},
+        {h4, "#### Title"},
+        {h5, "##### Title"},
+        {h6, "###### Title"}
     };
   }
 

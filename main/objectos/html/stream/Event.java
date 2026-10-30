@@ -21,14 +21,14 @@ public sealed interface Event
     BeginStartTag,
     EndDocument,
     EndStartTag,
-    RenderAttribute,
-    RenderBooleanAttribute,
-    RenderDoctype,
-    RenderEndTag,
-    RenderJsActionAttribute,
-    RenderRaw,
-    RenderTestable,
-    RenderText {
+    EmitAttribute,
+    EmitBooleanAttribute,
+    EmitDoctype,
+    EmitEndTag,
+    EmitJsActionAttribute,
+    EmitRaw,
+    EmitTestable,
+    EmitText {
 
   /// Returns the nesting level of this event.
   ///

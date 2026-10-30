@@ -16,18 +16,18 @@
 package objectox.html.format;
 
 import objectos.html.stream.BeginStartTag;
+import objectos.html.stream.EmitAttribute;
+import objectos.html.stream.EmitBooleanAttribute;
+import objectos.html.stream.EmitDoctype;
+import objectos.html.stream.EmitEndTag;
+import objectos.html.stream.EmitJsActionAttribute;
+import objectos.html.stream.EmitRaw;
+import objectos.html.stream.EmitTestable;
+import objectos.html.stream.EmitTestableCell;
+import objectos.html.stream.EmitTestableHeading;
+import objectos.html.stream.EmitText;
 import objectos.html.stream.EndDocument;
 import objectos.html.stream.EndStartTag;
-import objectos.html.stream.RenderAttribute;
-import objectos.html.stream.RenderBooleanAttribute;
-import objectos.html.stream.RenderDoctype;
-import objectos.html.stream.RenderEndTag;
-import objectos.html.stream.RenderJsActionAttribute;
-import objectos.html.stream.RenderRaw;
-import objectos.html.stream.RenderTestable;
-import objectos.html.stream.RenderText;
-import objectos.html.stream.TestableCell;
-import objectos.html.stream.TestableHeading;
 
 public final class TestableFormatter extends BaseFormatter {
 
@@ -37,42 +37,42 @@ public final class TestableFormatter extends BaseFormatter {
   final void beginStartTag(BeginStartTag event, Output out) {}
 
   @Override
+  final void emitAttribute(EmitAttribute attr, Output out) {}
+
+  @Override
+  final void emitBooleanAttribute(EmitBooleanAttribute attr, Output out) {}
+
+  @Override
+  final void emitDoctype(EmitDoctype event, Output out) {}
+
+  @Override
+  final void emitEndTag(EmitEndTag endTag, Output out) {}
+
+  @Override
+  final void emitJsActionAttribute(EmitJsActionAttribute attr, Output out) {}
+
+  @Override
+  final void emitRaw(EmitRaw raw, Output out) {}
+
+  @Override
+  final void emitTestable(EmitTestable event, Output out) {
+    switch (event) {
+      case EmitTestableCell _ -> {}
+
+      case EmitTestableHeading heading -> emitHeading(heading, out);
+    }
+  }
+
+  @Override
+  final void emitText(EmitText text, Output out) {}
+
+  @Override
   final void endDocument(EndDocument event, Output out) {}
 
   @Override
   final void endStartTag(EndStartTag event, Output out) {}
 
-  @Override
-  final void renderAttribute(RenderAttribute attr, Output out) {}
-
-  @Override
-  final void renderBooleanAttribute(RenderBooleanAttribute attr, Output out) {}
-
-  @Override
-  final void renderDoctype(RenderDoctype event, Output out) {}
-
-  @Override
-  final void renderEndTag(RenderEndTag endTag, Output out) {}
-
-  @Override
-  final void renderJsActionAttribute(RenderJsActionAttribute attr, Output out) {}
-
-  @Override
-  final void renderRaw(RenderRaw raw, Output out) {}
-
-  @Override
-  final void renderTestable(RenderTestable event, Output out) {
-    switch (event) {
-      case TestableCell _ -> {}
-
-      case TestableHeading heading -> renderHeading(heading, out);
-    }
-  }
-
-  @Override
-  final void renderText(RenderText text, Output out) {}
-
-  private void renderHeading(TestableHeading heading, Output out) {
+  private void emitHeading(EmitTestableHeading heading, Output out) {
     final int level;
     level = heading.heading();
 

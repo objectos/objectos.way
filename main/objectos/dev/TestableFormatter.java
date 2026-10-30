@@ -22,15 +22,35 @@ import objectox.dev.TestableFormatterPojo;
 /// Formats a string representation that is suitable for a testable object.
 public sealed interface TestableFormatter permits TestableFormatterPojo {
 
-  /// Formats the specified string a level 1 heading.
+  /// Formats a level 1 heading.
   ///
   /// @param value the heading text
   void h1(String value);
 
-  /// Formats the specified string a level 2 heading.
+  /// Formats a level 2 heading.
   ///
   /// @param value the heading text
   void h2(String value);
+
+  /// Formats a level 3 heading.
+  ///
+  /// @param value the heading text
+  void h3(String value);
+
+  /// Formats a level 4 heading.
+  ///
+  /// @param value the heading text
+  void h4(String value);
+
+  /// Formats a level 5 heading.
+  ///
+  /// @param value the heading text
+  void h5(String value);
+
+  /// Formats a level 6 heading.
+  ///
+  /// @param value the heading text
+  void h6(String value);
 
   /// Formats a list of items.
   ///

@@ -89,7 +89,7 @@ final class ScanElementAttributeState implements State {
 
         ctx.result(event);
 
-        yield new RenderEndTagState(ctx, elementName);
+        yield new EmitEndTagState(ctx, elementName);
       }
 
       case VOID -> {

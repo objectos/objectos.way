@@ -24,17 +24,17 @@ import objectos.script.JsAction;
 import objectox.html.attr.AttributeName;
 import objectox.html.elem.ElementName;
 import objectox.html.stream.BeginStartTagEvent;
+import objectox.html.stream.EmitAttributeEvent;
+import objectox.html.stream.EmitBooleanAttributeEvent;
+import objectox.html.stream.EmitDoctypeEvent;
+import objectox.html.stream.EmitEndTagEvent;
+import objectox.html.stream.EmitJsActionAttributeEvent;
+import objectox.html.stream.EmitRawEvent;
+import objectox.html.stream.EmitTestableCellEvent;
+import objectox.html.stream.EmitTestableHeadingEvent;
+import objectox.html.stream.EmitTextEvent;
 import objectox.html.stream.EndDocumentEvent;
 import objectox.html.stream.EndStartTagEvent;
-import objectox.html.stream.RenderAttributeEvent;
-import objectox.html.stream.RenderBooleanAttributeEvent;
-import objectox.html.stream.RenderDoctypeEvent;
-import objectox.html.stream.RenderEndTagEvent;
-import objectox.html.stream.RenderJsActionAttributeEvent;
-import objectox.html.stream.RenderRawEvent;
-import objectox.html.stream.RenderTextEvent;
-import objectox.html.stream.TestableCellEvent;
-import objectox.html.stream.TestableHeadingEvent;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -62,56 +62,56 @@ public class StandardFormatterTest {
         >\
         """
     }, {
-        new RenderAttributeEvent(0, AttributeName.ID, "foo"),
+        new EmitAttributeEvent(0, AttributeName.ID, "foo"),
         """
          id="foo"\
         """
     }, {
-        new RenderAttributeEvent(0, AttributeName.ID, "a\"b&c<d>e"),
+        new EmitAttributeEvent(0, AttributeName.ID, "a\"b&c<d>e"),
         """
          id="a&quot;b&amp;c&lt;d&gt;e"\
         """
     }, {
-        new RenderBooleanAttributeEvent(0, AttributeName.AUTOFOCUS),
+        new EmitBooleanAttributeEvent(0, AttributeName.AUTOFOCUS),
         """
          autofocus\
         """
     }, {
-        new RenderDoctypeEvent(0),
+        new EmitDoctypeEvent(0),
         """
         <!DOCTYPE html>\
         """
     }, {
-        new RenderEndTagEvent(0, ElementName.DIV),
+        new EmitEndTagEvent(0, ElementName.DIV),
         """
         </div>\
         """
     }, {
-        new RenderJsActionAttributeEvent(0, AttributeName.ONCLICK, action),
+        new EmitJsActionAttributeEvent(0, AttributeName.ONCLICK, action),
         """
          onclick='way.on(event,["NO"])'\
         """
     }, {
-        new RenderRawEvent(0, "<br/>"),
+        new EmitRawEvent(0, "<br/>"),
         """
         <br/>\
         """
     }, {
-        new RenderTextEvent(0, "<xml></xml>&copy;"),
+        new EmitTextEvent(0, "<xml></xml>&copy;"),
         """
         &lt;xml&gt;&lt;/xml&gt;&amp;copy;\
         """
     }, {
-        new RenderTextEvent(0, "a\nb"),
+        new EmitTextEvent(0, "a\nb"),
         """
         a
         b\
         """
     }, {
-        new TestableCellEvent(0, 10, "foo"),
+        new EmitTestableCellEvent(0, 10, "foo"),
         ""
     }, {
-        new TestableHeadingEvent(0, 1, "foo"),
+        new EmitTestableHeadingEvent(0, 1, "foo"),
         ""
     }};
   }
