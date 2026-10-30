@@ -32,6 +32,18 @@ import objectox.dev.TestableHeading;
 
 public final class TestableFormatter extends BaseFormatter {
 
+  private enum State {
+
+    EMPTY,
+
+    CONTENT,
+
+    ROW;
+
+  }
+
+  private State state = State.EMPTY;
+
   public TestableFormatter() {}
 
   @Override
@@ -58,7 +70,7 @@ public final class TestableFormatter extends BaseFormatter {
   @Override
   final void emitTestable(EmitTestable event, Output out) {
     switch (event) {
-      case EmitTestableCell _ -> {}
+      case EmitTestableCell cell -> emitCell(cell, out);
 
       case EmitTestableHeading heading -> emitHeading(heading, out);
     }
@@ -68,12 +80,49 @@ public final class TestableFormatter extends BaseFormatter {
   final void emitText(EmitText text, Output out) {}
 
   @Override
-  final void endDocument(EndDocument event, Output out) {}
+  final void endDocument(EndDocument event, Output out) {
+    switch (state) {
+      case ROW -> {
+        out.append(" |\n");
+
+        state = State.CONTENT;
+      }
+
+      case EMPTY, CONTENT -> {}
+    }
+  }
 
   @Override
   final void endStartTag(EndStartTag event, Output out) {}
 
+  private void emitCell(EmitTestableCell cell, Output out) {
+    switch (state) {
+      case EMPTY -> out.append("| ");
+
+      case CONTENT -> out.append("\n| ");
+
+      case ROW -> out.append(" | ");
+    }
+
+    state = State.ROW;
+
+    final String value;
+    value = cell.value();
+
+    out.append(value);
+  }
+
   private void emitHeading(EmitTestableHeading heading, Output out) {
+    switch (state) {
+      case EMPTY -> {}
+
+      case CONTENT -> out.append('\n');
+
+      case ROW -> out.append(" |\n\n");
+    }
+
+    state = State.CONTENT;
+
     final int level;
     level = heading.heading();
 
@@ -87,8 +136,6 @@ public final class TestableFormatter extends BaseFormatter {
     s = testable.toString();
 
     out.append(s);
-
-    out.append('\n');
 
     out.append('\n');
   }
