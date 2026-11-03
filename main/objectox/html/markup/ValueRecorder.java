@@ -83,6 +83,8 @@ final class ValueRecorder {
       case HtmlBytes.TCELL16 -> HtmlBytes.xTCELL16;
       case HtmlBytes.TCELL24 -> HtmlBytes.xTCELL24;
 
+      case HtmlBytes.TROW -> HtmlBytes.xTROW;
+
       case HtmlBytes.xELEMSTR8 -> HtmlBytes.xELEMSTR8;
       case HtmlBytes.xELEMVOID8 -> HtmlBytes.xELEMVOID8;
 
@@ -110,6 +112,8 @@ final class ValueRecorder {
       case HtmlBytes.xTCELL8 -> HtmlBytes.xTCELL8;
       case HtmlBytes.xTCELL16 -> HtmlBytes.xTCELL16;
       case HtmlBytes.xTCELL24 -> HtmlBytes.xTCELL24;
+
+      case HtmlBytes.xTROW -> HtmlBytes.xTROW;
 
       case HtmlBytes.oTHEADING8 -> HtmlBytes.oTHEADING8;
       case HtmlBytes.oTHEADING16 -> HtmlBytes.oTHEADING16;

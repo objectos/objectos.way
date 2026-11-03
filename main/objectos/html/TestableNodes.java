@@ -34,8 +34,8 @@ public sealed interface TestableNodes permits MarkupTestableNodes {
   ///
   /// @return an object representing the encoded testable node
   ///
-  /// @throws IllegalArgumentException if the width is not greater than zero
-  /// or if the value is longer than the width
+  /// @throws IllegalArgumentException if the width is negative
+  ///         or if the value is longer than the width
   /// @throws NullPointerException if the value is null
   TestableMarkup cell(int width, String value);
 
@@ -80,5 +80,12 @@ public sealed interface TestableNodes permits MarkupTestableNodes {
   ///
   /// @return an object representing the encoded testable node
   TestableMarkup h6(String value);
+
+  /// Encodes a testable-only node which marks the beginning of a testable row.
+  ///
+  /// This node does not produce any HTML output.
+  ///
+  /// @return an object representing the encoded testable node
+  TestableMarkup row();
 
 }

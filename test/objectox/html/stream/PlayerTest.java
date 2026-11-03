@@ -838,4 +838,50 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), false);
   }
 
+  @Test(description = """
+  testable row:
+  - document level
+  """)
+  public void testable08() {
+    final Player subject;
+    subject = PlayerY.create(opts -> {
+      opts.addByte(HtmlBytes.TROW);
+    });
+
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new BeginTestableRowEvent(0));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EndDocumentEvent(false));
+    assertEquals(subject.hasNext(), false);
+  }
+
+  @Test(description = """
+  testable row:
+  - element child
+  """)
+  public void testable09() {
+    final Player subject;
+    subject = PlayerY.create(opts -> {
+      opts.addByte(HtmlBytes.xTROW);
+
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.DIV.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+    });
+
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new BeginStartTagEvent(0, ElementName.DIV));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EndStartTagEvent(0, EndStartTagKind.ELEMENT));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new BeginTestableRowEvent(1));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EmitEndTagEvent(0, ElementName.DIV));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EndDocumentEvent(false));
+    assertEquals(subject.hasNext(), false);
+  }
+
 }

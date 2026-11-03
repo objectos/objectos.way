@@ -24,6 +24,7 @@ import objectos.script.JsAction;
 import objectox.html.attr.AttributeName;
 import objectox.html.elem.ElementName;
 import objectox.html.stream.BeginStartTagEvent;
+import objectox.html.stream.BeginTestableRowEvent;
 import objectox.html.stream.EmitAttributeEvent;
 import objectox.html.stream.EmitBooleanAttributeEvent;
 import objectox.html.stream.EmitDoctypeEvent;
@@ -355,6 +356,118 @@ public class TestableFormatterTest {
 
   @Test(dataProvider = "testCase03Provider")
   public void testCase03(Event[] events, String expected) {
+    test(events, expected);
+  }
+
+  @DataProvider
+  public Object[][] testCase04Provider() {
+    return new Object[][] {
+        {
+            evts(new BeginTestableRowEvent(0)),
+            ""
+        },
+        {
+            evts(
+                new BeginTestableRowEvent(0),
+                new EmitTestableCellEvent(0, "1"),
+                new EndDocumentEvent(false)
+            ),
+            """
+            | 1 |
+            """
+        },
+        {
+            evts(
+                new EmitTestableCellEvent(0, "1"),
+                new BeginTestableRowEvent(0),
+                new EmitTestableCellEvent(0, "2"),
+                new EndDocumentEvent(false)
+            ),
+            """
+            | 1 |
+            | 2 |
+            """
+        },
+        {
+            evts(
+                new EmitTestableCellEvent(0, "1"),
+                new EmitTestableCellEvent(0, "2"),
+                new BeginTestableRowEvent(0),
+                new EmitTestableCellEvent(0, "3"),
+                new EndDocumentEvent(false)
+            ),
+            """
+            | 1 | 2 |
+            | 3 |
+            """
+        },
+        {
+            evts(
+                new EmitTestableCellEvent(0, "1"),
+                new BeginTestableRowEvent(0),
+                new EmitTestableHeadingEvent(0, 2, "Heading 2"),
+                new BeginTestableRowEvent(0),
+                new EmitTestableCellEvent(0, "2"),
+                new EndDocumentEvent(false)
+            ),
+            """
+            | 1 |
+
+            ## Heading 2
+
+            | 2 |
+            """
+        },
+        {
+            evts(
+                new EmitTestableHeadingEvent(0, 2, "Heading 2"),
+                new BeginTestableRowEvent(0),
+                new EmitTestableCellEvent(0, "1"),
+                new EndDocumentEvent(false)
+            ),
+            """
+            ## Heading 2
+
+            | 1 |
+            """
+        },
+        {
+            evts(
+                new BeginTestableRowEvent(0),
+                new EmitTestableHeadingEvent(0, 2, "Heading 2")
+            ),
+            """
+            ## Heading 2
+            """
+        },
+        {
+            evts(
+                new EmitTestableCellEvent(0, "1"),
+                new BeginTestableRowEvent(0),
+                new BeginTestableRowEvent(0),
+                new EmitTestableCellEvent(0, "2"),
+                new EndDocumentEvent(false)
+            ),
+            """
+            | 1 |
+            | 2 |
+            """
+        },
+        {
+            evts(
+                new EmitTestableCellEvent(0, "1"),
+                new BeginTestableRowEvent(0),
+                new EndDocumentEvent(false)
+            ),
+            """
+            | 1 |
+            """
+        }
+    };
+  }
+
+  @Test(dataProvider = "testCase04Provider")
+  public void testCase04(Event[] events, String expected) {
     test(events, expected);
   }
 

@@ -154,6 +154,8 @@ class Ctx {
       case HtmlBytes.TCELL16 -> new EmitTestableCellState(this, TestableLevel.TOP_LEVEL, IntSize.BIT16);
       case HtmlBytes.TCELL24 -> new EmitTestableCellState(this, TestableLevel.TOP_LEVEL, IntSize.BIT24);
 
+      case HtmlBytes.TROW -> new BeginTestableRowState(this, ScanLevel.TOP_LEVEL);
+
       case HtmlBytes.xELEMSTR8 -> new BeginStartTagState(this, ScanLevel.NESTED, ElementKind.REGULAR, IntSize.BIT8);
       case HtmlBytes.xELEMVOID8 -> new BeginStartTagState(this, ScanLevel.NESTED, ElementKind.VOID, IntSize.BIT8);
 
@@ -184,6 +186,8 @@ class Ctx {
       case HtmlBytes.xTCELL8 -> new EmitTestableCellState(this, TestableLevel.REGULAR, IntSize.BIT8);
       case HtmlBytes.xTCELL16 -> new EmitTestableCellState(this, TestableLevel.REGULAR, IntSize.BIT16);
       case HtmlBytes.xTCELL24 -> new EmitTestableCellState(this, TestableLevel.REGULAR, IntSize.BIT24);
+
+      case HtmlBytes.xTROW -> new BeginTestableRowState(this, ScanLevel.NESTED);
 
       case HtmlBytes.oTHEADING8 -> new EmitTestableHeadingState(this, TestableLevel.TEST_ONLY, IntSize.BIT8);
       case HtmlBytes.oTHEADING16 -> new EmitTestableHeadingState(this, TestableLevel.TEST_ONLY, IntSize.BIT16);

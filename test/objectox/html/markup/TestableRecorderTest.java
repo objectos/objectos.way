@@ -246,6 +246,37 @@ public class TestableRecorderTest {
     );
   }
 
+  @Test(description = "a testable row is recorded with the TROW opcode")
+  public void row01() {
+    test(
+        _ -> {},
+
+        subject -> subject.row(),
+        0,
+
+        opts -> {
+          opts.addByte(HtmlBytes.TROW);
+        }
+    );
+  }
+
+  @Test(description = "the returned testable row pointer is the first available index in the code array")
+  public void row02() {
+    test(
+        opts -> {
+          opts.addInt24(0);
+        },
+
+        subject -> subject.row(),
+        3,
+
+        opts -> {
+          opts.addInt24(0);
+          opts.addByte(HtmlBytes.TROW);
+        }
+    );
+  }
+
   private void test(
       Consumer<? super HtmlSink> input,
       Function<? super TestableRecorder, ? extends TestableMarkupPointer> action,

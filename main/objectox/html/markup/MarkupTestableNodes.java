@@ -61,4 +61,9 @@ public final class MarkupTestableNodes implements TestableNodes {
     return recorder.heading(6, value);
   }
 
+  @Override
+  public final TestableMarkup row() {
+    return recorder.row();
+  }
+
 }

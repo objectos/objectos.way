@@ -165,4 +165,137 @@ public class TestableNodesTest {
     t.cell(1, "xy");
   }
 
+  @Test(description = """
+  testable row node:
+  - document level
+  """)
+  public void row01() {
+    final Markup subject;
+    subject = Markup.of();
+
+    final TestableNodes t;
+    t = subject.t();
+
+    t.row();
+
+    assertEquals(
+        subject.compile(),
+
+        HtmlY.create(opts -> {
+          opts.addByte(HtmlBytes.TROW);
+        })
+    );
+  }
+
+  @Test(description = """
+  testable row node:
+  - element child
+  """)
+  public void row02() {
+    final Markup subject;
+    subject = Markup.of();
+
+    subject.div(
+        subject.t().row()
+    );
+
+    assertEquals(
+        subject.compile(),
+
+        HtmlY.create(opts -> {
+          opts.addByte(HtmlBytes.xTROW);
+          opts.addByte(HtmlBytes.ELEMSTR8);
+          opts.addInt8(ElementName.DIV.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(1);
+          opts.addInt8(0);
+        })
+    );
+  }
+
+  @Test(description = """
+  testable row node:
+  - begins a new row in the testable text
+  """)
+  public void row03() {
+    final Markup subject;
+    subject = Markup.of();
+
+    final TestableNodes t;
+    t = subject.t();
+
+    t.row();
+    t.cell(1, "a");
+    t.row();
+    t.cell(1, "b");
+
+    final String actual;
+    actual = subject.compile().toTestableText();
+
+    assertEquals(actual, "| a |\n| b |\n");
+  }
+
+  @Test(description = """
+  testable row node:
+  - starts a new row after preceding cells
+  """)
+  public void row04() {
+    final Markup subject;
+    subject = Markup.of();
+
+    final TestableNodes t;
+    t = subject.t();
+
+    t.cell(1, "a");
+    t.cell(1, "b");
+    t.row();
+    t.cell(1, "c");
+
+    final String actual;
+    actual = subject.compile().toTestableText();
+
+    assertEquals(actual, "| a | b |\n| c |\n");
+  }
+
+  @Test(description = """
+  testable row node:
+  - does not produce HTML output
+  """)
+  public void row05() {
+    final Markup subject;
+    subject = Markup.of();
+
+    subject.div(
+        subject.t().row()
+    );
+
+    final String actual;
+    actual = subject.compile().toString();
+
+    assertEquals(actual, "<div></div>\n");
+  }
+
+  @Test(description = """
+  testable row node:
+  - element child
+  - contributes to the testable text
+  """)
+  public void row06() {
+    final Markup subject;
+    subject = Markup.of();
+
+    final TestableNodes t;
+    t = subject.t();
+
+    subject.div(
+        t.row(),
+        t.cell(1, "a")
+    );
+
+    final String actual;
+    actual = subject.compile().toTestableText();
+
+    assertEquals(actual, "| a |\n");
+  }
+
 }

@@ -197,7 +197,9 @@ public class ScanElementAttributeStateTest {
 
         {HtmlBytes.xTCELL8, s(ctx -> new EmitTestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT8))},
         {HtmlBytes.xTCELL16, s(ctx -> new EmitTestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT16))},
-        {HtmlBytes.xTCELL24, s(ctx -> new EmitTestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT24))}
+        {HtmlBytes.xTCELL24, s(ctx -> new EmitTestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT24))},
+
+        {HtmlBytes.xTROW, s(ctx -> new BeginTestableRowState(ctx, ScanLevel.NESTED))}
     };
   }
 
@@ -519,6 +521,8 @@ public class ScanElementAttributeStateTest {
         {HtmlBytes.TCELL8},
         {HtmlBytes.TCELL16},
         {HtmlBytes.TCELL24},
+
+        {HtmlBytes.TROW},
 
         {HtmlBytes.xFRAGSTR}
     };

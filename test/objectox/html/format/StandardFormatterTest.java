@@ -24,6 +24,7 @@ import objectos.script.JsAction;
 import objectox.html.attr.AttributeName;
 import objectox.html.elem.ElementName;
 import objectox.html.stream.BeginStartTagEvent;
+import objectox.html.stream.BeginTestableRowEvent;
 import objectox.html.stream.EmitAttributeEvent;
 import objectox.html.stream.EmitBooleanAttributeEvent;
 import objectox.html.stream.EmitDoctypeEvent;
@@ -112,6 +113,9 @@ public class StandardFormatterTest {
         ""
     }, {
         new EmitTestableHeadingEvent(0, 1, "foo"),
+        ""
+    }, {
+        new BeginTestableRowEvent(0),
         ""
     }};
   }

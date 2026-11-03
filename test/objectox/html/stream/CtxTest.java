@@ -101,6 +101,8 @@ public class CtxTest {
         {HtmlBytes.TCELL16, op(ctx -> new EmitTestableCellState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT16))},
         {HtmlBytes.TCELL24, op(ctx -> new EmitTestableCellState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT24))},
 
+        {HtmlBytes.TROW, op(ctx -> new BeginTestableRowState(ctx, ScanLevel.TOP_LEVEL))},
+
         {HtmlBytes.xELEMSTR8, op(ctx -> new BeginStartTagState(ctx, ScanLevel.NESTED, ElementKind.REGULAR, IntSize.BIT8))},
         {HtmlBytes.xELEMVOID8, op(ctx -> new BeginStartTagState(ctx, ScanLevel.NESTED, ElementKind.VOID, IntSize.BIT8))},
 
@@ -131,6 +133,8 @@ public class CtxTest {
         {HtmlBytes.xTCELL8, op(ctx -> new EmitTestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT8))},
         {HtmlBytes.xTCELL16, op(ctx -> new EmitTestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT16))},
         {HtmlBytes.xTCELL24, op(ctx -> new EmitTestableCellState(ctx, TestableLevel.REGULAR, IntSize.BIT24))},
+
+        {HtmlBytes.xTROW, op(ctx -> new BeginTestableRowState(ctx, ScanLevel.NESTED))},
 
         {HtmlBytes.oTHEADING8, op(ctx -> new EmitTestableHeadingState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT8))},
         {HtmlBytes.oTHEADING16, op(ctx -> new EmitTestableHeadingState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT16))},

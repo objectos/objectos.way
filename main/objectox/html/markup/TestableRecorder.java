@@ -84,4 +84,11 @@ final class TestableRecorder {
     return new TestableMarkupPointer(startIndex);
   }
 
+  public final TestableMarkupPointer row() {
+    final int startIndex;
+    startIndex = sink.addByte(HtmlBytes.TROW);
+
+    return new TestableMarkupPointer(startIndex);
+  }
+
 }

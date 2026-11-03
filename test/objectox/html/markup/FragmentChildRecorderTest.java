@@ -460,6 +460,31 @@ public class FragmentChildRecorderTest {
     );
   }
 
+  @Test(description = "fragment root testable row becomes x-prefixed")
+  public void testCase12() {
+    test(
+        opts -> {
+          opts.addInt24(HtmlSink.MAX_INT24);
+          opts.addByte(HtmlBytes.FRAGSTR);
+          opts.addInt24(0);
+          opts.addByte(HtmlBytes.TROW);
+          opts.addByte(HtmlBytes.FRAGEND);
+        },
+
+        IntSize.BIT8, 3,
+        1,
+
+        opts -> {
+          opts.addInt24(HtmlSink.MAX_INT24);
+          opts.addByte(HtmlBytes.xFRAGSTR);
+          opts.addInt24(0);
+          opts.addByte(HtmlBytes.xTROW);
+          opts.addByte(HtmlBytes.FRAGEND);
+          opts.addInt8(7);
+        }
+    );
+  }
+
   private byte[] bytes(int... values) {
     final byte[] res;
     res = new byte[values.length];

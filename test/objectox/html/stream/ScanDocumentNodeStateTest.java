@@ -80,6 +80,9 @@ public class ScanDocumentNodeStateTest {
         {HtmlBytes.TCELL16, s(ctx -> new EmitTestableCellState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT16))},
         {HtmlBytes.TCELL24, s(ctx -> new EmitTestableCellState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT24))},
 
+        {HtmlBytes.TROW, s(ctx -> new BeginTestableRowState(ctx, ScanLevel.TOP_LEVEL))},
+        {HtmlBytes.xTROW, s(ctx -> new ScanDocumentNodeState(ctx))},
+
         {HtmlBytes.TEXT8, s(ctx -> new EmitTextState(ctx, ScanLevel.TOP_LEVEL, IntSize.BIT8))},
         {HtmlBytes.TEXT16, s(ctx -> new EmitTextState(ctx, ScanLevel.TOP_LEVEL, IntSize.BIT16))},
         {HtmlBytes.TEXT24, s(ctx -> new EmitTextState(ctx, ScanLevel.TOP_LEVEL, IntSize.BIT24))},

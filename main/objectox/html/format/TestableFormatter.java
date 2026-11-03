@@ -16,6 +16,7 @@
 package objectox.html.format;
 
 import objectos.html.stream.BeginStartTag;
+import objectos.html.stream.BeginTestableRow;
 import objectos.html.stream.EmitAttribute;
 import objectos.html.stream.EmitBooleanAttribute;
 import objectos.html.stream.EmitDoctype;
@@ -38,7 +39,9 @@ public final class TestableFormatter extends BaseFormatter {
 
     CONTENT,
 
-    ROW;
+    ROW,
+
+    ROW_START;
 
   }
 
@@ -70,6 +73,8 @@ public final class TestableFormatter extends BaseFormatter {
   @Override
   final void emitTestable(EmitTestable event, Output out) {
     switch (event) {
+      case BeginTestableRow _ -> beginTestableRow(out);
+
       case EmitTestableCell cell -> emitCell(cell, out);
 
       case EmitTestableHeading heading -> emitHeading(heading, out);
@@ -88,16 +93,28 @@ public final class TestableFormatter extends BaseFormatter {
         state = State.CONTENT;
       }
 
-      case EMPTY, CONTENT -> {}
+      case EMPTY, CONTENT, ROW_START -> {}
     }
   }
 
   @Override
   final void endStartTag(EndStartTag event, Output out) {}
 
+  private void beginTestableRow(Output out) {
+    switch (state) {
+      case EMPTY, CONTENT, ROW_START -> {}
+
+      case ROW -> {
+        out.append(" |\n");
+
+        state = State.ROW_START;
+      }
+    }
+  }
+
   private void emitCell(EmitTestableCell cell, Output out) {
     switch (state) {
-      case EMPTY -> out.append("| ");
+      case EMPTY, ROW_START -> out.append("| ");
 
       case CONTENT -> out.append("\n| ");
 
@@ -116,7 +133,7 @@ public final class TestableFormatter extends BaseFormatter {
     switch (state) {
       case EMPTY -> {}
 
-      case CONTENT -> out.append('\n');
+      case CONTENT, ROW_START -> out.append('\n');
 
       case ROW -> out.append(" |\n\n");
     }

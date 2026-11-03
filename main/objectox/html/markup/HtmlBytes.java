@@ -49,73 +49,75 @@ public final class HtmlBytes {
   public static final byte TCELL8 = -113;
   public static final byte TCELL16 = -112;
   public static final byte TCELL24 = -111;
+  public static final byte TROW = -110;
 
   // text
 
-  public static final byte TEXT8 = -110;
-  public static final byte TEXT16 = -109;
-  public static final byte TEXT24 = -108;
+  public static final byte TEXT8 = -109;
+  public static final byte TEXT16 = -108;
+  public static final byte TEXT24 = -107;
 
   // raw
 
-  public static final byte RAW8 = -107;
-  public static final byte RAW16 = -106;
-  public static final byte RAW24 = -105;
+  public static final byte RAW8 = -106;
+  public static final byte RAW16 = -105;
+  public static final byte RAW24 = -104;
 
   // contents
 
-  public static final byte VALUES8 = -104;
-  public static final byte VALUES16 = -103;
-  public static final byte VALUES24 = -102;
+  public static final byte VALUES8 = -103;
+  public static final byte VALUES16 = -102;
+  public static final byte VALUES24 = -101;
 
   // xelement
 
-  public static final byte xELEMSTR8 = -101;
-  public static final byte xELEMVOID8 = -100;
+  public static final byte xELEMSTR8 = -100;
+  public static final byte xELEMVOID8 = -99;
 
   // xattributes
 
-  public static final byte xATTRIBUTE88 = -99;
-  public static final byte xATTRIBUTE816 = -98;
-  public static final byte xATTRIBUTE824 = -97;
-  public static final byte xBOOLEAN8 = -96;
-  public static final byte xJSACTION88 = -95;
-  public static final byte xJSACTION816 = -94;
-  public static final byte xJSACTION824 = -93;
+  public static final byte xATTRIBUTE88 = -98;
+  public static final byte xATTRIBUTE816 = -97;
+  public static final byte xATTRIBUTE824 = -96;
+  public static final byte xBOOLEAN8 = -95;
+  public static final byte xJSACTION88 = -94;
+  public static final byte xJSACTION816 = -93;
+  public static final byte xJSACTION824 = -92;
 
   // xfragment
 
-  public static final byte xFRAGSTR = -92;
+  public static final byte xFRAGSTR = -91;
 
   // xtestable
 
-  public static final byte xTHEADING8 = -91;
-  public static final byte xTHEADING16 = -90;
-  public static final byte xTHEADING24 = -89;
-  public static final byte xTCELL8 = -88;
-  public static final byte xTCELL16 = -87;
-  public static final byte xTCELL24 = -86;
+  public static final byte xTHEADING8 = -90;
+  public static final byte xTHEADING16 = -89;
+  public static final byte xTHEADING24 = -88;
+  public static final byte xTCELL8 = -87;
+  public static final byte xTCELL16 = -86;
+  public static final byte xTCELL24 = -85;
+  public static final byte xTROW = -84;
 
   // otestable
 
-  public static final byte oTHEADING8 = -85;
-  public static final byte oTHEADING16 = -84;
-  public static final byte oTHEADING24 = -83;
-  public static final byte oTCELL8 = -82;
-  public static final byte oTCELL16 = -81;
-  public static final byte oTCELL24 = -80;
+  public static final byte oTHEADING8 = -83;
+  public static final byte oTHEADING16 = -82;
+  public static final byte oTHEADING24 = -81;
+  public static final byte oTCELL8 = -80;
+  public static final byte oTCELL16 = -79;
+  public static final byte oTCELL24 = -78;
 
   // xtext
 
-  public static final byte xTEXT8 = -79;
-  public static final byte xTEXT16 = -78;
-  public static final byte xTEXT24 = -77;
+  public static final byte xTEXT8 = -77;
+  public static final byte xTEXT16 = -76;
+  public static final byte xTEXT24 = -75;
 
   // xraw
 
-  public static final byte xRAW8 = -76;
-  public static final byte xRAW16 = -75;
-  public static final byte xRAW24 = -74;
+  public static final byte xRAW8 = -74;
+  public static final byte xRAW16 = -73;
+  public static final byte xRAW24 = -72;
 
   private HtmlBytes() {}
 

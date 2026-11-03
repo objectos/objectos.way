@@ -87,6 +87,25 @@ public class MarkupTestableNodesTest {
     );
   }
 
+  @Test(description = "TestableRecorder delegation (row)")
+  public void row01() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final MarkupTestableNodes subject;
+    subject = create(sink);
+
+    subject.row();
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.TROW);
+        })
+    );
+  }
+
   private MarkupTestableNodes create(HtmlSink sink) {
     final TestableRecorder recorder;
     recorder = new TestableRecorder(sink);
