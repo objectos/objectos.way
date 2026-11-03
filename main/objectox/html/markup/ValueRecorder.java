@@ -83,7 +83,12 @@ final class ValueRecorder {
       case HtmlBytes.TCELL16 -> HtmlBytes.xTCELL16;
       case HtmlBytes.TCELL24 -> HtmlBytes.xTCELL24;
 
+      case HtmlBytes.TITEM8 -> HtmlBytes.xTITEM8;
+      case HtmlBytes.TITEM16 -> HtmlBytes.xTITEM16;
+      case HtmlBytes.TITEM24 -> HtmlBytes.xTITEM24;
+
       case HtmlBytes.TROW -> HtmlBytes.xTROW;
+      case HtmlBytes.TLIST -> HtmlBytes.xTLIST;
 
       case HtmlBytes.xELEMSTR8 -> HtmlBytes.xELEMSTR8;
       case HtmlBytes.xELEMVOID8 -> HtmlBytes.xELEMVOID8;
@@ -113,7 +118,12 @@ final class ValueRecorder {
       case HtmlBytes.xTCELL16 -> HtmlBytes.xTCELL16;
       case HtmlBytes.xTCELL24 -> HtmlBytes.xTCELL24;
 
+      case HtmlBytes.xTITEM8 -> HtmlBytes.xTITEM8;
+      case HtmlBytes.xTITEM16 -> HtmlBytes.xTITEM16;
+      case HtmlBytes.xTITEM24 -> HtmlBytes.xTITEM24;
+
       case HtmlBytes.xTROW -> HtmlBytes.xTROW;
+      case HtmlBytes.xTLIST -> HtmlBytes.xTLIST;
 
       case HtmlBytes.oTHEADING8 -> HtmlBytes.oTHEADING8;
       case HtmlBytes.oTHEADING16 -> HtmlBytes.oTHEADING16;
@@ -122,6 +132,10 @@ final class ValueRecorder {
       case HtmlBytes.oTCELL8 -> HtmlBytes.oTCELL8;
       case HtmlBytes.oTCELL16 -> HtmlBytes.oTCELL16;
       case HtmlBytes.oTCELL24 -> HtmlBytes.oTCELL24;
+
+      case HtmlBytes.oTITEM8 -> HtmlBytes.oTITEM8;
+      case HtmlBytes.oTITEM16 -> HtmlBytes.oTITEM16;
+      case HtmlBytes.oTITEM24 -> HtmlBytes.oTITEM24;
 
       default -> throw new IllegalArgumentException("Invalid opcode: " + opcode);
     };
@@ -136,6 +150,10 @@ final class ValueRecorder {
       case HtmlBytes.TCELL8 -> HtmlBytes.oTCELL8;
       case HtmlBytes.TCELL16 -> HtmlBytes.oTCELL16;
       case HtmlBytes.TCELL24 -> HtmlBytes.oTCELL24;
+
+      case HtmlBytes.TITEM8 -> HtmlBytes.oTITEM8;
+      case HtmlBytes.TITEM16 -> HtmlBytes.oTITEM16;
+      case HtmlBytes.TITEM24 -> HtmlBytes.oTITEM24;
 
       default -> throw new IllegalArgumentException("Invalid opcode: " + opcode);
     };

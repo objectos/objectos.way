@@ -884,4 +884,142 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), false);
   }
 
+  @Test(description = """
+  testable list:
+  - document level
+  """)
+  public void testable10() {
+    final Player subject;
+    subject = PlayerY.create(opts -> {
+      opts.addByte(HtmlBytes.TLIST);
+    });
+
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new BeginTestableListEvent(0));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EndDocumentEvent(false));
+    assertEquals(subject.hasNext(), false);
+  }
+
+  @Test(description = """
+  testable list:
+  - element child
+  """)
+  public void testable11() {
+    final Player subject;
+    subject = PlayerY.create(opts -> {
+      opts.addByte(HtmlBytes.xTLIST);
+
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.DIV.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+    });
+
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new BeginStartTagEvent(0, ElementName.DIV));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EndStartTagEvent(0, EndStartTagKind.ELEMENT));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new BeginTestableListEvent(1));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EmitEndTagEvent(0, ElementName.DIV));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EndDocumentEvent(false));
+    assertEquals(subject.hasNext(), false);
+  }
+
+  @Test(description = """
+  testable list item:
+  - document level
+  - 8 bit
+  """)
+  public void testable12() {
+    final Player subject;
+    subject = PlayerY.create(opts -> {
+      opts.addByte(HtmlBytes.TITEM8);
+
+      opts.addInt8(opts.addObject("Item"));
+    });
+
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EmitTestableListItemEvent(0, "Item"));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EndDocumentEvent(false));
+    assertEquals(subject.hasNext(), false);
+  }
+
+  @Test(description = """
+  testable list item:
+  - element child
+  - regular elem
+  """)
+  public void testable13() {
+    final Player subject;
+    subject = PlayerY.create(opts -> {
+      opts.addByte(HtmlBytes.xTITEM8);
+
+      opts.addInt8(opts.addObject("Ipsum"));
+
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.DIV.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+    });
+
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new BeginStartTagEvent(0, ElementName.DIV));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EndStartTagEvent(0, EndStartTagKind.ELEMENT));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EmitTextEvent(1, "Ipsum"));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EmitTestableListItemEvent(1, "Ipsum"));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EmitEndTagEvent(0, ElementName.DIV));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EndDocumentEvent(false));
+    assertEquals(subject.hasNext(), false);
+  }
+
+  @Test(description = """
+  testable list item:
+  - element child
+  - testable-only opcode
+  - fragment body
+  """)
+  public void testable14() {
+    final Player subject;
+    subject = PlayerY.create(opts -> {
+      opts.addByte(HtmlBytes.xFRAGSTR);
+      opts.addInt24(7);
+
+      opts.addByte(HtmlBytes.oTITEM8);
+
+      opts.addInt8(opts.addObject("Ipsum"));
+
+      opts.addByte(HtmlBytes.FRAGEND);
+
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.DIV.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(4);
+    });
+
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new BeginStartTagEvent(0, ElementName.DIV));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EndStartTagEvent(0, EndStartTagKind.ELEMENT));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EmitTestableListItemEvent(1, "Ipsum"));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EmitEndTagEvent(0, ElementName.DIV));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EndDocumentEvent(false));
+    assertEquals(subject.hasNext(), false);
+  }
+
 }

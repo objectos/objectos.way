@@ -154,7 +154,12 @@ class Ctx {
       case HtmlBytes.TCELL16 -> new EmitTestableCellState(this, TestableLevel.TOP_LEVEL, IntSize.BIT16);
       case HtmlBytes.TCELL24 -> new EmitTestableCellState(this, TestableLevel.TOP_LEVEL, IntSize.BIT24);
 
+      case HtmlBytes.TITEM8 -> new EmitTestableListItemState(this, TestableLevel.TOP_LEVEL, IntSize.BIT8);
+      case HtmlBytes.TITEM16 -> new EmitTestableListItemState(this, TestableLevel.TOP_LEVEL, IntSize.BIT16);
+      case HtmlBytes.TITEM24 -> new EmitTestableListItemState(this, TestableLevel.TOP_LEVEL, IntSize.BIT24);
+
       case HtmlBytes.TROW -> new BeginTestableRowState(this, ScanLevel.TOP_LEVEL);
+      case HtmlBytes.TLIST -> new BeginTestableListState(this, ScanLevel.TOP_LEVEL);
 
       case HtmlBytes.xELEMSTR8 -> new BeginStartTagState(this, ScanLevel.NESTED, ElementKind.REGULAR, IntSize.BIT8);
       case HtmlBytes.xELEMVOID8 -> new BeginStartTagState(this, ScanLevel.NESTED, ElementKind.VOID, IntSize.BIT8);
@@ -187,7 +192,12 @@ class Ctx {
       case HtmlBytes.xTCELL16 -> new EmitTestableCellState(this, TestableLevel.REGULAR, IntSize.BIT16);
       case HtmlBytes.xTCELL24 -> new EmitTestableCellState(this, TestableLevel.REGULAR, IntSize.BIT24);
 
+      case HtmlBytes.xTITEM8 -> new EmitTestableListItemState(this, TestableLevel.REGULAR, IntSize.BIT8);
+      case HtmlBytes.xTITEM16 -> new EmitTestableListItemState(this, TestableLevel.REGULAR, IntSize.BIT16);
+      case HtmlBytes.xTITEM24 -> new EmitTestableListItemState(this, TestableLevel.REGULAR, IntSize.BIT24);
+
       case HtmlBytes.xTROW -> new BeginTestableRowState(this, ScanLevel.NESTED);
+      case HtmlBytes.xTLIST -> new BeginTestableListState(this, ScanLevel.NESTED);
 
       case HtmlBytes.oTHEADING8 -> new EmitTestableHeadingState(this, TestableLevel.TEST_ONLY, IntSize.BIT8);
       case HtmlBytes.oTHEADING16 -> new EmitTestableHeadingState(this, TestableLevel.TEST_ONLY, IntSize.BIT16);
@@ -196,6 +206,10 @@ class Ctx {
       case HtmlBytes.oTCELL8 -> new EmitTestableCellState(this, TestableLevel.TEST_ONLY, IntSize.BIT8);
       case HtmlBytes.oTCELL16 -> new EmitTestableCellState(this, TestableLevel.TEST_ONLY, IntSize.BIT16);
       case HtmlBytes.oTCELL24 -> new EmitTestableCellState(this, TestableLevel.TEST_ONLY, IntSize.BIT24);
+
+      case HtmlBytes.oTITEM8 -> new EmitTestableListItemState(this, TestableLevel.TEST_ONLY, IntSize.BIT8);
+      case HtmlBytes.oTITEM16 -> new EmitTestableListItemState(this, TestableLevel.TEST_ONLY, IntSize.BIT16);
+      case HtmlBytes.oTITEM24 -> new EmitTestableListItemState(this, TestableLevel.TEST_ONLY, IntSize.BIT24);
 
       default -> throw State.malformed();
     };

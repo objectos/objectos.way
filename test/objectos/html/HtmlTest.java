@@ -763,6 +763,95 @@ public class HtmlTest {
   }
 
   @Test(description = """
+  toTestableText:
+  - testable list items
+  """)
+  public void toTestableText05() {
+    final Markup markup;
+    markup = Markup.of();
+
+    final TestableNodes t;
+    t = markup.t();
+
+    t.item("Foo");
+    t.item("Bar");
+
+    final Html subject;
+    subject = markup.compile();
+
+    assertEquals(
+        subject.toTestableText(),
+
+        """
+        - Foo
+        - Bar
+        """
+    );
+  }
+
+  @Test(description = """
+  toTestableText:
+  - testable list items separated by a list
+  """)
+  public void toTestableText06() {
+    final Markup markup;
+    markup = Markup.of();
+
+    final TestableNodes t;
+    t = markup.t();
+
+    t.item("A");
+    t.item("B");
+    t.list();
+    t.item("C");
+
+    final Html subject;
+    subject = markup.compile();
+
+    assertEquals(
+        subject.toTestableText(),
+
+        """
+        - A
+        - B
+
+        - C
+        """
+    );
+  }
+
+  @Test(description = """
+  toTestableText:
+  - testable heading, list items and cells
+  """)
+  public void toTestableText07() {
+    final Markup markup;
+    markup = Markup.of();
+
+    final TestableNodes t;
+    t = markup.t();
+
+    t.h1("Heading 1");
+    t.item("Item");
+    t.cell(1, "x");
+
+    final Html subject;
+    subject = markup.compile();
+
+    assertEquals(
+        subject.toTestableText(),
+
+        """
+        # Heading 1
+
+        - Item
+
+        | x |
+        """
+    );
+  }
+
+  @Test(description = """
   void elem:
   - no attrs
   """)

@@ -231,6 +231,10 @@ public class FragmentChildRecorderTest {
         {bytes(HtmlBytes.xTCELL8, 0), "unconsumed testable cell (1-byte value index)"},
         {bytes(HtmlBytes.xTCELL16, 0, 0), "unconsumed testable cell (2-byte value index)"},
         {bytes(HtmlBytes.xTCELL24, 0, 0, 0), "unconsumed testable cell (3-byte value index)"},
+        {bytes(HtmlBytes.xTITEM8, 0), "unconsumed testable list item (1-byte value index)"},
+        {bytes(HtmlBytes.xTITEM16, 0, 0), "unconsumed testable list item (2-byte value index)"},
+        {bytes(HtmlBytes.xTITEM24, 0, 0, 0), "unconsumed testable list item (3-byte value index)"},
+        {bytes(HtmlBytes.xTLIST), "unconsumed testable list"},
         {bytes(HtmlBytes.xTEXT8, 0x7F), "unconsumed text (1-byte value index)"},
         {bytes(HtmlBytes.xTEXT16, 0x7F, 0x7F), "unconsumed text (2-byte value index)"},
         {bytes(HtmlBytes.xTEXT24, 0x7F, 0x7F, 0x7F), "unconsumed text (3-byte value index)"},
@@ -429,7 +433,10 @@ public class FragmentChildRecorderTest {
         {HtmlBytes.THEADING24, HtmlBytes.oTHEADING24, 4, "testable heading (4 operand bytes)"},
         {HtmlBytes.TCELL8, HtmlBytes.oTCELL8, 1, "testable cell (1 operand byte)"},
         {HtmlBytes.TCELL16, HtmlBytes.oTCELL16, 2, "testable cell (2 operand bytes)"},
-        {HtmlBytes.TCELL24, HtmlBytes.oTCELL24, 3, "testable cell (3 operand bytes)"}
+        {HtmlBytes.TCELL24, HtmlBytes.oTCELL24, 3, "testable cell (3 operand bytes)"},
+        {HtmlBytes.TITEM8, HtmlBytes.oTITEM8, 1, "testable list item (1 operand byte)"},
+        {HtmlBytes.TITEM16, HtmlBytes.oTITEM16, 2, "testable list item (2 operand bytes)"},
+        {HtmlBytes.TITEM24, HtmlBytes.oTITEM24, 3, "testable list item (3 operand bytes)"}
     };
   }
 
@@ -479,6 +486,31 @@ public class FragmentChildRecorderTest {
           opts.addByte(HtmlBytes.xFRAGSTR);
           opts.addInt24(0);
           opts.addByte(HtmlBytes.xTROW);
+          opts.addByte(HtmlBytes.FRAGEND);
+          opts.addInt8(7);
+        }
+    );
+  }
+
+  @Test(description = "fragment root testable list becomes x-prefixed")
+  public void testCase13() {
+    test(
+        opts -> {
+          opts.addInt24(HtmlSink.MAX_INT24);
+          opts.addByte(HtmlBytes.FRAGSTR);
+          opts.addInt24(0);
+          opts.addByte(HtmlBytes.TLIST);
+          opts.addByte(HtmlBytes.FRAGEND);
+        },
+
+        IntSize.BIT8, 3,
+        1,
+
+        opts -> {
+          opts.addInt24(HtmlSink.MAX_INT24);
+          opts.addByte(HtmlBytes.xFRAGSTR);
+          opts.addInt24(0);
+          opts.addByte(HtmlBytes.xTLIST);
           opts.addByte(HtmlBytes.FRAGEND);
           opts.addInt8(7);
         }

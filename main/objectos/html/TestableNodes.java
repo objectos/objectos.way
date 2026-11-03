@@ -81,6 +81,22 @@ public sealed interface TestableNodes permits MarkupTestableNodes {
   /// @return an object representing the encoded testable node
   TestableMarkup h6(String value);
 
+  /// Encodes a testable list item node with the specified value.
+  ///
+  /// @param value the testable node value
+  ///
+  /// @return an object representing the encoded testable node
+  ///
+  /// @throws NullPointerException if the value is null
+  TestableMarkup item(String value);
+
+  /// Encodes a testable-only node which marks the beginning of a testable list.
+  ///
+  /// This node does not produce any HTML output.
+  ///
+  /// @return an object representing the encoded testable node
+  TestableMarkup list();
+
   /// Encodes a testable-only node which marks the beginning of a testable row.
   ///
   /// This node does not produce any HTML output.

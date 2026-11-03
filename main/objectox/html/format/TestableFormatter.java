@@ -16,6 +16,7 @@
 package objectox.html.format;
 
 import objectos.html.stream.BeginStartTag;
+import objectos.html.stream.BeginTestableList;
 import objectos.html.stream.BeginTestableRow;
 import objectos.html.stream.EmitAttribute;
 import objectos.html.stream.EmitBooleanAttribute;
@@ -26,6 +27,7 @@ import objectos.html.stream.EmitRaw;
 import objectos.html.stream.EmitTestable;
 import objectos.html.stream.EmitTestableCell;
 import objectos.html.stream.EmitTestableHeading;
+import objectos.html.stream.EmitTestableListItem;
 import objectos.html.stream.EmitText;
 import objectos.html.stream.EndDocument;
 import objectos.html.stream.EndStartTag;
@@ -41,7 +43,11 @@ public final class TestableFormatter extends BaseFormatter {
 
     ROW,
 
-    ROW_START;
+    ROW_START,
+
+    LIST,
+
+    LIST_START;
 
   }
 
@@ -73,11 +79,15 @@ public final class TestableFormatter extends BaseFormatter {
   @Override
   final void emitTestable(EmitTestable event, Output out) {
     switch (event) {
+      case BeginTestableList _ -> beginTestableList(out);
+
       case BeginTestableRow _ -> beginTestableRow(out);
 
       case EmitTestableCell cell -> emitCell(cell, out);
 
       case EmitTestableHeading heading -> emitHeading(heading, out);
+
+      case EmitTestableListItem item -> emitListItem(item, out);
     }
   }
 
@@ -93,32 +103,58 @@ public final class TestableFormatter extends BaseFormatter {
         state = State.CONTENT;
       }
 
-      case EMPTY, CONTENT, ROW_START -> {}
+      case EMPTY, CONTENT, ROW_START, LIST, LIST_START -> {}
     }
   }
 
   @Override
   final void endStartTag(EndStartTag event, Output out) {}
 
-  private void beginTestableRow(Output out) {
+  private void beginTestableList(Output out) {
     switch (state) {
-      case EMPTY, CONTENT, ROW_START -> {}
+      case EMPTY, CONTENT, ROW_START, LIST_START -> {}
 
       case ROW -> {
         out.append(" |\n");
 
         state = State.ROW_START;
       }
+
+      case LIST -> {
+        out.append('\n');
+
+        state = State.LIST_START;
+      }
+    }
+  }
+
+  private void beginTestableRow(Output out) {
+    switch (state) {
+      case EMPTY, CONTENT, ROW_START, LIST_START -> {}
+
+      case ROW -> {
+        out.append(" |\n");
+
+        state = State.ROW_START;
+      }
+
+      case LIST -> {
+        out.append('\n');
+
+        state = State.LIST_START;
+      }
     }
   }
 
   private void emitCell(EmitTestableCell cell, Output out) {
     switch (state) {
-      case EMPTY, ROW_START -> out.append("| ");
+      case EMPTY, ROW_START, LIST_START -> out.append("| ");
 
       case CONTENT -> out.append("\n| ");
 
       case ROW -> out.append(" | ");
+
+      case LIST -> out.append("\n| ");
     }
 
     state = State.ROW;
@@ -131,9 +167,9 @@ public final class TestableFormatter extends BaseFormatter {
 
   private void emitHeading(EmitTestableHeading heading, Output out) {
     switch (state) {
-      case EMPTY -> {}
+      case EMPTY, LIST_START -> {}
 
-      case CONTENT, ROW_START -> out.append('\n');
+      case CONTENT, ROW_START, LIST -> out.append('\n');
 
       case ROW -> out.append(" |\n\n");
     }
@@ -153,6 +189,25 @@ public final class TestableFormatter extends BaseFormatter {
     s = testable.toString();
 
     out.append(s);
+
+    out.append('\n');
+  }
+
+  private void emitListItem(EmitTestableListItem item, Output out) {
+    switch (state) {
+      case EMPTY, LIST, LIST_START -> out.append("- ");
+
+      case CONTENT, ROW_START -> out.append("\n- ");
+
+      case ROW -> out.append(" |\n\n- ");
+    }
+
+    state = State.LIST;
+
+    final String value;
+    value = item.value();
+
+    out.append(value);
 
     out.append('\n');
   }

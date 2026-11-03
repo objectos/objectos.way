@@ -24,6 +24,7 @@ import objectos.script.JsAction;
 import objectox.html.attr.AttributeName;
 import objectox.html.elem.ElementName;
 import objectox.html.stream.BeginStartTagEvent;
+import objectox.html.stream.BeginTestableListEvent;
 import objectox.html.stream.BeginTestableRowEvent;
 import objectox.html.stream.EmitAttributeEvent;
 import objectox.html.stream.EmitBooleanAttributeEvent;
@@ -33,6 +34,7 @@ import objectox.html.stream.EmitJsActionAttributeEvent;
 import objectox.html.stream.EmitRawEvent;
 import objectox.html.stream.EmitTestableCellEvent;
 import objectox.html.stream.EmitTestableHeadingEvent;
+import objectox.html.stream.EmitTestableListItemEvent;
 import objectox.html.stream.EmitTextEvent;
 import objectox.html.stream.EndDocumentEvent;
 import objectox.html.stream.EndStartTagEvent;
@@ -468,6 +470,185 @@ public class TestableFormatterTest {
 
   @Test(dataProvider = "testCase04Provider")
   public void testCase04(Event[] events, String expected) {
+    test(events, expected);
+  }
+
+  @DataProvider
+  public Object[][] testCase05Provider() {
+    return new Object[][] {
+        {
+            evts(
+                new EmitTestableListItemEvent(0, "Foo"),
+                new EndDocumentEvent(false)
+            ),
+            """
+            - Foo
+            """
+        },
+        {
+            evts(
+                new EmitTestableListItemEvent(0, "Foo"),
+                new EmitTestableListItemEvent(0, "Bar"),
+                new EmitTestableListItemEvent(0, "Baz"),
+                new EndDocumentEvent(false)
+            ),
+            """
+            - Foo
+            - Bar
+            - Baz
+            """
+        },
+        {
+            evts(
+                new EmitTestableListItemEvent(0, "A"),
+                new EmitTestableListItemEvent(0, "B"),
+                new BeginTestableListEvent(0),
+                new EmitTestableListItemEvent(0, "C"),
+                new EndDocumentEvent(false)
+            ),
+            """
+            - A
+            - B
+
+            - C
+            """
+        },
+        {
+            evts(
+                new EmitTestableHeadingEvent(0, 1, "Heading 1"),
+                new EmitTestableListItemEvent(0, "Foo"),
+                new EndDocumentEvent(false)
+            ),
+            """
+            # Heading 1
+
+            - Foo
+            """
+        },
+        {
+            evts(
+                new EmitTestableListItemEvent(0, "Foo"),
+                new EmitTestableHeadingEvent(0, 1, "Heading 1"),
+                new EndDocumentEvent(false)
+            ),
+            """
+            - Foo
+
+            # Heading 1
+            """
+        },
+        {
+            evts(
+                new EmitTestableListItemEvent(0, "Foo"),
+                new EmitTestableCellEvent(0, "x"),
+                new EndDocumentEvent(false)
+            ),
+            """
+            - Foo
+
+            | x |
+            """
+        },
+        {
+            evts(
+                new EmitTestableCellEvent(0, "x"),
+                new EmitTestableListItemEvent(0, "Foo"),
+                new EndDocumentEvent(false)
+            ),
+            """
+            | x |
+
+            - Foo
+            """
+        },
+        {
+            evts(
+                new EmitTestableListItemEvent(0, "1"),
+                new BeginTestableRowEvent(0),
+                new EmitTestableListItemEvent(0, "2"),
+                new EndDocumentEvent(false)
+            ),
+            """
+            - 1
+
+            - 2
+            """
+        },
+        {
+            evts(
+                new EmitTestableListItemEvent(0, "1"),
+                new BeginTestableRowEvent(0),
+                new EmitTestableCellEvent(0, "2"),
+                new EndDocumentEvent(false)
+            ),
+            """
+            - 1
+
+            | 2 |
+            """
+        },
+        {
+            evts(
+                new EmitTestableCellEvent(0, "1"),
+                new BeginTestableListEvent(0),
+                new EmitTestableListItemEvent(0, "2"),
+                new EndDocumentEvent(false)
+            ),
+            """
+            | 1 |
+
+            - 2
+            """
+        },
+        {
+            evts(
+                new EmitTestableCellEvent(0, "1"),
+                new BeginTestableListEvent(0),
+                new EmitTestableCellEvent(0, "2"),
+                new EndDocumentEvent(false)
+            ),
+            """
+            | 1 |
+            | 2 |
+            """
+        },
+        {
+            evts(new BeginTestableListEvent(0)),
+            ""
+        },
+        {
+            evts(
+                new BeginTestableListEvent(0),
+                new EmitTestableListItemEvent(0, "Foo"),
+                new EndDocumentEvent(false)
+            ),
+            """
+            - Foo
+            """
+        },
+        {
+            evts(
+                new EmitTestableListItemEvent(0, "Foo"),
+                new BeginTestableListEvent(0),
+                new EndDocumentEvent(false)
+            ),
+            """
+            - Foo
+
+            """
+        },
+        {
+            evts(
+                new EmitTestableListItemEvent(0, "Foo "),
+                new EndDocumentEvent(false)
+            ),
+            "- Foo \n"
+        }
+    };
+  }
+
+  @Test(dataProvider = "testCase05Provider")
+  public void testCase05(Event[] events, String expected) {
     test(events, expected);
   }
 

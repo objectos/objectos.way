@@ -63,7 +63,12 @@ final class FragmentChildRecorder {
         case HtmlBytes.TCELL16 -> { sum += valueRecorder.testableOnly(size, value); cursor += 2; }
         case HtmlBytes.TCELL24 -> { sum += valueRecorder.testableOnly(size, value); cursor += 3; }
 
+        case HtmlBytes.TITEM8 -> { sum += valueRecorder.testableOnly(size, value); cursor += 1; }
+        case HtmlBytes.TITEM16 -> { sum += valueRecorder.testableOnly(size, value); cursor += 2; }
+        case HtmlBytes.TITEM24 -> { sum += valueRecorder.testableOnly(size, value); cursor += 3; }
+
         case HtmlBytes.TROW -> { sum += valueRecorder.record(size, value); }
+        case HtmlBytes.TLIST -> { sum += valueRecorder.record(size, value); }
 
         case HtmlBytes.TEXT8 -> { sum += valueRecorder.record(size, value); cursor += 1; }
         case HtmlBytes.TEXT16 -> { sum += valueRecorder.record(size, value); cursor += 2; }
@@ -84,7 +89,12 @@ final class FragmentChildRecorder {
         case HtmlBytes.xTCELL16 -> cursor += 2;
         case HtmlBytes.xTCELL24 -> cursor += 3;
 
+        case HtmlBytes.xTITEM8 -> cursor += 1;
+        case HtmlBytes.xTITEM16 -> cursor += 2;
+        case HtmlBytes.xTITEM24 -> cursor += 3;
+
         case HtmlBytes.xTROW -> {}
+        case HtmlBytes.xTLIST -> {}
 
         case HtmlBytes.xTEXT8 -> cursor += 1;
         case HtmlBytes.xTEXT16 -> cursor += 2;

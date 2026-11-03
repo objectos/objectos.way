@@ -62,6 +62,16 @@ public final class MarkupTestableNodes implements TestableNodes {
   }
 
   @Override
+  public final TestableMarkup item(String value) {
+    return recorder.item(value);
+  }
+
+  @Override
+  public final TestableMarkup list() {
+    return recorder.list();
+  }
+
+  @Override
   public final TestableMarkup row() {
     return recorder.row();
   }

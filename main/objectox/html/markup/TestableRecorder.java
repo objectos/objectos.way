@@ -84,6 +84,34 @@ final class TestableRecorder {
     return new TestableMarkupPointer(startIndex);
   }
 
+  public final TestableMarkupPointer item(String value) {
+    final String v;
+    v = Objects.requireNonNull(value, "value == null");
+
+    final int valueIndex;
+    valueIndex = sink.addObject(v);
+
+    final IntSize size;
+    size = IntSize.of(valueIndex);
+
+    final byte proto;
+    proto = size.toTestableItemByte();
+
+    final int startIndex;
+    startIndex = sink.addByte(proto);
+
+    sink.addInt(size, valueIndex);
+
+    return new TestableMarkupPointer(startIndex);
+  }
+
+  public final TestableMarkupPointer list() {
+    final int startIndex;
+    startIndex = sink.addByte(HtmlBytes.TLIST);
+
+    return new TestableMarkupPointer(startIndex);
+  }
+
   public final TestableMarkupPointer row() {
     final int startIndex;
     startIndex = sink.addByte(HtmlBytes.TROW);

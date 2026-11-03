@@ -80,8 +80,14 @@ public class ScanDocumentNodeStateTest {
         {HtmlBytes.TCELL16, s(ctx -> new EmitTestableCellState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT16))},
         {HtmlBytes.TCELL24, s(ctx -> new EmitTestableCellState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT24))},
 
+        {HtmlBytes.TITEM8, s(ctx -> new EmitTestableListItemState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT8))},
+        {HtmlBytes.TITEM16, s(ctx -> new EmitTestableListItemState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT16))},
+        {HtmlBytes.TITEM24, s(ctx -> new EmitTestableListItemState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT24))},
+
         {HtmlBytes.TROW, s(ctx -> new BeginTestableRowState(ctx, ScanLevel.TOP_LEVEL))},
+        {HtmlBytes.TLIST, s(ctx -> new BeginTestableListState(ctx, ScanLevel.TOP_LEVEL))},
         {HtmlBytes.xTROW, s(ctx -> new ScanDocumentNodeState(ctx))},
+        {HtmlBytes.xTLIST, s(ctx -> new ScanDocumentNodeState(ctx))},
 
         {HtmlBytes.TEXT8, s(ctx -> new EmitTextState(ctx, ScanLevel.TOP_LEVEL, IntSize.BIT8))},
         {HtmlBytes.TEXT16, s(ctx -> new EmitTextState(ctx, ScanLevel.TOP_LEVEL, IntSize.BIT16))},
@@ -155,13 +161,21 @@ public class ScanDocumentNodeStateTest {
         {HtmlBytes.xTCELL16, 2},
         {HtmlBytes.xTCELL24, 3},
 
+        {HtmlBytes.xTITEM8, 1},
+        {HtmlBytes.xTITEM16, 2},
+        {HtmlBytes.xTITEM24, 3},
+
         {HtmlBytes.oTHEADING8, 2},
         {HtmlBytes.oTHEADING16, 3},
         {HtmlBytes.oTHEADING24, 4},
 
         {HtmlBytes.oTCELL8, 1},
         {HtmlBytes.oTCELL16, 2},
-        {HtmlBytes.oTCELL24, 3}
+        {HtmlBytes.oTCELL24, 3},
+
+        {HtmlBytes.oTITEM8, 1},
+        {HtmlBytes.oTITEM16, 2},
+        {HtmlBytes.oTITEM24, 3}
     };
   }
 

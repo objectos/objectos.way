@@ -87,6 +87,45 @@ public class MarkupTestableNodesTest {
     );
   }
 
+  @Test(description = "TestableRecorder delegation (item)")
+  public void item01() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final MarkupTestableNodes subject;
+    subject = create(sink);
+
+    subject.item("Ipsum");
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.TITEM8);
+          opts.addInt8(opts.addObject("Ipsum"));
+        })
+    );
+  }
+
+  @Test(description = "TestableRecorder delegation (list)")
+  public void list01() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final MarkupTestableNodes subject;
+    subject = create(sink);
+
+    subject.list();
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.TLIST);
+        })
+    );
+  }
+
   @Test(description = "TestableRecorder delegation (row)")
   public void row01() {
     final HtmlSink sink;

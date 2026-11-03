@@ -19,6 +19,8 @@ package objectos.html.stream;
 public sealed interface EmitTestable
     extends Event
     permits
+    BeginTestableList,
     BeginTestableRow,
+    EmitTestableCell,
     EmitTestableHeading,
-    EmitTestableCell {}
+    EmitTestableListItem {}

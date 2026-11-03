@@ -166,6 +166,243 @@ public class TestableNodesTest {
   }
 
   @Test(description = """
+  testable list item node:
+  - document level
+  """)
+  public void item01() {
+    final Markup subject;
+    subject = Markup.of();
+
+    final TestableNodes t;
+    t = subject.t();
+
+    t.item("Foo");
+
+    assertEquals(
+        subject.compile(),
+
+        HtmlY.create(opts -> {
+          opts.addByte(HtmlBytes.TITEM8);
+          opts.addInt8(opts.addObject("Foo"));
+        })
+    );
+  }
+
+  @Test(description = """
+  testable list item node:
+  - element child
+  """)
+  public void item02() {
+    final Markup subject;
+    subject = Markup.of();
+
+    subject.div(
+        subject.t().item("Ipsum")
+    );
+
+    assertEquals(
+        subject.compile(),
+
+        HtmlY.create(opts -> {
+          opts.addByte(HtmlBytes.xTITEM8);
+          opts.addInt8(opts.addObject("Ipsum"));
+          opts.addByte(HtmlBytes.ELEMSTR8);
+          opts.addInt8(ElementName.DIV.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(1);
+          opts.addInt8(0);
+        })
+    );
+  }
+
+  @Test(
+      description = "testable list item node rejects a null value",
+      expectedExceptions = NullPointerException.class,
+      expectedExceptionsMessageRegExp = "value == null")
+  public void item03() {
+    final Markup subject;
+    subject = Markup.of();
+
+    final TestableNodes t;
+    t = subject.t();
+
+    t.item(null);
+  }
+
+  @Test(description = """
+  testable list item node:
+  - multiple items are formatted as a markdown list
+  """)
+  public void item04() {
+    final Markup subject;
+    subject = Markup.of();
+
+    final TestableNodes t;
+    t = subject.t();
+
+    t.item("Foo");
+    t.item("Bar");
+    t.item("Baz");
+
+    final String actual;
+    actual = subject.compile().toTestableText();
+
+    assertEquals(actual, "- Foo\n- Bar\n- Baz\n");
+  }
+
+  @Test(description = """
+  testable list item node:
+  - element child
+  - rendered as text in regular HTML
+  """)
+  public void item05() {
+    final Markup subject;
+    subject = Markup.of();
+
+    subject.div(
+        subject.t().item("Foo")
+    );
+
+    final String actual;
+    actual = subject.compile().toString();
+
+    assertEquals(actual, "<div>Foo</div>\n");
+  }
+
+  @Test(description = """
+  testable list item node:
+  - element child
+  - contributes to the testable text
+  """)
+  public void item06() {
+    final Markup subject;
+    subject = Markup.of();
+
+    final TestableNodes t;
+    t = subject.t();
+
+    subject.div(
+        t.item("a")
+    );
+
+    final String actual;
+    actual = subject.compile().toTestableText();
+
+    assertEquals(actual, "- a\n");
+  }
+
+  @Test(description = """
+  testable list node:
+  - document level
+  """)
+  public void list01() {
+    final Markup subject;
+    subject = Markup.of();
+
+    final TestableNodes t;
+    t = subject.t();
+
+    t.list();
+
+    assertEquals(
+        subject.compile(),
+
+        HtmlY.create(opts -> {
+          opts.addByte(HtmlBytes.TLIST);
+        })
+    );
+  }
+
+  @Test(description = """
+  testable list node:
+  - element child
+  """)
+  public void list02() {
+    final Markup subject;
+    subject = Markup.of();
+
+    subject.div(
+        subject.t().list()
+    );
+
+    assertEquals(
+        subject.compile(),
+
+        HtmlY.create(opts -> {
+          opts.addByte(HtmlBytes.xTLIST);
+          opts.addByte(HtmlBytes.ELEMSTR8);
+          opts.addInt8(ElementName.DIV.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(1);
+          opts.addInt8(0);
+        })
+    );
+  }
+
+  @Test(description = """
+  testable list node:
+  - begins a new list in the testable text
+  """)
+  public void list03() {
+    final Markup subject;
+    subject = Markup.of();
+
+    final TestableNodes t;
+    t = subject.t();
+
+    t.item("A");
+    t.item("B");
+    t.list();
+    t.item("C");
+
+    final String actual;
+    actual = subject.compile().toTestableText();
+
+    assertEquals(actual, "- A\n- B\n\n- C\n");
+  }
+
+  @Test(description = """
+  testable list node:
+  - does not produce HTML output
+  """)
+  public void list04() {
+    final Markup subject;
+    subject = Markup.of();
+
+    subject.div(
+        subject.t().list()
+    );
+
+    final String actual;
+    actual = subject.compile().toString();
+
+    assertEquals(actual, "<div></div>\n");
+  }
+
+  @Test(description = """
+  testable list node:
+  - element child
+  - contributes to the testable text
+  """)
+  public void list05() {
+    final Markup subject;
+    subject = Markup.of();
+
+    final TestableNodes t;
+    t = subject.t();
+
+    subject.div(
+        t.list(),
+        t.item("a")
+    );
+
+    final String actual;
+    actual = subject.compile().toTestableText();
+
+    assertEquals(actual, "- a\n");
+  }
+
+  @Test(description = """
   testable row node:
   - document level
   """)

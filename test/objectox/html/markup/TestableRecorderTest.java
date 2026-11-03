@@ -246,6 +246,126 @@ public class TestableRecorderTest {
     );
   }
 
+  @Test(
+      description = "rejects a null item value",
+      expectedExceptions = NullPointerException.class,
+      expectedExceptionsMessageRegExp = "value == null")
+  public void item01() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final TestableRecorder subject;
+    subject = new TestableRecorder(sink);
+
+    subject.item(null);
+  }
+
+  @Test(description = """
+  a testable list item is recorded with the TITEM8 opcode when the object index fits in 1 byte
+  """)
+  public void item02() {
+    test(
+        _ -> {},
+
+        subject -> subject.item("Ipsum"),
+        0,
+
+        opts -> {
+          opts.addByte(HtmlBytes.TITEM8);
+          opts.addInt8(opts.addObject("Ipsum"));
+        }
+    );
+  }
+
+  @Test(description = """
+  a testable list item is recorded with the TITEM16 opcode when the object index fits in 2 bytes
+  """)
+  public void item03() {
+    test(
+        opts -> {
+          opts.objectsIndex(HtmlSink.FIRST_INT16);
+        },
+
+        subject -> subject.item("Ipsum"),
+        0,
+
+        opts -> {
+          opts.objectsIndex(HtmlSink.FIRST_INT16);
+          opts.addByte(HtmlBytes.TITEM16);
+          opts.addInt16(opts.addObject("Ipsum"));
+        }
+    );
+  }
+
+  @Test(description = """
+  a testable list item is recorded with the TITEM24 opcode when the object index fits in 3 bytes
+  """)
+  public void item04() {
+    test(
+        opts -> {
+          opts.objectsIndex(HtmlSink.FIRST_INT24);
+        },
+
+        subject -> subject.item("Ipsum"),
+        0,
+
+        opts -> {
+          opts.objectsIndex(HtmlSink.FIRST_INT24);
+          opts.addByte(HtmlBytes.TITEM24);
+          opts.addInt24(opts.addObject("Ipsum"));
+        }
+    );
+  }
+
+  @Test(description = "the returned item pointer is the first available index in the code array")
+  public void item05() {
+    test(
+        opts -> {
+          opts.addInt24(0);
+        },
+
+        subject -> subject.item("Ipsum"),
+        3,
+
+        opts -> {
+          opts.addInt24(0);
+          opts.addByte(HtmlBytes.TITEM8);
+          opts.addInt8(opts.addObject("Ipsum"));
+        }
+    );
+  }
+
+  @Test(description = "a testable list is recorded with the TLIST opcode")
+  public void list01() {
+    test(
+        _ -> {},
+
+        subject -> subject.list(),
+        0,
+
+        opts -> {
+          opts.addByte(HtmlBytes.TLIST);
+        }
+    );
+  }
+
+  @Test(description = "the returned testable list pointer is the first available index in the code array")
+  public void list02() {
+    test(
+        opts -> {
+          opts.addInt24(0);
+        },
+
+        subject -> subject.list(),
+        3,
+
+        opts -> {
+          opts.addInt24(0);
+          opts.addByte(HtmlBytes.TLIST);
+        }
+    );
+  }
+
   @Test(description = "a testable row is recorded with the TROW opcode")
   public void row01() {
     test(

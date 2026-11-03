@@ -138,6 +138,23 @@ public class IntSizeTest {
   }
 
   @DataProvider
+  public Object[][] toTestableItemByteProvider() {
+    return new Object[][] {
+        {IntSize.BIT8, HtmlBytes.TITEM8},
+        {IntSize.BIT16, HtmlBytes.TITEM16},
+        {IntSize.BIT24, HtmlBytes.TITEM24}
+    };
+  }
+
+  @Test(dataProvider = "toTestableItemByteProvider", description = "each size is associated with its TITEM opcode")
+  public void toTestableItemByte(IntSize size, byte expected) {
+    final byte res;
+    res = size.toTestableItemByte();
+
+    assertEquals(res, expected);
+  }
+
+  @DataProvider
   public Object[][] toValuesByteProvider() {
     return new Object[][] {
         {IntSize.BIT8, HtmlBytes.VALUES8},

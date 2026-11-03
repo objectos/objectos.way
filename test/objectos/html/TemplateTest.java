@@ -2091,6 +2091,50 @@ x\
     );
   }
 
+  @Test(description = "testable list items")
+  public void testableNodes04() {
+    final Template subject;
+    subject = new Template() {
+      @Override
+      protected final void render() {
+        t.item("Foo");
+        t.item("Bar");
+      }
+    };
+
+    assertEquals(
+        subject.toTestableText(),
+
+        """
+        - Foo
+        - Bar
+        """
+    );
+  }
+
+  @Test(description = "testable list items separated by a list")
+  public void testableNodes05() {
+    final Template subject;
+    subject = new Template() {
+      @Override
+      protected final void render() {
+        t.item("A");
+        t.list();
+        t.item("B");
+      }
+    };
+
+    assertEquals(
+        subject.toTestableText(),
+
+        """
+        - A
+
+        - B
+        """
+    );
+  }
+
   private void test(Template template, String expected) {
     String result;
     result = template.toString();

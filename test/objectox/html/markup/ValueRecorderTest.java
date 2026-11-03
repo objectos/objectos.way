@@ -53,7 +53,11 @@ public class ValueRecorderTest {
         {HtmlBytes.TCELL8, HtmlBytes.xTCELL8},
         {HtmlBytes.TCELL16, HtmlBytes.xTCELL16},
         {HtmlBytes.TCELL24, HtmlBytes.xTCELL24},
+        {HtmlBytes.TITEM8, HtmlBytes.xTITEM8},
+        {HtmlBytes.TITEM16, HtmlBytes.xTITEM16},
+        {HtmlBytes.TITEM24, HtmlBytes.xTITEM24},
         {HtmlBytes.TROW, HtmlBytes.xTROW},
+        {HtmlBytes.TLIST, HtmlBytes.xTLIST},
 
         {HtmlBytes.xELEMSTR8, HtmlBytes.xELEMSTR8},
         {HtmlBytes.xELEMVOID8, HtmlBytes.xELEMVOID8},
@@ -81,14 +85,21 @@ public class ValueRecorderTest {
         {HtmlBytes.xTCELL8, HtmlBytes.xTCELL8},
         {HtmlBytes.xTCELL16, HtmlBytes.xTCELL16},
         {HtmlBytes.xTCELL24, HtmlBytes.xTCELL24},
+        {HtmlBytes.xTITEM8, HtmlBytes.xTITEM8},
+        {HtmlBytes.xTITEM16, HtmlBytes.xTITEM16},
+        {HtmlBytes.xTITEM24, HtmlBytes.xTITEM24},
         {HtmlBytes.xTROW, HtmlBytes.xTROW},
+        {HtmlBytes.xTLIST, HtmlBytes.xTLIST},
 
         {HtmlBytes.oTHEADING8, HtmlBytes.oTHEADING8},
         {HtmlBytes.oTHEADING16, HtmlBytes.oTHEADING16},
         {HtmlBytes.oTHEADING24, HtmlBytes.oTHEADING24},
         {HtmlBytes.oTCELL8, HtmlBytes.oTCELL8},
         {HtmlBytes.oTCELL16, HtmlBytes.oTCELL16},
-        {HtmlBytes.oTCELL24, HtmlBytes.oTCELL24}
+        {HtmlBytes.oTCELL24, HtmlBytes.oTCELL24},
+        {HtmlBytes.oTITEM8, HtmlBytes.oTITEM8},
+        {HtmlBytes.oTITEM16, HtmlBytes.oTITEM16},
+        {HtmlBytes.oTITEM24, HtmlBytes.oTITEM24}
     };
   }
 
@@ -217,7 +228,10 @@ public class ValueRecorderTest {
         {HtmlBytes.THEADING24, HtmlBytes.oTHEADING24},
         {HtmlBytes.TCELL8, HtmlBytes.oTCELL8},
         {HtmlBytes.TCELL16, HtmlBytes.oTCELL16},
-        {HtmlBytes.TCELL24, HtmlBytes.oTCELL24}
+        {HtmlBytes.TCELL24, HtmlBytes.oTCELL24},
+        {HtmlBytes.TITEM8, HtmlBytes.oTITEM8},
+        {HtmlBytes.TITEM16, HtmlBytes.oTITEM16},
+        {HtmlBytes.TITEM24, HtmlBytes.oTITEM24}
     };
   }
 
@@ -349,9 +363,14 @@ public class ValueRecorderTest {
         {HtmlBytes.xTCELL8},
         {HtmlBytes.xTCELL16},
         {HtmlBytes.xTCELL24},
+        {HtmlBytes.xTITEM8},
+        {HtmlBytes.xTITEM16},
+        {HtmlBytes.xTITEM24},
 
         {HtmlBytes.TROW},
         {HtmlBytes.xTROW},
+        {HtmlBytes.TLIST},
+        {HtmlBytes.xTLIST},
 
         {HtmlBytes.oTHEADING8},
         {HtmlBytes.oTHEADING16},
@@ -359,6 +378,9 @@ public class ValueRecorderTest {
         {HtmlBytes.oTCELL8},
         {HtmlBytes.oTCELL16},
         {HtmlBytes.oTCELL24},
+        {HtmlBytes.oTITEM8},
+        {HtmlBytes.oTITEM16},
+        {HtmlBytes.oTITEM24},
 
         {HtmlBytes.xTEXT8},
         {HtmlBytes.xTEXT16},
