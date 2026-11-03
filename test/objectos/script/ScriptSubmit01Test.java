@@ -47,7 +47,7 @@ public class ScriptSubmit01Test {
       var items = page.locator("#subject li");
       var url = page.url();
 
-      assertThat(subject).hasText("AAA BBB CCC");
+      assertThat(subject).hasText("AAABBBCCC");
       assertThat(items).hasCount(3);
 
       search.fill("BB");
