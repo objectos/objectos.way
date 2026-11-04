@@ -20,6 +20,7 @@ import static org.testng.Assert.assertEquals;
 import java.util.function.Consumer;
 import objectos.script.Js;
 import objectos.script.JsAction;
+import objectox.html.MarkupImpl;
 import objectox.html.attr.AttributeName;
 import objectox.html.elem.ElementName;
 import objectox.html.markup.HtmlBytes;
@@ -245,6 +246,385 @@ public class MarkupTest {
               opts.addByte(HtmlBytes.VALUES8);
               opts.addInt8(0);
             })
+        },
+        {
+            "boolean attribute, 1 count, 8bit, regular element",
+
+            markup(m -> {
+              m.span(
+                  Markup.autofocus
+              );
+            }),
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.xBOOLEAN8);
+              opts.addInt8(AttributeName.AUTOFOCUS.index());
+              opts.addByte(HtmlBytes.ELEMSTR8);
+              opts.addInt8(ElementName.SPAN.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(0);
+            })
+        },
+        {
+            "boolean attribute, 1 count, 8bit, void element",
+
+            markup(m -> {
+              m.input(
+                  Markup.checked
+              );
+            }),
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.xBOOLEAN8);
+              opts.addInt8(AttributeName.CHECKED.index());
+              opts.addByte(HtmlBytes.ELEMVOID8);
+              opts.addInt8(ElementName.INPUT.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(0);
+            })
+        },
+        {
+            "regular attribute contenteditable, 1 count, 8bit, regular element",
+
+            markup(m -> {
+              m.div(
+                  m.contenteditable("false")
+              );
+            }),
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.xATTRIBUTE88);
+              opts.addInt8(AttributeName.CONTENTEDITABLE.index());
+              opts.addInt8(opts.addObject("false"));
+              opts.addByte(HtmlBytes.ELEMSTR8);
+              opts.addInt8(ElementName.DIV.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(0);
+            })
+        },
+        {
+            "regular attribute contenteditable, 1 count, 16bit, regular element",
+
+            markup(HtmlSink.FIRST_INT16, m -> {
+              m.div(
+                  m.contenteditable("false")
+              );
+            }),
+
+            html(opts -> {
+              opts.objectsIndex(HtmlSink.FIRST_INT16);
+
+              opts.addByte(HtmlBytes.xATTRIBUTE816);
+              opts.addInt8(AttributeName.CONTENTEDITABLE.index());
+              opts.addInt16(opts.addObject("false"));
+              opts.addByte(HtmlBytes.ELEMSTR8);
+              opts.addInt8(ElementName.DIV.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(0);
+            })
+        },
+        {
+            "regular attribute contenteditable, 1 count, 24bit, regular element",
+
+            markup(HtmlSink.FIRST_INT24, m -> {
+              m.div(
+                  m.contenteditable("false")
+              );
+            }),
+
+            html(opts -> {
+              opts.objectsIndex(HtmlSink.FIRST_INT24);
+
+              opts.addByte(HtmlBytes.xATTRIBUTE824);
+              opts.addInt8(AttributeName.CONTENTEDITABLE.index());
+              opts.addInt24(opts.addObject("false"));
+              opts.addByte(HtmlBytes.ELEMSTR8);
+              opts.addInt8(ElementName.DIV.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(0);
+            })
+        },
+        {
+            "regular attribute type, 1 count, 8bit, void element",
+
+            markup(m -> {
+              m.input(
+                  m.type("password")
+              );
+            }),
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.xATTRIBUTE88);
+              opts.addInt8(AttributeName.TYPE.index());
+              opts.addInt8(opts.addObject("password"));
+              opts.addByte(HtmlBytes.ELEMVOID8);
+              opts.addInt8(ElementName.INPUT.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(0);
+            })
+        },
+        {
+            "regular attribute type, 1 count, 16bit, void element",
+
+            markup(HtmlSink.FIRST_INT16, m -> {
+              m.input(
+                  m.type("password")
+              );
+            }),
+
+            html(opts -> {
+              opts.objectsIndex(HtmlSink.FIRST_INT16);
+
+              opts.addByte(HtmlBytes.xATTRIBUTE816);
+              opts.addInt8(AttributeName.TYPE.index());
+              opts.addInt16(opts.addObject("password"));
+              opts.addByte(HtmlBytes.ELEMVOID8);
+              opts.addInt8(ElementName.INPUT.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(0);
+            })
+        },
+        {
+            "regular attribute type, 1 count, 24bit, void element",
+
+            markup(HtmlSink.FIRST_INT24, m -> {
+              m.input(
+                  m.type("password")
+              );
+            }),
+
+            html(opts -> {
+              opts.objectsIndex(HtmlSink.FIRST_INT24);
+
+              opts.addByte(HtmlBytes.xATTRIBUTE824);
+              opts.addInt8(AttributeName.TYPE.index());
+              opts.addInt24(opts.addObject("password"));
+              opts.addByte(HtmlBytes.ELEMVOID8);
+              opts.addInt8(ElementName.INPUT.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(0);
+            })
+        },
+        {
+            "regular element, no attributes, regular element child",
+
+            markup(m -> {
+              m.div(
+                  m.span()
+              );
+            }),
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.xELEMSTR8);
+              opts.addInt8(ElementName.SPAN.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(0);
+              opts.addByte(HtmlBytes.ELEMSTR8);
+              opts.addInt8(ElementName.DIV.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(0);
+            })
+        },
+        {
+            "regular element, no attributes, void element child",
+
+            markup(m -> {
+              m.article(
+                  m.hr()
+              );
+            }),
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.xELEMVOID8);
+              opts.addInt8(ElementName.HR.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(0);
+              opts.addByte(HtmlBytes.ELEMSTR8);
+              opts.addInt8(ElementName.ARTICLE.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(0);
+            })
+        },
+        {
+            "regular element, no attributes, nested elements",
+
+            markup(m -> {
+              m.html(
+                  m.head(
+                      m.meta()
+                  )
+              );
+            }),
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.xELEMVOID8);
+              opts.addInt8(ElementName.META.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(0);
+              opts.addByte(HtmlBytes.xELEMSTR8);
+              opts.addInt8(ElementName.HEAD.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(0);
+              opts.addByte(HtmlBytes.ELEMSTR8);
+              opts.addInt8(ElementName.HTML.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(4);
+            })
+        },
+        {
+            "testable text, top-level testable heading",
+
+            markup(m -> {
+              final TestableNodes t;
+              t = m.t();
+
+              t.h1("Heading 1");
+            }),
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.THEADING8);
+              opts.addByte((byte) 1);
+              opts.addInt8(opts.addObject("Heading 1"));
+            })
+        },
+        {
+            "testable text, top-level testable cells",
+
+            markup(m -> {
+              final TestableNodes t;
+              t = m.t();
+
+              t.cell(1, "1");
+              t.cell(1, "2");
+            }),
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.TCELL8);
+              opts.addInt8(opts.addObject("1"));
+              opts.addByte(HtmlBytes.TCELL8);
+              opts.addInt8(opts.addObject("2"));
+            })
+        },
+        {
+            "testable text, testable heading followed by testable cell",
+
+            markup(m -> {
+              final TestableNodes t;
+              t = m.t();
+
+              t.h1("Heading 1");
+              t.cell(1, "x");
+            }),
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.THEADING8);
+              opts.addByte((byte) 1);
+              opts.addInt8(opts.addObject("Heading 1"));
+              opts.addByte(HtmlBytes.TCELL8);
+              opts.addInt8(opts.addObject("x"));
+            })
+        },
+        {
+            "testable text, document without testable nodes",
+
+            markup(_ -> {}),
+
+            html(_ -> {})
+        },
+        {
+            "testable text, testable list items",
+
+            markup(m -> {
+              final TestableNodes t;
+              t = m.t();
+
+              t.item("Foo");
+              t.item("Bar");
+            }),
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.TITEM8);
+              opts.addInt8(opts.addObject("Foo"));
+              opts.addByte(HtmlBytes.TITEM8);
+              opts.addInt8(opts.addObject("Bar"));
+            })
+        },
+        {
+            "testable text, testable list items separated by a list",
+
+            markup(m -> {
+              final TestableNodes t;
+              t = m.t();
+
+              t.item("A");
+              t.item("B");
+              t.list();
+              t.item("C");
+            }),
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.TITEM8);
+              opts.addInt8(opts.addObject("A"));
+              opts.addByte(HtmlBytes.TITEM8);
+              opts.addInt8(opts.addObject("B"));
+              opts.addByte(HtmlBytes.TLIST);
+              opts.addByte(HtmlBytes.TITEM8);
+              opts.addInt8(opts.addObject("C"));
+            })
+        },
+        {
+            "testable text, testable heading, list items and cells",
+
+            markup(m -> {
+              final TestableNodes t;
+              t = m.t();
+
+              t.h1("Heading 1");
+              t.item("Item");
+              t.cell(1, "x");
+            }),
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.THEADING8);
+              opts.addByte((byte) 1);
+              opts.addInt8(opts.addObject("Heading 1"));
+              opts.addByte(HtmlBytes.TITEM8);
+              opts.addInt8(opts.addObject("Item"));
+              opts.addByte(HtmlBytes.TCELL8);
+              opts.addInt8(opts.addObject("x"));
+            })
+        },
+        {
+            "testable text, testable props",
+
+            markup(m -> {
+              final TestableNodes t;
+              t = m.t();
+
+              t.prop("First name", "John");
+              t.prop("Last name", "Smith");
+            }),
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.TPROP8);
+              opts.addObject("First name");
+              opts.addInt8(opts.addObject("John"));
+              opts.addByte(HtmlBytes.TPROP8);
+              opts.addObject("Last name");
+              opts.addInt8(opts.addObject("Smith"));
+            })
         }};
   }
 
@@ -260,6 +640,20 @@ public class MarkupTest {
   private Html markup(Consumer<Markup> consumer) {
     final Markup subject;
     subject = Markup.of();
+
+    consumer.accept(subject);
+
+    return subject.compile();
+  }
+
+  private Html markup(int objectsIndex, Consumer<? super Markup> consumer) {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    sink.objectsIndex(objectsIndex);
+
+    final Markup subject;
+    subject = MarkupImpl.of(sink);
 
     consumer.accept(subject);
 
