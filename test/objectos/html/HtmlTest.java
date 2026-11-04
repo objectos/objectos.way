@@ -17,887 +17,594 @@ package objectos.html;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.function.Consumer;
 import objectos.script.Js;
 import objectos.script.JsAction;
 import objectox.html.attr.AttributeName;
 import objectox.html.elem.ElementName;
 import objectox.html.markup.HtmlBytes;
 import objectox.html.markup.HtmlSink;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+// Any update to this test must have a corresponding test in
+// test/objectos/html/MarkupTest.java.
 public class HtmlTest {
 
-  @Test(description = """
-  boolean attr:
-  - count: 1
-  - object
-  - name (8 bit)
-  - reg elem
-  """)
-  public void booleanAttribute01() {
-    final Html subject;
-    subject = HtmlY.create(opts -> {
-      opts.addByte(HtmlBytes.xBOOLEAN8);
-      opts.addInt8(AttributeName.AUTOFOCUS.index());
-      opts.addByte(HtmlBytes.ELEMSTR8);
-      opts.addInt8(ElementName.SPAN.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-    });
-
-    assertEquals(
-        subject.toString(),
-
-        """
-        <span autofocus></span>
-        """
-    );
-  }
-
-  @Test(description = """
-  boolean attr:
-  - count: 1
-  - object
-  - name (8 bit)
-  - void elem
-  """)
-  public void booleanAttribute02() {
-    final Html subject;
-    subject = HtmlY.create(opts -> {
-      opts.addByte(HtmlBytes.xBOOLEAN8);
-      opts.addInt8(AttributeName.CHECKED.index());
-      opts.addByte(HtmlBytes.ELEMVOID8);
-      opts.addInt8(ElementName.INPUT.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-    });
-
-    assertEquals(
-        subject.toString(),
-
-        """
-        <input checked>
-        """
-    );
-  }
-
-  @Test(description = """
-  document:
-  - empty
-  """)
-  public void document01() {
-    final Html subject;
-    subject = HtmlY.create(_ -> {
-
-    });
-
-    assertEquals(
-        subject.toString(),
-
-        ""
-    );
-  }
-
-  @Test(description = """
-  js action attr:
-  - count: 1
-  - markup
-  - name (8 bit)
-  - reg elem
-  """)
-  public void jsActionAttribute01() {
+  @DataProvider
+  public Object[][] toStringProvider() {
     final JsAction action;
     action = Js.noop();
 
-    final Html subject;
-    subject = HtmlY.create(opts -> {
-      opts.addByte(HtmlBytes.xJSACTION88);
-      opts.addInt8(AttributeName.ONCLICK.index());
-      opts.addInt8(opts.addObject(action));
-      opts.addByte(HtmlBytes.ELEMSTR8);
-      opts.addInt8(ElementName.DIV.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-    });
+    return new Object[][] {
+        {
+            "boolean attribute, 1 count, 8bit, regular element",
 
-    assertEquals(
-        subject.toString(),
+            html(opts -> {
+              opts.addByte(HtmlBytes.xBOOLEAN8);
+              opts.addInt8(AttributeName.AUTOFOCUS.index());
+              opts.addByte(HtmlBytes.ELEMSTR8);
+              opts.addInt8(ElementName.SPAN.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(0);
+            }),
 
-        """
-        <div onclick='way.on(event,["NO"])'></div>
-        """
-    );
+            """
+            <span autofocus></span>
+            """
+        },
+        {
+            "boolean attribute, 1 count, 8bit, void element",
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.xBOOLEAN8);
+              opts.addInt8(AttributeName.CHECKED.index());
+              opts.addByte(HtmlBytes.ELEMVOID8);
+              opts.addInt8(ElementName.INPUT.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(0);
+            }),
+
+            """
+            <input checked>
+            """
+        },
+        {
+            "document, empty",
+
+            html(_ -> {}),
+
+            ""
+        },
+        {
+            "js action attribute, 1 count, 8bit, regular element",
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.xJSACTION88);
+              opts.addInt8(AttributeName.ONCLICK.index());
+              opts.addInt8(opts.addObject(action));
+              opts.addByte(HtmlBytes.ELEMSTR8);
+              opts.addInt8(ElementName.DIV.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(0);
+            }),
+
+            """
+            <div onclick='way.on(event,["NO"])'></div>
+            """
+        },
+        {
+            "js action attribute, 1 count, 8bit, void element",
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.xJSACTION88);
+              opts.addInt8(AttributeName.ONCLICK.index());
+              opts.addInt8(opts.addObject(action));
+              opts.addByte(HtmlBytes.ELEMVOID8);
+              opts.addInt8(ElementName.INPUT.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(0);
+            }),
+
+            """
+            <input onclick='way.on(event,["NO"])'>
+            """
+        },
+        {
+            "regular attribute contenteditable, 1 count, 8bit, regular element",
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.xATTRIBUTE88);
+              opts.addInt8(AttributeName.CONTENTEDITABLE.index());
+              opts.addInt8(opts.addObject("false"));
+              opts.addByte(HtmlBytes.ELEMSTR8);
+              opts.addInt8(ElementName.DIV.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(0);
+            }),
+
+            """
+            <div contenteditable="false"></div>
+            """
+        },
+        {
+            "regular attribute contenteditable, 1 count, 16bit, regular element",
+
+            html(opts -> {
+              opts.objectsIndex(HtmlSink.FIRST_INT16);
+
+              opts.addByte(HtmlBytes.xATTRIBUTE816);
+              opts.addInt8(AttributeName.CONTENTEDITABLE.index());
+              opts.addInt16(opts.addObject("false"));
+              opts.addByte(HtmlBytes.ELEMSTR8);
+              opts.addInt8(ElementName.DIV.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(0);
+            }),
+
+            """
+            <div contenteditable="false"></div>
+            """
+        },
+        {
+            "regular attribute contenteditable, 1 count, 24bit, regular element",
+
+            html(opts -> {
+              opts.objectsIndex(HtmlSink.FIRST_INT24);
+
+              opts.addByte(HtmlBytes.xATTRIBUTE824);
+              opts.addInt8(AttributeName.CONTENTEDITABLE.index());
+              opts.addInt24(opts.addObject("false"));
+              opts.addByte(HtmlBytes.ELEMSTR8);
+              opts.addInt8(ElementName.DIV.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(0);
+            }),
+
+            """
+            <div contenteditable="false"></div>
+            """
+        },
+        {
+            "regular attribute type, 1 count, 8bit, void element",
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.xATTRIBUTE88);
+              opts.addInt8(AttributeName.TYPE.index());
+              opts.addInt8(opts.addObject("password"));
+              opts.addByte(HtmlBytes.ELEMVOID8);
+              opts.addInt8(ElementName.INPUT.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(0);
+            }),
+
+            """
+            <input type="password">
+            """
+        },
+        {
+            "regular attribute type, 1 count, 16bit, void element",
+
+            html(opts -> {
+              opts.objectsIndex(HtmlSink.FIRST_INT16);
+
+              opts.addByte(HtmlBytes.xATTRIBUTE816);
+              opts.addInt8(AttributeName.TYPE.index());
+              opts.addInt16(opts.addObject("password"));
+              opts.addByte(HtmlBytes.ELEMVOID8);
+              opts.addInt8(ElementName.INPUT.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(0);
+            }),
+
+            """
+            <input type="password">
+            """
+        },
+        {
+            "regular attribute type, 1 count, 24bit, void element",
+
+            html(opts -> {
+              opts.objectsIndex(HtmlSink.FIRST_INT24);
+
+              opts.addByte(HtmlBytes.xATTRIBUTE824);
+              opts.addInt8(AttributeName.TYPE.index());
+              opts.addInt24(opts.addObject("password"));
+              opts.addByte(HtmlBytes.ELEMVOID8);
+              opts.addInt8(ElementName.INPUT.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(0);
+            }),
+
+            """
+            <input type="password">
+            """
+        },
+        {
+            "regular attribute, 1 count, 8bit, regular element",
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.xATTRIBUTE88);
+              opts.addInt8(AttributeName.ID.index());
+              opts.addInt8(opts.addObject("foo"));
+              opts.addByte(HtmlBytes.ELEMSTR8);
+              opts.addInt8(ElementName.DIV.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(0);
+            }),
+
+            """
+            <div id="foo"></div>
+            """
+        },
+        {
+            "regular attribute, 1 count, 8bit, void element",
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.xATTRIBUTE88);
+              opts.addInt8(AttributeName.ID.index());
+              opts.addInt8(opts.addObject("foo"));
+              opts.addByte(HtmlBytes.ELEMVOID8);
+              opts.addInt8(ElementName.INPUT.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(0);
+            }),
+
+            """
+            <input id="foo">
+            """
+        },
+        {
+            "regular attribute, 2 count, 8bit, regular element",
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.xATTRIBUTE88);
+              opts.addInt8(AttributeName.LANG.index());
+              opts.addInt8(opts.addObject("pt-BR"));
+              opts.addByte(HtmlBytes.xATTRIBUTE88);
+              opts.addInt8(AttributeName.DIR.index());
+              opts.addInt8(opts.addObject("auto"));
+              opts.addByte(HtmlBytes.ELEMSTR8);
+              opts.addInt8(ElementName.HTML.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(2);
+              opts.addInt8(0);
+              opts.addInt8(3);
+            }),
+
+            """
+            <html lang="pt-BR" dir="auto"></html>
+            """
+        },
+        {
+            "regular attribute, 2 count, 8bit, void element",
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.xATTRIBUTE88);
+              opts.addInt8(AttributeName.TYPE.index());
+              opts.addInt8(opts.addObject("text"));
+              opts.addByte(HtmlBytes.xATTRIBUTE88);
+              opts.addInt8(AttributeName.SIZE.index());
+              opts.addInt8(opts.addObject("30"));
+              opts.addByte(HtmlBytes.ELEMVOID8);
+              opts.addInt8(ElementName.INPUT.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(2);
+              opts.addInt8(0);
+              opts.addInt8(3);
+            }),
+
+            """
+            <input type="text" size="30">
+            """
+        },
+        {
+            "regular attribute, 3 count, 8bit, regular element",
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.xATTRIBUTE88);
+              opts.addInt8(AttributeName.CLASS.index());
+              opts.addInt8(opts.addObject("c1"));
+              opts.addByte(HtmlBytes.xATTRIBUTE88);
+              opts.addInt8(AttributeName.CLASS.index());
+              opts.addInt8(opts.addObject("c3"));
+              opts.addByte(HtmlBytes.xATTRIBUTE88);
+              opts.addInt8(AttributeName.CLASS.index());
+              opts.addInt8(opts.addObject("c2"));
+              opts.addByte(HtmlBytes.ELEMSTR8);
+              opts.addInt8(ElementName.SPAN.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(3);
+              opts.addInt8(0);
+              opts.addInt8(6);
+              opts.addInt8(3);
+            }),
+
+            """
+            <span class="c1 c2 c3"></span>
+            """
+        },
+        {
+            "regular attribute, 3 count, 8bit, void element",
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.xATTRIBUTE88);
+              opts.addInt8(AttributeName.CLASS.index());
+              opts.addInt8(opts.addObject("c2"));
+              opts.addByte(HtmlBytes.xATTRIBUTE88);
+              opts.addInt8(AttributeName.CLASS.index());
+              opts.addInt8(opts.addObject("c1"));
+              opts.addByte(HtmlBytes.xATTRIBUTE88);
+              opts.addInt8(AttributeName.CLASS.index());
+              opts.addInt8(opts.addObject("c3"));
+              opts.addByte(HtmlBytes.ELEMVOID8);
+              opts.addInt8(ElementName.INPUT.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(3);
+              opts.addInt8(3);
+              opts.addInt8(0);
+              opts.addInt8(6);
+            }),
+
+            """
+            <input class="c1 c2 c3">
+            """
+        },
+        {
+            "regular element, no attributes, no children",
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.ELEMSTR8);
+              opts.addInt8(ElementName.DIV.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(0);
+            }),
+
+            """
+            <div></div>
+            """
+        },
+        {
+            "regular element, no attributes, regular element child",
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.xELEMSTR8);
+              opts.addInt8(ElementName.SPAN.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(0);
+              opts.addByte(HtmlBytes.ELEMSTR8);
+              opts.addInt8(ElementName.DIV.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(0);
+            }),
+
+            """
+            <div>\
+            <span></span>\
+            </div>
+            """
+        },
+        {
+            "regular element, no attributes, void element child",
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.xELEMVOID8);
+              opts.addInt8(ElementName.HR.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(0);
+              opts.addByte(HtmlBytes.ELEMSTR8);
+              opts.addInt8(ElementName.ARTICLE.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(0);
+            }),
+
+            """
+            <article>\
+            <hr>\
+            </article>
+            """
+        },
+        {
+            "regular element, no attributes, nested elements",
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.xELEMVOID8);
+              opts.addInt8(ElementName.META.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(0);
+              opts.addByte(HtmlBytes.xELEMSTR8);
+              opts.addInt8(ElementName.HEAD.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(0);
+              opts.addByte(HtmlBytes.ELEMSTR8);
+              opts.addInt8(ElementName.HTML.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(4);
+            }),
+
+            """
+            <html>\
+            <head>\
+            <meta>\
+            </head>\
+            </html>
+            """
+        },
+        {
+            "void element, no attributes",
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.ELEMVOID8);
+              opts.addInt8(ElementName.HR.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(0);
+            }),
+
+            """
+            <hr>
+            """
+        }
+    };
   }
 
-  @Test(description = """
-  js action attr:
-  - count: 1
-  - markup
-  - name (8 bit)
-  - void elem
-  """)
-  public void jsActionAttribute02() {
-    final JsAction action;
-    action = Js.noop();
-
-    final Html subject;
-    subject = HtmlY.create(opts -> {
-      opts.addByte(HtmlBytes.xJSACTION88);
-      opts.addInt8(AttributeName.ONCLICK.index());
-      opts.addInt8(opts.addObject(action));
-      opts.addByte(HtmlBytes.ELEMVOID8);
-      opts.addInt8(ElementName.INPUT.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-    });
-
-    assertEquals(
-        subject.toString(),
-
-        """
-        <input onclick='way.on(event,["NO"])'>
-        """
-    );
+  @Test(dataProvider = "toStringProvider")
+  public void toString(String description, Html subject, String expected) {
+    assertEquals(subject.toString(), expected, description);
   }
 
-  @Test(description = """
-  reg attr:
-  - count: 1
-  - markup
-  - name (8 bit)
-  - reg elem
-  """)
-  public void regularAttribute01_08bit() {
-    final Html subject;
-    subject = HtmlY.create(opts -> {
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.CONTENTEDITABLE.index());
-      opts.addInt8(opts.addObject("false"));
-      opts.addByte(HtmlBytes.ELEMSTR8);
-      opts.addInt8(ElementName.DIV.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-    });
+  @DataProvider
+  public Object[][] toTestableTextProvider() {
+    return new Object[][] {
+        {
+            "testable text, top-level testable heading",
 
-    assertEquals(
-        subject.toString(),
+            html(opts -> {
+              opts.addByte(HtmlBytes.THEADING8);
+              opts.addByte((byte) 1);
+              opts.addInt8(opts.addObject("Heading 1"));
+            }),
 
-        """
-        <div contenteditable="false"></div>
-        """
-    );
+            """
+            # Heading 1
+            """
+        },
+        {
+            "testable text, top-level testable cells",
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.TCELL8);
+              opts.addInt8(opts.addObject("1"));
+              opts.addByte(HtmlBytes.TCELL8);
+              opts.addInt8(opts.addObject("2"));
+            }),
+
+            """
+            | 1 | 2 |
+            """
+        },
+        {
+            "testable text, testable heading followed by testable cell",
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.THEADING8);
+              opts.addByte((byte) 1);
+              opts.addInt8(opts.addObject("Heading 1"));
+              opts.addByte(HtmlBytes.TCELL8);
+              opts.addInt8(opts.addObject("x"));
+            }),
+
+            """
+            # Heading 1
+
+            | x |
+            """
+        },
+        {
+            "testable text, document without testable nodes",
+
+            html(_ -> {}),
+
+            ""
+        },
+        {
+            "testable text, testable list items",
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.TITEM8);
+              opts.addInt8(opts.addObject("Foo"));
+              opts.addByte(HtmlBytes.TITEM8);
+              opts.addInt8(opts.addObject("Bar"));
+            }),
+
+            """
+            - Foo
+            - Bar
+            """
+        },
+        {
+            "testable text, testable list items separated by a list",
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.TITEM8);
+              opts.addInt8(opts.addObject("A"));
+              opts.addByte(HtmlBytes.TITEM8);
+              opts.addInt8(opts.addObject("B"));
+              opts.addByte(HtmlBytes.TLIST);
+              opts.addByte(HtmlBytes.TITEM8);
+              opts.addInt8(opts.addObject("C"));
+            }),
+
+            """
+            - A
+            - B
+
+            - C
+            """
+        },
+        {
+            "testable text, testable heading, list items and cells",
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.THEADING8);
+              opts.addByte((byte) 1);
+              opts.addInt8(opts.addObject("Heading 1"));
+              opts.addByte(HtmlBytes.TITEM8);
+              opts.addInt8(opts.addObject("Item"));
+              opts.addByte(HtmlBytes.TCELL8);
+              opts.addInt8(opts.addObject("x"));
+            }),
+
+            """
+            # Heading 1
+
+            - Item
+
+            | x |
+            """
+        },
+        {
+            "testable text, testable props",
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.TPROP8);
+              opts.addObject("First name");
+              opts.addInt8(opts.addObject("John"));
+              opts.addByte(HtmlBytes.TPROP8);
+              opts.addObject("Last name");
+              opts.addInt8(opts.addObject("Smith"));
+            }),
+
+            """
+            - First name: John
+            - Last name: Smith
+            """
+        }
+    };
   }
 
-  @Test(description = """
-  reg attr:
-  - count: 1
-  - markup
-  - name (16 bit)
-  - reg elem
-  """)
-  public void regularAttribute01_16bit() {
-    final Html subject;
-    subject = HtmlY.create(opts -> {
-      opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
-
-      opts.addByte(HtmlBytes.xATTRIBUTE816);
-      opts.addInt8(AttributeName.CONTENTEDITABLE.index());
-      opts.addInt16(opts.addObject("false"));
-      opts.addByte(HtmlBytes.ELEMSTR8);
-      opts.addInt8(ElementName.DIV.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-    });
-
-    assertEquals(
-        subject.toString(),
-
-        """
-        <div contenteditable="false"></div>
-        """
-    );
+  @Test(dataProvider = "toTestableTextProvider")
+  public void toTestableText(String description, Html subject, String expected) {
+    assertEquals(subject.toTestableText(), expected, description);
   }
 
-  @Test(description = """
-  reg attr:
-  - count: 1
-  - markup
-  - name (24 bit)
-  - reg elem
-  """)
-  public void regularAttribute01_24bit() {
-    final Html subject;
-    subject = HtmlY.create(opts -> {
-      opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
-
-      opts.addByte(HtmlBytes.xATTRIBUTE824);
-      opts.addInt8(AttributeName.CONTENTEDITABLE.index());
-      opts.addInt24(opts.addObject("false"));
-      opts.addByte(HtmlBytes.ELEMSTR8);
-      opts.addInt8(ElementName.DIV.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-    });
-
-    assertEquals(
-        subject.toString(),
-
-        """
-        <div contenteditable="false"></div>
-        """
-    );
-  }
-
-  @Test(description = """
-  reg attr:
-  - count: 1
-  - markup
-  - name (8 bit)
-  - void elem
-  """)
-  public void regularAttribute02_08bit() {
-    final Html subject;
-    subject = HtmlY.create(opts -> {
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.TYPE.index());
-      opts.addInt8(opts.addObject("password"));
-      opts.addByte(HtmlBytes.ELEMVOID8);
-      opts.addInt8(ElementName.INPUT.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-    });
-
-    assertEquals(
-        subject.toString(),
-
-        """
-        <input type="password">
-        """
-    );
-  }
-
-  @Test(description = """
-  reg attr:
-  - count: 1
-  - markup
-  - name (16 bit)
-  - void elem
-  """)
-  public void regularAttribute02_16bit() {
-    final Html subject;
-    subject = HtmlY.create(opts -> {
-      opts.objectsIndex(HtmlSink.MAX_INT8 + 1);
-
-      opts.addByte(HtmlBytes.xATTRIBUTE816);
-      opts.addInt8(AttributeName.TYPE.index());
-      opts.addInt16(opts.addObject("password"));
-      opts.addByte(HtmlBytes.ELEMVOID8);
-      opts.addInt8(ElementName.INPUT.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-    });
-
-    assertEquals(
-        subject.toString(),
-
-        """
-        <input type="password">
-        """
-    );
-  }
-
-  @Test(description = """
-  reg attr:
-  - count: 1
-  - markup
-  - name (24 bit)
-  - void elem
-  """)
-  public void regularAttribute02_24bit() {
-    final Html subject;
-    subject = HtmlY.create(opts -> {
-      opts.objectsIndex(HtmlSink.MAX_INT16 + 1);
-
-      opts.addByte(HtmlBytes.xATTRIBUTE824);
-      opts.addInt8(AttributeName.TYPE.index());
-      opts.addInt24(opts.addObject("password"));
-      opts.addByte(HtmlBytes.ELEMVOID8);
-      opts.addInt8(ElementName.INPUT.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-    });
-
-    assertEquals(
-        subject.toString(),
-
-        """
-        <input type="password">
-        """
-    );
-  }
-
-  @Test(description = """
-  reg attr:
-  - count: 1
-  - object
-  - name (8 bit)
-  - reg elem
-  """)
-  public void regularAttribute03() {
-    final Html subject;
-    subject = HtmlY.create(opts -> {
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.ID.index());
-      opts.addInt8(opts.addObject("foo"));
-      opts.addByte(HtmlBytes.ELEMSTR8);
-      opts.addInt8(ElementName.DIV.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-    });
-
-    assertEquals(
-        subject.toString(),
-
-        """
-        <div id="foo"></div>
-        """
-    );
-  }
-
-  @Test(description = """
-  reg attr:
-  - count: 1
-  - object
-  - name (8 bit)
-  - void elem
-  """)
-  public void regularAttribute04() {
-    final Html subject;
-    subject = HtmlY.create(opts -> {
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.ID.index());
-      opts.addInt8(opts.addObject("foo"));
-      opts.addByte(HtmlBytes.ELEMVOID8);
-      opts.addInt8(ElementName.INPUT.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-    });
-
-    assertEquals(
-        subject.toString(),
-
-        """
-        <input id="foo">
-        """
-    );
-  }
-
-  @Test(description = """
-  reg attr:
-  - count: 2
-  - markup
-  - name (8 bit)
-  - reg elem
-  """)
-  public void regularAttribute05() {
-    final Html subject;
-    subject = HtmlY.create(opts -> {
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.LANG.index());
-      opts.addInt8(opts.addObject("pt-BR"));
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.DIR.index());
-      opts.addInt8(opts.addObject("auto"));
-      opts.addByte(HtmlBytes.ELEMSTR8);
-      opts.addInt8(ElementName.HTML.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(2);
-      opts.addInt8(0);
-      opts.addInt8(3);
-    });
-
-    assertEquals(
-        subject.toString(),
-
-        """
-        <html lang="pt-BR" dir="auto"></html>
-        """
-    );
-  }
-
-  @Test(description = """
-  reg attr:
-  - count: 2
-  - markup
-  - name (8 bit)
-  - void elem
-  """)
-  public void regularAttribute06() {
-    final Html subject;
-    subject = HtmlY.create(opts -> {
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.TYPE.index());
-      opts.addInt8(opts.addObject("text"));
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.SIZE.index());
-      opts.addInt8(opts.addObject("30"));
-      opts.addByte(HtmlBytes.ELEMVOID8);
-      opts.addInt8(ElementName.INPUT.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(2);
-      opts.addInt8(0);
-      opts.addInt8(3);
-    });
-
-    assertEquals(
-        subject.toString(),
-
-        """
-        <input type="text" size="30">
-        """
-    );
-  }
-
-  @Test(description = """
-  reg attr:
-  - count: 3
-  - object (class)
-  - name (8 bit)
-  - reg elem
-  """)
-  public void regularAttribute07() {
-    final Html subject;
-    subject = HtmlY.create(opts -> {
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.CLASS.index());
-      opts.addInt8(opts.addObject("c1"));
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.CLASS.index());
-      opts.addInt8(opts.addObject("c3"));
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.CLASS.index());
-      opts.addInt8(opts.addObject("c2"));
-      opts.addByte(HtmlBytes.ELEMSTR8);
-      opts.addInt8(ElementName.SPAN.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(3);
-      opts.addInt8(0);
-      opts.addInt8(6);
-      opts.addInt8(3);
-    });
-
-    assertEquals(
-        subject.toString(),
-
-        """
-        <span class="c1 c2 c3"></span>
-        """
-    );
-  }
-
-  @Test(description = """
-  reg attr:
-  - count: 3
-  - object (class)
-  - name (8 bit)
-  - void elem
-  """)
-  public void regularAttribute08() {
-    final Html subject;
-    subject = HtmlY.create(opts -> {
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.CLASS.index());
-      opts.addInt8(opts.addObject("c2"));
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.CLASS.index());
-      opts.addInt8(opts.addObject("c1"));
-      opts.addByte(HtmlBytes.xATTRIBUTE88);
-      opts.addInt8(AttributeName.CLASS.index());
-      opts.addInt8(opts.addObject("c3"));
-      opts.addByte(HtmlBytes.ELEMVOID8);
-      opts.addInt8(ElementName.INPUT.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(3);
-      opts.addInt8(3);
-      opts.addInt8(0);
-      opts.addInt8(6);
-    });
-
-    assertEquals(
-        subject.toString(),
-
-        """
-        <input class="c1 c2 c3">
-        """
-    );
-  }
-
-  @Test(description = """
-  regular elem:
-  - no attrs
-  - no children
-  """)
-  public void regularElement01() {
-    final Html subject;
-    subject = HtmlY.create(opts -> {
-      opts.addByte(HtmlBytes.ELEMSTR8);
-      opts.addInt8(ElementName.DIV.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(0);
-    });
-
-    assertEquals(
-        subject.toString(),
-
-        """
-        <div></div>
-        """
-    );
-  }
-
-  @Test(description = """
-  regular elem:
-  - no attrs
-  - reg elem (no attrs / no children)
-  """)
-  public void regularElement02() {
-    final Html subject;
-    subject = HtmlY.create(opts -> {
-      opts.addByte(HtmlBytes.xELEMSTR8);
-      opts.addInt8(ElementName.SPAN.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMSTR8);
-      opts.addInt8(ElementName.DIV.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-    });
-
-    assertEquals(
-        subject.toString(),
-
-        """
-        <div>\
-        <span></span>\
-        </div>
-        """
-    );
-  }
-
-  @Test(description = """
-  regular elem:
-  - no attrs
-  - void elem (no attrs)
-  """)
-  public void regularElement03() {
-    final Html subject;
-    subject = HtmlY.create(opts -> {
-      opts.addByte(HtmlBytes.xELEMVOID8);
-      opts.addInt8(ElementName.HR.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMSTR8);
-      opts.addInt8(ElementName.ARTICLE.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-    });
-
-    assertEquals(
-        subject.toString(),
-
-        """
-        <article>\
-        <hr>\
-        </article>
-        """
-    );
-  }
-
-  @Test(description = """
-  regular elem:
-  - no attrs
-  - reg elem (no attrs / containing a void elem)
-  - void elem (no attrs)
-  """)
-  public void regularElement04() {
-    final Html subject;
-    subject = HtmlY.create(opts -> {
-      opts.addByte(HtmlBytes.xELEMVOID8);
-      opts.addInt8(ElementName.META.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(0);
-      opts.addByte(HtmlBytes.xELEMSTR8);
-      opts.addInt8(ElementName.HEAD.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(0);
-      opts.addByte(HtmlBytes.ELEMSTR8);
-      opts.addInt8(ElementName.HTML.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(1);
-      opts.addInt8(4);
-    });
-
-    assertEquals(
-        subject.toString(),
-
-        """
-        <html>\
-        <head>\
-        <meta>\
-        </head>\
-        </html>
-        """
-    );
-  }
-
-  @Test(description = """
-  toTestableText:
-  - top-level testable heading
-  """)
-  public void toTestableText01() {
-    final Markup markup;
-    markup = Markup.of();
-
-    final TestableNodes t;
-    t = markup.t();
-
-    t.h1("Heading 1");
-
-    final Html subject;
-    subject = markup.compile();
-
-    assertEquals(
-        subject.toTestableText(),
-
-        """
-        # Heading 1
-        """
-    );
-  }
-
-  @Test(description = """
-  toTestableText:
-  - top-level testable cells
-  """)
-  public void toTestableText02() {
-    final Markup markup;
-    markup = Markup.of();
-
-    final TestableNodes t;
-    t = markup.t();
-
-    t.cell(1, "1");
-    t.cell(1, "2");
-
-    final Html subject;
-    subject = markup.compile();
-
-    assertEquals(
-        subject.toTestableText(),
-
-        """
-        | 1 | 2 |
-        """
-    );
-  }
-
-  @Test(description = """
-  toTestableText:
-  - testable heading followed by testable cell
-  """)
-  public void toTestableText03() {
-    final Markup markup;
-    markup = Markup.of();
-
-    final TestableNodes t;
-    t = markup.t();
-
-    t.h1("Heading 1");
-    t.cell(1, "x");
-
-    final Html subject;
-    subject = markup.compile();
-
-    assertEquals(
-        subject.toTestableText(),
-
-        """
-        # Heading 1
-
-        | x |
-        """
-    );
-  }
-
-  @Test(description = """
-  toTestableText:
-  - document without testable nodes
-  """)
-  public void toTestableText04() {
-    final Markup markup;
-    markup = Markup.of();
-
-    final Html subject;
-    subject = markup.compile();
-
-    assertEquals(
-        subject.toTestableText(),
-
-        ""
-    );
-  }
-
-  @Test(description = """
-  toTestableText:
-  - testable list items
-  """)
-  public void toTestableText05() {
-    final Markup markup;
-    markup = Markup.of();
-
-    final TestableNodes t;
-    t = markup.t();
-
-    t.item("Foo");
-    t.item("Bar");
-
-    final Html subject;
-    subject = markup.compile();
-
-    assertEquals(
-        subject.toTestableText(),
-
-        """
-        - Foo
-        - Bar
-        """
-    );
-  }
-
-  @Test(description = """
-  toTestableText:
-  - testable list items separated by a list
-  """)
-  public void toTestableText06() {
-    final Markup markup;
-    markup = Markup.of();
-
-    final TestableNodes t;
-    t = markup.t();
-
-    t.item("A");
-    t.item("B");
-    t.list();
-    t.item("C");
-
-    final Html subject;
-    subject = markup.compile();
-
-    assertEquals(
-        subject.toTestableText(),
-
-        """
-        - A
-        - B
-
-        - C
-        """
-    );
-  }
-
-  @Test(description = """
-  toTestableText:
-  - testable heading, list items and cells
-  """)
-  public void toTestableText07() {
-    final Markup markup;
-    markup = Markup.of();
-
-    final TestableNodes t;
-    t = markup.t();
-
-    t.h1("Heading 1");
-    t.item("Item");
-    t.cell(1, "x");
-
-    final Html subject;
-    subject = markup.compile();
-
-    assertEquals(
-        subject.toTestableText(),
-
-        """
-        # Heading 1
-
-        - Item
-
-        | x |
-        """
-    );
-  }
-
-  @Test(description = """
-  toTestableText:
-  - testable props
-  """)
-  public void toTestableText08() {
-    final Markup markup;
-    markup = Markup.of();
-
-    final TestableNodes t;
-    t = markup.t();
-
-    t.prop("First name", "John");
-    t.prop("Last name", "Smith");
-
-    final Html subject;
-    subject = markup.compile();
-
-    assertEquals(
-        subject.toTestableText(),
-
-        """
-        - First name: John
-        - Last name: Smith
-        """
-    );
-  }
-
-  @Test(description = """
-  void elem:
-  - no attrs
-  """)
-  public void voidElement01() {
-    final Html subject;
-    subject = HtmlY.create(opts -> {
-      opts.addByte(HtmlBytes.ELEMVOID8);
-      opts.addInt8(ElementName.HR.index());
-      opts.addByte(HtmlBytes.VALUES8);
-      opts.addInt8(0);
-    });
-
-    assertEquals(
-        subject.toString(),
-
-        """
-        <hr>
-        """
-    );
+  private Html html(Consumer<? super HtmlSink> opts) {
+    return HtmlY.create(opts);
   }
 
 }

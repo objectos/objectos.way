@@ -484,6 +484,20 @@ public class MarkupTest {
             })
         },
         {
+            "void element, no attributes",
+
+            markup(m -> {
+              m.hr();
+            }),
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.ELEMVOID8);
+              opts.addInt8(ElementName.HR.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(0);
+            })
+        },
+        {
             "testable text, top-level testable heading",
 
             markup(m -> {
