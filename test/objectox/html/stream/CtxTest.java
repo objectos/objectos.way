@@ -105,6 +105,10 @@ public class CtxTest {
         {HtmlBytes.TITEM16, op(ctx -> new EmitTestableListItemState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT16))},
         {HtmlBytes.TITEM24, op(ctx -> new EmitTestableListItemState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT24))},
 
+        {HtmlBytes.TPROP8, op(ctx -> new EmitTestablePropState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT8))},
+        {HtmlBytes.TPROP16, op(ctx -> new EmitTestablePropState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT16))},
+        {HtmlBytes.TPROP24, op(ctx -> new EmitTestablePropState(ctx, TestableLevel.TOP_LEVEL, IntSize.BIT24))},
+
         {HtmlBytes.TROW, op(ctx -> new BeginTestableRowState(ctx, ScanLevel.TOP_LEVEL))},
         {HtmlBytes.TLIST, op(ctx -> new BeginTestableListState(ctx, ScanLevel.TOP_LEVEL))},
 
@@ -143,6 +147,10 @@ public class CtxTest {
         {HtmlBytes.xTITEM16, op(ctx -> new EmitTestableListItemState(ctx, TestableLevel.REGULAR, IntSize.BIT16))},
         {HtmlBytes.xTITEM24, op(ctx -> new EmitTestableListItemState(ctx, TestableLevel.REGULAR, IntSize.BIT24))},
 
+        {HtmlBytes.xTPROP8, op(ctx -> new EmitTestablePropState(ctx, TestableLevel.REGULAR, IntSize.BIT8))},
+        {HtmlBytes.xTPROP16, op(ctx -> new EmitTestablePropState(ctx, TestableLevel.REGULAR, IntSize.BIT16))},
+        {HtmlBytes.xTPROP24, op(ctx -> new EmitTestablePropState(ctx, TestableLevel.REGULAR, IntSize.BIT24))},
+
         {HtmlBytes.xTROW, op(ctx -> new BeginTestableRowState(ctx, ScanLevel.NESTED))},
         {HtmlBytes.xTLIST, op(ctx -> new BeginTestableListState(ctx, ScanLevel.NESTED))},
 
@@ -156,7 +164,11 @@ public class CtxTest {
 
         {HtmlBytes.oTITEM8, op(ctx -> new EmitTestableListItemState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT8))},
         {HtmlBytes.oTITEM16, op(ctx -> new EmitTestableListItemState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT16))},
-        {HtmlBytes.oTITEM24, op(ctx -> new EmitTestableListItemState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT24))}
+        {HtmlBytes.oTITEM24, op(ctx -> new EmitTestableListItemState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT24))},
+
+        {HtmlBytes.oTPROP8, op(ctx -> new EmitTestablePropState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT8))},
+        {HtmlBytes.oTPROP16, op(ctx -> new EmitTestablePropState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT16))},
+        {HtmlBytes.oTPROP24, op(ctx -> new EmitTestablePropState(ctx, TestableLevel.TEST_ONLY, IntSize.BIT24))}
     };
   }
 

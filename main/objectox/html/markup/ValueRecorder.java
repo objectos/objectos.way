@@ -87,6 +87,10 @@ final class ValueRecorder {
       case HtmlBytes.TITEM16 -> HtmlBytes.xTITEM16;
       case HtmlBytes.TITEM24 -> HtmlBytes.xTITEM24;
 
+      case HtmlBytes.TPROP8 -> HtmlBytes.xTPROP8;
+      case HtmlBytes.TPROP16 -> HtmlBytes.xTPROP16;
+      case HtmlBytes.TPROP24 -> HtmlBytes.xTPROP24;
+
       case HtmlBytes.TROW -> HtmlBytes.xTROW;
       case HtmlBytes.TLIST -> HtmlBytes.xTLIST;
 
@@ -122,6 +126,10 @@ final class ValueRecorder {
       case HtmlBytes.xTITEM16 -> HtmlBytes.xTITEM16;
       case HtmlBytes.xTITEM24 -> HtmlBytes.xTITEM24;
 
+      case HtmlBytes.xTPROP8 -> HtmlBytes.xTPROP8;
+      case HtmlBytes.xTPROP16 -> HtmlBytes.xTPROP16;
+      case HtmlBytes.xTPROP24 -> HtmlBytes.xTPROP24;
+
       case HtmlBytes.xTROW -> HtmlBytes.xTROW;
       case HtmlBytes.xTLIST -> HtmlBytes.xTLIST;
 
@@ -136,6 +144,10 @@ final class ValueRecorder {
       case HtmlBytes.oTITEM8 -> HtmlBytes.oTITEM8;
       case HtmlBytes.oTITEM16 -> HtmlBytes.oTITEM16;
       case HtmlBytes.oTITEM24 -> HtmlBytes.oTITEM24;
+
+      case HtmlBytes.oTPROP8 -> HtmlBytes.oTPROP8;
+      case HtmlBytes.oTPROP16 -> HtmlBytes.oTPROP16;
+      case HtmlBytes.oTPROP24 -> HtmlBytes.oTPROP24;
 
       default -> throw new IllegalArgumentException("Invalid opcode: " + opcode);
     };
@@ -154,6 +166,10 @@ final class ValueRecorder {
       case HtmlBytes.TITEM8 -> HtmlBytes.oTITEM8;
       case HtmlBytes.TITEM16 -> HtmlBytes.oTITEM16;
       case HtmlBytes.TITEM24 -> HtmlBytes.oTITEM24;
+
+      case HtmlBytes.TPROP8 -> HtmlBytes.oTPROP8;
+      case HtmlBytes.TPROP16 -> HtmlBytes.oTPROP16;
+      case HtmlBytes.TPROP24 -> HtmlBytes.oTPROP24;
 
       default -> throw new IllegalArgumentException("Invalid opcode: " + opcode);
     };

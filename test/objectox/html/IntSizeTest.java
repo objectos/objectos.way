@@ -155,6 +155,23 @@ public class IntSizeTest {
   }
 
   @DataProvider
+  public Object[][] toTestablePropByteProvider() {
+    return new Object[][] {
+        {IntSize.BIT8, HtmlBytes.TPROP8},
+        {IntSize.BIT16, HtmlBytes.TPROP16},
+        {IntSize.BIT24, HtmlBytes.TPROP24}
+    };
+  }
+
+  @Test(dataProvider = "toTestablePropByteProvider", description = "each size is associated with its TPROP opcode")
+  public void toTestablePropByte(IntSize size, byte expected) {
+    final byte res;
+    res = size.toTestablePropByte();
+
+    assertEquals(res, expected);
+  }
+
+  @DataProvider
   public Object[][] toValuesByteProvider() {
     return new Object[][] {
         {IntSize.BIT8, HtmlBytes.VALUES8},

@@ -23,4 +23,5 @@ public sealed interface EmitTestable
     BeginTestableRow,
     EmitTestableCell,
     EmitTestableHeading,
-    EmitTestableListItem {}
+    EmitTestableListItem,
+    EmitTestableProp {}

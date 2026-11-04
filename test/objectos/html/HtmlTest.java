@@ -852,6 +852,33 @@ public class HtmlTest {
   }
 
   @Test(description = """
+  toTestableText:
+  - testable props
+  """)
+  public void toTestableText08() {
+    final Markup markup;
+    markup = Markup.of();
+
+    final TestableNodes t;
+    t = markup.t();
+
+    t.prop("First name", "John");
+    t.prop("Last name", "Smith");
+
+    final Html subject;
+    subject = markup.compile();
+
+    assertEquals(
+        subject.toTestableText(),
+
+        """
+        - First name: John
+        - Last name: Smith
+        """
+    );
+  }
+
+  @Test(description = """
   void elem:
   - no attrs
   """)

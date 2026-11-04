@@ -23,6 +23,7 @@ import objectox.html.markup.MarkupTestableNodes;
 /// Testable nodes contribute to the output of the
 /// [Component#toTestableText()] method. During regular HTML formatting,
 /// testable nodes are rendered as text nodes with the specified value.
+/// A testable prop is an exception: only its value is rendered.
 public sealed interface TestableNodes permits MarkupTestableNodes {
 
   /// Encodes a testable cell node with the specified width and value.
@@ -96,6 +97,20 @@ public sealed interface TestableNodes permits MarkupTestableNodes {
   ///
   /// @return an object representing the encoded testable node
   TestableMarkup list();
+
+  /// Encodes a testable prop node with the specified name and value.
+  ///
+  /// During testable formatting, a prop is rendered as a list item in the
+  /// form `name: value`. During regular HTML formatting, only the value is
+  /// rendered as a text node.
+  ///
+  /// @param name the testable prop name
+  /// @param value the testable prop value
+  ///
+  /// @return an object representing the encoded testable node
+  ///
+  /// @throws NullPointerException if the name or the value is null
+  TestableMarkup prop(String name, String value);
 
   /// Encodes a testable-only node which marks the beginning of a testable row.
   ///

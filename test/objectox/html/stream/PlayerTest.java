@@ -1022,4 +1022,99 @@ public class PlayerTest {
     assertEquals(subject.hasNext(), false);
   }
 
+  @Test(description = """
+  testable prop:
+  - document level
+  - 8 bit
+  """)
+  public void testable15() {
+    final Player subject;
+    subject = PlayerY.create(opts -> {
+      opts.addByte(HtmlBytes.TPROP8);
+
+      opts.addObject("Name");
+      opts.addInt8(opts.addObject("Value"));
+    });
+
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EmitTestablePropEvent(0, "Name", "Value"));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EndDocumentEvent(false));
+    assertEquals(subject.hasNext(), false);
+  }
+
+  @Test(description = """
+  testable prop:
+  - element child
+  - regular elem
+  """)
+  public void testable16() {
+    final Player subject;
+    subject = PlayerY.create(opts -> {
+      opts.addByte(HtmlBytes.xTPROP8);
+
+      opts.addObject("Name");
+      opts.addInt8(opts.addObject("Value"));
+
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.DIV.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(0);
+    });
+
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new BeginStartTagEvent(0, ElementName.DIV));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EndStartTagEvent(0, EndStartTagKind.ELEMENT));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EmitTextEvent(1, "Value"));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EmitTestablePropEvent(1, "Name", "Value"));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EmitEndTagEvent(0, ElementName.DIV));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EndDocumentEvent(false));
+    assertEquals(subject.hasNext(), false);
+  }
+
+  @Test(description = """
+  testable prop:
+  - element child
+  - testable-only opcode
+  - fragment body
+  """)
+  public void testable17() {
+    final Player subject;
+    subject = PlayerY.create(opts -> {
+      opts.addByte(HtmlBytes.xFRAGSTR);
+      opts.addInt24(7);
+
+      opts.addByte(HtmlBytes.oTPROP8);
+
+      opts.addObject("Name");
+      opts.addInt8(opts.addObject("Value"));
+
+      opts.addByte(HtmlBytes.FRAGEND);
+
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(ElementName.DIV.index());
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(1);
+      opts.addInt8(4);
+    });
+
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new BeginStartTagEvent(0, ElementName.DIV));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EndStartTagEvent(0, EndStartTagKind.ELEMENT));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EmitTestablePropEvent(1, "Name", "Value"));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EmitEndTagEvent(0, ElementName.DIV));
+    assertEquals(subject.hasNext(), true);
+    assertEquals(subject.next(), new EndDocumentEvent(false));
+    assertEquals(subject.hasNext(), false);
+  }
+
 }

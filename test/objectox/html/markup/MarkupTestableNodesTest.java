@@ -107,6 +107,27 @@ public class MarkupTestableNodesTest {
     );
   }
 
+  @Test(description = "TestableRecorder delegation (prop)")
+  public void prop01() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final MarkupTestableNodes subject;
+    subject = create(sink);
+
+    subject.prop("Name", "Value");
+
+    assertEquals(
+        sink,
+
+        HtmlSinkY.create(opts -> {
+          opts.addByte(HtmlBytes.TPROP8);
+          opts.addObject("Name");
+          opts.addInt8(opts.addObject("Value"));
+        })
+    );
+  }
+
   @Test(description = "TestableRecorder delegation (list)")
   public void list01() {
     final HtmlSink sink;

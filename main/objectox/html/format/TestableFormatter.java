@@ -28,6 +28,7 @@ import objectos.html.stream.EmitTestable;
 import objectos.html.stream.EmitTestableCell;
 import objectos.html.stream.EmitTestableHeading;
 import objectos.html.stream.EmitTestableListItem;
+import objectos.html.stream.EmitTestableProp;
 import objectos.html.stream.EmitText;
 import objectos.html.stream.EndDocument;
 import objectos.html.stream.EndStartTag;
@@ -88,6 +89,8 @@ public final class TestableFormatter extends BaseFormatter {
       case EmitTestableHeading heading -> emitHeading(heading, out);
 
       case EmitTestableListItem item -> emitListItem(item, out);
+
+      case EmitTestableProp prop -> emitProp(prop, out);
     }
   }
 
@@ -109,6 +112,18 @@ public final class TestableFormatter extends BaseFormatter {
 
   @Override
   final void endStartTag(EndStartTag event, Output out) {}
+
+  private void beginListItem(Output out) {
+    switch (state) {
+      case EMPTY, LIST, LIST_START -> out.append("- ");
+
+      case CONTENT, ROW_START -> out.append("\n- ");
+
+      case ROW -> out.append(" |\n\n- ");
+    }
+
+    state = State.LIST;
+  }
 
   private void beginTestableList(Output out) {
     switch (state) {
@@ -194,18 +209,28 @@ public final class TestableFormatter extends BaseFormatter {
   }
 
   private void emitListItem(EmitTestableListItem item, Output out) {
-    switch (state) {
-      case EMPTY, LIST, LIST_START -> out.append("- ");
-
-      case CONTENT, ROW_START -> out.append("\n- ");
-
-      case ROW -> out.append(" |\n\n- ");
-    }
-
-    state = State.LIST;
+    beginListItem(out);
 
     final String value;
     value = item.value();
+
+    out.append(value);
+
+    out.append('\n');
+  }
+
+  private void emitProp(EmitTestableProp prop, Output out) {
+    beginListItem(out);
+
+    final String name;
+    name = prop.name();
+
+    final String value;
+    value = prop.value();
+
+    out.append(name);
+
+    out.append(": ");
 
     out.append(value);
 

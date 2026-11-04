@@ -292,6 +292,202 @@ public class TestableNodesTest {
   }
 
   @Test(description = """
+  testable prop node:
+  - document level
+  """)
+  public void prop01() {
+    final Markup subject;
+    subject = Markup.of();
+
+    final TestableNodes t;
+    t = subject.t();
+
+    t.prop("First name", "John");
+
+    assertEquals(
+        subject.compile(),
+
+        HtmlY.create(opts -> {
+          opts.addByte(HtmlBytes.TPROP8);
+          opts.addObject("First name");
+          opts.addInt8(opts.addObject("John"));
+        })
+    );
+  }
+
+  @Test(description = """
+  testable prop node:
+  - element child
+  """)
+  public void prop02() {
+    final Markup subject;
+    subject = Markup.of();
+
+    subject.div(
+        subject.t().prop("First name", "John")
+    );
+
+    assertEquals(
+        subject.compile(),
+
+        HtmlY.create(opts -> {
+          opts.addByte(HtmlBytes.xTPROP8);
+          opts.addObject("First name");
+          opts.addInt8(opts.addObject("John"));
+          opts.addByte(HtmlBytes.ELEMSTR8);
+          opts.addInt8(ElementName.DIV.index());
+          opts.addByte(HtmlBytes.VALUES8);
+          opts.addInt8(1);
+          opts.addInt8(0);
+        })
+    );
+  }
+
+  @Test(
+      description = "testable prop node rejects a null name",
+      expectedExceptions = NullPointerException.class,
+      expectedExceptionsMessageRegExp = "name == null")
+  public void prop03() {
+    final Markup subject;
+    subject = Markup.of();
+
+    subject.t().prop(null, "John");
+  }
+
+  @Test(
+      description = "testable prop node rejects a null value",
+      expectedExceptions = NullPointerException.class,
+      expectedExceptionsMessageRegExp = "value == null")
+  public void prop04() {
+    final Markup subject;
+    subject = Markup.of();
+
+    subject.t().prop("First name", null);
+  }
+
+  @Test(description = """
+  testable prop node:
+  - multiple props are formatted as a markdown list
+  """)
+  public void prop05() {
+    final Markup subject;
+    subject = Markup.of();
+
+    final TestableNodes t;
+    t = subject.t();
+
+    t.prop("First name", "John");
+    t.prop("Last name", "Smith");
+
+    final String actual;
+    actual = subject.compile().toTestableText();
+
+    assertEquals(actual, "- First name: John\n- Last name: Smith\n");
+  }
+
+  @Test(description = """
+  testable prop node:
+  - element child
+  - rendered as text in regular HTML using only the value
+  """)
+  public void prop06() {
+    final Markup subject;
+    subject = Markup.of();
+
+    subject.div(
+        subject.t().prop("First name", "John")
+    );
+
+    final String actual;
+    actual = subject.compile().toString();
+
+    assertEquals(actual, "<div>John</div>\n");
+  }
+
+  @Test(description = """
+  testable prop node:
+  - element child
+  - contributes to the testable text
+  """)
+  public void prop07() {
+    final Markup subject;
+    subject = Markup.of();
+
+    subject.div(
+        subject.t().prop("First name", "John")
+    );
+
+    final String actual;
+    actual = subject.compile().toTestableText();
+
+    assertEquals(actual, "- First name: John\n");
+  }
+
+  @Test(description = """
+  testable prop node:
+  - begins a new list after preceding items
+  """)
+  public void prop08() {
+    final Markup subject;
+    subject = Markup.of();
+
+    final TestableNodes t;
+    t = subject.t();
+
+    t.item("Item");
+    t.prop("Name", "Value");
+    t.list();
+    t.prop("Other", "Prop");
+
+    final String actual;
+    actual = subject.compile().toTestableText();
+
+    assertEquals(actual, "- Item\n- Name: Value\n\n- Other: Prop\n");
+  }
+
+  @Test(description = """
+  testable prop node:
+  - fragment child
+  - does not produce regular HTML output
+  """)
+  public void prop09() {
+    final Markup subject;
+    subject = Markup.of();
+
+    subject.div(
+        subject.f(() -> {
+          subject.t().prop("Name", "Value");
+        })
+    );
+
+    final String actual;
+    actual = subject.compile().toString();
+
+    assertEquals(actual, "<div></div>\n");
+  }
+
+  @Test(description = """
+  testable prop node:
+  - fragment child
+  - contributes to the testable text
+  """)
+  public void prop10() {
+    final Markup subject;
+    subject = Markup.of();
+
+    subject.div(
+        subject.f(() -> {
+          subject.t().prop("Name", "Value");
+        })
+    );
+
+    final String actual;
+    actual = subject.compile().toTestableText();
+
+    assertEquals(actual, "- Name: Value\n");
+  }
+
+  @Test(description = """
   testable list node:
   - document level
   """)

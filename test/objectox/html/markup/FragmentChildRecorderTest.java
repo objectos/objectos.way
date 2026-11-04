@@ -234,6 +234,9 @@ public class FragmentChildRecorderTest {
         {bytes(HtmlBytes.xTITEM8, 0), "unconsumed testable list item (1-byte value index)"},
         {bytes(HtmlBytes.xTITEM16, 0, 0), "unconsumed testable list item (2-byte value index)"},
         {bytes(HtmlBytes.xTITEM24, 0, 0, 0), "unconsumed testable list item (3-byte value index)"},
+        {bytes(HtmlBytes.xTPROP8, 0), "unconsumed testable prop (1-byte value index)"},
+        {bytes(HtmlBytes.xTPROP16, 0, 0), "unconsumed testable prop (2-byte value index)"},
+        {bytes(HtmlBytes.xTPROP24, 0, 0, 0), "unconsumed testable prop (3-byte value index)"},
         {bytes(HtmlBytes.xTLIST), "unconsumed testable list"},
         {bytes(HtmlBytes.xTEXT8, 0x7F), "unconsumed text (1-byte value index)"},
         {bytes(HtmlBytes.xTEXT16, 0x7F, 0x7F), "unconsumed text (2-byte value index)"},
@@ -436,7 +439,10 @@ public class FragmentChildRecorderTest {
         {HtmlBytes.TCELL24, HtmlBytes.oTCELL24, 3, "testable cell (3 operand bytes)"},
         {HtmlBytes.TITEM8, HtmlBytes.oTITEM8, 1, "testable list item (1 operand byte)"},
         {HtmlBytes.TITEM16, HtmlBytes.oTITEM16, 2, "testable list item (2 operand bytes)"},
-        {HtmlBytes.TITEM24, HtmlBytes.oTITEM24, 3, "testable list item (3 operand bytes)"}
+        {HtmlBytes.TITEM24, HtmlBytes.oTITEM24, 3, "testable list item (3 operand bytes)"},
+        {HtmlBytes.TPROP8, HtmlBytes.oTPROP8, 1, "testable prop (1 operand byte)"},
+        {HtmlBytes.TPROP16, HtmlBytes.oTPROP16, 2, "testable prop (2 operand bytes)"},
+        {HtmlBytes.TPROP24, HtmlBytes.oTPROP24, 3, "testable prop (3 operand bytes)"}
     };
   }
 

@@ -112,6 +112,34 @@ final class TestableRecorder {
     return new TestableMarkupPointer(startIndex);
   }
 
+  public final TestableMarkupPointer prop(String name, String value) {
+    final String n;
+    n = Objects.requireNonNull(name, "name == null");
+
+    final String v;
+    v = Objects.requireNonNull(value, "value == null");
+
+    // The name is recorded immediately before the value, so the name index
+    // is always the object index immediately preceding the value index.
+    sink.addObject(n);
+
+    final int valueIndex;
+    valueIndex = sink.addObject(v);
+
+    final IntSize size;
+    size = IntSize.of(valueIndex);
+
+    final byte proto;
+    proto = size.toTestablePropByte();
+
+    final int startIndex;
+    startIndex = sink.addByte(proto);
+
+    sink.addInt(size, valueIndex);
+
+    return new TestableMarkupPointer(startIndex);
+  }
+
   public final TestableMarkupPointer row() {
     final int startIndex;
     startIndex = sink.addByte(HtmlBytes.TROW);

@@ -92,6 +92,10 @@ public class ScanElementNodeStateTest {
         {HtmlBytes.xTITEM16, s(ctx -> new EmitTestableListItemState(ctx, TestableLevel.REGULAR, IntSize.BIT16))},
         {HtmlBytes.xTITEM24, s(ctx -> new EmitTestableListItemState(ctx, TestableLevel.REGULAR, IntSize.BIT24))},
 
+        {HtmlBytes.xTPROP8, s(ctx -> new EmitTestablePropState(ctx, TestableLevel.REGULAR, IntSize.BIT8))},
+        {HtmlBytes.xTPROP16, s(ctx -> new EmitTestablePropState(ctx, TestableLevel.REGULAR, IntSize.BIT16))},
+        {HtmlBytes.xTPROP24, s(ctx -> new EmitTestablePropState(ctx, TestableLevel.REGULAR, IntSize.BIT24))},
+
         {HtmlBytes.xTROW, s(ctx -> new BeginTestableRowState(ctx, ScanLevel.NESTED))},
         {HtmlBytes.xTLIST, s(ctx -> new BeginTestableListState(ctx, ScanLevel.NESTED))}
     };
@@ -305,6 +309,10 @@ public class ScanElementNodeStateTest {
         {HtmlBytes.TITEM8},
         {HtmlBytes.TITEM16},
         {HtmlBytes.TITEM24},
+
+        {HtmlBytes.TPROP8},
+        {HtmlBytes.TPROP16},
+        {HtmlBytes.TPROP24},
 
         {HtmlBytes.TROW},
         {HtmlBytes.TLIST},

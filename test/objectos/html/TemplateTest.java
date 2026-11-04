@@ -2135,6 +2135,27 @@ x\
     );
   }
 
+  @Test(description = "testable props")
+  public void testableNodes06() {
+    final Template subject;
+    subject = new Template() {
+      @Override
+      protected final void render() {
+        t.prop("First name", "John");
+        t.prop("Last name", "Smith");
+      }
+    };
+
+    assertEquals(
+        subject.toTestableText(),
+
+        """
+        - First name: John
+        - Last name: Smith
+        """
+    );
+  }
+
   private void test(Template template, String expected) {
     String result;
     result = template.toString();

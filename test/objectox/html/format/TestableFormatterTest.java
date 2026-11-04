@@ -35,6 +35,7 @@ import objectox.html.stream.EmitRawEvent;
 import objectox.html.stream.EmitTestableCellEvent;
 import objectox.html.stream.EmitTestableHeadingEvent;
 import objectox.html.stream.EmitTestableListItemEvent;
+import objectox.html.stream.EmitTestablePropEvent;
 import objectox.html.stream.EmitTextEvent;
 import objectox.html.stream.EndDocumentEvent;
 import objectox.html.stream.EndStartTagEvent;
@@ -649,6 +650,76 @@ public class TestableFormatterTest {
 
   @Test(dataProvider = "testCase05Provider")
   public void testCase05(Event[] events, String expected) {
+    test(events, expected);
+  }
+
+  @DataProvider
+  public Object[][] testCase06Provider() {
+    return new Object[][] {
+        {
+            evts(
+                new EmitTestablePropEvent(0, "First name", "John"),
+                new EndDocumentEvent(false)
+            ),
+            """
+            - First name: John
+            """
+        },
+        {
+            evts(
+                new EmitTestablePropEvent(0, "First name", "John"),
+                new EmitTestablePropEvent(0, "Last name", "Smith"),
+                new EndDocumentEvent(false)
+            ),
+            """
+            - First name: John
+            - Last name: Smith
+            """
+        },
+        {
+            evts(
+                new EmitTestableListItemEvent(0, "Item"),
+                new EmitTestablePropEvent(0, "Name", "Value"),
+                new BeginTestableListEvent(0),
+                new EmitTestablePropEvent(0, "Other", "Prop"),
+                new EndDocumentEvent(false)
+            ),
+            """
+            - Item
+            - Name: Value
+
+            - Other: Prop
+            """
+        },
+        {
+            evts(
+                new EmitTestableHeadingEvent(0, 1, "Heading 1"),
+                new EmitTestablePropEvent(0, "Name", "Value"),
+                new EndDocumentEvent(false)
+            ),
+            """
+            # Heading 1
+
+            - Name: Value
+            """
+        },
+        {
+            evts(
+                new EmitTestableCellEvent(0, "1"),
+                new EmitTestablePropEvent(0, "Name", "Value"),
+                new EndDocumentEvent(false)
+            ),
+            """
+            | 1 |
+
+            - Name: Value
+            """
+        }
+    };
+  }
+
+  @Test(dataProvider = "testCase06Provider")
+  public void testCase06(Event[] events, String expected) {
     test(events, expected);
   }
 

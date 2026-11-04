@@ -158,6 +158,10 @@ class Ctx {
       case HtmlBytes.TITEM16 -> new EmitTestableListItemState(this, TestableLevel.TOP_LEVEL, IntSize.BIT16);
       case HtmlBytes.TITEM24 -> new EmitTestableListItemState(this, TestableLevel.TOP_LEVEL, IntSize.BIT24);
 
+      case HtmlBytes.TPROP8 -> new EmitTestablePropState(this, TestableLevel.TOP_LEVEL, IntSize.BIT8);
+      case HtmlBytes.TPROP16 -> new EmitTestablePropState(this, TestableLevel.TOP_LEVEL, IntSize.BIT16);
+      case HtmlBytes.TPROP24 -> new EmitTestablePropState(this, TestableLevel.TOP_LEVEL, IntSize.BIT24);
+
       case HtmlBytes.TROW -> new BeginTestableRowState(this, ScanLevel.TOP_LEVEL);
       case HtmlBytes.TLIST -> new BeginTestableListState(this, ScanLevel.TOP_LEVEL);
 
@@ -196,6 +200,10 @@ class Ctx {
       case HtmlBytes.xTITEM16 -> new EmitTestableListItemState(this, TestableLevel.REGULAR, IntSize.BIT16);
       case HtmlBytes.xTITEM24 -> new EmitTestableListItemState(this, TestableLevel.REGULAR, IntSize.BIT24);
 
+      case HtmlBytes.xTPROP8 -> new EmitTestablePropState(this, TestableLevel.REGULAR, IntSize.BIT8);
+      case HtmlBytes.xTPROP16 -> new EmitTestablePropState(this, TestableLevel.REGULAR, IntSize.BIT16);
+      case HtmlBytes.xTPROP24 -> new EmitTestablePropState(this, TestableLevel.REGULAR, IntSize.BIT24);
+
       case HtmlBytes.xTROW -> new BeginTestableRowState(this, ScanLevel.NESTED);
       case HtmlBytes.xTLIST -> new BeginTestableListState(this, ScanLevel.NESTED);
 
@@ -210,6 +218,10 @@ class Ctx {
       case HtmlBytes.oTITEM8 -> new EmitTestableListItemState(this, TestableLevel.TEST_ONLY, IntSize.BIT8);
       case HtmlBytes.oTITEM16 -> new EmitTestableListItemState(this, TestableLevel.TEST_ONLY, IntSize.BIT16);
       case HtmlBytes.oTITEM24 -> new EmitTestableListItemState(this, TestableLevel.TEST_ONLY, IntSize.BIT24);
+
+      case HtmlBytes.oTPROP8 -> new EmitTestablePropState(this, TestableLevel.TEST_ONLY, IntSize.BIT8);
+      case HtmlBytes.oTPROP16 -> new EmitTestablePropState(this, TestableLevel.TEST_ONLY, IntSize.BIT16);
+      case HtmlBytes.oTPROP24 -> new EmitTestablePropState(this, TestableLevel.TEST_ONLY, IntSize.BIT24);
 
       default -> throw State.malformed();
     };

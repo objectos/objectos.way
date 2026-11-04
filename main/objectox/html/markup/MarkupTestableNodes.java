@@ -72,6 +72,11 @@ public final class MarkupTestableNodes implements TestableNodes {
   }
 
   @Override
+  public final TestableMarkup prop(String name, String value) {
+    return recorder.prop(name, value);
+  }
+
+  @Override
   public final TestableMarkup row() {
     return recorder.row();
   }

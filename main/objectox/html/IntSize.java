@@ -112,6 +112,16 @@ public enum IntSize {
     };
   }
 
+  public final byte toTestablePropByte() {
+    return switch (this) {
+      case BIT8 -> HtmlBytes.TPROP8;
+
+      case BIT16 -> HtmlBytes.TPROP16;
+
+      case BIT24 -> HtmlBytes.TPROP24;
+    };
+  }
+
   public final byte toValuesByte() {
     return switch (this) {
       case BIT8 -> HtmlBytes.VALUES8;

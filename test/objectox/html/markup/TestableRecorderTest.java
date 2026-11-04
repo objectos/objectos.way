@@ -335,6 +335,134 @@ public class TestableRecorderTest {
     );
   }
 
+  @Test(
+      description = "rejects a null prop name",
+      expectedExceptions = NullPointerException.class,
+      expectedExceptionsMessageRegExp = "name == null")
+  public void prop01() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final TestableRecorder subject;
+    subject = new TestableRecorder(sink);
+
+    subject.prop(null, "Ipsum");
+  }
+
+  @Test(
+      description = "rejects a null prop value",
+      expectedExceptions = NullPointerException.class,
+      expectedExceptionsMessageRegExp = "value == null")
+  public void prop02() {
+    final HtmlSink sink;
+    sink = new HtmlSink();
+
+    final TestableRecorder subject;
+    subject = new TestableRecorder(sink);
+
+    subject.prop("Name", null);
+  }
+
+  @Test(description = """
+  a testable prop is recorded with the TPROP8 opcode when the object index fits in 1 byte
+  """)
+  public void prop03() {
+    test(
+        _ -> {},
+
+        subject -> subject.prop("Name", "Value"),
+        0,
+
+        opts -> {
+          opts.addByte(HtmlBytes.TPROP8);
+          opts.addObject("Name");
+          opts.addInt8(opts.addObject("Value"));
+        }
+    );
+  }
+
+  @Test(description = """
+  a testable prop is recorded with the TPROP16 opcode when the object index fits in 2 bytes
+  """)
+  public void prop04() {
+    test(
+        opts -> {
+          opts.objectsIndex(HtmlSink.FIRST_INT16);
+        },
+
+        subject -> subject.prop("Name", "Value"),
+        0,
+
+        opts -> {
+          opts.objectsIndex(HtmlSink.FIRST_INT16);
+          opts.addByte(HtmlBytes.TPROP16);
+          opts.addObject("Name");
+          opts.addInt16(opts.addObject("Value"));
+        }
+    );
+  }
+
+  @Test(description = """
+  a testable prop is recorded with the TPROP24 opcode when the object index fits in 3 bytes
+  """)
+  public void prop05() {
+    test(
+        opts -> {
+          opts.objectsIndex(HtmlSink.FIRST_INT24);
+        },
+
+        subject -> subject.prop("Name", "Value"),
+        0,
+
+        opts -> {
+          opts.objectsIndex(HtmlSink.FIRST_INT24);
+          opts.addByte(HtmlBytes.TPROP24);
+          opts.addObject("Name");
+          opts.addInt24(opts.addObject("Value"));
+        }
+    );
+  }
+
+  @Test(description = """
+  a testable prop uses the value object index width when the name and value indexes differ
+  """)
+  public void prop06() {
+    test(
+        opts -> {
+          opts.objectsIndex(HtmlSink.MAX_INT8);
+        },
+
+        subject -> subject.prop("Name", "Value"),
+        0,
+
+        opts -> {
+          opts.objectsIndex(HtmlSink.MAX_INT8);
+          opts.addByte(HtmlBytes.TPROP16);
+          opts.addObject("Name");
+          opts.addInt16(opts.addObject("Value"));
+        }
+    );
+  }
+
+  @Test(description = "the returned prop pointer is the first available index in the code array")
+  public void prop07() {
+    test(
+        opts -> {
+          opts.addInt24(0);
+        },
+
+        subject -> subject.prop("Name", "Value"),
+        3,
+
+        opts -> {
+          opts.addInt24(0);
+          opts.addByte(HtmlBytes.TPROP8);
+          opts.addObject("Name");
+          opts.addInt8(opts.addObject("Value"));
+        }
+    );
+  }
+
   @Test(description = "a testable list is recorded with the TLIST opcode")
   public void list01() {
     test(
