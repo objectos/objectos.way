@@ -17,337 +17,253 @@ package objectos.html;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.function.Consumer;
 import objectos.script.Js;
 import objectos.script.JsAction;
 import objectox.html.attr.AttributeName;
 import objectox.html.elem.ElementName;
 import objectox.html.markup.HtmlBytes;
+import objectox.html.markup.HtmlSink;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class MarkupTest {
 
-  @Test(description = """
-  document:
-  - empty
-  """)
-  public void document01() {
-    final Markup subject;
-    subject = Markup.of();
-
-    assertEquals(
-        subject.compile(),
-
-        HtmlY.create(_ -> {
-
-        })
-    );
-  }
-
-  @Test(description = """
-  js action attr:
-  - count: 1
-  - markup
-  - name (8 bit)
-  - reg elem
-  """)
-  public void jsActionAttribute01() {
-    final Markup subject;
-    subject = Markup.of();
-
+  @DataProvider
+  public Object[][] compileProvider() {
     final JsAction action;
     action = Js.noop();
 
-    subject.div(
-        subject.onclick(action)
-    );
+    return new Object[][] {
+        {
+            "empty document",
 
-    assertEquals(
-        subject.compile(),
+            markup(_ -> {}),
 
-        HtmlY.create(opts -> {
-          opts.addByte(HtmlBytes.xJSACTION88);
-          opts.addInt8(AttributeName.ONCLICK.index());
-          opts.addInt8(opts.addObject(action));
-          opts.addByte(HtmlBytes.ELEMSTR8);
-          opts.addInt8(ElementName.DIV.index());
-          opts.addByte(HtmlBytes.VALUES8);
-          opts.addInt8(1);
-          opts.addInt8(0);
-        })
-    );
+            html(_ -> {})
+        },
+        {
+            "js action attribute, 1 count, 8bit, regular element",
+
+            markup(m -> {
+              m.div(
+                  m.onclick(action)
+              );
+            }),
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.xJSACTION88);
+              opts.addInt8(AttributeName.ONCLICK.index());
+              opts.addInt8(opts.addObject(action));
+              opts.addByte(HtmlBytes.ELEMSTR8);
+              opts.addInt8(ElementName.DIV.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(0);
+            })
+        },
+        {
+            "js action attribute, 1 count, 8bit, void element",
+
+            markup(m -> {
+              m.input(
+                  m.onclick(action)
+              );
+            }),
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.xJSACTION88);
+              opts.addInt8(AttributeName.ONCLICK.index());
+              opts.addInt8(opts.addObject(action));
+              opts.addByte(HtmlBytes.ELEMVOID8);
+              opts.addInt8(ElementName.INPUT.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(0);
+            })
+        },
+        {
+            "regular attribute, 1 count, 8bit, regular element",
+
+            markup(m -> {
+              m.div(
+                  Id.of("foo")
+              );
+            }),
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.xATTRIBUTE88);
+              opts.addInt8(AttributeName.ID.index());
+              opts.addInt8(opts.addObject("foo"));
+              opts.addByte(HtmlBytes.ELEMSTR8);
+              opts.addInt8(ElementName.DIV.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(0);
+            })
+        },
+        {
+            "regular attribute, 1 count, 8bit, void element",
+
+            markup(m -> {
+              m.input(
+                  Id.of("foo")
+              );
+            }),
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.xATTRIBUTE88);
+              opts.addInt8(AttributeName.ID.index());
+              opts.addInt8(opts.addObject("foo"));
+              opts.addByte(HtmlBytes.ELEMVOID8);
+              opts.addInt8(ElementName.INPUT.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(0);
+            })
+        },
+        {
+            "regular attribute, 2 count, 8bit, regular element",
+
+            markup(m -> {
+              m.html(
+                  m.lang("pt-BR"),
+                  m.dir("auto")
+              );
+            }),
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.xATTRIBUTE88);
+              opts.addInt8(AttributeName.LANG.index());
+              opts.addInt8(opts.addObject("pt-BR"));
+              opts.addByte(HtmlBytes.xATTRIBUTE88);
+              opts.addInt8(AttributeName.DIR.index());
+              opts.addInt8(opts.addObject("auto"));
+              opts.addByte(HtmlBytes.ELEMSTR8);
+              opts.addInt8(ElementName.HTML.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(2);
+              opts.addInt8(0);
+              opts.addInt8(3);
+            })
+        },
+        {
+            "regular attribute, 2 count, 8bit",
+
+            markup(m -> {
+              m.input(
+                  m.type("text"),
+                  m.size("30")
+              );
+            }),
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.xATTRIBUTE88);
+              opts.addInt8(AttributeName.TYPE.index());
+              opts.addInt8(opts.addObject("text"));
+              opts.addByte(HtmlBytes.xATTRIBUTE88);
+              opts.addInt8(AttributeName.SIZE.index());
+              opts.addInt8(opts.addObject("30"));
+              opts.addByte(HtmlBytes.ELEMVOID8);
+              opts.addInt8(ElementName.INPUT.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(2);
+              opts.addInt8(0);
+              opts.addInt8(3);
+            })
+        },
+        {
+            "regular attribute, 3 count, 8bit, regular element",
+
+            markup(m -> {
+              m.span(
+                  m.className("c1"),
+                  ClassName.of("c2"),
+                  m.className("c3")
+              );
+            }),
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.xATTRIBUTE88);
+              opts.addInt8(AttributeName.CLASS.index());
+              opts.addInt8(opts.addObject("c1"));
+              opts.addByte(HtmlBytes.xATTRIBUTE88);
+              opts.addInt8(AttributeName.CLASS.index());
+              opts.addInt8(opts.addObject("c3"));
+              opts.addByte(HtmlBytes.xATTRIBUTE88);
+              opts.addInt8(AttributeName.CLASS.index());
+              opts.addInt8(opts.addObject("c2"));
+              opts.addByte(HtmlBytes.ELEMSTR8);
+              opts.addInt8(ElementName.SPAN.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(3);
+              opts.addInt8(0);
+              opts.addInt8(6);
+              opts.addInt8(3);
+            })
+        },
+        {
+            "regular attribute, 3 count, 8bit, void element",
+
+            markup(m -> {
+              m.input(
+                  ClassName.of("c1"),
+                  m.className("c2"),
+                  ClassName.of("c3")
+              );
+            }),
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.xATTRIBUTE88);
+              opts.addInt8(AttributeName.CLASS.index());
+              opts.addInt8(opts.addObject("c2"));
+              opts.addByte(HtmlBytes.xATTRIBUTE88);
+              opts.addInt8(AttributeName.CLASS.index());
+              opts.addInt8(opts.addObject("c1"));
+              opts.addByte(HtmlBytes.xATTRIBUTE88);
+              opts.addInt8(AttributeName.CLASS.index());
+              opts.addInt8(opts.addObject("c3"));
+              opts.addByte(HtmlBytes.ELEMVOID8);
+              opts.addInt8(ElementName.INPUT.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(3);
+              opts.addInt8(3);
+              opts.addInt8(0);
+              opts.addInt8(6);
+            })
+        },
+        {
+            "regular element, no attributes, no children",
+
+            markup(m -> {
+              m.div();
+            }),
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.ELEMSTR8);
+              opts.addInt8(ElementName.DIV.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(0);
+            })
+        }};
   }
 
-  @Test(description = """
-  js action attr:
-  - count: 1
-  - markup
-  - name (8 bit)
-  - void elem
-  """)
-  public void jsActionAttribute02() {
+  @Test(dataProvider = "compileProvider")
+  public void compile(String description, Html actual, Html expected) {
+    assertEquals(actual, expected, description);
+  }
+
+  private Html html(Consumer<? super HtmlSink> opts) {
+    return HtmlY.create(opts);
+  }
+
+  private Html markup(Consumer<Markup> consumer) {
     final Markup subject;
     subject = Markup.of();
 
-    final JsAction action;
-    action = Js.noop();
+    consumer.accept(subject);
 
-    subject.input(
-        subject.onclick(action)
-    );
-
-    assertEquals(
-        subject.compile(),
-
-        HtmlY.create(opts -> {
-          opts.addByte(HtmlBytes.xJSACTION88);
-          opts.addInt8(AttributeName.ONCLICK.index());
-          opts.addInt8(opts.addObject(action));
-          opts.addByte(HtmlBytes.ELEMVOID8);
-          opts.addInt8(ElementName.INPUT.index());
-          opts.addByte(HtmlBytes.VALUES8);
-          opts.addInt8(1);
-          opts.addInt8(0);
-        })
-    );
-  }
-
-  @Test(description = """
-  reg attr:
-  - count: 1
-  - object
-  - name (8 bit)
-  - reg elem
-  """)
-  public void regularAttribute03() {
-    final Markup subject;
-    subject = Markup.of();
-
-    subject.div(
-        Id.of("foo")
-    );
-
-    assertEquals(
-        subject.compile(),
-
-        HtmlY.create(opts -> {
-          opts.addByte(HtmlBytes.xATTRIBUTE88);
-          opts.addInt8(AttributeName.ID.index());
-          opts.addInt8(opts.addObject("foo"));
-          opts.addByte(HtmlBytes.ELEMSTR8);
-          opts.addInt8(ElementName.DIV.index());
-          opts.addByte(HtmlBytes.VALUES8);
-          opts.addInt8(1);
-          opts.addInt8(0);
-        })
-    );
-  }
-
-  @Test(description = """
-  reg attr:
-  - count: 1
-  - object
-  - name (8 bit)
-  - void elem
-  """)
-  public void regularAttribute04() {
-    final Markup subject;
-    subject = Markup.of();
-
-    subject.input(
-        Id.of("foo")
-    );
-
-    assertEquals(
-        subject.compile(),
-
-        HtmlY.create(opts -> {
-          opts.addByte(HtmlBytes.xATTRIBUTE88);
-          opts.addInt8(AttributeName.ID.index());
-          opts.addInt8(opts.addObject("foo"));
-          opts.addByte(HtmlBytes.ELEMVOID8);
-          opts.addInt8(ElementName.INPUT.index());
-          opts.addByte(HtmlBytes.VALUES8);
-          opts.addInt8(1);
-          opts.addInt8(0);
-        })
-    );
-  }
-
-  @Test(description = """
-  reg attr:
-  - count: 2
-  - markup
-  - name (8 bit)
-  - reg elem
-  """)
-  public void regularAttribute05() {
-    final Markup subject;
-    subject = Markup.of();
-
-    subject.html(
-        subject.lang("pt-BR"),
-        subject.dir("auto")
-    );
-
-    assertEquals(
-        subject.compile(),
-
-        HtmlY.create(opts -> {
-          opts.addByte(HtmlBytes.xATTRIBUTE88);
-          opts.addInt8(AttributeName.LANG.index());
-          opts.addInt8(opts.addObject("pt-BR"));
-          opts.addByte(HtmlBytes.xATTRIBUTE88);
-          opts.addInt8(AttributeName.DIR.index());
-          opts.addInt8(opts.addObject("auto"));
-          opts.addByte(HtmlBytes.ELEMSTR8);
-          opts.addInt8(ElementName.HTML.index());
-          opts.addByte(HtmlBytes.VALUES8);
-          opts.addInt8(2);
-          opts.addInt8(0);
-          opts.addInt8(3);
-        })
-    );
-  }
-
-  @Test(description = """
-  reg attr:
-  - count: 2
-  - markup
-  - name (8 bit)
-  - void elem
-  """)
-  public void regularAttribute06() {
-    final Markup subject;
-    subject = Markup.of();
-
-    subject.input(
-        subject.type("text"),
-        subject.size("30")
-    );
-
-    assertEquals(
-        subject.compile(),
-
-        HtmlY.create(opts -> {
-          opts.addByte(HtmlBytes.xATTRIBUTE88);
-          opts.addInt8(AttributeName.TYPE.index());
-          opts.addInt8(opts.addObject("text"));
-          opts.addByte(HtmlBytes.xATTRIBUTE88);
-          opts.addInt8(AttributeName.SIZE.index());
-          opts.addInt8(opts.addObject("30"));
-          opts.addByte(HtmlBytes.ELEMVOID8);
-          opts.addInt8(ElementName.INPUT.index());
-          opts.addByte(HtmlBytes.VALUES8);
-          opts.addInt8(2);
-          opts.addInt8(0);
-          opts.addInt8(3);
-        })
-    );
-  }
-
-  @Test(description = """
-  reg attr:
-  - count: 3
-  - object (class)
-  - name (8 bit)
-  - reg elem
-  """)
-  public void regularAttribute07() {
-    final Markup subject;
-    subject = Markup.of();
-
-    subject.span(
-        subject.className("c1"),
-        ClassName.of("c2"),
-        subject.className("c3")
-    );
-
-    assertEquals(
-        subject.compile(),
-
-        HtmlY.create(opts -> {
-          opts.addByte(HtmlBytes.xATTRIBUTE88);
-          opts.addInt8(AttributeName.CLASS.index());
-          opts.addInt8(opts.addObject("c1"));
-          opts.addByte(HtmlBytes.xATTRIBUTE88);
-          opts.addInt8(AttributeName.CLASS.index());
-          opts.addInt8(opts.addObject("c3"));
-          opts.addByte(HtmlBytes.xATTRIBUTE88);
-          opts.addInt8(AttributeName.CLASS.index());
-          opts.addInt8(opts.addObject("c2"));
-          opts.addByte(HtmlBytes.ELEMSTR8);
-          opts.addInt8(ElementName.SPAN.index());
-          opts.addByte(HtmlBytes.VALUES8);
-          opts.addInt8(3);
-          opts.addInt8(0);
-          opts.addInt8(6);
-          opts.addInt8(3);
-        })
-    );
-  }
-
-  @Test(description = """
-  reg attr:
-  - count: 3
-  - object (class)
-  - name (8 bit)
-  - void elem
-  """)
-  public void regularAttribute08() {
-    final Markup subject;
-    subject = Markup.of();
-
-    subject.input(
-        ClassName.of("c1"),
-        subject.className("c2"),
-        ClassName.of("c3")
-    );
-
-    assertEquals(
-        subject.compile(),
-
-        HtmlY.create(opts -> {
-          opts.addByte(HtmlBytes.xATTRIBUTE88);
-          opts.addInt8(AttributeName.CLASS.index());
-          opts.addInt8(opts.addObject("c2"));
-          opts.addByte(HtmlBytes.xATTRIBUTE88);
-          opts.addInt8(AttributeName.CLASS.index());
-          opts.addInt8(opts.addObject("c1"));
-          opts.addByte(HtmlBytes.xATTRIBUTE88);
-          opts.addInt8(AttributeName.CLASS.index());
-          opts.addInt8(opts.addObject("c3"));
-          opts.addByte(HtmlBytes.ELEMVOID8);
-          opts.addInt8(ElementName.INPUT.index());
-          opts.addByte(HtmlBytes.VALUES8);
-          opts.addInt8(3);
-          opts.addInt8(3);
-          opts.addInt8(0);
-          opts.addInt8(6);
-        })
-    );
-  }
-
-  @Test(description = """
-  regular elem:
-  - no attrs
-  - no children
-  """)
-  public void regularElement01() {
-    final Markup subject;
-    subject = Markup.of();
-
-    subject.div();
-
-    assertEquals(
-        subject.compile(),
-
-        HtmlY.create(opts -> {
-          opts.addByte(HtmlBytes.ELEMSTR8);
-          opts.addInt8(ElementName.DIV.index());
-          opts.addByte(HtmlBytes.VALUES8);
-          opts.addInt8(0);
-        })
-    );
+    return subject.compile();
   }
 
 }
