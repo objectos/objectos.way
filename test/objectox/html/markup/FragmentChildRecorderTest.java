@@ -88,23 +88,28 @@ public class FragmentChildRecorderTest {
   @DataProvider
   public Object[][] testCase03Provider() {
     return new Object[][] {
-        {HtmlBytes.TEXT8, HtmlBytes.xTEXT8, "text (1-byte value index)"},
-        {HtmlBytes.TEXT16, HtmlBytes.xTEXT16, "text (2-byte value index)"},
-        {HtmlBytes.TEXT24, HtmlBytes.xTEXT24, "text (3-byte value index)"},
-        {HtmlBytes.RAW8, HtmlBytes.xRAW8, "raw text (1-byte value index)"},
-        {HtmlBytes.RAW16, HtmlBytes.xRAW16, "raw text (2-byte value index)"},
-        {HtmlBytes.RAW24, HtmlBytes.xRAW24, "raw text (3-byte value index)"}
+        {HtmlBytes.TEXT8, HtmlBytes.xTEXT8, 1, "text (1-byte value index)"},
+        {HtmlBytes.TEXT16, HtmlBytes.xTEXT16, 2, "text (2-byte value index)"},
+        {HtmlBytes.TEXT24, HtmlBytes.xTEXT24, 3, "text (3-byte value index)"},
+        {HtmlBytes.RAW8, HtmlBytes.xRAW8, 1, "raw text (1-byte value index)"},
+        {HtmlBytes.RAW16, HtmlBytes.xRAW16, 2, "raw text (2-byte value index)"},
+        {HtmlBytes.RAW24, HtmlBytes.xRAW24, 3, "raw text (3-byte value index)"}
     };
   }
 
   @Test(dataProvider = "testCase03Provider", description = "ValueRecorder delegation (all widths)")
-  public void testCase03(byte opcode, byte xOpcode, String description) {
+  public void testCase03(byte opcode, byte xOpcode, int body, String description) {
     test(
         opts -> {
           opts.addInt24(HtmlSink.MAX_INT24);
           opts.addByte(HtmlBytes.FRAGSTR);
           opts.addInt24(0);
           opts.addByte(opcode);
+
+          for (int i = 0; i < body; i++) {
+            opts.addInt8(0);
+          }
+
           opts.addByte(HtmlBytes.FRAGEND);
         },
 
@@ -115,6 +120,11 @@ public class FragmentChildRecorderTest {
           opts.addByte(HtmlBytes.xFRAGSTR);
           opts.addInt24(0);
           opts.addByte(xOpcode);
+
+          for (int i = 0; i < body; i++) {
+            opts.addInt8(0);
+          }
+
           opts.addByte(HtmlBytes.FRAGEND);
           opts.addInt8(7);
         }
@@ -190,33 +200,30 @@ public class FragmentChildRecorderTest {
     );
   }
 
-  @Test(description = "walk stops at the end of the sink")
+  @Test(
+      description = "fragment without FRAGEND is malformed",
+      expectedExceptions = IllegalStateException.class,
+      expectedExceptionsMessageRegExp = "Unexpected opcode: 7 at index 11"
+  )
   public void testCase06() {
-    test(
-        opts -> {
-          opts.addInt24(HtmlSink.MAX_INT24);
-          opts.addByte(HtmlBytes.FRAGSTR);
-          opts.addInt24(0);
-          opts.addByte(HtmlBytes.ELEMSTR8);
-          opts.addInt8(2);
-          opts.addByte(HtmlBytes.VALUES8);
-          opts.addInt8(0);
-        },
+    final HtmlSink sink;
+    sink = HtmlSinkY.create(opts -> {
+      opts.addInt24(HtmlSink.MAX_INT24);
+      opts.addByte(HtmlBytes.FRAGSTR);
+      opts.addInt24(0);
+      opts.addByte(HtmlBytes.ELEMSTR8);
+      opts.addInt8(2);
+      opts.addByte(HtmlBytes.VALUES8);
+      opts.addInt8(0);
+    });
 
-        IntSize.BIT8, 3,
-        1,
+    final ValueRecorder valueRecorder;
+    valueRecorder = new ValueRecorder(sink);
 
-        opts -> {
-          opts.addInt24(HtmlSink.MAX_INT24);
-          opts.addByte(HtmlBytes.xFRAGSTR);
-          opts.addInt24(0);
-          opts.addByte(HtmlBytes.xELEMSTR8);
-          opts.addInt8(2);
-          opts.addByte(HtmlBytes.VALUES8);
-          opts.addInt8(0);
-          opts.addInt8(7);
-        }
-    );
+    final FragmentChildRecorder subject;
+    subject = new FragmentChildRecorder(sink, valueRecorder);
+
+    subject.record(IntSize.BIT8, 3);
   }
 
   @DataProvider
@@ -237,7 +244,20 @@ public class FragmentChildRecorderTest {
         {bytes(HtmlBytes.xTPROP8, 0), "unconsumed testable prop (1-byte value index)"},
         {bytes(HtmlBytes.xTPROP16, 0, 0), "unconsumed testable prop (2-byte value index)"},
         {bytes(HtmlBytes.xTPROP24, 0, 0, 0), "unconsumed testable prop (3-byte value index)"},
+        {bytes(HtmlBytes.xTROW), "unconsumed testable row"},
         {bytes(HtmlBytes.xTLIST), "unconsumed testable list"},
+        {bytes(HtmlBytes.oTHEADING8, 1, 0), "testable-only heading (1-byte value index)"},
+        {bytes(HtmlBytes.oTHEADING16, 1, 0, 0), "testable-only heading (2-byte value index)"},
+        {bytes(HtmlBytes.oTHEADING24, 1, 0, 0, 0), "testable-only heading (3-byte value index)"},
+        {bytes(HtmlBytes.oTCELL8, 0), "testable-only cell (1-byte value index)"},
+        {bytes(HtmlBytes.oTCELL16, 0, 0), "testable-only cell (2-byte value index)"},
+        {bytes(HtmlBytes.oTCELL24, 0, 0, 0), "testable-only cell (3-byte value index)"},
+        {bytes(HtmlBytes.oTITEM8, 0), "testable-only list item (1-byte value index)"},
+        {bytes(HtmlBytes.oTITEM16, 0, 0), "testable-only list item (2-byte value index)"},
+        {bytes(HtmlBytes.oTITEM24, 0, 0, 0), "testable-only list item (3-byte value index)"},
+        {bytes(HtmlBytes.oTPROP8, 0), "testable-only prop (1-byte value index)"},
+        {bytes(HtmlBytes.oTPROP16, 0, 0), "testable-only prop (2-byte value index)"},
+        {bytes(HtmlBytes.oTPROP24, 0, 0, 0), "testable-only prop (3-byte value index)"},
         {bytes(HtmlBytes.xTEXT8, 0x7F), "unconsumed text (1-byte value index)"},
         {bytes(HtmlBytes.xTEXT16, 0x7F, 0x7F), "unconsumed text (2-byte value index)"},
         {bytes(HtmlBytes.xTEXT24, 0x7F, 0x7F, 0x7F), "unconsumed text (3-byte value index)"},
@@ -257,10 +277,7 @@ public class FragmentChildRecorderTest {
         {bytes(HtmlBytes.JSACTION824, 2, 0, 0, 0), "JS action attribute (1-byte name, 3-byte value indexes)"},
         {bytes(HtmlBytes.xJSACTION824, 2, 0, 0, 0), "consumed JS action attribute (1-byte name, 3-byte value indexes)"},
         {bytes(HtmlBytes.BOOLEAN8, 2), "boolean attribute (1-byte value index)"},
-        {bytes(HtmlBytes.xBOOLEAN8, 2), "consumed boolean attribute (1-byte value index)"},
-        {bytes(HtmlBytes.VALUES8, 1), "unmatched byte (VALUES8 marker)"},
-        {bytes(HtmlBytes.DOCTYPE), "unmatched byte (DOCTYPE)"},
-        {bytes(10), "unmatched byte (10)"}
+        {bytes(HtmlBytes.xBOOLEAN8, 2), "consumed boolean attribute (1-byte value index)"}
     };
   }
 
@@ -521,6 +538,44 @@ public class FragmentChildRecorderTest {
           opts.addInt8(7);
         }
     );
+  }
+
+  @DataProvider
+  public Object[][] testCase14Provider() {
+    return new Object[][] {
+        {bytes(HtmlBytes.VALUES8, 1), "VALUES8"},
+        {bytes(HtmlBytes.DOCTYPE), "DOCTYPE"},
+        {bytes(10), "unmatched byte"}
+    };
+  }
+
+  @Test(
+      dataProvider = "testCase14Provider",
+      description = "unexpected opcode",
+      expectedExceptions = IllegalStateException.class,
+      expectedExceptionsMessageRegExp = "Unexpected opcode: -?\\d+ at index 7"
+  )
+  public void testCase14(byte[] body, String description) {
+    final HtmlSink sink;
+    sink = HtmlSinkY.create(opts -> {
+      opts.addInt24(HtmlSink.MAX_INT24);
+      opts.addByte(HtmlBytes.FRAGSTR);
+      opts.addInt24(0);
+
+      for (byte b : body) {
+        opts.addByte(b);
+      }
+
+      opts.addByte(HtmlBytes.FRAGEND);
+    });
+
+    final ValueRecorder valueRecorder;
+    valueRecorder = new ValueRecorder(sink);
+
+    final FragmentChildRecorder subject;
+    subject = new FragmentChildRecorder(sink, valueRecorder);
+
+    subject.record(IntSize.BIT8, 3);
   }
 
   private byte[] bytes(int... values) {
