@@ -17,8 +17,8 @@ package objectox.html.markup;
 
 import java.util.Arrays;
 import java.util.HexFormat;
-import objectos.internal.Util;
 import objectox.html.IntSize;
+import objectox.html.MoreArrays;
 
 public final class HtmlSink {
 
@@ -43,9 +43,9 @@ public final class HtmlSink {
   private int objectsIndex;
 
   public HtmlSink() {
-    code = Util.EMPTY_BYTE_ARRAY;
+    code = MoreArrays.EMPTY_BYTE_ARRAY;
 
-    objects = Util.EMPTY_OBJECT_ARRAY;
+    objects = MoreArrays.EMPTY_OBJECT_ARRAY;
   }
 
   public HtmlSink(byte[] code, Object[] objects) {
@@ -62,7 +62,7 @@ public final class HtmlSink {
     final int idx;
     idx = codeIndex++;
 
-    code = Util.growIfNecessary(code, idx);
+    code = MoreArrays.growIfNecessary(code, idx);
 
     code[idx] = value;
 
@@ -116,7 +116,7 @@ public final class HtmlSink {
     final int idx;
     idx = objectsIndex++;
 
-    objects = Util.growIfNecessary(objects, idx);
+    objects = MoreArrays.growIfNecessary(objects, idx);
 
     objects[idx] = value;
 
@@ -209,7 +209,7 @@ public final class HtmlSink {
     final int idx0;
     idx0 = index + 0;
 
-    code = Util.growIfNecessary(code, idx0);
+    code = MoreArrays.growIfNecessary(code, idx0);
 
     code[idx0] = (byte) value;
   }
@@ -228,7 +228,7 @@ public final class HtmlSink {
     final int idx1;
     idx1 = index + 1;
 
-    code = Util.growIfNecessary(code, idx1);
+    code = MoreArrays.growIfNecessary(code, idx1);
 
     code[idx0] = (byte) (value >>> 8);
 
@@ -252,7 +252,7 @@ public final class HtmlSink {
     final int idx2;
     idx2 = index + 2;
 
-    code = Util.growIfNecessary(code, idx2);
+    code = MoreArrays.growIfNecessary(code, idx2);
 
     code[idx0] = (byte) (value >>> 16);
 

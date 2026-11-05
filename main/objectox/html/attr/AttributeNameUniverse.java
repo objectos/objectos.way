@@ -17,7 +17,7 @@ package objectox.html.attr;
 
 import java.util.HashMap;
 import java.util.Map;
-import objectos.internal.Util;
+import objectox.html.MoreArrays;
 
 public final class AttributeNameUniverse {
 
@@ -73,7 +73,7 @@ public final class AttributeNameUniverse {
     final int index;
     index = size++;
 
-    array = Util.growIfNecessary(array, index);
+    array = MoreArrays.growIfNecessary(array, index);
 
     final AttributeName created;
     created = new AttributeName(index, validated);

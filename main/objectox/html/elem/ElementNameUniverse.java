@@ -18,7 +18,7 @@ package objectox.html.elem;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import objectos.internal.Util;
+import objectox.html.MoreArrays;
 
 public final class ElementNameUniverse {
 
@@ -77,7 +77,7 @@ public final class ElementNameUniverse {
     final int index;
     index = size++;
 
-    array = Util.growIfNecessary(array, index);
+    array = MoreArrays.growIfNecessary(array, index);
 
     final ElementName created;
     created = new ElementName(index, validated);

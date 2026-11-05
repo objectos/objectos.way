@@ -20,8 +20,8 @@ import java.util.HexFormat;
 import java.util.Objects;
 import objectos.html.stream.Event;
 import objectos.script.JsAction;
-import objectos.internal.Util;
 import objectox.html.IntSize;
+import objectox.html.MoreArrays;
 import objectox.html.markup.HtmlBytes;
 
 class Ctx {
@@ -279,7 +279,7 @@ class Ctx {
     final int index;
     index = ++stackIndex;
 
-    stack = Util.growIfNecessary(stack, index);
+    stack = MoreArrays.growIfNecessary(stack, index);
 
     stack[index] = frame;
   }

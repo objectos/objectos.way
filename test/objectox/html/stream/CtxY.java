@@ -17,8 +17,8 @@ package objectox.html.stream;
 
 import java.util.function.Consumer;
 import objectos.html.stream.Event;
-import objectos.internal.Util;
 import objectox.html.IntSize;
+import objectox.html.MoreArrays;
 import objectox.html.markup.HtmlSink;
 import objectox.html.markup.HtmlSinkY;
 
@@ -86,7 +86,7 @@ final class CtxY {
     final int index;
     index = ++stackIndex;
 
-    stack = Util.growIfNecessary(stack, index);
+    stack = MoreArrays.growIfNecessary(stack, index);
 
     stack[index] = value;
   }
