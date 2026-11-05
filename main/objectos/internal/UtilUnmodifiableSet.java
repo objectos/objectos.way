@@ -16,6 +16,7 @@
 package objectos.internal;
 
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -70,7 +71,7 @@ abstract sealed class UtilUnmodifiableSet<E>
    *         {@code null}
    */
   public static <E> UtilUnmodifiableSet<E> copyOf(E[] array) {
-    Check.notNull(array, "array == null");
+    Objects.requireNonNull(array, "array == null");
 
     var set = new UtilSet<E>();
 
@@ -79,9 +80,14 @@ abstract sealed class UtilUnmodifiableSet<E>
     for (int i = 0, size = array.length; i < size; i++) {
       element = array[i];
 
-      set.addUnchecked(
-          Check.notNull(element, "array[", i, "] == null")
-      );
+      if (element == null) {
+        final String msg;
+        msg = "array[" + i + "] == null";
+
+        throw new NullPointerException(msg);
+      }
+
+      set.addUnchecked(element);
     }
 
     return set.toUnmodifiableSet();
@@ -113,7 +119,7 @@ abstract sealed class UtilUnmodifiableSet<E>
    */
   @SuppressWarnings("unchecked")
   public static <E> UtilUnmodifiableSet<E> copyOf(Iterable<? extends E> elements) {
-    Check.notNull(elements, "elements == null");
+    Objects.requireNonNull(elements, "elements == null");
 
     if (elements instanceof UtilUnmodifiableSet) {
       return (UtilUnmodifiableSet<E>) elements;
@@ -153,7 +159,7 @@ abstract sealed class UtilUnmodifiableSet<E>
    *         iterator is {@code null}
    */
   public static <E> UtilUnmodifiableSet<E> copyOf(Iterator<? extends E> iterator) {
-    Check.notNull(iterator, "iterator == null");
+    Objects.requireNonNull(iterator, "iterator == null");
 
     if (!iterator.hasNext()) {
       return UtilUnmodifiableSet.of();
@@ -215,7 +221,7 @@ abstract sealed class UtilUnmodifiableSet<E>
    *         if the specified element is {@code null}
    */
   public static <E> UtilUnmodifiableSet<E> of(E element) {
-    Check.notNull(element, "element == null");
+    Objects.requireNonNull(element, "element == null");
 
     var set = new UtilSet<E>();
 
@@ -248,8 +254,8 @@ abstract sealed class UtilUnmodifiableSet<E>
    */
   @SuppressWarnings("unchecked")
   public static <E> UtilUnmodifiableSet<E> of(E first, E... more) {
-    Check.notNull(first, "first == null");
-    Check.notNull(more, "more == null");
+    Objects.requireNonNull(first, "first == null");
+    Objects.requireNonNull(more, "more == null");
 
     var set = new UtilSet<E>();
 

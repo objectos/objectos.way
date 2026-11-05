@@ -38,7 +38,7 @@ abstract class UtilArrayBasedMap<K, V> implements Map<K, V> {
     @SuppressWarnings("unchecked")
     @Override
     public final <T> T[] toArray(T[] a) {
-      Check.notNull(a, "a == null");
+      Objects.requireNonNull(a, "a == null");
 
       Object[] target = a;
 

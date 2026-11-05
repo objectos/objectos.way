@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.SequencedMap;
 import java.util.Set;
 
@@ -119,7 +120,9 @@ public final class Util {
    *         if {@code requiredIndex < 0}
    */
   public static byte[] growIfNecessary(byte[] array, int requiredIndex) {
-    Check.argument(requiredIndex >= 0, "requiredIndex cannot be negative");
+    if (requiredIndex < 0) {
+      throw new IllegalArgumentException("requiredIndex cannot be negative");
+    }
 
     var length = array.length;
 
@@ -181,7 +184,9 @@ public final class Util {
    *         if {@code requiredIndex < 0}
    */
   public static int[] growIfNecessary(int[] array, int requiredIndex) {
-    Check.argument(requiredIndex >= 0, "requiredIndex cannot be negative");
+    if (requiredIndex < 0) {
+      throw new IllegalArgumentException("requiredIndex cannot be negative");
+    }
 
     var length = array.length;
 
@@ -246,7 +251,9 @@ public final class Util {
    *         if {@code requiredIndex < 0}
    */
   public static <T> T[] growIfNecessary(T[] array, int requiredIndex) {
-    Check.argument(requiredIndex >= 0, "requiredIndex cannot be negative");
+    if (requiredIndex < 0) {
+      throw new IllegalArgumentException("requiredIndex cannot be negative");
+    }
 
     var length = array.length;
 
@@ -301,7 +308,7 @@ public final class Util {
    *         if {@code array} is null
    */
   public static String toHexString(byte[] array) {
-    Check.notNull(array, "array == null");
+    Objects.requireNonNull(array, "array == null");
 
     var length = array.length;
 

@@ -17,6 +17,7 @@ package objectos.internal;
 
 import java.lang.reflect.Array;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Set;
 
 final class UtilSets {
@@ -179,7 +180,7 @@ final class UtilSets {
 
   @SuppressWarnings("unchecked")
   static <T> T[] toArrayImpl(Object[] array, int size, T[] a) {
-    Check.notNull(a, "a == null");
+    Objects.requireNonNull(a, "a == null");
 
     Object[] target = a;
 

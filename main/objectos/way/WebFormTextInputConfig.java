@@ -17,7 +17,6 @@ package objectos.way;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
-import objectos.internal.Check;
 
 final class WebFormTextInputConfig extends WebFormFieldConfig implements Web.Form.TextInput.Config {
 
@@ -33,7 +32,9 @@ final class WebFormTextInputConfig extends WebFormFieldConfig implements Web.For
 
   @Override
   public final void maxLength(int value) {
-    Check.argument(value > 0, "Maximum length must be greater than zero");
+    if (value <= 0) {
+      throw new IllegalArgumentException("Maximum length must be greater than zero");
+    }
 
     maxLength = value;
 

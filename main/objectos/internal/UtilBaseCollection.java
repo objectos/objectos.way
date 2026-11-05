@@ -18,6 +18,7 @@ package objectos.internal;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.RandomAccess;
 import java.util.function.Predicate;
 
@@ -55,7 +56,7 @@ abstract class UtilBaseCollection<E> implements Collection<E> {
    */
   @Override
   public final boolean containsAll(Collection<?> c) {
-    Check.notNull(c, "c == null");
+    Objects.requireNonNull(c, "c == null");
 
     if (c instanceof RandomAccess && c instanceof List<?> list) {
       for (int i = 0; i < list.size(); i++) {
@@ -137,7 +138,7 @@ abstract class UtilBaseCollection<E> implements Collection<E> {
    * @return a new string representing this collection
    */
   public String join(String delimiter) {
-    Check.notNull(delimiter, "delimiter == null");
+    Objects.requireNonNull(delimiter, "delimiter == null");
 
     if (isEmpty()) {
       return "";
@@ -178,9 +179,9 @@ abstract class UtilBaseCollection<E> implements Collection<E> {
    * @return a new string representing this collection
    */
   public String join(String delimiter, String prefix, String suffix) {
-    Check.notNull(delimiter, "delimiter == null");
-    Check.notNull(prefix, "prefix == null");
-    Check.notNull(suffix, "suffix == null");
+    Objects.requireNonNull(delimiter, "delimiter == null");
+    Objects.requireNonNull(prefix, "prefix == null");
+    Objects.requireNonNull(suffix, "suffix == null");
 
     if (isEmpty()) {
       return prefix + suffix;

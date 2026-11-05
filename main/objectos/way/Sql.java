@@ -29,7 +29,6 @@ import java.util.OptionalInt;
 import java.util.OptionalLong;
 import java.util.function.Consumer;
 import javax.sql.DataSource;
-import objectos.internal.Check;
 import objectos.internal.Util;
 
 /**
@@ -349,8 +348,13 @@ public final class Sql {
   public interface Page {
 
     static Page of(int number, int size) {
-      Check.argument(number > 0, "number must be positive");
-      Check.argument(size > 0, "size must be positive");
+      if (number <= 0) {
+        throw new IllegalArgumentException("number must be positive");
+      }
+
+      if (size <= 0) {
+        throw new IllegalArgumentException("size must be positive");
+      }
 
       record SqlPage(int number, int size) implements Sql.Page {}
 

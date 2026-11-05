@@ -16,6 +16,7 @@
 package objectos.internal;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -53,8 +54,8 @@ class UtilUnmodifiableMap<K, V> extends UtilArrayBasedMap<K, V> {
   }
 
   static <K, V> UtilUnmodifiableMap<K, V> of(K key, V value) {
-    Check.notNull(key, "key == null");
-    Check.notNull(value, "value == null");
+    Objects.requireNonNull(key, "key == null");
+    Objects.requireNonNull(value, "value == null");
 
     var map = new UtilMap<K, V>();
 
@@ -64,10 +65,10 @@ class UtilUnmodifiableMap<K, V> extends UtilArrayBasedMap<K, V> {
   }
 
   static <K, V> UtilUnmodifiableMap<K, V> of(K k1, V v1, K k2, V v2) {
-    Check.notNull(k1, "k1 == null");
-    Check.notNull(v1, "v1 == null");
-    Check.notNull(k2, "k2 == null");
-    Check.notNull(v2, "v2 == null");
+    Objects.requireNonNull(k1, "k1 == null");
+    Objects.requireNonNull(v1, "v1 == null");
+    Objects.requireNonNull(k2, "k2 == null");
+    Objects.requireNonNull(v2, "v2 == null");
 
     var map = new UtilMap<K, V>();
 
@@ -78,12 +79,12 @@ class UtilUnmodifiableMap<K, V> extends UtilArrayBasedMap<K, V> {
   }
 
   static <K, V> UtilUnmodifiableMap<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3) {
-    Check.notNull(k1, "k1 == null");
-    Check.notNull(v1, "v1 == null");
-    Check.notNull(k2, "k2 == null");
-    Check.notNull(v2, "v2 == null");
-    Check.notNull(k3, "k3 == null");
-    Check.notNull(v3, "v3 == null");
+    Objects.requireNonNull(k1, "k1 == null");
+    Objects.requireNonNull(v1, "v1 == null");
+    Objects.requireNonNull(k2, "k2 == null");
+    Objects.requireNonNull(v2, "v2 == null");
+    Objects.requireNonNull(k3, "k3 == null");
+    Objects.requireNonNull(v3, "v3 == null");
 
     var map = new UtilMap<K, V>();
 

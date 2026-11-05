@@ -16,7 +16,7 @@
 package objectos.way;
 
 import java.util.List;
-import objectos.internal.Check;
+import java.util.Objects;
 import objectos.internal.Util;
 
 final class AppShutdownHook implements App.ShutdownHook {
@@ -71,14 +71,14 @@ final class AppShutdownHook implements App.ShutdownHook {
 
   @Override
   public final void register(AutoCloseable closeable) {
-    Check.notNull(closeable, "closeable == null");
+    Objects.requireNonNull(closeable, "closeable == null");
 
     addHook(closeable);
   }
 
   @Override
   public final void registerIfPossible(Object resource) {
-    Check.notNull(resource, "resource == null");
+    Objects.requireNonNull(resource, "resource == null");
 
     if (resource instanceof AutoCloseable) {
       addHook(resource);
@@ -91,7 +91,7 @@ final class AppShutdownHook implements App.ShutdownHook {
 
   @Override
   public final void registerThread(Thread thread) {
-    Check.notNull(thread, "thread == null");
+    Objects.requireNonNull(thread, "thread == null");
 
     addHook(thread);
   }

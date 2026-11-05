@@ -17,7 +17,6 @@ package objectos.way;
 
 import java.util.List;
 import java.util.function.Consumer;
-import objectos.internal.Check;
 import objectos.internal.UtilList;
 
 final class WebFormConfig implements Web.FormSpec.Config {
@@ -28,12 +27,16 @@ final class WebFormConfig implements Web.FormSpec.Config {
 
   @Override
   public final void action(String value) {
-    Check.argument(!value.isBlank(), "Action must not be blank");
+    if (value.isBlank()) {
+      throw new IllegalArgumentException("Action must not be blank");
+    }
 
     final char first;
     first = value.charAt(0);
 
-    Check.argument(first == '/', "Action must start with the '/' character");
+    if (first != '/') {
+      throw new IllegalArgumentException("Action must start with the '/' character");
+    }
 
     action = value;
   }

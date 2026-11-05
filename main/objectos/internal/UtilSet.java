@@ -18,6 +18,7 @@ package objectos.internal;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.RandomAccess;
 import java.util.Set;
 
@@ -90,7 +91,7 @@ final class UtilSet<E> extends UtilBaseCollection<E> implements Set<E> {
    */
   @Override
   public final boolean addAll(Collection<? extends E> c) {
-    Check.notNull(c, "c == null");
+    Objects.requireNonNull(c, "c == null");
 
     return addAll0(c, "c[");
   }
@@ -117,7 +118,7 @@ final class UtilSet<E> extends UtilBaseCollection<E> implements Set<E> {
    *         element that is {@code null}
    */
   public final boolean addAllIterable(Iterable<? extends E> iterable) {
-    Check.notNull(iterable, "iterable == null");
+    Objects.requireNonNull(iterable, "iterable == null");
 
     return addAll0(iterable, "iterable[");
   }
@@ -148,10 +149,13 @@ final class UtilSet<E> extends UtilBaseCollection<E> implements Set<E> {
    * @throws NullPointerException
    *         if the specified element is {@code null}
    *
-   * @see Check#notNull(Object, Object)
+   * @see Objects#requireNonNull(Object, String)
    */
   public final boolean addWithNullMessage(E e, Object nullMessage) {
-    Check.notNull(e, nullMessage);
+    final String msg;
+    msg = String.valueOf(nullMessage);
+
+    Objects.requireNonNull(e, msg);
 
     return addUnchecked(e);
   }
@@ -184,11 +188,16 @@ final class UtilSet<E> extends UtilBaseCollection<E> implements Set<E> {
    *         operation. {@code false} if the element was already present in this
    *         set
    *
-   * @see Check#notNull(Object, Object, int, Object)
+   * @see String#valueOf(Object)
    */
   public final boolean addWithNullMessage(
       E e, Object nullMessageStart, int index, Object nullMessageEnd) {
-    Check.notNull(e, nullMessageStart, index, nullMessageEnd);
+    if (e == null) {
+      final String msg;
+      msg = String.valueOf(nullMessageStart) + index + nullMessageEnd;
+
+      throw new NullPointerException(msg);
+    }
 
     return addUnchecked(e);
   }
@@ -351,7 +360,12 @@ final class UtilSet<E> extends UtilBaseCollection<E> implements Set<E> {
       for (int i = 0, size = list.size(); i < size; i++) {
         var element = list.get(i);
 
-        Check.notNull(element, nullMessageStart, i, "] == null");
+        if (element == null) {
+          final String msg;
+          msg = String.valueOf(nullMessageStart) + i + "] == null";
+
+          throw new NullPointerException(msg);
+        }
 
         if (addUnchecked(element)) {
           mod = true;
@@ -363,7 +377,12 @@ final class UtilSet<E> extends UtilBaseCollection<E> implements Set<E> {
       int i = 0;
 
       for (E element : iterable) {
-        Check.notNull(element, nullMessageStart, i, "] == null");
+        if (element == null) {
+          final String msg;
+          msg = String.valueOf(nullMessageStart) + i + "] == null";
+
+          throw new NullPointerException(msg);
+        }
 
         if (addUnchecked(element)) {
           mod = true;

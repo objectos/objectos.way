@@ -27,7 +27,6 @@ import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.OptionalLong;
 import objectos.internal.Ascii;
-import objectos.internal.Check;
 import objectos.internal.UtilList;
 
 final class SqlTransaction implements Sql.Transaction {
@@ -155,7 +154,7 @@ final class SqlTransaction implements Sql.Transaction {
 
   @Override
   public final <T extends Throwable> T rollbackAndSuppress(T error) {
-    Check.notNull(error, "error == null");
+    Objects.requireNonNull(error, "error == null");
 
     return rollbackAndSuppress0(error);
   }
@@ -172,7 +171,7 @@ final class SqlTransaction implements Sql.Transaction {
 
   @Override
   public final Sql.RollbackWrapperException rollbackAndWrap(Throwable error) {
-    Check.notNull(error, "error == null");
+    Objects.requireNonNull(error, "error == null");
 
     Sql.RollbackWrapperException wrapper;
     wrapper = new Sql.RollbackWrapperException(error);

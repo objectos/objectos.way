@@ -16,7 +16,6 @@
 package objectos.way;
 
 import java.util.concurrent.atomic.AtomicInteger;
-import objectos.internal.Check;
 
 abstract class WebFormFieldConfig {
 
@@ -34,19 +33,25 @@ abstract class WebFormFieldConfig {
   }
 
   public final void label(String value) {
-    Check.argument(!value.isBlank(), "Description must not be blank"); // implicit value null-check
+    if (value.isBlank()) {
+      throw new IllegalArgumentException("Description must not be blank");
+    }
 
     label = value;
   }
 
   public final void id(String value) {
-    Check.argument(!value.isBlank(), "Id must not be blank"); // implicit value null-check
+    if (value.isBlank()) {
+      throw new IllegalArgumentException("Id must not be blank");
+    }
 
     id = value;
   }
 
   public final void name(String value) {
-    Check.argument(!value.isBlank(), "Name must not be blank"); // implicit value null-check
+    if (value.isBlank()) {
+      throw new IllegalArgumentException("Name must not be blank");
+    }
 
     name = value;
   }

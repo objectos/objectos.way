@@ -37,7 +37,6 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
-import objectos.internal.Check;
 
 final class TestingResultSet extends AbstractTestable implements ResultSet {
 
@@ -230,7 +229,9 @@ final class TestingResultSet extends AbstractTestable implements ResultSet {
 
   @Override
   public final ResultSetMetaData getMetaData() throws SQLException {
-    Check.state(metaData != null, "meta data was not set");
+    if (metaData == null) {
+      throw new IllegalStateException("meta data was not set");
+    }
 
     return metaData;
   }

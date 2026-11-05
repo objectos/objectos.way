@@ -21,6 +21,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Objects;
 import java.util.RandomAccess;
 import java.util.function.UnaryOperator;
 
@@ -67,7 +68,7 @@ public final class UtilUnmodifiableList<E> extends UtilUnmodifiableCollection<E>
    *         {@code null}
    */
   public static <E> UtilUnmodifiableList<E> copyOf(E[] array) {
-    Check.notNull(array, "array == null");
+    Objects.requireNonNull(array, "array == null");
 
     switch (array.length) {
       case 0:
@@ -78,7 +79,14 @@ public final class UtilUnmodifiableList<E> extends UtilUnmodifiableCollection<E>
         for (int i = 0; i < array.length; i++) {
           var e = array[i];
 
-          copy[i] = Check.notNull(e, "array[", i, "] == null");
+          if (e == null) {
+            final String msg;
+            msg = "array[" + i + "] == null";
+
+            throw new NullPointerException(msg);
+          }
+
+          copy[i] = e;
         }
 
         return new UtilUnmodifiableList<E>(copy);
@@ -114,7 +122,7 @@ public final class UtilUnmodifiableList<E> extends UtilUnmodifiableCollection<E>
    */
   @SuppressWarnings("unchecked")
   public static <E> UtilUnmodifiableList<E> copyOf(Iterable<? extends E> elements) {
-    Check.notNull(elements, "elements == null");
+    Objects.requireNonNull(elements, "elements == null");
 
     if (elements instanceof UtilUnmodifiableList) {
       return (UtilUnmodifiableList<E>) elements;
@@ -132,7 +140,14 @@ public final class UtilUnmodifiableList<E> extends UtilUnmodifiableCollection<E>
       for (int i = 0; i < size; i++) {
         var e = list.get(i);
 
-        data[i] = Check.notNull(e, "elements[", i, "] == null");
+        if (e == null) {
+          final String msg;
+          msg = "elements[" + i + "] == null";
+
+          throw new NullPointerException(msg);
+        }
+
+        data[i] = e;
       }
 
       return new UtilUnmodifiableList<>(data);
@@ -146,7 +161,12 @@ public final class UtilUnmodifiableList<E> extends UtilUnmodifiableCollection<E>
       int index = 0;
 
       for (var e : coll) {
-        Check.notNull(e, "elements[", index, "] == null");
+        if (e == null) {
+          final String msg;
+          msg = "elements[" + index + "] == null";
+
+          throw new NullPointerException(msg);
+        }
 
         data[index++] = e;
       }
@@ -179,7 +199,7 @@ public final class UtilUnmodifiableList<E> extends UtilUnmodifiableCollection<E>
    *         iterator is {@code null}
    */
   public static <E> UtilUnmodifiableList<E> copyOf(Iterator<? extends E> iterator) {
-    Check.notNull(iterator, "iterator == null");
+    Objects.requireNonNull(iterator, "iterator == null");
 
     return copyOf0(iterator);
   }
@@ -212,7 +232,7 @@ public final class UtilUnmodifiableList<E> extends UtilUnmodifiableCollection<E>
    *         if the specified element is {@code null}
    */
   public static <E> UtilUnmodifiableList<E> of(E element) {
-    Check.notNull(element, "element == null");
+    Objects.requireNonNull(element, "element == null");
 
     return new UtilUnmodifiableList<>(
         new Object[] {element}
@@ -239,8 +259,8 @@ public final class UtilUnmodifiableList<E> extends UtilUnmodifiableCollection<E>
    */
   @SuppressWarnings("unchecked")
   public static <E> UtilUnmodifiableList<E> of(E first, E... more) {
-    Check.notNull(first, "first == null");
-    Check.notNull(more, "more == null");
+    Objects.requireNonNull(first, "first == null");
+    Objects.requireNonNull(more, "more == null");
 
     var elements = new Object[more.length + 1];
 
@@ -249,7 +269,7 @@ public final class UtilUnmodifiableList<E> extends UtilUnmodifiableCollection<E>
     for (int i = 0; i < more.length; i++) {
       var e = more[i];
 
-      elements[i + 1] = Check.notNull(e, "more[" + i + "] == null");
+      elements[i + 1] = Objects.requireNonNull(e, "more[" + i + "] == null");
     }
 
     return new UtilUnmodifiableList<E>(elements);

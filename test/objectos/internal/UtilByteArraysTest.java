@@ -21,6 +21,7 @@ import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -105,8 +106,11 @@ public class UtilByteArraysTest {
   private static final int BYTE_MASK = 0xFF;
 
   private long longValue(byte[] array) {
-    Check.notNull(array, "array == null");
-    Check.argument(array.length == 8, "array.length must be 8");
+    Objects.requireNonNull(array, "array == null");
+
+    if (array.length != 8) {
+      throw new IllegalArgumentException("array.length must be 8");
+    }
 
     return longValueUnchecked(array);
   }

@@ -17,6 +17,7 @@ package objectos.internal;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -133,8 +134,8 @@ public sealed class UtilMap<K, V> extends UtilArrayBasedMap<K, V> permits UtilSe
    */
   @Override
   public final V put(K key, V value) {
-    Check.notNull(key, "key == null");
-    Check.notNull(value, "value == null");
+    Objects.requireNonNull(key, "key == null");
+    Objects.requireNonNull(value, "value == null");
 
     return putUnchecked(key, value);
   }

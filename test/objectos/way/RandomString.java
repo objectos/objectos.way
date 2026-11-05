@@ -16,8 +16,8 @@
 package objectos.way;
 
 import java.security.SecureRandom;
+import java.util.Objects;
 import java.util.Random;
-import objectos.internal.Check;
 
 /**
  * A {@code RandomString} is used to generate random string values
@@ -63,7 +63,7 @@ final class RandomString {
    *         if {@code random} is null
    */
   public RandomString(Random random) {
-    this.random = Check.notNull(random, "random == null");
+    this.random = Objects.requireNonNull(random, "random == null");
 
     this.dictionary = DEFAULT_DICTIONARY.toCharArray();
   }
@@ -83,12 +83,14 @@ final class RandomString {
    *         if {@code random} or {@code dictionary} is null
    */
   public RandomString(Random random, String dictionary) {
-    Check.notNull(dictionary, "dictionary == null");
-    Check.argument(dictionary.length() > 1, "dictionary.length() > 1");
+    Objects.requireNonNull(dictionary, "dictionary == null");
+    if (dictionary.length() <= 1) {
+      throw new IllegalArgumentException("dictionary.length() > 1");
+    }
 
     this.dictionary = dictionary.toCharArray();
 
-    this.random = Check.notNull(random, "random == null");
+    this.random = Objects.requireNonNull(random, "random == null");
   }
 
   /**
@@ -105,7 +107,9 @@ final class RandomString {
    *         if {@code length <= 0}
    */
   public final String nextString(int length) {
-    Check.argument(length > 0, "length has to be > 0");
+    if (length <= 0) {
+      throw new IllegalArgumentException("length has to be > 0");
+    }
 
     return randomString0(length);
   }

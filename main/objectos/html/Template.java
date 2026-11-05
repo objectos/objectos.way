@@ -29,7 +29,6 @@ import objectos.html.markup.RawMarkup;
 import objectos.html.markup.RegularElementValue;
 import objectos.html.markup.TextMarkup;
 import objectos.html.markup.VoidElementValue;
-import objectos.internal.Check;
 import objectos.script.JsAction;
 
 /**
@@ -54,7 +53,9 @@ public abstract class Template implements Component {
 
   @Override
   public final void renderHtml(Markup m) {
-    Check.state(markup == null, "Concurrent evalution of a HtmlTemplate is not supported");
+    if (markup != null) {
+      throw new IllegalStateException("Concurrent evalution of a HtmlTemplate is not supported");
+    }
 
     try {
       markup = m;
@@ -98,7 +99,9 @@ public abstract class Template implements Component {
   protected abstract void render();
 
   private Markup markup() {
-    Check.state(markup != null, "markup not set");
+    if (markup == null) {
+      throw new IllegalStateException("markup not set");
+    }
 
     return markup;
   }

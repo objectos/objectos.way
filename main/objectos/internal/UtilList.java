@@ -21,6 +21,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Objects;
 import java.util.RandomAccess;
 import java.util.function.UnaryOperator;
 
@@ -73,7 +74,7 @@ public final class UtilList<E> extends UtilBaseCollection<E> implements List<E> 
    */
   @Override
   public final boolean add(E e) {
-    Check.notNull(e, "e == null");
+    Objects.requireNonNull(e, "e == null");
 
     return add0(e);
   }
@@ -116,7 +117,7 @@ public final class UtilList<E> extends UtilBaseCollection<E> implements List<E> 
    */
   @Override
   public final boolean addAll(Collection<? extends E> c) {
-    Check.notNull(c, "c == null");
+    Objects.requireNonNull(c, "c == null");
 
     return addAll0(c, "c[");
   }
@@ -549,7 +550,7 @@ public final class UtilList<E> extends UtilBaseCollection<E> implements List<E> 
    */
   @SuppressWarnings("unchecked")
   public final UtilUnmodifiableList<E> toUnmodifiableList(Comparator<? super E> c) {
-    Check.notNull(c, "c == null");
+    Objects.requireNonNull(c, "c == null");
 
     switch (size) {
       case 0:
@@ -622,9 +623,14 @@ public final class UtilList<E> extends UtilBaseCollection<E> implements List<E> 
     for (int i = 0; i < collSize; i++) {
       var element = array[i];
 
-      append0(
-          Check.notNull(element, "c[", i, "] == null")
-      );
+      if (element == null) {
+        final String msg;
+        msg = "c[" + i + "] == null";
+
+        throw new NullPointerException(msg);
+      }
+
+      append0(element);
     }
 
     return true;
@@ -638,9 +644,14 @@ public final class UtilList<E> extends UtilBaseCollection<E> implements List<E> 
     while (iterator.hasNext()) {
       var element = iterator.next();
 
-      ret = add0(
-          Check.notNull(element, nullMessageStart, index, "] == null")
-      );
+      if (element == null) {
+        final String msg;
+        msg = nullMessageStart + index + "] == null";
+
+        throw new NullPointerException(msg);
+      }
+
+      ret = add0(element);
 
       index++;
     }
@@ -660,9 +671,14 @@ public final class UtilList<E> extends UtilBaseCollection<E> implements List<E> 
     for (int i = 0; i < listSize; i++) {
       var element = list.get(i);
 
-      append0(
-          Check.notNull(element, nullMessageStart, i, "] == null")
-      );
+      if (element == null) {
+        final String msg;
+        msg = nullMessageStart + i + "] == null";
+
+        throw new NullPointerException(msg);
+      }
+
+      append0(element);
     }
 
     return true;

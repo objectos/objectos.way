@@ -189,7 +189,7 @@ final class UtilLists {
   }
 
   static String joinImpl(Object[] data, int size, String delimiter) {
-    Check.notNull(delimiter, "delimiter == null");
+    Objects.requireNonNull(delimiter, "delimiter == null");
 
     if (size == 0) {
       return "";
@@ -222,9 +222,9 @@ final class UtilLists {
   }
 
   static String joinImpl(Object[] data, int size, String delimiter, String prefix, String suffix) {
-    Check.notNull(delimiter, "delimiter == null");
-    Check.notNull(prefix, "prefix == null");
-    Check.notNull(suffix, "suffix == null");
+    Objects.requireNonNull(delimiter, "delimiter == null");
+    Objects.requireNonNull(prefix, "prefix == null");
+    Objects.requireNonNull(suffix, "suffix == null");
 
     if (size == 0) {
       return prefix + suffix;
@@ -277,7 +277,7 @@ final class UtilLists {
 
   @SuppressWarnings("unchecked")
   static <T> T[] toArrayImpl(Object[] data, int size, T[] a) {
-    Check.notNull(a, "a == null");
+    Objects.requireNonNull(a, "a == null");
 
     if (a.length < size) {
       Class<? extends Object[]> newType;
