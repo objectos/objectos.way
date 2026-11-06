@@ -98,11 +98,6 @@ public final class HtmlImpl implements Html {
   }
 
   @Override
-  public final String toJsonString() {
-    throw new UnsupportedOperationException("Implement me");
-  }
-
-  @Override
   public final String toString() {
     try (final Reader r = openStream()) {
       return r.readAllAsString();
