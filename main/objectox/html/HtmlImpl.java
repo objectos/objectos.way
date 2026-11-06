@@ -51,7 +51,7 @@ public final class HtmlImpl implements Html {
   @Override
   public final void binaryTo(OutputStream out) throws IOException {
     try (
-        Reader reader = openStream();
+        Reader reader = openStream(Formatter.standard());
         Writer writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
     ) {
       reader.transferTo(writer);
@@ -99,7 +99,12 @@ public final class HtmlImpl implements Html {
 
   @Override
   public final String toString() {
-    try (final Reader r = openStream()) {
+    return toString(Formatter.standard());
+  }
+
+  @Override
+  public final String toString(Formatter formatter) {
+    try (final Reader r = openStream(formatter)) {
       return r.readAllAsString();
     } catch (IOException e) {
       throw new UncheckedIOException(e);
@@ -108,14 +113,7 @@ public final class HtmlImpl implements Html {
 
   @Override
   public final String toTestableText() {
-    final Formatter f;
-    f = Formatter.testable();
-
-    try (final Reader r = openStream(f)) {
-      return r.readAllAsString();
-    } catch (IOException e) {
-      throw new UncheckedIOException(e);
-    }
+    return toString(Formatter.testable());
   }
 
 }

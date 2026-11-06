@@ -18,6 +18,7 @@ package objectos.html;
 import static org.testng.Assert.assertEquals;
 
 import java.util.function.Consumer;
+import objectos.html.format.Formatter;
 import objectos.script.Js;
 import objectos.script.JsAction;
 import objectox.html.attr.AttributeName;
@@ -469,7 +470,7 @@ public class HtmlTest {
   }
 
   @DataProvider
-  public Object[][] toTestableTextProvider() {
+  public Object[][] toStringFormattedProvider() {
     return new Object[][] {
         {
             "testable text, top-level testable heading",
@@ -479,6 +480,53 @@ public class HtmlTest {
               opts.addByte((byte) 1);
               opts.addInt8(opts.addObject("Heading 1"));
             }),
+
+            "",
+
+            """
+            # Heading 1
+            """
+        },
+        {
+            "testable text, testable heading after a regular element",
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.ELEMSTR8);
+              opts.addInt8(ElementName.DIV.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(0);
+
+              opts.addByte(HtmlBytes.THEADING8);
+              opts.addByte((byte) 1);
+              opts.addInt8(opts.addObject("Heading 1"));
+            }),
+
+            """
+            <div></div>
+            """,
+
+            """
+            # Heading 1
+            """
+        },
+        {
+            "testable text, testable heading inside a regular element",
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.xTHEADING8);
+              opts.addByte((byte) 1);
+              opts.addInt8(opts.addObject("Heading 1"));
+
+              opts.addByte(HtmlBytes.ELEMSTR8);
+              opts.addInt8(ElementName.DIV.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(0);
+            }),
+
+            """
+            <div>Heading 1</div>
+            """,
 
             """
             # Heading 1
@@ -494,6 +542,31 @@ public class HtmlTest {
               opts.addInt8(opts.addObject("2"));
             }),
 
+            "",
+
+            """
+            | 1 | 2 |
+            """
+        },
+        {
+            "testable text, testable cells after a regular element",
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.ELEMVOID8);
+              opts.addInt8(ElementName.HR.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(0);
+
+              opts.addByte(HtmlBytes.TCELL8);
+              opts.addInt8(opts.addObject("1"));
+              opts.addByte(HtmlBytes.TCELL8);
+              opts.addInt8(opts.addObject("2"));
+            }),
+
+            """
+            <hr>
+            """,
+
             """
             | 1 | 2 |
             """
@@ -502,12 +575,21 @@ public class HtmlTest {
             "testable text, testable heading followed by testable cell",
 
             html(opts -> {
+              opts.addByte(HtmlBytes.ELEMSTR8);
+              opts.addInt8(ElementName.SPAN.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(0);
+
               opts.addByte(HtmlBytes.THEADING8);
               opts.addByte((byte) 1);
               opts.addInt8(opts.addObject("Heading 1"));
               opts.addByte(HtmlBytes.TCELL8);
               opts.addInt8(opts.addObject("x"));
             }),
+
+            """
+            <span></span>
+            """,
 
             """
             # Heading 1
@@ -518,7 +600,16 @@ public class HtmlTest {
         {
             "testable text, document without testable nodes",
 
-            html(_ -> {}),
+            html(opts -> {
+              opts.addByte(HtmlBytes.ELEMSTR8);
+              opts.addInt8(ElementName.DIV.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(0);
+            }),
+
+            """
+            <div></div>
+            """,
 
             ""
         },
@@ -526,11 +617,20 @@ public class HtmlTest {
             "testable text, testable list items",
 
             html(opts -> {
+              opts.addByte(HtmlBytes.ELEMSTR8);
+              opts.addInt8(ElementName.DIV.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(0);
+
               opts.addByte(HtmlBytes.TITEM8);
               opts.addInt8(opts.addObject("Foo"));
               opts.addByte(HtmlBytes.TITEM8);
               opts.addInt8(opts.addObject("Bar"));
             }),
+
+            """
+            <div></div>
+            """,
 
             """
             - Foo
@@ -541,6 +641,11 @@ public class HtmlTest {
             "testable text, testable list items separated by a list",
 
             html(opts -> {
+              opts.addByte(HtmlBytes.ELEMVOID8);
+              opts.addInt8(ElementName.HR.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(0);
+
               opts.addByte(HtmlBytes.TITEM8);
               opts.addInt8(opts.addObject("A"));
               opts.addByte(HtmlBytes.TITEM8);
@@ -549,6 +654,10 @@ public class HtmlTest {
               opts.addByte(HtmlBytes.TITEM8);
               opts.addInt8(opts.addObject("C"));
             }),
+
+            """
+            <hr>
+            """,
 
             """
             - A
@@ -561,6 +670,11 @@ public class HtmlTest {
             "testable text, testable heading, list items and cells",
 
             html(opts -> {
+              opts.addByte(HtmlBytes.ELEMSTR8);
+              opts.addInt8(ElementName.SPAN.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(0);
+
               opts.addByte(HtmlBytes.THEADING8);
               opts.addByte((byte) 1);
               opts.addInt8(opts.addObject("Heading 1"));
@@ -569,6 +683,10 @@ public class HtmlTest {
               opts.addByte(HtmlBytes.TCELL8);
               opts.addInt8(opts.addObject("x"));
             }),
+
+            """
+            <span></span>
+            """,
 
             """
             # Heading 1
@@ -582,6 +700,11 @@ public class HtmlTest {
             "testable text, testable props",
 
             html(opts -> {
+              opts.addByte(HtmlBytes.ELEMSTR8);
+              opts.addInt8(ElementName.DIV.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(0);
+
               opts.addByte(HtmlBytes.TPROP8);
               opts.addObject("First name");
               opts.addInt8(opts.addObject("John"));
@@ -591,16 +714,77 @@ public class HtmlTest {
             }),
 
             """
+            <div></div>
+            """,
+
+            """
             - First name: John
             - Last name: Smith
+            """
+        },
+        {
+            "testable text, testable item inside a regular element",
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.xTITEM8);
+              opts.addInt8(opts.addObject("Foo"));
+
+              opts.addByte(HtmlBytes.ELEMSTR8);
+              opts.addInt8(ElementName.DIV.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(0);
+            }),
+
+            """
+            <div>Foo</div>
+            """,
+
+            """
+            - Foo
+            """
+        },
+        {
+            "testable text, testable prop inside a regular element",
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.xTPROP8);
+              opts.addObject("First name");
+              opts.addInt8(opts.addObject("John"));
+
+              opts.addByte(HtmlBytes.ELEMSTR8);
+              opts.addInt8(ElementName.DIV.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(0);
+            }),
+
+            """
+            <div>John</div>
+            """,
+
+            """
+            - First name: John
             """
         }
     };
   }
 
-  @Test(dataProvider = "toTestableTextProvider")
-  public void toTestableText(String description, Html subject, String expected) {
-    assertEquals(subject.toTestableText(), expected, description);
+  @Test(dataProvider = "toStringFormattedProvider")
+  public void toStringFormatted(
+      String description,
+      Html subject,
+      String expectedStandard,
+      String expectedTestable) {
+    final String standard;
+    standard = subject.toString(Formatter.standard());
+
+    assertEquals(standard, expectedStandard, description);
+
+    final String testable;
+    testable = subject.toString(Formatter.testable());
+
+    assertEquals(testable, expectedTestable, description);
   }
 
   private Html html(Consumer<? super HtmlSink> opts) {

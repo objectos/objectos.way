@@ -34,14 +34,6 @@ public sealed interface Html extends BinaryObject, Testable permits HtmlImpl {
   /// Returns a new [Reader] for reading the formatted HTML represented by this
   /// object.
   ///
-  /// @return a newly created [Reader] for reading the formatted HTML
-  default Reader openStream() {
-    return openStream(Formatter.standard());
-  }
-
-  /// Returns a new [Reader] for reading the formatted HTML represented by this
-  /// object.
-  ///
   /// @param formatter the object to format the stream of events
   ///
   /// @return a newly created [Reader] for reading the formatted HTML
@@ -49,8 +41,17 @@ public sealed interface Html extends BinaryObject, Testable permits HtmlImpl {
 
   /// Returns the formatted HTML represented by this object.
   ///
+  /// This method is equivalent to invoking `toString(Formatter.standard())`.
+  ///
   /// @return the formatted HTML represented by this object
   @Override
   String toString();
+
+  /// Returns the formatted HTML represented by this object.
+  ///
+  /// @param formatter the object to format the stream of events
+  ///
+  /// @return the formatted HTML represented by this object
+  String toString(Formatter formatter);
 
 }

@@ -50,6 +50,8 @@ public final class StandardFormatter extends BaseFormatter {
     opts.add('>', "&gt;");
   });
 
+  private boolean written;
+
   public StandardFormatter() {}
 
   @Override
@@ -60,6 +62,8 @@ public final class StandardFormatter extends BaseFormatter {
     out.append('<');
 
     out.append(name);
+
+    written = true;
   }
 
   @Override
@@ -84,6 +88,8 @@ public final class StandardFormatter extends BaseFormatter {
     out.append(escaped);
 
     out.append('"');
+
+    written = true;
   }
 
   @Override
@@ -94,11 +100,15 @@ public final class StandardFormatter extends BaseFormatter {
     out.append(' ');
 
     out.append(name);
+
+    written = true;
   }
 
   @Override
   final void emitDoctype(EmitDoctype event, Output out) {
     out.append("<!DOCTYPE html>");
+
+    written = true;
   }
 
   @Override
@@ -111,6 +121,8 @@ public final class StandardFormatter extends BaseFormatter {
     out.append(name);
 
     out.append('>');
+
+    written = true;
   }
 
   @Override
@@ -135,6 +147,8 @@ public final class StandardFormatter extends BaseFormatter {
     out.append(escaped);
 
     out.append('\'');
+
+    written = true;
   }
 
   @Override
@@ -143,6 +157,8 @@ public final class StandardFormatter extends BaseFormatter {
     value = raw.value();
 
     out.append(value);
+
+    written = !value.isEmpty();
   }
 
   @Override
@@ -157,20 +173,22 @@ public final class StandardFormatter extends BaseFormatter {
     escaped = TEXT_ESCAPER.escape(value);
 
     out.append(escaped);
+
+    written = !escaped.isEmpty();
   }
 
   @Override
   final void endDocument(EndDocument event, Output out) {
-    if (event.empty()) {
-      return;
+    if (written) {
+      out.append('\n');
     }
-
-    out.append('\n');
   }
 
   @Override
   final void endStartTag(EndStartTag event, Output out) {
     out.append('>');
+
+    written = true;
   }
 
 }

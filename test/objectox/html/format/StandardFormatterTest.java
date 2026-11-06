@@ -46,95 +46,162 @@ public class StandardFormatterTest {
     final JsAction action;
     action = Js.noop();
 
-    return new Object[][] {{
-        new BeginStartTagEvent(0, ElementName.DIV),
-        """
-        <div\
-        """
-    }, {
-        new EndDocumentEvent(false),
-        "\n"
-    }, {
-        new EndDocumentEvent(true),
-        ""
-    }, {
-        new EndStartTagEvent(0, EndStartTagKind.ELEMENT),
-        """
-        >\
-        """
-    }, {
-        new EmitAttributeEvent(0, AttributeName.ID, "foo"),
-        """
-         id="foo"\
-        """
-    }, {
-        new EmitAttributeEvent(0, AttributeName.ID, "a\"b&c<d>e"),
-        """
-         id="a&quot;b&amp;c&lt;d&gt;e"\
-        """
-    }, {
-        new EmitBooleanAttributeEvent(0, AttributeName.AUTOFOCUS),
-        """
-         autofocus\
-        """
-    }, {
-        new EmitDoctypeEvent(0),
-        """
-        <!DOCTYPE html>\
-        """
-    }, {
-        new EmitEndTagEvent(0, ElementName.DIV),
-        """
-        </div>\
-        """
-    }, {
-        new EmitJsActionAttributeEvent(0, AttributeName.ONCLICK, action),
-        """
-         onclick='way.on(event,["NO"])'\
-        """
-    }, {
-        new EmitRawEvent(0, "<br/>"),
-        """
-        <br/>\
-        """
-    }, {
-        new EmitTextEvent(0, "<xml></xml>&copy;"),
-        """
-        &lt;xml&gt;&lt;/xml&gt;&amp;copy;\
-        """
-    }, {
-        new EmitTextEvent(0, "a\nb"),
-        """
-        a
-        b\
-        """
-    }, {
-        new EmitTestableCellEvent(0, "foo"),
-        ""
-    }, {
-        new EmitTestableHeadingEvent(0, 1, "foo"),
-        ""
-    }, {
-        new BeginTestableRowEvent(0),
-        ""
-    }};
+    return new Object[][] {
+        {
+            evts(new BeginStartTagEvent(0, ElementName.DIV)),
+            """
+            <div\
+            """
+        },
+        {
+            evts(new EndDocumentEvent(false)),
+            ""
+        },
+        {
+            evts(new EndDocumentEvent(true)),
+            ""
+        },
+        {
+            evts(new EndStartTagEvent(0, EndStartTagKind.ELEMENT)),
+            """
+            >\
+            """
+        },
+        {
+            evts(new EmitAttributeEvent(0, AttributeName.ID, "foo")),
+            """
+             id="foo"\
+            """
+        },
+        {
+            evts(new EmitAttributeEvent(0, AttributeName.ID, "a\"b&c<d>e")),
+            """
+             id="a&quot;b&amp;c&lt;d&gt;e"\
+            """
+        },
+        {
+            evts(new EmitBooleanAttributeEvent(0, AttributeName.AUTOFOCUS)),
+            """
+             autofocus\
+            """
+        },
+        {
+            evts(new EmitDoctypeEvent(0)),
+            """
+            <!DOCTYPE html>\
+            """
+        },
+        {
+            evts(new EmitEndTagEvent(0, ElementName.DIV)),
+            """
+            </div>\
+            """
+        },
+        {
+            evts(new EmitJsActionAttributeEvent(0, AttributeName.ONCLICK, action)),
+            """
+             onclick='way.on(event,["NO"])'\
+            """
+        },
+        {
+            evts(new EmitRawEvent(0, "<br/>")),
+            """
+            <br/>\
+            """
+        },
+        {
+            evts(new EmitTextEvent(0, "<xml></xml>&copy;")),
+            """
+            &lt;xml&gt;&lt;/xml&gt;&amp;copy;\
+            """
+        },
+        {
+            evts(new EmitTextEvent(0, "a\nb")),
+            """
+            a
+            b\
+            """
+        },
+        {
+            evts(new EmitTestableCellEvent(0, "foo")),
+            ""
+        },
+        {
+            evts(new EmitTestableHeadingEvent(0, 1, "foo")),
+            ""
+        },
+        {
+            evts(new BeginTestableRowEvent(0)),
+            ""
+        },
+        {
+            evts(
+                new EmitTestableHeadingEvent(0, 1, "Heading 1"),
+                new EmitTestableCellEvent(0, "1"),
+                new EndDocumentEvent(false)
+            ),
+            ""
+        },
+        {
+            evts(
+                new BeginStartTagEvent(0, ElementName.DIV),
+                new EmitAttributeEvent(0, AttributeName.ID, "foo"),
+                new EmitBooleanAttributeEvent(0, AttributeName.AUTOFOCUS),
+                new EmitJsActionAttributeEvent(0, AttributeName.ONCLICK, action),
+                new EndStartTagEvent(0, EndStartTagKind.ELEMENT),
+                new EmitTextEvent(0, "Hello"),
+                new EmitEndTagEvent(0, ElementName.DIV),
+                new EndDocumentEvent(false)
+            ),
+            """
+            <div id="foo" autofocus onclick='way.on(event,["NO"])'>Hello</div>
+            """
+        },
+        {
+            evts(
+                new EmitAttributeEvent(0, AttributeName.ID, "foo"),
+                new EmitBooleanAttributeEvent(0, AttributeName.AUTOFOCUS),
+                new EmitJsActionAttributeEvent(0, AttributeName.ONCLICK, action)
+            ),
+            """
+             id="foo" autofocus onclick='way.on(event,["NO"])'\
+            """
+        },
+        {
+            evts(
+                new EmitDoctypeEvent(0),
+                new EmitTextEvent(0, "<xml></xml>&copy;"),
+                new EmitRawEvent(0, "<br/>"),
+                new EmitEndTagEvent(0, ElementName.DIV),
+                new EndDocumentEvent(true)
+            ),
+            """
+            <!DOCTYPE html>&lt;xml&gt;&lt;/xml&gt;&amp;copy;<br/></div>
+            """
+        }
+    };
   }
 
   @Test(dataProvider = "formatToProvider")
-  public void formatTo(Event event, String expected) {
+  public void formatTo(Event[] events, String expected) {
     final StandardFormatter subject;
     subject = new StandardFormatter();
 
     final Output out;
     out = OutputY.create();
 
-    subject.formatTo(event, out);
+    for (Event event : events) {
+      subject.formatTo(event, out);
+    }
 
-    assertEquals(
-        out.toString(),
+    final String actual;
+    actual = out.toString();
 
-        expected
-    );
+    assertEquals(actual, expected);
+  }
+
+  private Event[] evts(Event... events) {
+    return events;
   }
 
 }

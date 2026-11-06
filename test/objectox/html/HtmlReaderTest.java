@@ -27,6 +27,7 @@ import objectox.html.format.BaseFormatter;
 import objectox.html.format.Output;
 import objectox.html.format.OutputY;
 import objectox.html.format.StandardFormatter;
+import objectox.html.stream.EmitRawEvent;
 import objectox.html.stream.EmitTextEvent;
 import objectox.html.stream.EndDocumentEvent;
 import org.testng.annotations.Test;
@@ -198,7 +199,7 @@ public class HtmlReaderTest {
   public void read11() throws IOException {
     test(
         evts(
-            new EndDocumentEvent(false)
+            new EmitRawEvent(0, "\n")
         ),
 
         output(y -> y.overflow = "abcdefgh"),
@@ -214,7 +215,7 @@ public class HtmlReaderTest {
   public void read12() throws IOException {
     test(
         evts(
-            new EndDocumentEvent(false)
+            new EmitRawEvent(0, "\n")
         ),
 
         output(y -> y.overflow = "abcdefgh"),
@@ -230,7 +231,7 @@ public class HtmlReaderTest {
   public void read13() throws IOException {
     test(
         evts(
-            new EndDocumentEvent(false)
+            new EmitRawEvent(0, "\n")
         ),
 
         output(y -> y.overflow = "ab"),
