@@ -16,36 +16,15 @@
 package objectos.html;
 
 import java.io.Reader;
-import java.util.Objects;
 import java.util.stream.Stream;
 import objectos.dev.Testable;
 import objectos.html.format.Formatter;
 import objectos.html.stream.Event;
 import objectos.lang.BinaryObject;
 import objectox.html.HtmlImpl;
-import objectox.html.attr.AttributeName;
 
 /// Represents a compiled HTML document.
 public sealed interface Html extends BinaryObject, Testable permits HtmlImpl {
-
-  /// Formats the specified string to be used as an HTML attribute value. More
-  /// specifically, this method returns a string whose value is the specified
-  /// string:
-  ///
-  /// - With all leading and trailing [white space][Character#isWhitespace(char)]
-  ///   removed. - All other [white space][Character#isWhitespace(char)]
-  ///   characters are replaced by the space character (`U+0020`). - All
-  ///   sequences of more than one consecutive space characters are normalized to
-  ///   a single space character.
-  ///
-  /// @param value the string to be formatted
-  ///
-  /// @return the formatted string
-  static String formatAttrValue(String value) {
-    Objects.requireNonNull(value, "value == null");
-
-    return AttributeName.formatAttrValue(value, new StringBuilder());
-  }
 
   /// Returns the contents of this Objectos HTML document as a stream of events.
   ///

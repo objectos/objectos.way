@@ -17,7 +17,7 @@ package objectos.way;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.html.Html;
+import objectos.html.ClassName;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -39,7 +39,7 @@ public class HtmlTest {
 
   @Test(dataProvider = "formatAttrValueProvider")
   public void formatAttrValue(String value, String expected, String description) {
-    assertEquals(Html.formatAttrValue(value), expected, description);
+    assertEquals(ClassName.ofText(value).value(), expected, description);
   }
 
 }

@@ -115,8 +115,13 @@ public final class ClassName
    * @return a newly constructed {@code ClassName} instance
    */
   public static ClassName ofText(String value) {
+    Objects.requireNonNull(value, "value == null");
+
+    final StringBuilder sb;
+    sb = new StringBuilder();
+
     String result;
-    result = Html.formatAttrValue(value);
+    result = AttributeName.formatAttrValue(value, sb);
 
     return new ClassName(result);
   }
