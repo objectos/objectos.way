@@ -13,28 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.dev;
+package objectox.lang;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
-public final class TestableCellLocalDateTime {
+public final class TestableHeading {
 
-  private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+  private final String level;
 
-  private final LocalDateTime value;
+  private final String value;
 
-  TestableCellLocalDateTime(LocalDateTime value) {
-    this.value = value;
+  public TestableHeading(int level, String value) {
+    this.level = switch (level) {
+      case 1 -> "#";
+
+      case 2 -> "##";
+
+      case 3 -> "###";
+
+      case 4 -> "####";
+
+      case 5 -> "#####";
+
+      case 6 -> "######";
+
+      default -> "#".repeat(level);
+    };
+
+    this.value = Objects.requireNonNull(value, "value == null");
   }
 
   @Override
   public final String toString() {
-    if (value != null) {
-      return FORMATTER.format(value);
-    } else {
-      return "---------- --------";
-    }
+    return level + " " + value;
   }
 
 }

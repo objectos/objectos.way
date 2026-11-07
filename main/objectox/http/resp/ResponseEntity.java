@@ -16,8 +16,8 @@
 package objectox.http.resp;
 
 import java.nio.file.Path;
-import objectos.dev.Testable;
 import objectos.http.Content;
+import objectos.lang.Testable;
 
 public sealed interface ResponseEntity extends Testable {
 

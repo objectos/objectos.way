@@ -17,10 +17,10 @@ package objectox.http.media;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import objectos.dev.Testable;
 import objectos.http.Content;
 import objectos.http.MediaType;
 import objectos.lang.BinaryObject;
+import objectos.lang.Testable;
 
 public record ContentBinaryObject(MediaType contentType, BinaryObject contents) implements Content {
 

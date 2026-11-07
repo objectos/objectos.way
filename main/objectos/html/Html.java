@@ -17,10 +17,10 @@ package objectos.html;
 
 import java.io.Reader;
 import java.util.stream.Stream;
-import objectos.dev.Testable;
 import objectos.html.format.Formatter;
 import objectos.html.stream.Event;
 import objectos.lang.BinaryObject;
+import objectos.lang.Testable;
 import objectox.html.HtmlImpl;
 
 /// Represents a compiled HTML document.

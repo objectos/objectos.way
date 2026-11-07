@@ -13,28 +13,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.dev;
+package objectox.lang;
 
 import static org.testng.Assert.assertEquals;
 
-import java.time.LocalDateTime;
+import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class TestableCellLocalDateTimeTest {
+public class TestableHeadingTest {
+
+  @Test(description = "reject null value")
+  public void format01() {
+    try {
+      new TestableHeading(1, null);
+
+      Assert.fail("It should have thrown");
+    } catch (NullPointerException expected) {
+      final String msg = expected.getMessage();
+
+      assertEquals(msg, "value == null");
+    }
+  }
 
   @DataProvider
-  public Object[][] format01Provider() {
+  public Object[][] format02Provider() {
     return new Object[][] {
-        {LocalDateTime.of(2026, 1, 1, 13, 0), "2026-01-01 13:00:00"},
-        {null, "---------- --------"}
+        {1, "# Title"},
+        {2, "## Title"},
+        {3, "### Title"},
+        {4, "#### Title"},
+        {5, "##### Title"},
+        {6, "###### Title"},
+        {7, "####### Title"}
     };
   }
 
-  @Test(dataProvider = "format01Provider", description = "format")
-  public void format01(LocalDateTime value, String expected) {
-    final TestableCellLocalDateTime subject;
-    subject = new TestableCellLocalDateTime(value);
+  @Test(dataProvider = "format02Provider", description = "accept")
+  public void format02(int level, String expected) {
+    final TestableHeading subject;
+    subject = new TestableHeading(level, "Title");
 
     assertEquals(subject.toString(), expected);
   }

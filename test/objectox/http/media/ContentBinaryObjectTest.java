@@ -20,9 +20,9 @@ import static org.testng.Assert.assertEquals;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import objectos.dev.Testable;
 import objectos.http.MediaType;
 import objectos.lang.BinaryObject;
+import objectos.lang.Testable;
 import org.testng.annotations.Test;
 
 public class ContentBinaryObjectTest {

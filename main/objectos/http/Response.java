@@ -16,7 +16,7 @@
 package objectos.http;
 
 import java.util.function.Consumer;
-import objectos.dev.Testable;
+import objectos.lang.Testable;
 import objectox.http.resp.ResponsePojo;
 
 /// An HTTP response message.

@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.dev;
+package objectos.lang;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import objectox.dev.TestableRowFormatterPojo;
+import objectox.lang.TestableRowFormatterPojo;
 
 /// Formats a row for the string representation of a testable table.
 public sealed interface TestableRowFormatter permits TestableRowFormatterPojo {

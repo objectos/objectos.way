@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import objectos.dev.Testable;
+import objectos.lang.Testable;
 import objectos.way.Sql.Meta.QueryTables;
 import objectos.way.Sql.MetaTable;
 import objectos.way.Sql.Migrations;

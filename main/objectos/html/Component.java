@@ -15,11 +15,11 @@
  */
 package objectos.html;
 
-import objectos.dev.Testable;
 import objectos.html.markup.RegularElementValue;
 import objectos.http.Content;
 import objectos.http.ContentProvider;
 import objectos.http.MediaType;
+import objectos.lang.Testable;
 import objectox.html.MarkupImpl;
 
 /// An object that renders HTML on its own or as part of a larger HTML document.

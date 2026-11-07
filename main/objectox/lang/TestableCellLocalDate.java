@@ -13,28 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.html;
+package objectox.lang;
 
-public interface HtmlTestable {
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
-  void cell(String value, int width);
+public final class TestableCellLocalDate {
 
-  void field(String name, String value);
+  private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-  void fieldName(String name);
+  private final LocalDate value;
 
-  void heading1(String value);
+  TestableCellLocalDate(LocalDate value) {
+    this.value = value;
+  }
 
-  void heading2(String value);
-
-  void heading3(String value);
-
-  void heading4(String value);
-
-  void heading5(String value);
-
-  void heading6(String value);
-
-  void newLine();
+  @Override
+  public final String toString() {
+    if (value != null) {
+      return FORMATTER.format(value);
+    } else {
+      return "----------";
+    }
+  }
 
 }

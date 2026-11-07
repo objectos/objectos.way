@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.dev;
+package objectox.lang;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import objectos.dev.TestableFormatter;
-import objectos.dev.TestableListFormatter;
-import objectos.dev.TestableRowFormatter;
+import objectos.lang.TestableFormatter;
+import objectos.lang.TestableListFormatter;
+import objectos.lang.TestableRowFormatter;
 
 public final class TestableFormatterPojo implements TestableFormatter {
 

@@ -16,8 +16,8 @@
 package objectox.html.markup;
 
 import java.util.Objects;
-import objectox.dev.TestableCellString;
 import objectox.html.IntSize;
+import objectox.lang.TestableCellString;
 
 final class TestableRecorder {
 

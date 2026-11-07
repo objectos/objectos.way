@@ -13,28 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.dev;
+package objectox.lang;
 
 import static org.testng.Assert.assertEquals;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class TestableCellLocalDateTest {
+public class TestableCellLocalDateTimeTest {
 
   @DataProvider
   public Object[][] format01Provider() {
     return new Object[][] {
-        {LocalDate.of(2026, 1, 1), "2026-01-01"},
-        {null, "----------",}
+        {LocalDateTime.of(2026, 1, 1, 13, 0), "2026-01-01 13:00:00"},
+        {null, "---------- --------"}
     };
   }
 
   @Test(dataProvider = "format01Provider", description = "format")
-  public void format01(LocalDate value, String expected) {
-    final TestableCellLocalDate subject;
-    subject = new TestableCellLocalDate(value);
+  public void format01(LocalDateTime value, String expected) {
+    final TestableCellLocalDateTime subject;
+    subject = new TestableCellLocalDateTime(value);
 
     assertEquals(subject.toString(), expected);
   }

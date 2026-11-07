@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.dev;
+package objectox.lang;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import objectos.dev.TestableRowFormatter;
+import objectos.lang.TestableRowFormatter;
 
 public final class TestableRowFormatterPojo implements TestableRowFormatter {
 

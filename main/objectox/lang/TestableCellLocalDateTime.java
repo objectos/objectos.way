@@ -13,19 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.dev;
+package objectox.lang;
 
-/// Formats the string representation of a testable list.
-public interface TestableListFormatter {
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-  /// Adds the specified boolean as an item in the list.
-  ///
-  /// @param value the list item value
-  void item(boolean value);
+public final class TestableCellLocalDateTime {
 
-  /// Adds the specified string as an item in the list.
-  ///
-  /// @param value the list item value
-  void item(String value);
+  private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+  private final LocalDateTime value;
+
+  TestableCellLocalDateTime(LocalDateTime value) {
+    this.value = value;
+  }
+
+  @Override
+  public final String toString() {
+    if (value != null) {
+      return FORMATTER.format(value);
+    } else {
+      return "---------- --------";
+    }
+  }
 
 }

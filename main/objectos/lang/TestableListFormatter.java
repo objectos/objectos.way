@@ -13,39 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.dev;
+package objectos.lang;
 
-import java.util.Objects;
+/// Formats the string representation of a testable list.
+public interface TestableListFormatter {
 
-public final class TestableHeading {
+  /// Adds the specified boolean as an item in the list.
+  ///
+  /// @param value the list item value
+  void item(boolean value);
 
-  private final String level;
-
-  private final String value;
-
-  public TestableHeading(int level, String value) {
-    this.level = switch (level) {
-      case 1 -> "#";
-
-      case 2 -> "##";
-
-      case 3 -> "###";
-
-      case 4 -> "####";
-
-      case 5 -> "#####";
-
-      case 6 -> "######";
-
-      default -> "#".repeat(level);
-    };
-
-    this.value = Objects.requireNonNull(value, "value == null");
-  }
-
-  @Override
-  public final String toString() {
-    return level + " " + value;
-  }
+  /// Adds the specified string as an item in the list.
+  ///
+  /// @param value the list item value
+  void item(String value);
 
 }

@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.dev;
+package objectos.lang;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import objectox.dev.TestableFormatterPojo;
+import objectox.lang.TestableFormatterPojo;
 
 /// Formats a string representation that is suitable for a testable object.
 public sealed interface TestableFormatter permits TestableFormatterPojo {

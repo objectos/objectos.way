@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.dev;
+package objectox.lang;
 
 import static org.testng.Assert.assertEquals;
 
 import java.util.List;
 import java.util.function.BiConsumer;
-import objectos.dev.TestableRowFormatter;
+import objectos.lang.TestableRowFormatter;
 import org.testng.annotations.Test;
 
 public class TestableTableTest {

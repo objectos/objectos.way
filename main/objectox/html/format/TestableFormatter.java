@@ -32,7 +32,7 @@ import objectos.html.stream.EmitTestableProp;
 import objectos.html.stream.EmitText;
 import objectos.html.stream.EndDocument;
 import objectos.html.stream.EndStartTag;
-import objectox.dev.TestableHeading;
+import objectox.lang.TestableHeading;
 
 public final class TestableFormatter extends BaseFormatter {
 
