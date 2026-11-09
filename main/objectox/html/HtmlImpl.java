@@ -80,6 +80,15 @@ public final class HtmlImpl implements Html {
   }
 
   @Override
+  public final String format(Formatter formatter) {
+    try (final Reader r = openStream(formatter)) {
+      return r.readAllAsString();
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
+  }
+
+  @Override
   public final Reader openStream(Formatter formatter) {
     final Formatter f;
     f = Objects.requireNonNull(formatter, "formatter == null");
@@ -99,21 +108,12 @@ public final class HtmlImpl implements Html {
 
   @Override
   public final String toString() {
-    return toString(Formatter.standard());
-  }
-
-  @Override
-  public final String toString(Formatter formatter) {
-    try (final Reader r = openStream(formatter)) {
-      return r.readAllAsString();
-    } catch (IOException e) {
-      throw new UncheckedIOException(e);
-    }
+    return format(Formatter.standard());
   }
 
   @Override
   public final String toTestableText() {
-    return toString(Formatter.testable());
+    return format(Formatter.testable());
   }
 
 }

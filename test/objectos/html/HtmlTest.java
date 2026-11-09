@@ -470,7 +470,7 @@ public class HtmlTest {
   }
 
   @DataProvider
-  public Object[][] toStringFormattedProvider() {
+  public Object[][] formatProvider() {
     return new Object[][] {
         {
             "testable text, top-level testable heading",
@@ -770,19 +770,19 @@ public class HtmlTest {
     };
   }
 
-  @Test(dataProvider = "toStringFormattedProvider")
-  public void toStringFormatted(
+  @Test(dataProvider = "formatProvider")
+  public void format(
       String description,
       Html subject,
       String expectedStandard,
       String expectedTestable) {
     final String standard;
-    standard = subject.toString(Formatter.standard());
+    standard = subject.format(Formatter.standard());
 
     assertEquals(standard, expectedStandard, description);
 
     final String testable;
-    testable = subject.toString(Formatter.testable());
+    testable = subject.format(Formatter.testable());
 
     assertEquals(testable, expectedTestable, description);
   }

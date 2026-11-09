@@ -15,6 +15,7 @@
  */
 package objectos.html;
 
+import objectos.html.format.Formatter;
 import objectos.html.markup.RegularElementValue;
 import objectos.http.Content;
 import objectos.http.ContentProvider;
@@ -29,6 +30,23 @@ public non-sealed interface Component
     ContentProvider,
     RegularElementValue,
     Testable {
+
+  /// Formats this HTML component using the specified formatter.
+  ///
+  /// @param formatter the formatter to use, not null
+  ///
+  /// @return the formatted string, not null
+  default String format(Formatter formatter) {
+    final Markup m;
+    m = newHtmlMarkup();
+
+    renderHtml(m);
+
+    final Html html;
+    html = m.compile();
+
+    return html.format(formatter);
+  }
 
   /// Returns the markup instance to be used by this component.
   ///
@@ -81,15 +99,7 @@ public non-sealed interface Component
   ///         this component
   @Override
   default String toTestableText() {
-    final Markup m;
-    m = MarkupImpl.create();
-
-    renderHtml(m);
-
-    final Html html;
-    html = m.compile();
-
-    return html.toTestableText();
+    return format(Formatter.testable());
   }
 
 }
