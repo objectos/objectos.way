@@ -18,6 +18,7 @@ package objectos.html;
 import static org.testng.Assert.assertEquals;
 
 import java.util.List;
+import objectos.html.format.Formatter;
 import org.testng.annotations.Test;
 
 public class MarkupJavadoc {
@@ -36,7 +37,7 @@ public class MarkupJavadoc {
     // @end
 
     assertEquals(
-        c.toHtml(),
+        c.format(Formatter.standard()),
 
         """
 <ul>\
@@ -76,7 +77,7 @@ Fri\
     // @end
 
     assertEquals(
-        new MyComponent().toHtml(),
+        new MyComponent().format(Formatter.standard()),
 
         """
 <ul>\
@@ -113,7 +114,7 @@ Fri\
     // @end
 
     assertEquals(
-        new MyComponent().toHtml(),
+        new MyComponent().format(Formatter.standard()),
 
         """
 <div>\
@@ -147,7 +148,7 @@ Cancel\
     // @end
 
     assertEquals(
-        new MyComponent().toHtml(),
+        new MyComponent().format(Formatter.standard()),
 
         """
 <div>\

@@ -17,7 +17,11 @@ package objectos.html;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.function.Consumer;
 import objectos.html.format.Formatter;
+import objectox.html.elem.ElementName;
+import objectox.html.markup.HtmlBytes;
+import objectox.html.markup.HtmlSink;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -25,44 +29,11 @@ public class ComponentTest {
 
   @DataProvider
   public Object[][] formatProvider() {
-    final Component empty;
-    empty = _ -> {};
-
-    final Component nested;
-    nested = m -> m.div(m.span(m.text("Hello")));
-
-    final Component testableHeading;
-    testableHeading = m -> m.t().h1("Heading 1");
-
-    final Component testableHeadingAfterRegular;
-    testableHeadingAfterRegular = m -> {
-      m.div(m.text("Hello"));
-      m.t().h1("Heading 1");
-    };
-
-    final Component testableHeadingAndCell;
-    testableHeadingAndCell = m -> {
-      m.t().h1("Heading 1");
-      m.t().cell(1, "x");
-    };
-
-    final Component testableListItems;
-    testableListItems = m -> {
-      m.t().item("Foo");
-      m.t().item("Bar");
-    };
-
-    final Component testableProps;
-    testableProps = m -> {
-      m.t().prop("First name", "John");
-      m.t().prop("Last name", "Smith");
-    };
-
     return new Object[][] {
         {
             "document, empty",
 
-            empty,
+            c(_ -> {}),
 
             "",
 
@@ -71,7 +42,7 @@ public class ComponentTest {
         {
             "regular element, nested",
 
-            nested,
+            c(m -> m.div(m.span(m.text("Hello")))),
 
             """
             <div>\
@@ -84,7 +55,7 @@ public class ComponentTest {
         {
             "testable text, top-level testable heading",
 
-            testableHeading,
+            c(m -> m.t().h1("Heading 1")),
 
             "",
 
@@ -95,7 +66,10 @@ public class ComponentTest {
         {
             "testable text, testable heading after a regular element",
 
-            testableHeadingAfterRegular,
+            c(m -> {
+              m.div(m.text("Hello"));
+              m.t().h1("Heading 1");
+            }),
 
             """
             <div>Hello</div>
@@ -108,7 +82,10 @@ public class ComponentTest {
         {
             "testable text, testable heading followed by testable cell",
 
-            testableHeadingAndCell,
+            c(m -> {
+              m.t().h1("Heading 1");
+              m.t().cell(1, "x");
+            }),
 
             "",
 
@@ -121,7 +98,10 @@ public class ComponentTest {
         {
             "testable text, testable list items",
 
-            testableListItems,
+            c(m -> {
+              m.t().item("Foo");
+              m.t().item("Bar");
+            }),
 
             "",
 
@@ -133,7 +113,10 @@ public class ComponentTest {
         {
             "testable text, testable props",
 
-            testableProps,
+            c(m -> {
+              m.t().prop("First name", "John");
+              m.t().prop("Last name", "Smith");
+            }),
 
             "",
 
@@ -160,6 +143,96 @@ public class ComponentTest {
     testable = subject.format(Formatter.testable());
 
     assertEquals(testable, expectedTestable, description);
+  }
+
+  @DataProvider
+  public Object[][] compileProvider() {
+    return new Object[][] {
+        {
+            "document, empty",
+
+            c(_ -> {}),
+
+            html(_ -> {})
+        },
+        {
+            "void element, no attributes",
+
+            c(m -> m.hr()),
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.ELEMVOID8);
+              opts.addInt8(ElementName.HR.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(0);
+            })
+        },
+        {
+            "regular element, no attributes, nested elements",
+
+            c(m -> m.html(m.head(m.meta()))),
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.xELEMVOID8);
+              opts.addInt8(ElementName.META.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(0);
+              opts.addByte(HtmlBytes.xELEMSTR8);
+              opts.addInt8(ElementName.HEAD.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(0);
+              opts.addByte(HtmlBytes.ELEMSTR8);
+              opts.addInt8(ElementName.HTML.index());
+              opts.addByte(HtmlBytes.VALUES8);
+              opts.addInt8(1);
+              opts.addInt8(4);
+            })
+        },
+        {
+            "testable text, top-level testable heading",
+
+            c(m -> m.t().h1("Heading 1")),
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.THEADING8);
+              opts.addByte((byte) 1);
+              opts.addInt8(opts.addObject("Heading 1"));
+            })
+        },
+        {
+            "testable text, testable heading followed by testable cell",
+
+            c(m -> {
+              m.t().h1("Heading 1");
+              m.t().cell(1, "x");
+            }),
+
+            html(opts -> {
+              opts.addByte(HtmlBytes.THEADING8);
+              opts.addByte((byte) 1);
+              opts.addInt8(opts.addObject("Heading 1"));
+              opts.addByte(HtmlBytes.TCELL8);
+              opts.addInt8(opts.addObject("x"));
+            })
+        }
+    };
+  }
+
+  @Test(dataProvider = "compileProvider")
+  public void compile(String description, Component subject, Html expected) {
+    final Html actual;
+    actual = subject.compile();
+
+    assertEquals(actual, expected, description);
+  }
+
+  private Component c(Component c) {
+    return c;
+  }
+
+  private Html html(Consumer<? super HtmlSink> opts) {
+    return HtmlY.create(opts);
   }
 
 }
