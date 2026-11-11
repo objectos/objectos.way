@@ -20,7 +20,7 @@ import static org.testng.Assert.assertEquals;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import objectos.http.MediaType;
+import objectos.media.MediaType;
 import objectos.lang.BinaryObject;
 import objectos.lang.Testable;
 import org.testng.annotations.Test;

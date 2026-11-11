@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import objectos.lang.BinaryObject;
+import objectos.media.MediaType;
 
 public final class ContentY {
 

@@ -19,7 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import objectos.http.Content;
 import objectos.http.ContentProvider;
-import objectos.http.MediaType;
+import objectos.media.MediaType;
 import org.testng.annotations.Test;
 
 public class ServerTaskTest9ResultContentProvider {

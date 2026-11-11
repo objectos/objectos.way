@@ -24,7 +24,7 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import objectos.http.Content;
-import objectos.http.MediaType;
+import objectos.media.MediaType;
 import objectos.internal.IOFunction;
 import objectos.lang.Throwables;
 import objectos.way.Note;

@@ -21,7 +21,7 @@ import objectos.http.Content;
 import objectos.http.ContentProvider;
 import objectos.http.HeaderName;
 import objectos.http.Status;
-import objectos.http.MediaType;
+import objectos.media.MediaType;
 import objectos.http.Redirection;
 import objectos.http.Request;
 import objectos.http.Response;

@@ -17,6 +17,7 @@ package objectox.http.media;
 
 import java.util.HashMap;
 import java.util.Map;
+import objectox.media.MediaTypeValidator;
 
 final class StaticFilesTypesBuilder {
 

@@ -17,7 +17,7 @@ package objectos.way.dev;
 
 import objectos.css.CssSource;
 import objectos.http.Content;
-import objectos.http.MediaType;
+import objectos.media.MediaType;
 import objectos.http.Request;
 import objectos.http.Result;
 import objectos.script.Js;

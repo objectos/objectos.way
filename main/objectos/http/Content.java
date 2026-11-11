@@ -18,6 +18,7 @@ package objectos.http;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import objectos.lang.BinaryObject;
+import objectos.media.MediaType;
 import objectox.http.media.ContentBinaryObject;
 import objectox.http.media.ContentBytes;
 

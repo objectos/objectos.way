@@ -30,7 +30,7 @@ import objectos.http.ContentY;
 import objectos.http.HeaderName;
 import objectos.http.HeaderValueOptions;
 import objectos.http.Status;
-import objectos.http.MediaType;
+import objectos.media.MediaType;
 import objectos.http.Redirection;
 import objectos.http.Response;
 import objectos.lang.Throwables;

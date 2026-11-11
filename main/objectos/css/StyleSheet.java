@@ -15,8 +15,14 @@
  */
 package objectos.css;
 
-import module java.base;
-import module objectos.way;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.function.Consumer;
+import objectos.http.Content;
+import objectos.http.ContentProvider;
+import objectos.lang.BinaryObject;
+import objectos.media.MediaType;
+import objectos.way.Note;
 
 /// A style sheet whose content is generated on demand by scanning Java class
 /// files for CSS utilities.

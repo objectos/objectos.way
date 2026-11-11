@@ -19,8 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import objectos.http.Content;
 import objectos.http.ContentY;
-import objectos.http.MediaType;
-import objectox.http.media.MediaTypePojo;
+import objectos.media.MediaType;
 import org.testng.annotations.Test;
 
 public class ServerTaskTest9ResultContent {
@@ -287,7 +286,7 @@ public class ServerTaskTest9ResultContent {
     contentType = contentTypeToFillResponseHeaders(256);
 
     final MediaType type;
-    type = new MediaTypePojo(contentType);
+    type = MediaType.of(contentType);
 
     final Content media;
     media = ContentY.chunked(type, 240);
@@ -296,7 +295,7 @@ public class ServerTaskTest9ResultContent {
     expectedResponse = """
     HTTP/1.1 200 OK\r
     Date: Wed, 28 Jun 2023 12:08:43 GMT\r
-    Content-Type: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\r
+    Content-Type: %s\r
     Transfer-Encoding: chunked\r
     \r
     F0\r
@@ -307,7 +306,7 @@ public class ServerTaskTest9ResultContent {
     1234567890123456789012345678901234567890\r
     0\r
     \r
-    """;
+    """.formatted(contentType);
 
     assertEquals(
         ServerTaskY.resp(opts -> {
@@ -398,7 +397,7 @@ public class ServerTaskTest9ResultContent {
       throw new IllegalArgumentException("Buffer is too small: buffer=" + buffer);
     }
 
-    return "X".repeat(contentTypeLength);
+    return "text/" + "X".repeat(contentTypeLength - 5);
   }
 
 }

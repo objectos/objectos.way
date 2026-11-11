@@ -27,7 +27,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import objectos.http.Content;
-import objectos.http.MediaType;
+import objectos.media.MediaType;
 import objectos.http.Request;
 import objectos.lang.Throwables;
 import objectos.way.Y;

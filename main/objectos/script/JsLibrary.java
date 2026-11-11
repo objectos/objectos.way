@@ -17,7 +17,7 @@ package objectos.script;
 
 import objectos.http.Content;
 import objectos.http.ContentProvider;
-import objectos.http.MediaType;
+import objectos.media.MediaType;
 
 /// Represents the source code of the Objectos Script JS library.
 public final class JsLibrary implements ContentProvider {

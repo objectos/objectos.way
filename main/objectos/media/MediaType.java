@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.media;
 
-import objectox.http.media.MediaTypePojo;
+import objectox.media.MediaTypePojo;
 
 /// Represents a media type such as `text/html; charset=utf-8`
 /// and `application/json`.

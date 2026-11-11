@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import java.util.List;
 import java.util.function.Consumer;
+import objectos.media.MediaType;
 import objectox.http.RequestMethodEnum;
 import org.testng.Assert;
 import org.testng.annotations.Test;

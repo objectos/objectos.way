@@ -23,6 +23,7 @@ module objectos.way {
   exports objectos.html.markup;
   exports objectos.http;
   exports objectos.lang;
+  exports objectos.media;
   exports objectos.script;
   exports objectos.way;
 

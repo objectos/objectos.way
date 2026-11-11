@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 import objectos.http.Content;
 import objectos.http.HeaderName;
-import objectos.http.MediaType;
+import objectos.media.MediaType;
 import objectos.way.Y;
 import objectos.y.SocketY;
 import objectox.http.HeaderNamePojo;

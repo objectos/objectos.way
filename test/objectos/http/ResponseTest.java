@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import java.util.List;
 import objectos.html.Template;
+import objectos.media.MediaType;
 import objectox.http.Header;
 import objectox.http.resp.ResponseEntity;
 import objectox.http.resp.ResponsePojo;

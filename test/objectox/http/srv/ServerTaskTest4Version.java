@@ -18,7 +18,7 @@ package objectox.http.srv;
 import static org.testng.Assert.assertEquals;
 
 import objectos.http.Content;
-import objectos.http.MediaType;
+import objectos.media.MediaType;
 import objectos.way.Y;
 import objectos.y.SocketY;
 import objectox.http.Version;

@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Set;
 import objectos.http.Content;
 import objectos.http.HttpY;
-import objectos.http.MediaType;
+import objectos.media.MediaType;
 import objectos.way.Y;
 import objectos.y.PathY;
 import objectos.y.SocketY;

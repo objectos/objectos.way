@@ -19,7 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import objectos.http.Content;
-import objectos.http.MediaType;
+import objectos.media.MediaType;
 import objectos.lang.Throwables;
 import objectos.way.Y;
 import objectos.y.SocketY;

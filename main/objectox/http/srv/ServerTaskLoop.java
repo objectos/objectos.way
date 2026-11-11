@@ -20,7 +20,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import objectos.http.Content;
 import objectos.http.HeaderName;
-import objectos.http.MediaType;
+import objectos.media.MediaType;
 import objectos.http.RequestMethod;
 import objectos.http.Status;
 import objectos.way.Note;

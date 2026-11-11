@@ -181,6 +181,7 @@ TEST_ADD_EXPORTS += objectos.way/objectox.http.resp=org.testng
 TEST_ADD_EXPORTS += objectos.way/objectox.http.session=org.testng
 TEST_ADD_EXPORTS += objectos.way/objectox.http.srv=org.testng
 TEST_ADD_EXPORTS += objectos.way/objectox.lang=org.testng
+TEST_ADD_EXPORTS += objectos.way/objectox.media=org.testng
 
 ## test --add-reads
 TEST_ADD_READS := objectos.way=org.testng

@@ -26,7 +26,7 @@ import java.io.InputStream;
 import java.io.UncheckedIOException;
 import objectos.http.Content;
 import objectos.http.Status;
-import objectos.http.MediaType;
+import objectos.media.MediaType;
 import objectos.lang.Key;
 import objectos.y.RandomGeneratorY;
 import objectos.y.SocketY;

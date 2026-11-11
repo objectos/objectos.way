@@ -19,7 +19,7 @@ import objectos.html.format.Formatter;
 import objectos.html.markup.RegularElementValue;
 import objectos.http.Content;
 import objectos.http.ContentProvider;
-import objectos.http.MediaType;
+import objectos.media.MediaType;
 import objectos.lang.Testable;
 import objectox.html.MarkupImpl;
 

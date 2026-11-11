@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import objectos.http.Content;
 import objectos.http.Handler;
-import objectos.http.MediaType;
+import objectos.media.MediaType;
 import objectos.http.Request;
 import objectos.http.Result;
 import objectox.http.req.RequestPojo;

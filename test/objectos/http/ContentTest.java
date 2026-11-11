@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ThreadLocalRandom;
+import objectos.media.MediaType;
 import objectox.http.media.ContentBytes;
 import org.testng.annotations.Test;
 

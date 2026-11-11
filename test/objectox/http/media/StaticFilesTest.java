@@ -33,7 +33,7 @@ import objectos.http.ContentProvider;
 import objectos.http.HeaderName;
 import objectos.http.Status;
 import objectos.lang.Stage;
-import objectos.http.MediaType;
+import objectos.media.MediaType;
 import objectos.http.Request;
 import objectos.http.RequestMethod;
 import objectos.http.Response;

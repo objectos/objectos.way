@@ -20,7 +20,7 @@ import static org.testng.Assert.assertEquals;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.concurrent.ThreadLocalRandom;
-import objectos.http.MediaType;
+import objectos.media.MediaType;
 import org.testng.annotations.Test;
 
 public class ContentBytesTest {

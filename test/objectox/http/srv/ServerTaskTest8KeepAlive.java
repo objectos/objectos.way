@@ -20,7 +20,7 @@ import static org.testng.Assert.assertEquals;
 import objectos.http.Content;
 import objectos.http.HeaderName;
 import objectos.http.Status;
-import objectos.http.MediaType;
+import objectos.media.MediaType;
 import objectos.http.Response;
 import objectos.y.SocketY;
 import org.testng.annotations.Test;

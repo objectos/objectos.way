@@ -22,7 +22,7 @@ import java.util.function.Consumer;
 import objectos.http.Content;
 import objectos.http.Handler;
 import objectos.http.Status;
-import objectos.http.MediaType;
+import objectos.media.MediaType;
 import objectos.http.Redirection;
 import objectos.http.RequestMethod;
 import objectos.http.Response;

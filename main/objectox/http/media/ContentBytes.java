@@ -20,7 +20,7 @@ import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Objects;
 import objectos.http.Content;
-import objectos.http.MediaType;
+import objectos.media.MediaType;
 
 public record ContentBytes(MediaType contentType, byte[] bytes) implements Content {
 

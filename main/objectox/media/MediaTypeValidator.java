@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http.media;
+package objectox.media;
 
 import objectos.internal.Ascii;
 

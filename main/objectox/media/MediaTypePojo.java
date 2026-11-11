@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.http.media;
+package objectox.media;
 
-import objectos.http.MediaType;
+import objectos.media.MediaType;
 
 public record MediaTypePojo(String fullType) implements MediaType {
 

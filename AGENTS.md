@@ -22,7 +22,7 @@ The root project is built by a hand-written `Makefile` — no Gradle/Maven.
 ## Layout & module boundaries
 
 - `main/` — production sources (module `objectos.way`). `test/` — TestNG tests.
-- Exported API (`main/module-info.java`): `objectos.css`, `objectos.dev`, `objectos.html`, `objectos.html.format`, `objectos.html.markup`, `objectos.html.stream`, `objectos.http`, `objectos.lang`, `objectos.script`, `objectos.way`.
+- Exported API (`main/module-info.java`): `objectos.css`, `objectos.dev`, `objectos.html`, `objectos.html.format`, `objectos.html.markup`, `objectos.html.stream`, `objectos.http`, `objectos.lang`, `objectos.media`, `objectos.script`, `objectos.way`.
 - `objectos.internal`, `objectos.way.dev`, and the whole `objectox.*` tree are **not exported** but still shipped in the jar. The jar excludes only `objectos/way/dev` and `objectos/way/DevBoot.class` (`JAR_EXCLUDES`).
 
 ## Generated code — never hand-edit

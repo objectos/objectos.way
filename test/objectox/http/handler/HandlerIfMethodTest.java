@@ -19,7 +19,7 @@ import static org.testng.Assert.assertSame;
 
 import objectos.http.Content;
 import objectos.http.Handler;
-import objectos.http.MediaType;
+import objectos.media.MediaType;
 import objectos.http.Request;
 import objectos.http.RequestMethod;
 import objectos.http.Result;

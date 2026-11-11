@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import objectos.http.Content;
 import objectos.http.HeaderName;
-import objectos.http.MediaType;
+import objectos.media.MediaType;
 import objectos.internal.Bytes;
 import objectos.lang.BinaryObject;
 import objectox.http.Header;

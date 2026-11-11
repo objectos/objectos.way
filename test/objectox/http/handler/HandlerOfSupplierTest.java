@@ -21,7 +21,7 @@ import static org.testng.Assert.assertSame;
 import java.util.function.Supplier;
 import objectos.http.Content;
 import objectos.http.Handler;
-import objectos.http.MediaType;
+import objectos.media.MediaType;
 import objectos.http.Result;
 import org.testng.Assert;
 import org.testng.annotations.Test;

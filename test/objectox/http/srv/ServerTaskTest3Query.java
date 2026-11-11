@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 import objectos.http.Content;
 import objectos.http.HttpY;
-import objectos.http.MediaType;
+import objectos.media.MediaType;
 import objectos.http.Request;
 import objectos.lang.Throwables;
 import objectos.y.SocketY;

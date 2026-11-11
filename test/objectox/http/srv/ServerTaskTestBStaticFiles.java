@@ -25,7 +25,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.util.function.BiFunction;
 import objectos.http.Content;
-import objectos.http.MediaType;
+import objectos.media.MediaType;
 import objectos.http.Request;
 import objectos.http.Result;
 import objectos.http.StaticFile;
