@@ -16,11 +16,14 @@
 package objectos.way.dev;
 
 import objectos.css.CssSource;
+import objectos.html.Html;
 import objectos.html.Template;
 import objectos.html.markup.ElementMarkup;
+import objectos.http.Content;
 import objectos.http.Handler;
 import objectos.http.Request;
 import objectos.http.Result;
+import objectos.media.MediaType;
 
 /*
 
@@ -32,7 +35,10 @@ public final class ScriptPopstateIndex extends Template implements Handler {
 
   @Override
   public Result handle(Request http) {
-    return this;
+    final Html html;
+    html = compile();
+
+    return Content.of(MediaType.TEXT_HTML, html);
   }
 
   @Override

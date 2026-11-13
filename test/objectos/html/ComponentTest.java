@@ -16,9 +16,13 @@
 package objectos.html;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 
 import java.util.function.Consumer;
 import objectos.html.format.Formatter;
+import objectos.http.ContentProvider;
+import objectos.http.Result;
+import objectos.lang.Testable;
 import objectox.html.elem.ElementName;
 import objectox.html.markup.HtmlBytes;
 import objectox.html.markup.HtmlSink;
@@ -26,6 +30,15 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class ComponentTest {
+
+  @Test(description = "Component is not an HTTP result nor a Testable")
+  public void api() {
+    assertFalse(ContentProvider.class.isAssignableFrom(Component.class));
+
+    assertFalse(Result.class.isAssignableFrom(Component.class));
+
+    assertFalse(Testable.class.isAssignableFrom(Component.class));
+  }
 
   @DataProvider
   public Object[][] formatProvider() {

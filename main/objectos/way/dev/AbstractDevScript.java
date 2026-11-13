@@ -15,12 +15,15 @@
  */
 package objectos.way.dev;
 
-import objectos.http.Request;
-import objectos.http.Result;
+import objectos.html.Html;
 import objectos.html.Id;
 import objectos.html.Template;
+import objectos.http.Content;
 import objectos.http.Handler;
 import objectos.http.HeaderName;
+import objectos.http.Request;
+import objectos.http.Result;
+import objectos.media.MediaType;
 
 abstract class AbstractDevScript extends Template implements Handler {
 
@@ -32,7 +35,14 @@ abstract class AbstractDevScript extends Template implements Handler {
 
   @Override
   public Result handle(Request req) {
-    return this;
+    return htmlContent();
+  }
+
+  final Content htmlContent() {
+    final Html html;
+    html = compile();
+
+    return Content.of(MediaType.TEXT_HTML, html);
   }
 
   @Override

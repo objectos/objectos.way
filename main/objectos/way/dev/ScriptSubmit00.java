@@ -50,7 +50,7 @@ public final class ScriptSubmit00 extends AbstractDevScript {
       initial = true;
 
       return switch (http.method().name()) {
-        case "GET" -> this;
+        case "GET" -> htmlContent();
 
         case "POST" -> {
           var input0 = http.formParam("input0");
@@ -71,7 +71,7 @@ public final class ScriptSubmit00 extends AbstractDevScript {
 
       wayRequest = "true".equals(http.queryParam("wayRequest"));
 
-      return this;
+      return htmlContent();
     }
   }
 

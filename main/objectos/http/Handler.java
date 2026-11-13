@@ -50,13 +50,23 @@ public non-sealed interface Handler extends RoutingOption {
   /// An invocation of the form:
   ///
   /// ```java
-  /// Handler h = Handler.ofSupplier(HomeTemplate::new);
+  /// Handler h = Handler.ofSupplier(() -> {
+  ///   final Html html;
+  ///   html = new HomeTemplate().compile();
+  ///
+  ///   return Content.of(MediaType.TEXT_HTML, html);
+  /// });
   /// ```
   ///
   /// Returns a handler that is equivalent to:
   ///
   /// ```java
-  /// Handler h = _ -> new HomeTemplate();
+  /// Handler h = _ -> {
+  ///   final Html html;
+  ///   html = new HomeTemplate().compile();
+  ///
+  ///   return Content.of(MediaType.TEXT_HTML, html);
+  /// };
   /// ```
   ///
   /// @param supplier the result supplier

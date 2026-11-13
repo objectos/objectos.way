@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import objectos.html.markup.ElementMarkup;
 import objectos.http.Content;
+import objectos.media.MediaType;
 import objectos.script.Js;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -1955,8 +1956,11 @@ public class TemplateTest {
       }
     };
 
+    final Html html;
+    html = template.compile();
+
     final Content content;
-    content = template.toContent();
+    content = Content.of(MediaType.TEXT_HTML, html);
 
     final ByteArrayOutputStream out;
     out = new ByteArrayOutputStream();

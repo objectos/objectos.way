@@ -18,7 +18,9 @@ package objectos.http;
 import static objectos.http.RequestMethod.GET;
 
 import java.util.function.Consumer;
+import objectos.html.Html;
 import objectos.html.Template;
+import objectos.media.MediaType;
 import objectos.script.JsLibrary;
 
 final class ServerTestHostMain implements Consumer<HostOptions> {
@@ -37,10 +39,20 @@ final class ServerTestHostMain implements Consumer<HostOptions> {
     });
   }
 
+  private static Content home() {
+    final Home home;
+    home = new Home();
+
+    final Html html;
+    html = home.compile();
+
+    return Content.of(MediaType.TEXT_HTML, html);
+  }
+
   private void routes(Routing r) {
     r.at("/", Redirection.movedPermanently("/index.html"));
 
-    r.at("/index.html", GET, Handler.ofSupplier(Home::new));
+    r.at("/index.html", GET, Handler.ofSupplier(ServerTestHostMain::home));
 
     r.at("/script.js", StaticFile.of(JsLibrary.of()));
   }

@@ -17,16 +17,12 @@ package objectos.html;
 
 import objectos.html.format.Formatter;
 import objectos.html.markup.RegularElementValue;
-import objectos.http.Content;
-import objectos.http.ContentProvider;
-import objectos.media.MediaType;
 import objectox.html.MarkupImpl;
 
 /// An object that renders HTML on its own or as part of a larger HTML document.
 @FunctionalInterface
 public non-sealed interface Component
     extends
-    ContentProvider,
     RegularElementValue {
 
   /// Compiles this component into an HTML document.
@@ -53,24 +49,11 @@ public non-sealed interface Component
   /// @param m the markup object to use
   void renderHtml(Markup m);
 
-  /// Returns a new `Content` object with the `text/html; charset=utf-8` type
-  /// and capable of writing the generated HTML.
-  ///
-  /// @return a newly created `Content` object
-  @Override
-  default Content toContent() {
-    final Html html;
-    html = compile();
-
-    return Content.of(MediaType.TEXT_HTML, html);
-  }
-
   /// Returns the formatted string representation of the testable nodes of this
   /// component.
   ///
   /// @return the formatted string representation of the testable nodes of
   ///         this component
-  @Override
   default String toTestableText() {
     final Html html;
     html = compile();
