@@ -31,12 +31,13 @@ import java.util.stream.StreamSupport;
 import objectos.html.Html;
 import objectos.html.format.Formatter;
 import objectos.html.stream.Event;
+import objectos.lang.Testable;
 import objectox.html.format.BaseFormatter;
 import objectox.html.format.Output;
 import objectox.html.markup.HtmlSink;
 import objectox.html.stream.Player;
 
-public final class HtmlImpl implements Html {
+public final class HtmlImpl implements Html, Testable {
 
   private final byte[] code;
 

@@ -20,11 +20,10 @@ import java.util.stream.Stream;
 import objectos.html.format.Formatter;
 import objectos.html.stream.Event;
 import objectos.lang.BinaryObject;
-import objectos.lang.Testable;
 import objectox.html.HtmlImpl;
 
 /// Represents a compiled HTML document.
-public sealed interface Html extends BinaryObject, Testable permits HtmlImpl {
+public sealed interface Html extends BinaryObject permits HtmlImpl {
 
   /// Returns the contents of this Objectos HTML document as a stream of events.
   ///
@@ -53,5 +52,10 @@ public sealed interface Html extends BinaryObject, Testable permits HtmlImpl {
   /// @return the formatted HTML represented by this object
   @Override
   String toString();
+
+  /// Returns the formatted string representation of this testable instance.
+  ///
+  /// @return the formatted string representation of this testable instance
+  String toTestableText();
 
 }
