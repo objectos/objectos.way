@@ -53,9 +53,4 @@ public sealed interface Html extends BinaryObject permits HtmlImpl {
   @Override
   String toString();
 
-  /// Returns the formatted string representation of this testable instance.
-  ///
-  /// @return the formatted string representation of this testable instance
-  String toTestableText();
-
 }

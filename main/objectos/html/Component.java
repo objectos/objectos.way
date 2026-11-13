@@ -15,6 +15,7 @@
  */
 package objectos.html;
 
+import objectos.html.format.Formatter;
 import objectos.html.markup.RegularElementValue;
 import objectos.http.Content;
 import objectos.http.ContentProvider;
@@ -74,7 +75,7 @@ public non-sealed interface Component
     final Html html;
     html = compile();
 
-    return html.toTestableText();
+    return html.format(Formatter.testable());
   }
 
 }

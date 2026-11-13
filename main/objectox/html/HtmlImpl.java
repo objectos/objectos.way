@@ -31,13 +31,12 @@ import java.util.stream.StreamSupport;
 import objectos.html.Html;
 import objectos.html.format.Formatter;
 import objectos.html.stream.Event;
-import objectos.lang.Testable;
 import objectox.html.format.BaseFormatter;
 import objectox.html.format.Output;
 import objectox.html.markup.HtmlSink;
 import objectox.html.stream.Player;
 
-public final class HtmlImpl implements Html, Testable {
+public final class HtmlImpl implements Html {
 
   private final byte[] code;
 
@@ -110,11 +109,6 @@ public final class HtmlImpl implements Html, Testable {
   @Override
   public final String toString() {
     return format(Formatter.standard());
-  }
-
-  @Override
-  public final String toTestableText() {
-    return format(Formatter.testable());
   }
 
 }

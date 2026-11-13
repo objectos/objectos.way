@@ -17,6 +17,7 @@ package objectos.html;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.html.format.Formatter;
 import objectox.html.elem.ElementName;
 import objectox.html.markup.HtmlBytes;
 import org.testng.annotations.Test;
@@ -245,7 +246,7 @@ public class TestableNodesTest {
     t.item("Baz");
 
     final String actual;
-    actual = subject.compile().toTestableText();
+    actual = subject.compile().format(Formatter.testable());
 
     assertEquals(actual, "- Foo\n- Bar\n- Baz\n");
   }
@@ -286,7 +287,7 @@ public class TestableNodesTest {
     );
 
     final String actual;
-    actual = subject.compile().toTestableText();
+    actual = subject.compile().format(Formatter.testable());
 
     assertEquals(actual, "- a\n");
   }
@@ -380,7 +381,7 @@ public class TestableNodesTest {
     t.prop("Last name", "Smith");
 
     final String actual;
-    actual = subject.compile().toTestableText();
+    actual = subject.compile().format(Formatter.testable());
 
     assertEquals(actual, "- First name: John\n- Last name: Smith\n");
   }
@@ -418,7 +419,7 @@ public class TestableNodesTest {
     );
 
     final String actual;
-    actual = subject.compile().toTestableText();
+    actual = subject.compile().format(Formatter.testable());
 
     assertEquals(actual, "- First name: John\n");
   }
@@ -440,7 +441,7 @@ public class TestableNodesTest {
     t.prop("Other", "Prop");
 
     final String actual;
-    actual = subject.compile().toTestableText();
+    actual = subject.compile().format(Formatter.testable());
 
     assertEquals(actual, "- Item\n- Name: Value\n\n- Other: Prop\n");
   }
@@ -482,7 +483,7 @@ public class TestableNodesTest {
     );
 
     final String actual;
-    actual = subject.compile().toTestableText();
+    actual = subject.compile().format(Formatter.testable());
 
     assertEquals(actual, "- Name: Value\n");
   }
@@ -552,7 +553,7 @@ public class TestableNodesTest {
     t.item("C");
 
     final String actual;
-    actual = subject.compile().toTestableText();
+    actual = subject.compile().format(Formatter.testable());
 
     assertEquals(actual, "- A\n- B\n\n- C\n");
   }
@@ -593,7 +594,7 @@ public class TestableNodesTest {
     );
 
     final String actual;
-    actual = subject.compile().toTestableText();
+    actual = subject.compile().format(Formatter.testable());
 
     assertEquals(actual, "- a\n");
   }
@@ -663,7 +664,7 @@ public class TestableNodesTest {
     t.cell(1, "b");
 
     final String actual;
-    actual = subject.compile().toTestableText();
+    actual = subject.compile().format(Formatter.testable());
 
     assertEquals(actual, "| a |\n| b |\n");
   }
@@ -685,7 +686,7 @@ public class TestableNodesTest {
     t.cell(1, "c");
 
     final String actual;
-    actual = subject.compile().toTestableText();
+    actual = subject.compile().format(Formatter.testable());
 
     assertEquals(actual, "| a | b |\n| c |\n");
   }
@@ -726,7 +727,7 @@ public class TestableNodesTest {
     );
 
     final String actual;
-    actual = subject.compile().toTestableText();
+    actual = subject.compile().format(Formatter.testable());
 
     assertEquals(actual, "| a |\n");
   }

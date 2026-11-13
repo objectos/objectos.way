@@ -17,8 +17,11 @@ package objectos.http;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
-import objectos.html.Template;
+import objectos.lang.BinaryObject;
 import objectos.media.MediaType;
 import objectox.http.Header;
 import objectox.http.resp.ResponseEntity;
@@ -119,17 +122,34 @@ public class ResponseTest {
 
   @Test(description = "testable text if content is testable")
   public void toTestableText02() {
-    final ContentProvider html;
-    html = new Template() {
+    class TestableContent implements BinaryObject, ContentProvider {
+
       @Override
-      protected void render() {
-        t.h1("Heading 1");
+      public final void binaryTo(OutputStream out) throws IOException {
+        final byte[] bytes;
+        bytes = "# Heading 1".getBytes(StandardCharsets.UTF_8);
+
+        out.write(bytes);
       }
-    };
+
+      @Override
+      public final Content toContent() {
+        return Content.of(MediaType.TEXT_HTML, this);
+      }
+
+      @Override
+      public final String toTestableText() {
+        return "# Heading 1\n";
+      }
+
+    }
+
+    final ContentProvider content;
+    content = new TestableContent();
 
     final Response subject;
     subject = Response.create(opts -> {
-      opts.send(html);
+      opts.send(content);
     });
 
     assertEquals(
