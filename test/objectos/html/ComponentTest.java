@@ -227,6 +227,14 @@ public class ComponentTest {
     assertEquals(actual, expected, description);
   }
 
+  @Test
+  public void toTestableText01() {
+    final Component subject;
+    subject = c(m -> m.t().h1("Heading 1"));
+
+    assertEquals(subject.toTestableText(), "# Heading 1\n");
+  }
+
   private Component c(Component c) {
     return c;
   }

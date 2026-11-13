@@ -19,7 +19,6 @@ import objectos.html.markup.RegularElementValue;
 import objectos.http.Content;
 import objectos.http.ContentProvider;
 import objectos.media.MediaType;
-import objectos.lang.Testable;
 import objectox.html.MarkupImpl;
 
 /// An object that renders HTML on its own or as part of a larger HTML document.
@@ -27,8 +26,7 @@ import objectox.html.MarkupImpl;
 public non-sealed interface Component
     extends
     ContentProvider,
-    RegularElementValue,
-    Testable {
+    RegularElementValue {
 
   /// Compiles this component into an HTML document.
   ///
