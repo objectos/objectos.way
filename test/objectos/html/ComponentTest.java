@@ -135,12 +135,12 @@ public class ComponentTest {
       String expectedStandard,
       String expectedTestable) {
     final String standard;
-    standard = subject.format(Formatter.standard());
+    standard = subject.compile().format(Formatter.standard());
 
     assertEquals(standard, expectedStandard, description);
 
     final String testable;
-    testable = subject.format(Formatter.testable());
+    testable = subject.compile().format(Formatter.testable());
 
     assertEquals(testable, expectedTestable, description);
   }

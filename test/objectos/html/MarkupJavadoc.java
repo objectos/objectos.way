@@ -37,7 +37,7 @@ public class MarkupJavadoc {
     // @end
 
     assertEquals(
-        c.format(Formatter.standard()),
+        c.compile().format(Formatter.standard()),
 
         """
 <ul>\
@@ -77,7 +77,7 @@ Fri\
     // @end
 
     assertEquals(
-        new MyComponent().format(Formatter.standard()),
+        new MyComponent().compile().format(Formatter.standard()),
 
         """
 <ul>\
@@ -114,7 +114,7 @@ Fri\
     // @end
 
     assertEquals(
-        new MyComponent().format(Formatter.standard()),
+        new MyComponent().compile().format(Formatter.standard()),
 
         """
 <div>\
@@ -148,7 +148,7 @@ Cancel\
     // @end
 
     assertEquals(
-        new MyComponent().format(Formatter.standard()),
+        new MyComponent().compile().format(Formatter.standard()),
 
         """
 <div>\

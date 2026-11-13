@@ -20,6 +20,8 @@ import objectox.html.format.StandardFormatter;
 import objectox.html.format.TestableFormatter;
 
 /// Formats the string representation of a compiled Objectos HTML document.
+/// A `Formatter` instance is allowed to be stateful and it is not safe to be
+/// shared between different threads.
 public sealed interface Formatter permits BaseFormatter {
 
   /// Returns the standard formatter instance.

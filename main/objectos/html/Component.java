@@ -15,7 +15,6 @@
  */
 package objectos.html;
 
-import objectos.html.format.Formatter;
 import objectos.html.markup.RegularElementValue;
 import objectos.http.Content;
 import objectos.http.ContentProvider;
@@ -41,18 +40,6 @@ public non-sealed interface Component
     renderHtml(m);
 
     return m.compile();
-  }
-
-  /// Formats this HTML component using the specified formatter.
-  ///
-  /// @param formatter the formatter to use, not null
-  ///
-  /// @return the formatted string, not null
-  default String format(Formatter formatter) {
-    final Html html;
-    html = compile();
-
-    return html.format(formatter);
   }
 
   /// Returns the markup instance to be used by this component.

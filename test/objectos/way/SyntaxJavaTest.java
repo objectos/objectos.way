@@ -372,7 +372,7 @@ public class SyntaxJavaTest {
     final Component component;
     component = Syntax.highlight(Syntax.JAVA, java);
 
-    assertEquals(component.format(Formatter.standard()), expected);
+    assertEquals(component.compile().format(Formatter.standard()), expected);
   }
 
 }
